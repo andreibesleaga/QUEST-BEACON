@@ -6,11 +6,6 @@
 > and at ≈ $0, so a real agency could self-host it with no licensing or lock-in.
 >
 > **IEEE Response Quest™ 2026 · Phase 3 (product)** · entry #5320 · Apache-2.0 · by Andrei Besleaga
->
-> **Live demo:** https://quest-beacon.up.railway.app · **Judge matrix:** [JUDGE_MATRIX.md](JUDGE_MATRIX.md)
-> (every Phase-2 claim and judging criterion mapped to its shipped implementation and evidence).
-> The contest evaluates the repository state at the submission tag; this repository then continues as
-> the project's open-source home — roadmap: [docs/features/ROADMAP-POST-V1.md](docs/features/ROADMAP-POST-V1.md).
 
 ## Why it matters
 During a wildfire or flood an emergency manager juggles half a dozen sites and stitches the picture
@@ -21,7 +16,7 @@ LLM only narrates and is structurally prevented from emitting a figure · no pub
 without a named human approving it, enforced at the type level.**
 
 ## Run it — one command, no keys, no network
-From this directory (the project root):
+From this directory (the project root — `Phase3/` in the current monorepo layout):
 ```bash
 docker compose -f infra/docker-compose.yml up -d --build   # Postgres → migrations → app
 open http://localhost:3000
@@ -75,8 +70,9 @@ Honest limitations are a graded rubric item here and are stated in the open, ind
   stated in the same place the limitation was.
 - **The gates below ran offline, MOCK sources, AI off — deliberately.** Offline/MOCK is the default
   reproducible posture for every gate, so the numbers are identical on any machine with zero keys and
-  zero egress. Live verification has since been performed (11+ live sources verified 2026-08-04 against real keys
-  and real upstreams); the per-source record is [audit/DATA_SOURCE_VERIFICATION.md](audit/DATA_SOURCE_VERIFICATION.md).
+  zero egress. Live verification has since been performed and its evidence lives in
+  [docs/LIVE_STATUS_SOURCE_OF_TRUTH.md](docs/LIVE_STATUS_SOURCE_OF_TRUTH.md) (11+ live sources verified
+  2026-08-04); the live-lane plan remains tracked in `docs/MASTER_SIGNOFF_PLAN.md` §6 (L1–L18).
 - **Data-source honesty:** ITU and CAMARA/GSMA ship **MOCK-only** by design (operator/data-gated); EFFIS is
   **CACHED-only** — its former endpoint is now **confirmed dead upstream** (HTTP 301 → S3 `NoSuchKey`;
   re-pointing is an open register item); `hifld` is registered but **held out of every region's allowlist**
@@ -100,7 +96,7 @@ Honest limitations are a graded rubric item here and are stated in the open, ind
 |---|---|---|
 | Lint | `./node_modules/.bin/eslint .` | **0** |
 | Types | `./node_modules/.bin/tsc --noEmit` | **0** |
-| Unit/integration | `./node_modules/.bin/vitest run` | **4526 passed / 2 skipped (4528), exit 0** (2026-08-24) |
+| Unit/integration | `./node_modules/.bin/vitest run` | **4536 passed / 2 skipped (4538), exit 0** (2026-08-25) |
 | …with coverage | `./node_modules/.bin/vitest run --coverage` | **green, every floor met (2026-08-24)** — and now enforced on every PR by CI. Its first CI run *failed* at 98.97% branch coverage against the 99% `src/application/**` floor: real drift accumulated since 2026-08-02, closed by covering `newsOutletProvenance`'s degrade branches. The floor was **not** lowered |
 | Architecture boundaries | `./node_modules/.bin/depcruise src app` | **0 violations across 844 modules** |
 | API contract | `docs/api/openapi.yaml` | parses — **36 paths · 39 operations · 65 schemas** |
@@ -138,7 +134,8 @@ project has been fighting, and it has bitten here before** (`depcruise 0/723`, `
 | [audit/DATA_SOURCE_VERIFICATION.md](audit/DATA_SOURCE_VERIFICATION.md) | every data source, verified, with fallbacks (US · Romania · worldwide) |
 | [project/TASKS.md](project/TASKS.md) | the build backlog + execution model |
 | [docs/ENGINEERING_PRINCIPLES.md](docs/ENGINEERING_PRINCIPLES.md) | the quality bar every phase honors |
-| [JUDGE_MATRIX.md](JUDGE_MATRIX.md) | **the submission matrix** — every Phase-2 claim and judging criterion mapped to its shipped implementation and evidence |
+| [docs/FINAL_HANDOFF.md](docs/FINAL_HANDOFF.md) | **the final state hub** — verification snapshot, Phase-2→Phase-3 map, judging-criteria map, and the ordered path to submission |
+| [docs/MASTER_SIGNOFF_PLAN.md](docs/MASTER_SIGNOFF_PLAN.md) | the historical sign-off plan (superseded by the handoff above) |
 
 ## What is built
 The full hexagonal spine is implemented and tested: **44 registered source adapters** — `config/adapters.json`

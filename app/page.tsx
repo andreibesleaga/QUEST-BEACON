@@ -100,6 +100,27 @@ const VISION_LIVE_ENABLED = process.env.NEXT_PUBLIC_FEATURE_VISION_LIVE === 'on'
  * is unavailable (Art. XVI: labelled, never a dead control). The server enforces the role regardless —
  * this only decides whether the control is offered or explained. Extracted for the complexity ceiling.
  */
+/**
+ * What the approval surfaces should DISPLAY for the current mutation + queue state (2026-08-25).
+ * - `approveError`: a FAILED approval must be labelled, never silent — before this, a rejected approve
+ *   (e.g. the one seeded DRAFT already promoted in an earlier session) left the button looking dead.
+ * - `approvedSticky`: "Approved" sticks only while it is true of what the tab shows — after the queue
+ *   refetch removes the approved DRAFT, an EMPTY queue keeps the badge (the decision visibly stuck);
+ *   a DIFFERENT draft arriving first re-enables the button so the next decision can be made
+ *   (`approve.variables` is the id of the last approval). Previously `approve.isSuccess` alone badged
+ *   "Approved" forever, hiding any newly arrived DRAFT behind a stale success.
+ */
+function approvalDisplayState(
+  approve: ReturnType<typeof useApproveAlert>,
+  draftAlerts: readonly DraftAlertItem[],
+): { approveError: string | undefined; approvedSticky: boolean } {
+  return {
+    approveError: approve.isError ? approve.error.message : undefined,
+    approvedSticky:
+      approve.isSuccess && (draftAlerts.length === 0 || approve.variables === draftAlerts[0]?.id),
+  };
+}
+
 function decisionApprovalProps(
   actorRole: ActorRole,
   firstDraft: DraftAlertItem | undefined,
@@ -237,6 +258,7 @@ export default function CopPage(): ReactNode {
   }, [alertsQuery.data]);
   const approve = useApproveAlert(activeRegionId);
   const decisionApproval = decisionApprovalProps(actorRole, draftAlerts[0], (id) => approve.mutate(id), tDecision);
+  const { approveError, approvedSticky } = approvalDisplayState(approve, draftAlerts);
 
   // Decision support figures + narration are DERIVED from the selected incident's SitRep (engine numbers only).
   const decisionSitRep = useSitRep(selectedIncidentId);
@@ -338,11 +360,12 @@ export default function CopPage(): ReactNode {
           {...(sitRepView?.data.summary !== undefined ? { narration: sitRepView.data.summary } : {})}
           {...(sitRepView ? { citations: sitRepView.citations } : {})}
           {...decisionApproval}
-          approved={approve.isSuccess}
+          approved={approvedSticky}
+          approveError={approveError}
         />
       </TabsContent>
       <TabsContent value="drafts">
-        <DraftAlertReview alerts={draftAlerts} onApprove={(id) => approve.mutate(id)} />
+        <DraftAlertReview alerts={draftAlerts} onApprove={(id) => approve.mutate(id)} approveError={approveError} />
       </TabsContent>
       {ANTICIPATORY_PANEL_ENABLED ? (
         <TabsContent value="anticipatory">
@@ -367,7 +390,13 @@ export default function CopPage(): ReactNode {
         <SuppliesPanel className="mt-4" />
         <VolunteerTeamsPanel className="mt-4" />
       </TabsContent>
-      <TabsContent value="verify">
+      {/* forceMount on the three INPUT-BEARING tabs (2026-08-25): their panels hold volatile local
+          state — a half-typed SOS report + consent, route inputs, the verifier's vision toggles and
+          optimistic decisions — and Radix unmounts inactive tab content by default, so switching tabs
+          silently destroyed a crisis operator's in-progress input. forceMount keeps them mounted while
+          Radix still `hidden`s the inactive panel (no visual or layout change). Query-only tabs keep
+          the default unmount — nothing user-authored lives in them. */}
+      <TabsContent value="verify" forceMount>
         <VerifierQueue
           reports={reportList}
           regionId={activeRegionId}
@@ -375,10 +404,10 @@ export default function CopPage(): ReactNode {
           visionLiveEnabled={VISION_LIVE_ENABLED}
         />
       </TabsContent>
-      <TabsContent value="report">
+      <TabsContent value="report" forceMount>
         <SosForm citizenStreamEnabled={CITIZEN_STREAM_ENABLED} />
       </TabsContent>
-      <TabsContent value="route">
+      <TabsContent value="route" forceMount>
         <RoutingPanel />
       </TabsContent>
     </Tabs>

@@ -61,7 +61,8 @@
     "approve": "Setujui keputusan",
     "humanApprovalRequired": "Persetujuan manusia wajib sebelum tindakan publik apa pun.",
     "noDraftToApprove": "Tidak ada yang perlu disetujui saat ini — tidak ada draf peringatan yang menunggu tinjauan.",
-    "roleRequiredToApprove": "Masuk sebagai Verifikator atau Manajer Darurat untuk menyetujui."
+    "roleRequiredToApprove": "Masuk sebagai Verifikator atau Manajer Darurat untuk menyetujui.",
+    "approveFailed": "Persetujuan gagal —"
   },
   "draftAlerts": {
     "title": "Tinjauan peringatan (DRAFT)",
@@ -69,7 +70,8 @@
     "emptyDescription": "Aturan ambang batas membuat peringatan DRAFT di sini.",
     "provenance": "Asal data",
     "noProvenance": "Tanpa asal data",
-    "reviewApprove": "Tinjau & setujui…"
+    "reviewApprove": "Tinjau & setujui…",
+    "approveFailed": "Persetujuan gagal —"
   },
   "locale": {
     "label": "Bahasa",

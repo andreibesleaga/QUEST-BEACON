@@ -61,7 +61,8 @@
     "approve": "批准决策",
     "humanApprovalRequired": "任何对外行动之前必须获得人工批准。",
     "noDraftToApprove": "当前没有待批准的内容——没有等待审核的草稿警报。",
-    "roleRequiredToApprove": "请以核验员或应急管理员身份登录后再批准。"
+    "roleRequiredToApprove": "请以核验员或应急管理员身份登录后再批准。",
+    "approveFailed": "批准失败 —"
   },
   "draftAlerts": {
     "title": "预警审核（DRAFT）",
@@ -69,7 +70,8 @@
     "emptyDescription": "阈值规则会在此处生成 DRAFT 预警。",
     "provenance": "数据来源",
     "noProvenance": "无来源记录",
-    "reviewApprove": "审核并批准…"
+    "reviewApprove": "审核并批准…",
+    "approveFailed": "批准失败 —"
   },
   "locale": {
     "label": "语言",

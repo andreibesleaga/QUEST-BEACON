@@ -61,7 +61,8 @@
     "approve": "Aprubahan ang desisyon",
     "humanApprovalRequired": "Kailangan ang pag-apruba ng tao bago ang anumang pampublikong aksyon.",
     "noDraftToApprove": "Walang dapat aprubahan sa ngayon — walang draft na alerto ang naghihintay ng pagsusuri.",
-    "roleRequiredToApprove": "Mag-sign in bilang Verifier o Emergency Manager para mag-apruba."
+    "roleRequiredToApprove": "Mag-sign in bilang Verifier o Emergency Manager para mag-apruba.",
+    "approveFailed": "Nabigo ang pag-apruba —"
   },
   "draftAlerts": {
     "title": "Pagsusuri ng alerto (DRAFT)",
@@ -69,7 +70,8 @@
     "emptyDescription": "Ang mga threshold rule ay gumagawa dito ng DRAFT na alerto.",
     "provenance": "Pinagmulan",
     "noProvenance": "Walang pinagmulan",
-    "reviewApprove": "Suriin at aprubahan…"
+    "reviewApprove": "Suriin at aprubahan…",
+    "approveFailed": "Nabigo ang pag-apruba —"
   },
   "locale": {
     "label": "Wika",

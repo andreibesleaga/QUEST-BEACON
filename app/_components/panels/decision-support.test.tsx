@@ -31,6 +31,20 @@ describe('DecisionSupport', () => {
     expect(screen.getByText('Approved by human')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Approve decision' })).not.toBeInTheDocument();
   });
+
+  it('a FAILED approval is labelled, never silent (2026-08-25) — the button stays for a retry', () => {
+    render(<DecisionSupport figures={[]} onApprove={vi.fn()} approveError="alert is not in DRAFT state" />);
+    const err = screen.getByTestId('approve-error');
+    expect(err).toHaveTextContent('Approval failed');
+    expect(err).toHaveTextContent('alert is not in DRAFT state');
+    expect(screen.getByRole('button', { name: 'Approve decision' })).toBeEnabled();
+  });
+
+  it('a stale error from a PREVIOUS attempt never contradicts the approved state', () => {
+    render(<DecisionSupport figures={[]} approved approveError="left over from an earlier click" />);
+    expect(screen.getByText('Approved by human')).toBeInTheDocument();
+    expect(screen.queryByTestId('approve-error')).not.toBeInTheDocument();
+  });
 });
 
 describe('DraftAlertReview', () => {
@@ -68,6 +82,19 @@ describe('DecisionSupport — unavailable-approval reason', () => {
       'Nothing to approve right now.',
     );
     expect(screen.getByRole('button')).toBeDisabled();
+  });
+
+  it('surfaces a failed approval above the queue instead of a silently dead button (2026-08-25)', () => {
+    render(
+      <DraftAlertReview
+        alerts={[{ id: 'a1', headline: 'Gauge crossing', state: 'DRAFT' }]}
+        onApprove={vi.fn()}
+        approveError="already ACTUAL"
+      />,
+    );
+    const err = screen.getByTestId('draft-approve-error');
+    expect(err).toHaveTextContent('Approval failed');
+    expect(err).toHaveTextContent('already ACTUAL');
   });
 
   it('renders NO reason when approval is wired (button enabled) or already approved', () => {

@@ -61,7 +61,8 @@
     "approve": "فیصلہ منظور کریں",
     "humanApprovalRequired": "کسی بھی عوامی اقدام سے پہلے انسانی منظوری لازمی ہے۔",
     "noDraftToApprove": "ابھی منظوری کے لیے کچھ نہیں — کوئی مسودہ الرٹ زیرِ جائزہ نہیں۔",
-    "roleRequiredToApprove": "منظوری کے لیے تصدیق کنندہ یا ایمرجنسی منیجر کے طور پر سائن اِن کریں۔"
+    "roleRequiredToApprove": "منظوری کے لیے تصدیق کنندہ یا ایمرجنسی منیجر کے طور پر سائن اِن کریں۔",
+    "approveFailed": "منظوری ناکام ہوگئی —"
   },
   "draftAlerts": {
     "title": "الرٹ جائزہ (DRAFT)",
@@ -69,7 +70,8 @@
     "emptyDescription": "حد کے قواعد یہاں DRAFT الرٹ بناتے ہیں۔",
     "provenance": "ماخذ",
     "noProvenance": "کوئی ماخذ نہیں",
-    "reviewApprove": "جائزہ لے کر منظور کریں…"
+    "reviewApprove": "جائزہ لے کر منظور کریں…",
+    "approveFailed": "منظوری ناکام ہوگئی —"
   },
   "locale": {
     "label": "زبان",

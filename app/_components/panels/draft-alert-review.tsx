@@ -20,13 +20,21 @@ export interface DraftAlertReviewProps {
   alerts: readonly DraftAlertItem[];
   /** Routes a DRAFT to the human approval / CAP-emit flow — this panel never emits itself. */
   onApprove?: ((id: string) => void) | undefined;
+  /** Message of a FAILED approval (2026-08-25) — previously silent, the button read as stuck (Art. XVI). */
+  approveError?: string | undefined;
   className?: string | undefined;
 }
 
-export function DraftAlertReview({ alerts, onApprove, className }: DraftAlertReviewProps): ReactNode {
+export function DraftAlertReview({ alerts, onApprove, approveError, className }: DraftAlertReviewProps): ReactNode {
   const t = useT('draftAlerts');
   return (
     <Panel title={t('title')} className={className} data-testid="draft-alert-review">
+      {approveError !== undefined ? (
+        <p role="alert" data-testid="draft-approve-error" className="mb-2 text-xs text-alert">
+          {t('approveFailed')} {approveError}
+          <OriginalLanguageChip />
+        </p>
+      ) : null}
       {alerts.length === 0 ? (
         <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} icon={FileWarning} />
       ) : (

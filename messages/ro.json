@@ -61,7 +61,8 @@
     "approve": "Aprobă decizia",
     "humanApprovalRequired": "Aprobarea umană este obligatorie înaintea oricărei acțiuni publice.",
     "noDraftToApprove": "Nimic de aprobat momentan — nicio alertă schiță nu așteaptă revizuire.",
-    "roleRequiredToApprove": "Autentificați-vă ca Verificator sau Manager de urgență pentru a aproba."
+    "roleRequiredToApprove": "Autentificați-vă ca Verificator sau Manager de urgență pentru a aproba.",
+    "approveFailed": "Aprobarea a eșuat —"
   },
   "draftAlerts": {
     "title": "Verificarea alertelor (DRAFT)",
@@ -69,7 +70,8 @@
     "emptyDescription": "Regulile de prag creează aici alerte DRAFT.",
     "provenance": "Proveniență",
     "noProvenance": "Fără proveniență",
-    "reviewApprove": "Verifică și aprobă…"
+    "reviewApprove": "Verifică și aprobă…",
+    "approveFailed": "Aprobarea a eșuat —"
   },
   "locale": {
     "label": "Limbă",

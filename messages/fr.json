@@ -61,7 +61,8 @@
     "approve": "Approuver la décision",
     "humanApprovalRequired": "Une approbation humaine est obligatoire avant toute action publique.",
     "noDraftToApprove": "Rien à approuver pour l'instant — aucune alerte provisoire en attente de révision.",
-    "roleRequiredToApprove": "Connectez-vous en tant que Vérificateur ou Gestionnaire d'urgence pour approuver."
+    "roleRequiredToApprove": "Connectez-vous en tant que Vérificateur ou Gestionnaire d'urgence pour approuver.",
+    "approveFailed": "Échec de l’approbation —"
   },
   "draftAlerts": {
     "title": "Revue des alertes (DRAFT)",
@@ -69,7 +70,8 @@
     "emptyDescription": "Les règles de seuil créent ici des alertes DRAFT.",
     "provenance": "Provenance",
     "noProvenance": "Aucune provenance",
-    "reviewApprove": "Examiner et approuver…"
+    "reviewApprove": "Examiner et approuver…",
+    "approveFailed": "Échec de l’approbation —"
   },
   "locale": {
     "label": "Langue",

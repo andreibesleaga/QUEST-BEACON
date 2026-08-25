@@ -23,6 +23,13 @@ export interface DecisionSupportProps {
   approved?: boolean | undefined;
   onApprove?: (() => void) | undefined;
   /**
+   * Message of a FAILED approval (2026-08-25). Until now a rejected POST /alerts/:id/approve was
+   * completely silent — the button just "did nothing" (e.g. when the one seeded DRAFT was already
+   * promoted by an earlier session, every further click 4xx'd invisibly and read as a stuck control).
+   * Art. XVI: a dead-end must be labelled.
+   */
+  approveError?: string | undefined;
+  /**
    * WHY approval is unavailable when `onApprove` is undefined ("no draft alert awaiting approval",
    * "sign in as VERIFIER/EM"). Art. XVI: a disabled keystone control must SAY why — until 2026-08-05 the
    * page never passed `onApprove` at all and this button read as broken HITL instead of enforced HITL.
@@ -37,6 +44,7 @@ export function DecisionSupport({
   citations,
   approved,
   onApprove,
+  approveError,
   unavailableReason,
   className,
 }: DecisionSupportProps): ReactNode {
@@ -105,6 +113,12 @@ export function DecisionSupport({
           ) : null}
         </span>
       </div>
+      {approveError !== undefined && !approved ? (
+        <p role="alert" data-testid="approve-error" className="mt-2 text-xs text-alert">
+          {t('approveFailed')} {approveError}
+          <OriginalLanguageChip />
+        </p>
+      ) : null}
     </section>
   );
 }

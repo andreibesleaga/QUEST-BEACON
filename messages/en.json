@@ -61,7 +61,8 @@
     "approve": "Approve decision",
     "humanApprovalRequired": "Human approval is required before any public action.",
     "noDraftToApprove": "Nothing to approve right now — no draft alert is awaiting review.",
-    "roleRequiredToApprove": "Sign in as a Verifier or Emergency Manager to approve."
+    "roleRequiredToApprove": "Sign in as a Verifier or Emergency Manager to approve.",
+    "approveFailed": "Approval failed —"
   },
   "draftAlerts": {
     "title": "Alert review (DRAFT)",
@@ -69,7 +70,8 @@
     "emptyDescription": "Threshold rules create DRAFT alerts here.",
     "provenance": "Provenance",
     "noProvenance": "No provenance",
-    "reviewApprove": "Review & approve…"
+    "reviewApprove": "Review & approve…",
+    "approveFailed": "Approval failed —"
   },
   "locale": {
     "label": "Language",

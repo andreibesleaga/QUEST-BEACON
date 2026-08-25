@@ -61,7 +61,8 @@
     "approve": "اعتماد القرار",
     "humanApprovalRequired": "يلزم اعتماد بشري قبل أي إجراء عام.",
     "noDraftToApprove": "لا يوجد ما يمكن اعتماده الآن — لا يوجد تنبيه مسودة بانتظار المراجعة.",
-    "roleRequiredToApprove": "سجّل الدخول كمدقّق أو مدير طوارئ للاعتماد."
+    "roleRequiredToApprove": "سجّل الدخول كمدقّق أو مدير طوارئ للاعتماد.",
+    "approveFailed": "فشلت الموافقة —"
   },
   "draftAlerts": {
     "title": "مراجعة التنبيهات (DRAFT)",
@@ -69,7 +70,8 @@
     "emptyDescription": "قواعد العتبات تُنشئ تنبيهات DRAFT هنا.",
     "provenance": "المصدر",
     "noProvenance": "لا يوجد مصدر",
-    "reviewApprove": "مراجعة واعتماد…"
+    "reviewApprove": "مراجعة واعتماد…",
+    "approveFailed": "فشلت الموافقة —"
   },
   "locale": {
     "label": "اللغة",

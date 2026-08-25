@@ -61,7 +61,8 @@
     "approve": "Aprovar decisão",
     "humanApprovalRequired": "É obrigatória a aprovação humana antes de qualquer ação pública.",
     "noDraftToApprove": "Nada para aprovar no momento — nenhum alerta em rascunho aguarda revisão.",
-    "roleRequiredToApprove": "Entre como Verificador ou Gestor de emergência para aprovar."
+    "roleRequiredToApprove": "Entre como Verificador ou Gestor de emergência para aprovar.",
+    "approveFailed": "A aprovação falhou —"
   },
   "draftAlerts": {
     "title": "Revisão de alertas (DRAFT)",
@@ -69,7 +70,8 @@
     "emptyDescription": "Regras de limiar criam alertas DRAFT aqui.",
     "provenance": "Proveniência",
     "noProvenance": "Sem proveniência",
-    "reviewApprove": "Revisar e aprovar…"
+    "reviewApprove": "Revisar e aprovar…",
+    "approveFailed": "A aprovação falhou —"
   },
   "locale": {
     "label": "Idioma",

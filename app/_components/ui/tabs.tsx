@@ -42,6 +42,16 @@ export const TabsTrigger = forwardRef<ElementRef<typeof TabsPrimitive.Trigger>, 
 type ContentProps = ComponentPropsWithoutRef<typeof TabsPrimitive.Content>;
 export const TabsContent = forwardRef<ElementRef<typeof TabsPrimitive.Content>, ContentProps>(
   function TabsContent({ className, ...rest }, ref): ReactNode {
-    return <TabsPrimitive.Content ref={ref} className={cn('pt-3 outline-none', className)} {...rest} />;
+    // `data-[state=inactive]:hidden` (2026-08-25): Radix sets the `hidden` attribute from `!present`,
+    // and with `forceMount` present is ALWAYS true — so a force-mounted inactive panel would render
+    // stacked below the active one (caught by the phone/tablet visual baselines: +814px page height).
+    // Hiding on data-state keeps the forceMount contract: mounted (state preserved), display:none.
+    return (
+      <TabsPrimitive.Content
+        ref={ref}
+        className={cn('pt-3 outline-none data-[state=inactive]:hidden', className)}
+        {...rest}
+      />
+    );
   },
 );

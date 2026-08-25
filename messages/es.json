@@ -61,7 +61,8 @@
     "approve": "Aprobar decisión",
     "humanApprovalRequired": "Se requiere aprobación humana antes de cualquier acción pública.",
     "noDraftToApprove": "Nada que aprobar por ahora: ninguna alerta en borrador espera revisión.",
-    "roleRequiredToApprove": "Inicie sesión como Verificador o Gestor de emergencias para aprobar."
+    "roleRequiredToApprove": "Inicie sesión como Verificador o Gestor de emergencias para aprobar.",
+    "approveFailed": "La aprobación falló —"
   },
   "draftAlerts": {
     "title": "Revisión de alertas (DRAFT)",
@@ -69,7 +70,8 @@
     "emptyDescription": "Las reglas de umbral crean aquí alertas DRAFT.",
     "provenance": "Procedencia",
     "noProvenance": "Sin procedencia",
-    "reviewApprove": "Revisar y aprobar…"
+    "reviewApprove": "Revisar y aprobar…",
+    "approveFailed": "La aprobación falló —"
   },
   "locale": {
     "label": "Idioma",

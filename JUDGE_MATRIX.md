@@ -28,9 +28,9 @@ situational synthesis, human-gated alerting, evacuation routing and responder lo
 | Data-source adapters | **44 registered** (id↔factory match test-asserted) · 41 consumed · 3 deliberately not (2 MOCK-only by design, 1 held — §7) |
 | Map layers | **14**, each with its own LIVE/CACHED/MOCK freshness badge; accessible list fallback covers all 14 |
 | Regions / locales | **5 zones** (US-CA, RO, ES, GR, PH) · **14 locales** incl. RTL (ar, ur) — region/locale are config, not code |
-| Tests | **4,532 unit/integration tests passed / 2 skipped** (exit 0, 2026-08-25) · Playwright e2e across **5 zones × 4 device projects** incl. axe WCAG 2.2 AA and visual baselines |
+| Tests | **4,536 unit/integration tests passed / 2 skipped** (exit 0, 2026-08-25) · Playwright e2e across **5 zones × 4 device projects** incl. axe WCAG 2.2 AA and visual baselines |
 | Coverage floors (CI-enforced) | domain + application **99/99/99/99** · main 97/79/96/97 · adapters 90/83/93/90 — floors are never lowered |
-| Architecture | Hexagonal ports & adapters, **0 boundary violations** (dependency-cruiser gate, 844+ modules) · **38 ADRs** |
+| Architecture | Hexagonal ports & adapters, **0 boundary violations** (dependency-cruiser gate, 844+ modules) · **39 ADR records** (001–037 + 008a; two records share the 036 number — a recorded finding) |
 | API | OpenAPI: **36 paths / 39 operations / 65 schemas**, zero `x-status: planned` — everything documented is served |
 | Time-to-Trustworthy-Picture | **< 10 s budget, measured ~1 s** per zone, phone included (`e2e/perf.spec.ts`) |
 | Real-time push | SSE delta in **~1.7 s** browser-proven (`e2e/sse-push.spec.ts`); 15 s polling is the labelled fallback |

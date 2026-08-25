@@ -52,9 +52,9 @@ tier CLOUD`), with per-role rate limits and ADR-018 budget caps (`BUDGET_PER_*_U
 
 ## 2. Deploy steps (Railway)
 
-1. **New project → Deploy from GitHub repo.** Select the Quest repo.
+1. **New project → Deploy from GitHub repo.** Select this repository.
 2. **Service settings:**
-   - Root directory: `Phase3`
+   - Root directory: the repository root
    - Builder: **Dockerfile**, path `infra/Dockerfile` (multi-stage, non-root, pinned digest).
 3. **Add Postgres** (Railway plugin) — it injects `DATABASE_URL`.
 4. **Variables** (Service → Variables). Everything is env-driven; nothing is hardcoded:

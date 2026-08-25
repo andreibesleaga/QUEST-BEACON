@@ -11,6 +11,7 @@
 // takes its labelled no-WebGL fallback instead of pulling the GL bundle into the module graph.
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, waitFor, cleanup, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { makeQueryClient } from './_lib/query-client.js';
@@ -292,5 +293,28 @@ describe('COP page — shelter capacity widget is MOUNTED from map-projection da
 
     await waitFor(() => expect(countOf('/map')).toBeGreaterThan(0));
     expect(screen.queryByTestId('ratio-sh-bare')).not.toBeInTheDocument();
+  });
+});
+
+describe('COP page — input-bearing dock tabs KEEP volatile state across tab switches (2026-08-25)', () => {
+  it('a half-typed SOS report survives visiting another tab (forceMount, Radix would unmount by default)', async () => {
+    const user = userEvent.setup();
+    renderCop();
+
+    // The report tab's form is force-mounted, so it exists (hidden) before its tab is ever opened.
+    const form = await screen.findByTestId('sos-form');
+    expect(form).toBeInTheDocument();
+
+    await user.click(screen.getByRole('tab', { name: 'Report SOS' }));
+    const text = screen.getByPlaceholderText('Describe the emergency and any immediate needs.');
+    await user.type(text, 'Trapped near the east bridge');
+
+    await user.click(screen.getByRole('tab', { name: 'Evac route' }));
+    await user.click(screen.getByRole('tab', { name: 'Report SOS' }));
+
+    // Before forceMount this came back EMPTY — the unmount destroyed a crisis operator's in-progress input.
+    expect(screen.getByPlaceholderText('Describe the emergency and any immediate needs.')).toHaveValue(
+      'Trapped near the east bridge',
+    );
   });
 });
