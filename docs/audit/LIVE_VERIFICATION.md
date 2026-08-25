@@ -99,6 +99,39 @@ placeholder the fail-fast refine rejects).
   alone never exposes an arbitrary-role minter (least-privilege hardening applied at integration).
 - RBAC + rate-limit stay keyed on the resolved role (spoof-proof); a body `actorId` → 400 (the resume-8 fix).
 
+
+### §2026-08-25 — CLOSED: the real-model run is now demonstrated
+
+The two caveats below (no cloud key on this host ⇒ AI proven only through the in-process provider) are
+**superseded**. `npm run ai:probe` was executed against a **real cloud model via OpenRouter**, through the
+full compliance gateway, on the live `us-ca` composition:
+
+```
+status      : 200
+aiMode      : cloud
+citations   : 28
+ai_call     : gen_ai.operation.name=llm.narrate · tier=CLOUD · in 2266 / out 1751 tokens
+              · cost_usd=0.011021 · stage=upstream · outcome=allow
+F3/F-340 (prose carries no figure): PASS
+```
+
+Three things this proves that the mock provider could not:
+
+1. **A real model was reached through the gateway** — the audited `ai_call` record carries a real tier,
+   real token counts and a real cost, and the gateway stamped it `allow` at the `upstream` stage.
+2. **The F3/F-340 guarantee holds against a real model**, not just a deterministic stub: the generated
+   prose contains **no figure at all**, while all 28 cited claims are rendered from the deterministic
+   record (exposure, population, weather, and 20 authority-ranked news fields).
+3. **The news grounding ran on live sources** — latimes.com, fema.gov, gdacs.org, reliefweb.int,
+   insurancejournal.com, noozhawk.com, meteoinfo.ru and NASA LANCE were cited by name, with Bluesky and
+   Mastodon items separately labelled *"Unverified social report — not corroborated by any authoritative
+   source"*.
+
+Reproduce: `PROBE_ROLE=EM AUTH_DEV_TRUST_HEADER=on npm run ai:probe` (the compliance proxy's role-scope
+denies the CLOUD tier to PUBLIC by policy, so the probe needs an authorized role; both flags are
+process-local and neither is set on the cloud deployment).
+
+
 ## 5. Live AI narration through the compliance proxy (B5)
 - `AI_MODE=cloud|local` wires the real env-driven LLM ladder (Groq → OpenRouter → Ollama) **through the
   ComplianceGateway**; the offline MOCK provider remains the fallback when no tier is configured, and

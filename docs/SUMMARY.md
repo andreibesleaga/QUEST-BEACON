@@ -56,9 +56,12 @@ EFFIS CACHED-only, EAGLE-I "assumed-offline", ORS route not yet UI-distinguished
 > [`docs/audit/LIVE_VERIFICATION.md`](audit/LIVE_VERIFICATION.md) §1–§4: the Docker stack, real
 > keyless live source fetches (`open-meteo`, `nwps`, with real timestamps), durable Postgres, and
 > per-user JWT auth. What is proven for **AI** is the *composition* — the compliance-gateway
-> chokepoint, the capability seal, the provider ladder and the F3 no-LLM-numbers guard — end-to-end
-> through the in-process provider. Running the full live matrix with keyed sources is documented in
-> [`docs/LIVE_PRODUCTION_GUIDE.md`](LIVE_PRODUCTION_GUIDE.md).
+> chokepoint, the capability seal, the provider ladder and the F3 no-LLM-numbers guard — and since
+> **2026-08-25 this is proven against a REAL cloud model**, not only the in-process provider: a live
+> OpenRouter call through the gateway returned a 28-citation SitRep whose prose carries **no figure at
+> all** (F3/F-340 PASS), grounded on live news sources — see
+> [`docs/audit/LIVE_VERIFICATION.md`](audit/LIVE_VERIFICATION.md). Running the full live matrix with
+> keyed sources is documented in [`docs/LIVE_PRODUCTION_GUIDE.md`](LIVE_PRODUCTION_GUIDE.md).
 
 > **Current state (the §1–§2 narrative above is the historical S00→S09/Phase-D snapshot; its counts are
 > superseded).** Five further waves shipped after it — MW-A (localization) → MW-B (region-generic engine,
