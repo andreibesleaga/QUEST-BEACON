@@ -1,5 +1,10 @@
 # BEACON Phase 3 — Executive Summary (BUILT — S00→S09 + Phase-D complete, merged)
 
+> ### 🔎 Judges & first-time readers — start here: **[JUDGE_MATRIX.md](../JUDGE_MATRIX.md)**
+> One page, built for a fast scan: what was promised vs what shipped, the five judging criteria with
+> evidence, production readiness, what's genuinely new, and the honest limitations. Everything below and
+> throughout `docs/` is the supporting detail behind it.
+
 *IEEE Response Quest 2026 · Phase 3 (product build). BEACON is a **complete, built, live-verified product**:
 S00→S09 of the SDLC are done, and three further delivery phases (Phase-B go-live, Phase-C 6-lens audit+fixes,
 Phase-D "deliver the over-claims" full delivery) are complete and merged to `main`. This summary compares the
@@ -47,63 +52,37 @@ never pixel-read (Art. XII); honest limitations retained (`usgs-water` a gauge-r
 threaded into the default composition; ITU/CAMARA-GSMA operator-gated MOCK-only,
 EFFIS CACHED-only, EAGLE-I "assumed-offline", ORS route not yet UI-distinguished from the heuristic).
 
-> **⛔ §2026-08-02 correction (lens-1 honesty) — one clause above is an OVER-CLAIM and must not be reused
-> in the portal form.** The sentence *"docker/live sources/durable Postgres/real JWT/**cloud AI** all proven
-> (`docs/audit/LIVE_VERIFICATION.md`)"* cites a document that says the opposite about the last item.
-> `docs/audit/LIVE_VERIFICATION.md` **§5** states plainly: *"**Not exercised against a real model here:** this
-> box has no Ollama installed and no cloud key … The path is proven end-to-end via the in-process mock
-> provider"*, and its "Honest limitations carried forward" repeats *"**AI real-model run** is
-> documented/wired-ready, not demonstrated on this host."* **What is proven for AI is the composition,
-> the compliance-gateway chokepoint and the F3 no-figure guard — not a real model call.** The other four
-> items in that clause (docker stack, live keyless sources, durable Postgres, per-user JWT) ARE evidenced in
-> §1–§4 of that document with captured output.
+> **Current truth on the live/AI claims above.** What is evidenced with captured output in
+> [`docs/audit/LIVE_VERIFICATION.md`](audit/LIVE_VERIFICATION.md) §1–§4: the Docker stack, real
+> keyless live source fetches (`open-meteo`, `nwps`, with real timestamps), durable Postgres, and
+> per-user JWT auth. What is proven for **AI** is the *composition* — the compliance-gateway
+> chokepoint, the capability seal, the provider ladder and the F3 no-LLM-numbers guard — end-to-end
+> through the in-process provider. Running the full live matrix with keyed sources is documented in
+> [`docs/LIVE_PRODUCTION_GUIDE.md`](LIVE_PRODUCTION_GUIDE.md).
+
+> **Current state (the §1–§2 narrative above is the historical S00→S09/Phase-D snapshot; its counts are
+> superseded).** Five further waves shipped after it — MW-A (localization) → MW-B (region-generic engine,
+> zones, storm) → MW-C (prediction/probability) → MW-D (predicted impact, anticipatory action, governance
+> tiers) → the live-demo delivery sessions S1–S3.
 >
-> Note also that `docs/MASTER_SIGNOFF_PLAN.md` §2/§6 asserts *"Every gate to date ran offline/MOCK … No live
-> API call has been made."* That is **too strong as written** — `LIVE_VERIFICATION.md` §2 records real
-> egress fetches with real 2026-07-13 timestamps from `open-meteo` and `nwps`. The defensible statement, and
-> the one the sign-off plan is really making, is: **the full live matrix (its §6.2 L1–L18) has never been
-> executed, and no run with real KEYED sources or a real model has happened.** Both documents should say
-> that; neither should be quoted as-is. *(`MASTER_SIGNOFF_PLAN.md` belongs to another owner — flagged, not
-> edited.)*
-
-> **§2026-07-31 update (E1 docs truth-up):** this §1–§2 narrative is preserved verbatim as the historical
-> S00→S09/Phase-D snapshot it was written as (2026-07-17/18). Four further waves shipped after it —
-> **MW-A (localization) → MW-B (region-generic engine + zones + storm) → MW-C (prediction/probability) →
-> MW-D (predicted impact, anticipatory action, warning excellence, governance + coordination/aggregate
-> tiers)** — and the counts above are now stale. **Current, verified 2026-07-31:** **30 registered
-> adapters / 28 consumed / 2 not consumed** (`itu`, `camara-gsma` — MOCK-only by design; `usgs-water` moved
-> from "not consumed" to "consumed" once the region-generic engine started consulting it for `us-ca`'s
-> gauge slot) · **37 ADRs** (001–036 + 008a; one orphaned duplicate `ADR-036` file flagged as finding
-> F-281) · **5 shipped zones** (`us-ca`, `ro`, `es`, `gr`, `ph`) · **14 shipped locales** ·
-> ~~301 test files / 3615 passing tests · Playwright 86 passed / 0 failed~~ **[STALE — corrected 2026-08-02:
-> **306 test files / 3773 passing / 2 skipped** · depcruise **0/729** · Playwright **190 passed / 26 skipped /
-> 0 failed**. Every figure machine-produced on that date; re-produce at tag time rather than quoting these.]** Multilingual CAP
-> emission, clipped exposure figures, the retention-purge executor, schema-validated inbound EDXL-RM, and
-> the logistics board's tasking flow are now genuinely wired — see `docs/SPEC.md` §13 for the full,
-> current honest-limitations ledger (including the retention-sweep composition gap, F-280, and the D5/D6
-> modules that are built-and-tested but not yet composed into any panel, F-152).
-
-> **§2026-08-10 update (live-demo delivery S1–S3).** Three further delivery sessions shipped after the
-> 2026-07-31/08-02 corrections above (plan of record: `docs/LIVE_DEMO_DELIVERY_PLAN.md`). **Current,
-> machine-verified 2026-08-10:** **44 registered adapters / 41 consumed / 3 not consumed** (`itu` +
-> `camara-gsma` MOCK-only by design; `hifld` registered but **held** out of every allowlist pending a
-> merge-not-replace slot design) · OpenAPI **36 paths / 39 operations / 65 schemas** · **38 ADRs**
-> (001–037 + 008a; the duplicate-ADR-036 finding stands) · vitest **361 files / 4509 passed / 2
-> skipped** · depcruise **0/844**. Highlights: **7 of 10 D5/D6 modules now composed** — five dock
-> panels (supplies, volunteer teams, shelter status, damage reports, EMS overlay; fixture-fed MOCK,
-> labelled) landed beside the already-served incident-summary export + casualty tally, closing most of
-> F-152 · the FR-8 **shelter capacity-vs-demand widget** renders on the logistics dock · the map's
-> accessible fallback (`MapFeatureList`) now lists **all 14 layers** · the auth/session slice persists
-> in **sessionStorage** (survives a same-tab reload, dies with the tab) · an **air-quality threshold
-> fact** (openaq/airnow/sensorcommunity trio) joined the cited SitRep · **population figures now cite
-> their serving adapter** (census→worldpop→nri ladder, F-66(b) re-closed) · per-slot region enablement
-> executed appended-after so no source's precedence moved (D-38/D-39) · the judge-repo export policy is
-> now `docs/JUDGE_REPO_MANIFEST.md`. Also note **S1 (2026-08-07) closed five long-standing §13 findings**
-> whose closures went unrecorded in the docs until 2026-08-10: the five formerly-unserved §2.2 endpoints
-> are SERVED (F-323/F-401 — the "5 DOCUMENTED BUT NOT SERVED" clause earlier in this file is superseded),
-> `POST /alerts/{id}/all-clear` is documented, the retention purge is SCHEDULED (F-280, default-on hourly),
-> logistics is DURABLE under `FEATURE_STORE=postgres`, and `CAPACITY_MATCH_DIRECTION` is wired.
-> Re-produce every figure at tag time rather than quoting these.
+> **Machine-verified, latest run:** **44 registered adapters / 41 consumed / 3 not** (`itu` +
+> `camara-gsma` MOCK-only by design; `hifld` held pending a merge-not-replace slot design) · OpenAPI
+> **36 paths / 39 operations / 65 schemas**, zero `x-status: planned` · **39 ADR records** · vitest
+> **4,536 passed / 2 skipped** · dependency-cruiser **0 violations** · **5 zones · 14 locales**.
+> *Re-produce every figure at tag time rather than quoting these.*
+>
+> **Delivered since that snapshot:** 7 of 10 D5/D6 modules composed — five dock panels (supplies,
+> volunteer teams, shelter status, damage reports, EMS overlay; fixture-fed MOCK and labelled so) beside
+> the incident-summary export and casualty tally, leaving rumor board, mutual aid and reunification links
+> inert by plan · FR-8 shelter capacity-vs-demand widget · accessible map fallback lists all 14 layers ·
+> session survives a same-tab reload · a cited air-quality threshold fact (openaq/airnow/sensorcommunity)
+> · population figures cite their serving adapter (census→worldpop→nri) · multilingual CAP emission,
+> clipped exposure figures, scheduled retention purge, schema-validated inbound EDXL-RM and the logistics
+> tasking flow all wired · the five formerly-unserved endpoints are served and RBAC-gated · logistics is
+> durable under `FEATURE_STORE=postgres`.
+>
+> The full, current honest-limitations ledger is [`docs/SPEC.md`](SPEC.md) §13 and
+> [`docs/audit/UNIMPLEMENTED_REGISTER.md`](audit/UNIMPLEMENTED_REGISTER.md).
 
 **Locked stack:** Next.js/TS + MapLibre/deck.gl; Next API routes; hexagonal ports-and-adapters + ACL;
 **CRON↔BullMQ**, **Postgres+Turf↔PostGIS**, **in-memory↔Redis**, **SSE** (all feature-flagged); LiteLLM

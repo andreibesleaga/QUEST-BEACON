@@ -3,6 +3,11 @@
 > The 60-second orientation. Everything here links to the authoritative doc — this page never duplicates
 > content (single-source rule), so a count that lives elsewhere is *pointed at*, not restated.
 
+> ### 🔎 Judges & first-time readers — start here: **[JUDGE_MATRIX.md](../JUDGE_MATRIX.md)**
+> One page, built for a fast scan: what was promised vs what shipped, the five judging criteria with
+> evidence, production readiness, what's genuinely new, and the honest limitations. Everything below and
+> throughout `docs/` is the supporting detail behind it.
+
 ## What
 Open-source (Apache-2.0), local-first, near-real-time **common operating picture** for wildfires & floods.
 Deterministic engine owns every number · LLM narrates cited facts and cannot emit a figure · a named human

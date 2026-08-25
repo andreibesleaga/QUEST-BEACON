@@ -1,5 +1,10 @@
 # BEACON — Operator Guide
 
+> ### 🔎 Judges & first-time readers — start here: **[JUDGE_MATRIX.md](../JUDGE_MATRIX.md)**
+> One page, built for a fast scan: what was promised vs what shipped, the five judging criteria with
+> evidence, production readiness, what's genuinely new, and the honest limitations. Everything below and
+> throughout `docs/` is the supporting detail behind it.
+
 > How to **use** the three core workflows — Situation Report, Logistics & Tasking, Evacuation
 > Routing — as an operator or judge, in any posture (local `npm run dev`, Docker, or the cloud
 > deploy). This guide states honest limitations inline (project law: degradation is labelled,
@@ -9,6 +14,11 @@
 > Executable walkthroughs of everything below: `e2e/logistics-tasking.spec.ts` (roster → task
 > lifecycle → pre-positioning) and `e2e/golden-path.spec.ts` (report → verify → SitRep → route).
 > A step-by-step filmed narrative lives in `docs/DEMO_SCRIPT.md`.
+>
+> **Running this for real, not as a demo?** `docs/LIVE_PRODUCTION_GUIDE.md` is the production
+> posture: every source that can serve live serving live (**35 of 44** adapters — the other nine
+> are named with their reasons), a real PostgreSQL store behind logistics/reports/audit, real AI
+> synthesis, real alert delivery, real road routing, and how to cover any region worldwide.
 
 ---
 
@@ -268,6 +278,7 @@ All configuration is env-driven (12-factor; nothing hardcoded). The single sourc
 | Auth (`AUTH_USERS`, `AUTH_SECRET`, `NEXT_PUBLIC_AUTH_TOKEN_LOGIN`, dev-login flags) | CONFIGURATION.md §10 |
 | Redundancy ladders (which flag drives which degrade path) | CONFIGURATION.md §11 |
 | Decision-engine tunables (trend, priority weights, thresholds) | CONFIGURATION.md §12 |
+| **Full-live production profile** (all source modes, keys, Postgres, Redis, AI, channels, worldwide regions) | **`docs/LIVE_PRODUCTION_GUIDE.md`** |
 
 Cloud-deploy specifics (token minting for judges, posture flags): `docs/CLOUD_DEPLOY_RAILWAY.md`.
 
@@ -285,6 +296,8 @@ operator will actually bump into:
   only; nothing is saved or recallable.
 - **Logistics durability is opt-in.** On the default in-memory profile, runtime-added resources
   and task state are lost on restart; `FEATURE_STORE=postgres` makes them durable (§3).
+  Full production database setup — provisioning, migration, what becomes durable and the two
+  persistence gaps that remain — is `docs/LIVE_PRODUCTION_GUIDE.md` §4.
 - **There is no SitRep refresh parameter** — every read is already a fresh computation, so a plain
   refetch is the refresh. (The dead `?refresh` param was removed from the OpenAPI 2026-08-10.)
 - **Pre-positioning radius and cap are code constants** (20 km / top-5 per category), not env

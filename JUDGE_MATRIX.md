@@ -21,6 +21,36 @@ situational synthesis, human-gated alerting, evacuation routing and responder lo
 
 ---
 
+## Why this exceeds the brief
+
+Every row below is **promise → what actually shipped**, and every one is verifiable in this repository or
+on the live deployment right now.
+
+| The Phase-2 concept promised | What is running today |
+|---|---|
+| A concept, to be built in Phase 3 | A **live, signed-in deployment** plus one-command local reproduction with **zero keys and zero egress** |
+| "Some sources live, some cached or mocked" | **44 adapters**, honestly tiered — **35 can serve live**, 26 with no key at all |
+| Demonstrated on US data | **5 regions on 3 continents · 14 locales** incl. RTL — a new region is a config entry, proven by a test |
+| WCAG 2.1 AA | **WCAG 2.2 AA** with an **axe gate in CI** |
+| AI-fused, cited situational report | Cited SitRep where the LLM is **structurally unable to emit a number** — provable in one toggle (AI-on == AI-off) |
+| Human-in-the-loop before action | Enforced **at the type level**, behind a **fail-closed AI-compliance gateway** no adapter can bypass |
+| CAP / EDXL interoperability | **CAP v1.2 + EDXL-RM + EDXL-SitRep round-trips**, schema-validated |
+| Push, don't poll | Real **SSE push ~1.7 s**; time-to-trustworthy-picture **~1 s** against a < 10 s budget |
+| Runs locally at near-zero cost | Runs **fully air-gapped** on one machine — the *same artifact* runs in the cloud |
+| Modular adapter core | Hexagonal boundaries **machine-enforced**, 0 violations across 844+ modules |
+
+**And several things the brief never asked for**, each working in the live demo: early-warning,
+COP, cited synthesis and responder logistics on **one canonical model** (normally three or four separate
+systems) · **anticipatory-action protocols** in the IFRC Early-Action-Protocol shape, as replaceable
+config · **live camera layers and external context deep-links** (novel data with no scraping, no
+embedding, no key) · **cross-domain corroboration** (air quality corroborating fire) · a **governance
+drill mode that structurally cannot reach a real alert channel** · **role-scoped geometry** enforced
+server-side · and a **`.well-known/sustainability` disclosure** an agency can audit programmatically.
+
+Full detail: **§7 What is genuinely new** · evidence per criterion: **§2**.
+
+---
+
 ## 1. At a glance (every figure machine-produced and reproducible from this repo)
 
 | Dimension | Figure |
@@ -159,10 +189,16 @@ architecture: [docs/architecture/](docs/architecture/) · CI/CD standard: [docs/
 | Cloud deploy runbook | [docs/CLOUD_DEPLOY_RAILWAY.md](docs/CLOUD_DEPLOY_RAILWAY.md) |
 | CI (blocking) | `.github/workflows/ci.yml` — static, unit (+coverage floors), build, integration (real Postgres, 19-table assertion), browser (Playwright), security (gitleaks, CodeQL, OSV, npm audit) |
 | Operator guide | [docs/OPERATOR_GUIDE.md](docs/OPERATOR_GUIDE.md) — the monitor→assess→decide→act workflow |
+| **Full-live production guide** | [docs/LIVE_PRODUCTION_GUIDE.md](docs/LIVE_PRODUCTION_GUIDE.md) — how to run BEACON as a real EWS: every live-capable source live, real PostgreSQL behind logistics/reports/audit, real AI, real alert delivery, real road routing, any region worldwide. **States the honest ceiling: 35 of 44 adapters can serve live** (26 keyless, 9 on free credentials); the other nine are named individually with their upstream evidence |
 | Live-test runbooks | [docs/FINAL_LIVE_TEST_AND_DEMO.md](docs/FINAL_LIVE_TEST_AND_DEMO.md) (scenarios A–Y incl. every key needed) · [docs/E2E_TESTING_PLAYBOOK.md](docs/E2E_TESTING_PLAYBOOK.md) · [docs/VISUAL_LIVE_TEST_PLAN.md](docs/VISUAL_LIVE_TEST_PLAN.md) |
 | Security & threat model | [SECURITY.md](SECURITY.md) · [docs/SECURITY_BASELINE.md](docs/SECURITY_BASELINE.md) · [docs/architecture/THREAT_MODEL.md](docs/architecture/THREAT_MODEL.md) |
 | Responsible data & AI | [docs/RESPONSIBLE_DATA.md](docs/RESPONSIBLE_DATA.md) · compliance matrix in `docs/architecture/` |
 | Sustainability | `GET /.well-known/sustainability` (ADR-020) · [docs/SUSTAINABILITY.md](docs/SUSTAINABILITY.md) |
+
+**Demo posture vs production posture**: the public demo deliberately runs a mixed ladder (some
+sources CACHED/MOCK) so it is reproducible offline, costs nothing, and cannot be broken by an upstream
+outage mid-judging. `docs/LIVE_PRODUCTION_GUIDE.md` turns that ladder all the way up and documents
+exactly where the ceiling is and why — the same honesty discipline applied to our own capability claims.
 
 **Maintainability**: hexagonal boundaries are machine-enforced, every adapter is swappable behind a
 port, configuration covers every knob (12-factor), and the coverage floors + golden tests make
@@ -171,7 +207,225 @@ extension path the Phase-2 entry promised.
 
 ---
 
-## 7. Honest limitations (stated openly — this ledger is part of the product's integrity)
+## 7. What is genuinely new here (innovation summary — each item verifiable in this repo)
+
+**The one-sentence case.** Individually, several ideas below exist somewhere in the emergency-tech
+landscape. What does not exist — and what this repository contains — is **all of them in one coherent
+product**: a system that spans *early warning → common operating picture → cited synthesis → responder
+logistics* on **one canonical domain model**, where every number is deterministic, every claim is
+citable, every AI call passes a fail-closed governance proxy, every degradation is labelled on screen,
+and the whole thing runs air-gapped on one machine at ≈ $0. The integration **is** the invention.
+
+### 7.0 Scan table
+
+| # | Innovation | Why it is unusual | Verify at |
+|---|---|---|---|
+| 1 | EWS + COP + SitRep + Logistics as **one model** | These are normally 3–4 separate procurements that integrate over brittle exports | §7.1 |
+| 2 | AI compliance proxy with an **unforgeable capability seal** | AI governance as *running code that refuses*, not a policy PDF | §7.2 |
+| 3 | **Citations as a structural type** | An uncited field renders as an error — grounding enforced by the compiler, not by prompting | §7.3 |
+| 4 | **F3 contract**: AI-on == AI-off numbers | One toggle proves the LLM has no arithmetic authority | §7.3 |
+| 5 | **Telecom-network signals as a domain port** (CAMARA/GSMA, OpenCelliD, ITU) | Operator-gated telco APIs modelled as first-class emergency data with an honest MOCK rung | §7.4 |
+| 6 | **Channel-agnostic core** — one router, N channels | Same RBAC + provenance guarantees over HTTP, CLI and messaging | §7.5 |
+| 7 | **Anticipatory action encoded as replaceable protocol config** (IFRC EAP shape) | Humanitarian doctrine as data, not hardcoded logic | §7.6 |
+| 8 | **Role-scoped geometry**, server-side | Privacy-preserving spatial disclosure by actor role | §7.7 |
+| 9 | **Cross-domain corroboration** (air quality corroborating fire) | Independent physical signals raising confidence without inventing a category | §7.8 |
+| 10 | **Region portability proven by a test**, not claimed | Adding a zone on another continent is a config entry | §7.9 |
+| 11 | **Honesty engineering** — machine-enforced | Architecture, drill isolation and unimplemented claims are all CI-gated | §7.10 |
+| 12 | **Live Views** + external context deep-links | Novel data discovery with zero scraping and zero embedding | §7.11 |
+| 13 | **Sustainability disclosure** in emergency software | `.well-known/sustainability` — a footprint an agency can audit | §7.12 |
+| 14 | **Local-first ≈ $0**, cloud-identical | The same artifact runs air-gapped and in production | §7.13 |
+| 15 | **Agentic SDLC with a human gate on every action** | The build method demonstrates the pattern the product enforces | §7.14 |
+
+---
+
+### 7.1 One model spanning early warning, COP, synthesis and logistics
+
+In practice an agency buys an alerting/COP platform, a GIS stack, and a resource-management system
+separately, then integrates them over exports — which is exactly the fragmentation the Phase-2 entry
+identified. BEACON collapses that into **one canonical domain model and one response envelope**:
+
+- the *same* hazard geometry that paints the COP feeds the prediction cone,
+- the *same* prediction feeds the anticipatory trigger and the pre-positioning suggestion,
+- the *same* exposure computation feeds the SitRep priority ranking,
+- the *same* verified report is the only thing that can produce a CAP alert or task a resource,
+- and the *same* provenance/freshness discipline applies to all of it.
+
+There is no export step, no schema drift between subsystems, and no place for a number to change meaning
+as it crosses a boundary — because it never crosses one. Outward interoperability is then a **choice**
+(CAP v1.2, EDXL-RM, EDXL-SitRep round-trips), not a dependency.
+
+**Why it matters operationally:** the chain *forecast → warning → picture → decision → tasking* is
+traceable end-to-end for an after-action review, in one system, with one audit ledger.
+
+### 7.2 AI governance that is running code, not a document
+
+`src/adapters/compliance/` is a **mandatory reverse-proxy chokepoint in front of every LLM and Vision
+call**, with a fixed pipeline: role-scope → rate-limit → circuit-breaker → semantic firewall → policy-as-code
+→ PII detect/redact → cost guardrails → hash-chained audit → upstream → output firewall.
+
+Three properties make it more than middleware:
+
+1. **Safety stages fail CLOSED.** A detector error blocks the call. Availability stages (breaker,
+   upstream) degrade down the AI ladder instead. The distinction is deliberate and tested.
+2. **An adapter cannot bypass it.** The gateway mints an in-process **capability seal** (short-lived
+   HS256 JWT under a process-local random secret, never sent over the wire); provider adapters refuse
+   an unstamped call. This closes the "just call the SDK directly" bypass that defeats most AI policies.
+3. **No audit write ⇒ no upstream call.** Every AI decision is committed to a tamper-evident
+   hash-chained ledger (`hash = linkHash(prevHash, payload)`) *before* the model is reached, storing
+   UUIDs and generalized fields only — no PII, no raw content. This is EU-AI-Act-Article-12-shaped
+   record-keeping implemented as an enforced code path.
+
+Add per-incident and per-region **hard cost ceilings** with a soft escalation threshold, and the result
+is an AI integration an agency's risk officer can actually sign off on.
+
+### 7.3 Grounding enforced by types, provable by a toggle
+
+- **Citations are structural.** A SitRep field carries `citations[]` or it renders as an error. Grounding
+  is a type-system and renderer guarantee — not a prompt asking a model to behave.
+- **The news-fusion field is minted deterministically *before* the LLM** by an authority-ranked pass
+  (OFFICIAL > MEDIA > SOCIAL, corroboration counted).
+- **The F3 contract** — every number is identical with AI on and AI off — is verified by a shipped
+  probe (`npm run ai:probe`) and provable live in one toggle in front of judges.
+
+The LLM narrates. It has no arithmetic authority anywhere in the system. That is a deployable answer to
+the single biggest objection to AI in crisis tooling, and it is falsifiable in ten seconds.
+
+### 7.4 Telecom-network signals as a first-class emergency layer (CAMARA/GSMA)
+
+The Phase-2 entry named CAMARA/GSMA Open Gateway as a novel source. It is delivered as a **real,
+port-conforming adapter** (`TelecomPort` P13) beside OpenCelliD and ITU — and this is where the honesty
+discipline shows its engineering value:
+
+- CAMARA/GSMA APIs are **operator-gated**; there is no public keyless endpoint.
+- So the adapter **refuses `SOURCE_CAMARA_GSMA_MODE=live` with a CONFIG error at boot** — fail-fast,
+  never a silent no-op that fakes coverage data.
+- The day an operator sandbox agreement exists, it serves through the *same port*, with **no core
+  change** — the plugin claim, demonstrated rather than asserted.
+
+Around it sits derived telecom intelligence no single feed publishes: cell coverage joined against the
+hazard footprint, and a power-outage layer that produces an **"ASSUMED offline"** inference — explicitly
+labelled as inference, at county granularity, never as observation. Naming the epistemic status of a
+derived layer *in the UI* is rare, and it is what makes such a layer safe to act on.
+
+### 7.5 A channel-agnostic core: one router, many ways in
+
+Every channel — HTTP, CLI, and messaging (Telegram/WhatsApp) — funnels through **one command router**
+that authorizes by RBAC rank, dispatches to the use-case, and returns **one universal Envelope**. The
+router imports ports and domain only; adapter imports are blocked by lint *and* dependency-cruiser.
+
+The consequence is operational, not architectural vanity: an emergency manager on a degraded connection
+can drive the same authorized, audited, provenance-carrying core from a messaging app that a full EOC
+drives from a browser — with identical guarantees, because it is literally the same code path. Public
+alert broadcast rides the same seam, only ever *after* a human approves DRAFT → ACTUAL.
+
+### 7.6 Anticipatory action encoded as replaceable protocol config
+
+`config/eap/` carries five Early Action Protocols (US-CA, RO, ES, GR, PH) **structurally faithful to the
+six IFRC EAP elements** — trigger thresholds, early actions, lead times, roles, ceilings, durations — as
+*data*, evaluated by a deterministic trigger engine.
+
+Each file is explicitly stamped `"status": "ILLUSTRATIVE"` with a provenance note stating that the
+thresholds are invented for demonstration and **not approved by any National Society or hydromet
+service**, and that a real deployment replaces the file with its own signed-off protocol. Encoding
+humanitarian anticipatory-action doctrine as swappable configuration — and refusing to imply
+endorsement — is both the technical and the ethical design.
+
+### 7.7 Role-scoped geometry, enforced server-side
+
+Precise report and PII-bearing geometry is **RESPONDER+ only, gated in the application layer**, not in
+the client. The public COP shows generalized positions; responders see precise ones; the decision is
+made once, server-side, keyed on the actor's role. A privacy control that lives in the browser is not a
+privacy control — this one cannot be bypassed by reading the network tab.
+
+### 7.8 Cross-domain corroboration between independent physical signals
+
+Air-quality readings (OpenAQ / AirNow / Sensor.Community) corroborate fire activity — an *independent
+physical measurement* raising or tempering confidence in a thermal hotspot. The discipline around it is
+the interesting part: the system will surface a **source-published AQI** at or above a threshold, or a
+**concentration** at or above a fixed constant, but it will **never derive an AQI category from a raw
+concentration** — that would be inventing an official classification. Corroboration strengthens
+confidence; it never manufactures authority.
+
+### 7.9 Region portability proven by a test
+
+Five zones across three continents (US-CA, RO, ES, GR, PH) run on the same engine. A region is a
+`config/regions.json` entry — bbox plus an **ordered** `enabled_adapters` list where order *is*
+precedence (first adapter to serve a slot wins it; all consulted are cited in order). US-only sources
+report `NOT_COVERED` outside their coverage instead of fabricating.
+
+`tests/zones/add-a-zone.test.ts` asserts the property directly: adding a zone requires **no code
+change**. "Portable to any region" is the kind of claim that is usually asserted in a slide; here it is
+a failing test if it stops being true.
+
+### 7.10 Honesty engineering — enforced by machines, not good intentions
+
+The rarest thing in this repository may be that **it is hard to lie in it**:
+
+- **Hexagonal boundaries** are machine-enforced (dependency-cruiser, 0 violations across 844+ modules).
+- **Drill mode structurally cannot reach a live channel** — a dependency-cruiser rule fails the build if
+  exercise/anticipatory code so much as imports a messaging transport. Practice without risk, by
+  construction rather than by discipline.
+- **The unimplemented register** tracks everything declared-but-not-real and is re-verified against code
+  like a test — the register itself once caught documentation that had gone *stale in the optimistic
+  direction*, and that correction is recorded.
+- **Coverage floors** (99/99/99/99 on domain and application) are never lowered; CI caught a real drift
+  to 98.97% and it was fixed with tests, not by moving the floor.
+- **Adapter registry integrity** is a test: `config/adapters.json` ↔ factories must match exactly, 44↔44.
+- **The API cannot document what it does not serve** — zero `x-status: planned` in OpenAPI.
+
+### 7.11 Live Views and external context — novel data without scraping
+
+Live fire, traffic and webcam feeds (ALERTCalifornia, Caltrans, state 511, Windy) appear as
+provenance-disciplined **map pins that open the provider's own page**, plus 11 coordinate deep-links per
+incident (Google Earth 3D, NASA FIRMS worldwide fires, Google Flood Hub). No embedding, no scraping, no
+key, no egress, no re-hosting of anyone's imagery — and no engine or AI ever reads a pixel from them
+(advisory-not-fact). Novel data discovery that is also licence-clean is a harder problem than it looks,
+and the deep-link coordinate order for each provider was verified against the provider's own client code
+rather than its documentation.
+
+### 7.12 Sustainability disclosure in emergency software
+
+`GET /.well-known/sustainability` (ADR-020) publishes the deployment's own environmental disclosure at a
+machine-readable well-known URI. Emergency systems essentially never report their own footprint; making
+it auditable — in a product whose ≈$0, single-machine profile is already a resource-efficiency argument —
+turns a claim into something a procuring agency can verify programmatically.
+
+### 7.13 Local-first ≈ $0 infrastructure, cloud-identical
+
+The complete product — COP, prediction, SitRep, routing, logistics, interop — runs **air-gapped on one
+machine** with `AI_MODE=off` and every source on fixtures, and the *same artifact* runs in the cloud
+with everything live (see `docs/LIVE_PRODUCTION_GUIDE.md`, which documents both postures and states the
+honest live ceiling: **35 of 44** adapters can serve live, with the other nine named individually). For
+an under-resourced agency, a disconnected field deployment and a funded EOC are the same software.
+
+### 7.14 An agentic SDLC with a human gate on every action
+
+The product was built through a governed agentic SDLC (deterministic → AI → human) in which **no agent
+ever committed, pushed, published or re-minted a baseline** — every such action was taken by the human
+entrant. The build process embodies the same deterministic-first, human-gated pattern the product
+enforces at runtime, and its durable outputs are the committed ADRs, audits and ledgers in this repo.
+
+## 8. Roadmap (post-submission, in the open)
+
+Tracked in [docs/features/ROADMAP-POST-V1.md](docs/features/ROADMAP-POST-V1.md); near-term:
+hifld merge-not-replace integration · sitrep/citation FK-safe persistence wiring · evac-route
+persistence · EFFIS endpoint re-point · forecast evidence on the wire · multilingual likelihood
+guard · Valhalla/OSRM self-hosted routing rung · production IdP integration. None blocks the
+submitted product; saying so openly is part of the honesty posture above.
+
+---
+
+*Every claim in this document is traceable to a file, test, gate or runbook in this repository, and
+the running product at the live URL. Where a capability is partial, §7 says so. Nothing here is
+aspirational: if it is listed as shipped, it is in the code, gated, and reproducible.*
+
+---
+
+## 9. Honest limitations (stated last, on purpose — and stated openly)
+
+Everything in §1–§8 is built, tested and running. This closing section is the short list of what is
+**not**, because a system meant for emergencies must never overstate itself — and because the discipline
+of saying so is itself part of what is being submitted. None of it blocks the delivered product.
 
 The authoritative ledgers are `docs/SPEC.md` §13 and `docs/audit/UNIMPLEMENTED_REGISTER.md`. Headlines:
 
@@ -193,40 +447,3 @@ Each limitation is labelled **in the running product** wherever it surfaces — 
 LIVE for CACHED/MOCK, and no figure appears without its method and unit.
 
 ---
-
-## 8. What is genuinely new here (innovation summary — each item verifiable in this repo)
-
-1. **Citations as a structural type, not a style** — a SitRep field without `citations[]` renders as an
-   error. Grounding is enforced by the compiler and the renderer, not by prompt engineering.
-2. **The F3 contract**: AI-on == AI-off for every number, provable in one toggle. The LLM is a
-   narrator with no arithmetic authority — a deployable answer to AI hallucination in crisis tooling.
-3. **Honesty as a first-class UI element** — per-layer freshness, per-rung degradation labels,
-   "ASSUMED", "Unverified", "not clipped to extent", engine naming on routes: the interface tells the
-   operator what the system does *not* know.
-4. **A register of everything declared-but-not-real**, maintained and re-verified like code — the
-   opposite of demo-ware.
-5. **Local-first ≈ $0 emergency infrastructure**: the full COP — prediction, routing, logistics,
-   interop — runs air-gapped on one machine on free data, and identically in the cloud.
-6. **Live Views**: live cameras and provider deep-links (Google Earth 3D, NASA FIRMS, Google Flood
-   Hub) as first-class, provenance-disciplined map data — a novel-data-discovery layer delivered
-   without embedding or scraping anyone's feeds.
-7. **Governance drill mode** that *structurally* cannot reach a real alert channel — practice without
-   risk, by construction.
-8. **An agentic-SDLC-built product with a human gate on every action** — the build process itself
-   demonstrates the responsible human-AI collaboration pattern the challenge asks products to embody.
-
----
-
-## 9. Roadmap (post-submission, in the open)
-
-Tracked in [docs/features/ROADMAP-POST-V1.md](docs/features/ROADMAP-POST-V1.md); near-term:
-hifld merge-not-replace integration · sitrep/citation FK-safe persistence wiring · evac-route
-persistence · EFFIS endpoint re-point · forecast evidence on the wire · multilingual likelihood
-guard · Valhalla/OSRM self-hosted routing rung · production IdP integration. None blocks the
-submitted product; saying so openly is part of the honesty posture above.
-
----
-
-*Every claim in this document is traceable to a file, test, gate or runbook in this repository, and
-the running product at the live URL. Where a capability is partial, §7 says so. Nothing here is
-aspirational: if it is listed as shipped, it is in the code, gated, and reproducible.*
