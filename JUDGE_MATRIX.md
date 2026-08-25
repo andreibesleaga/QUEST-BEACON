@@ -6,12 +6,12 @@ situational synthesis, human-gated alerting, evacuation routing and responder lo
 
 | | |
 |---|---|
-| **Live deployment** | https://quest-beacon.up.railway.app (production posture; sign-in accounts provided with the submission) |
-| **Repository** | https://github.com/andreibesleaga/QUEST-BEACON |
+| **Live deployment** | https://quest-beacon.up.railway.app (production posture; sign-in accounts provided with the submission, access on-request basis) |
+| **Repository** | https://github.com/andreibesleaga/QUEST-BEACON (production repo, access on-request basis) |
 | **Reproduce locally** | `npm run docker:up` → http://localhost:3000 — full COP with **zero keys, zero egress, ~$0** |
 | **License / data** | Apache-2.0; 100 % open-source dependencies; free/open data sources only |
 | **Phase-2 concept score** | **4.48 / 5** (Review Committee 1, 10 evaluators) — advanced to Phase 3 |
-| **Entrant** | Andrei Besleaga (individual entry, active IEEE member) |
+| **Entrant** | Andrei Nicolae Besleaga (individual entry, active IEEE member) |
 
 > **Submission cut-off & living repository.** The product submitted to the contest is the repository
 > state at the submission tag — everything the judges evaluate is frozen there and reproducible from it.
