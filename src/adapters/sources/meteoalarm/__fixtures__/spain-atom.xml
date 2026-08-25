@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  HAND-AUTHORED recorded-STYLE MeteoAlarm Spain legacy-Atom sample (B3.1) - NOT a byte-recorded response.
+  Structure copied field-for-field from the RECORDED Romania sample
+  (src/adapters/sources/meteoalarm-ro/__fixtures__/romania-atom.xml, real upstream response fetched
+  2026-07-07): same producer emits every country feed. The SPAIN feed itself was live-verified keyless
+  2026-07-18 (GLOBAL_ZONE_SOURCE_RESEARCH.md "Cross-zone aggregators": GR/ES/PT/IT verified; AEMET =
+  MeteoAlarm-ES provider) but its body was not recorded, so entry VALUES here are plausible placeholders,
+  honestly labelled (F-51 discipline).
+  Source : https://feeds.meteoalarm.org/feeds/meteoalarm-legacy-atom-spain
+  License: MeteoAlarm, terms equivalent to CC BY 4.0
+  NO geometry in the feed: only geocodes, area names (cap:areaDesc) and awareness_type/level.
+-->
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:cap="urn:oasis:names:tc:emergency:cap:1.2">
+  <link rel="hub" href="https://pubsubhubbub.appspot.com/"/>
+  <link type="application/atom+xml" rel="self" href="https://feeds.meteoalarm.org/feeds/meteoalarm-legacy-atom-spain"/>
+  <link type="text/html" rel="alternate" href="https://meteoalarm.org"/>
+  <rights>Copyright © 2026 MeteoAlarm.Org. Licensed under terms equivalent to CC BY 4.0, with additional requirements for redistributing outlined in our Terms and Conditions.</rights>
+  <generator>MeteoAlarm Producer Server</generator>
+  <logo>https://feeds.meteoalarm.org/images/logo.svg</logo>
+  <author>
+    <name>meteoalarm.org</name>
+    <uri>https://meteoalarm.org</uri>
+    <email>meteoalarm@geosphere.at</email>
+  </author>
+  <id>tag:meteoalarm.org,2021-02-19:ES</id>
+  <title>MeteoAlarm - Alerting Europe for Extreme Weather</title>
+  <updated>2026-07-05T09:00:00.000000Z</updated>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>ES617</value>
+    </cap:geocode>
+    <link title="Sevilla" href="https://meteoalarm.org?geocode=EMMA_ID:ES061" hreflang="en"/>
+    <cap:areaDesc>Sevilla</cap:areaDesc>
+    <cap:event>awareness_type=5, awareness_level=3</cap:event>
+    <cap:sent>2026-07-05T05:30:00+00:00</cap:sent>
+    <cap:expires>2026-07-06T21:00:00+00:00</cap:expires>
+    <cap:effective>2026-07-05T05:30:00+00:00</cap:effective>
+    <cap:onset>2026-07-05T11:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Severe</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.724.0.ES.2607050530.99cc88dd77ee66ff</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-spain/9c8d7e6f-0000-4000-8000-cccccccccccc"/>
+    <link title="Spain" rel="related" href="https://meteoalarm.org?region=ES" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-07-05T05:30:00Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-spain/9c8d7e6f-0000-4000-8000-cccccccccccc?index_info=1&amp;index_area=61&amp;index_geocode=0</id>
+    <title>Orange High temperature Warning issued for Spain - Sevilla</title>
+    <updated>2026-07-05T05:30:00Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>ES523</value>
+    </cap:geocode>
+    <link title="Valencia" href="https://meteoalarm.org?geocode=EMMA_ID:ES052" hreflang="en"/>
+    <cap:areaDesc>Valencia</cap:areaDesc>
+    <cap:event>awareness_type=3, awareness_level=2</cap:event>
+    <cap:sent>2026-07-05T05:30:00+00:00</cap:sent>
+    <cap:expires>2026-07-06T14:00:00+00:00</cap:expires>
+    <cap:effective>2026-07-05T05:30:00+00:00</cap:effective>
+    <cap:onset>2026-07-05T15:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.724.0.ES.2607050530.11ff22ee33dd44cc</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-spain/1f2e3d4c-0000-4000-8000-dddddddddddd"/>
+    <link title="Spain" rel="related" href="https://meteoalarm.org?region=ES" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-07-05T05:30:00Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-spain/1f2e3d4c-0000-4000-8000-dddddddddddd?index_info=1&amp;index_area=52&amp;index_geocode=0</id>
+    <title>Yellow Thunderstorm Warning issued for Spain - Valencia</title>
+    <updated>2026-07-05T05:30:00Z</updated>
+  </entry>
+</feed>

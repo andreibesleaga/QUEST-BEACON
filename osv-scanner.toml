@@ -1,0 +1,8 @@
+# BEACON — OSV-Scanner policy (mirrors the documented dependency gate: `npm audit --audit-level=high`).
+# OSV-Scanner exits non-zero on ANY finding, so known-accepted low/medium DEV-ONLY advisories are recorded
+# here explicitly — each with its reason — rather than silently reddening the (non-blocking) security lane.
+# Review on every dependency update; remove an entry the moment the fix lands.
+
+[[IgnoredVulns]]
+id = "GHSA-67mh-4wv8-2f99"
+reason = "esbuild <=0.25.0 dev-server CORS advisory (CVSS 5.3, Medium). Dev-only transitive dependency (vite/vitest toolchain); the esbuild dev server is never exposed in this project and never ships in the production build. Below the documented high+ gate. Fix requires a toolchain major bump — tracked for the next dependency window."

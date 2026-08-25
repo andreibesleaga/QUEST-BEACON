@@ -1,0 +1,109 @@
+{
+  "$comment": "BEACON (IEEE Response Quest 2026, Phase 3) per-project GABBE policy. Pure-markdown operation (the GABBE Python CLI/MCP is optional); these values guide agent self-tuning, budgets, and gates. See ../audit/CLARIFICATIONS.md for locked technical decisions.",
+  "project": {
+    "name": "BEACON",
+    "description": "Open-source, local-first near-real-time COP for wildfires & floods.",
+    "phase": "Phase 3 — product build COMPLETE (S00→S13 + delivery waves MW-A…MW-D + live-demo increments S1–S3); repository in maintenance/roadmap mode.",
+    "license": "Apache-2.0"
+  },
+  "autonomy": "hybrid",
+  "budgets": {
+    "$comment": "Soft caps; exceeding triggers a HITL escalation (AGENTS.md §9). Spec phases are cheap; raise for S05 build.",
+    "max_cost_usd": 8.0,
+    "max_tokens_per_run": 200000
+  },
+  "model_tiers": {
+    "$comment": "Cost-tiered router mirroring the app's own LiteLLM fallback chain. Cheap-first, escalate on failure. The 'vision' tier powers multi-modal analysis (satellite imagery, SOS photos); 'offline' is the air-gapped local path. Model ids verified 2026-06-29; pin a currently-served id at build (Research Gate) — Groq's deprecation page is authoritative. llama-3.1-70b-versatile is DECOMMISSIONED (errors since 2025-01-24); llama-3.1-8b-instant / llama-3.3-70b are deprecated.",
+    "cheap": "groq/openai/gpt-oss-20b",
+    "default": "groq/openai/gpt-oss-120b",
+    "sota": "anthropic/claude-haiku-4-5",
+    "vision": "openrouter/qwen/qwen2.5-vl-72b-instruct",
+    "vision_offline": "ollama/llava",
+    "offline": "ollama/llama3"
+  },
+  "approved_providers": [
+    "groq",
+    "openrouter",
+    "anthropic",
+    "ollama"
+  ],
+  "redundancy": {
+    "$comment": "Article XVI — every layer has a fallback ladder; system must work offline/local and when any provider/API is down. Enforced as acceptance tests at S06.",
+    "required_acceptance_tests": [
+      "offline_airgapped",
+      "primary_source_down",
+      "ai_disabled"
+    ],
+    "data_ladder": "primary_api -> secondary/global_equivalent_api -> last_known_good_cache -> recorded_mock -> unavailable_with_freshness",
+    "ai_ladder": "cloud_llm -> alt_provider -> local_ollama -> deterministic_only",
+    "vision_ladder": "cloud_vision -> local_vision(llava) -> skip(advisory_only)",
+    "infra_flags": {
+      "queue": "cron|bullmq",
+      "spatial": "turf|postgis",
+      "cache": "memory|redis",
+      "realtime": "sse|polling",
+      "routing": "ors|valhalla|osrm|heuristic"
+    },
+    "deployment": "identical artifacts: local docker-compose (air-gapped, ~$0, no egress) AND cloud free tiers — config-driven"
+  },
+  "data_policy": {
+    "$comment": "First-class free-world data only. See ../audit/DATA_SOURCE_VERIFICATION.md for the verified catalog + LIVE/CACHED/MOCK verdicts.",
+    "preferred_providers": [
+      "UN OCHA (ReliefWeb, HDX/HAPI, GDACS)",
+      "ESA/Copernicus (EFFIS, GWIS, GloFAS, Sentinel-2)",
+      "NASA (FIRMS)",
+      "NOAA/USGS/NWS/FEMA/NIFC",
+      "OpenStreetMap",
+      "WorldPop"
+    ],
+    "forbidden": [
+      "paid/proprietary data",
+      "scraping ToS-protected platforms (e.g. X/Twitter)"
+    ]
+  },
+  "enabled_mcps": [
+    "context7",
+    "filesystem",
+    "sequential-thinking",
+    "brave-search"
+  ],
+  "registries": [
+    "https://skills.sh",
+    "google/skills"
+  ],
+  "sdlc": {
+    "$comment": "Drive S00->S04 with a human GO/NO-GO gate after each phase; stop before S05.",
+    "mode": "loki",
+    "current_phase": "S04 — Task decomposition COMPLETE (orch-judge PASS); ⏸️ PAUSED before S05 (awaiting user GO). ~470 tasks; S00 GO, S01-S03 approved + hardened.",
+    "gates": [
+      "S00",
+      "S01",
+      "S02",
+      "S03",
+      "S04"
+    ],
+    "stop_after": "S04 (PAUSE before S05 implementation)",
+    "human_gate_each_phase": true
+  },
+  "eval_thresholds": {
+    "$comment": "S06 quality gates (recorded now; enforced at build). Derived from CONSTITUTION Articles XI-XIV.",
+    "test_coverage_min": 0.99,
+    "sitrep_citation_coverage_min": 1.0,
+    "provenance_coverage_min": 1.0,
+    "llm_numeric_invention_rate_max": 0.0,
+    "pii_retention_rate_max": 0.0,
+    "golden_path_acceptance_min": 1.0
+  },
+  "protected_files": [
+    "agents/CONSTITUTION.md",
+    "agents/AGENTS.md",
+    "gabbe.config.json",
+    "audit/**",
+    "package.json",
+    "*.lock",
+    "Dockerfile",
+    "docker-compose.yml",
+    ".github/**",
+    "infra/**"
+  ]
+}

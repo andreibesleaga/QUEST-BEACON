@@ -1,0 +1,507 @@
+{
+  "_meta": {
+    "locale": "en",
+    "review": "source",
+    "machineTranslated": false,
+    "comment": "SOURCE catalog — English is authored here and is the fallback for every other locale (FR-I18N-2). Keys are namespaced by surface. Every other messages/<locale>.json mirrors this key tree; the key-parity test fails the build on drift. ICU message syntax (https://formatjs.io/docs/core-concepts/icu-syntax). Never translate: CAP/EDXL enum tokens, identifiers, units of record."
+  },
+  "channels": {
+    "digest": {
+      "trend": "trend",
+      "noClaim": "(no claim)",
+      "citations": "citations",
+      "sources": "sources",
+      "freshness": "freshness"
+    },
+    "alert": {
+      "headline": "BEACON ALERT — {severity} {category} for incident {incidentId} (alert {alertId})"
+    }
+  },
+  "actMenu": {
+    "trigger": "Act",
+    "title": "Act on selection",
+    "taskResource": "Task resource",
+    "drawRoute": "Draw evac route",
+    "createAlert": "Create DRAFT alert"
+  },
+  "app": {
+    "title": "BEACON — Common Operating Picture",
+    "description": "Open-source, local-first near-real-time COP for wildfires and floods.",
+    "skipToContent": "Skip to content"
+  },
+  "commandPalette": {
+    "openLabel": "Open command palette",
+    "triggerText": "Search",
+    "dialogLabel": "Command palette",
+    "placeholder": "Jump to a region, incident, panel — or act…",
+    "empty": "No matches.",
+    "groupRegions": "Regions",
+    "groupIncidents": "Incidents",
+    "groupPanels": "Panels",
+    "groupLayers": "Toggle layers",
+    "groupAct": "Act",
+    "toggleLayer": "Toggle {layer} layer",
+    "shortcutsTitle": "Keyboard shortcuts",
+    "shortcutsDescription": "Every COP action is reachable without a pointer.",
+    "shortcut": {
+      "openPalette": "Open the command palette",
+      "openShortcuts": "Open this shortcuts overlay",
+      "move": "Move between palette results",
+      "run": "Run the highlighted action",
+      "close": "Close the palette / overlay"
+    }
+  },
+  "decision": {
+    "sectionLabel": "Decision support",
+    "figures": "Deterministic figures",
+    "narration": "AI narration",
+    "noNarration": "No narration (deterministic-only).",
+    "citations": "Citations",
+    "approved": "Approved by human",
+    "approve": "Approve decision",
+    "humanApprovalRequired": "Human approval is required before any public action.",
+    "noDraftToApprove": "Nothing to approve right now — no draft alert is awaiting review.",
+    "roleRequiredToApprove": "Sign in as a Verifier or Emergency Manager to approve."
+  },
+  "draftAlerts": {
+    "title": "Alert review (DRAFT)",
+    "emptyTitle": "No draft alerts",
+    "emptyDescription": "Threshold rules create DRAFT alerts here.",
+    "provenance": "Provenance",
+    "noProvenance": "No provenance",
+    "reviewApprove": "Review & approve…"
+  },
+  "locale": {
+    "label": "Language",
+    "switcherLabel": "Display language",
+    "machineTranslatedNotice": "Machine-translated — not reviewed by a human translator.",
+    "machineTranslatedShort": "machine-translated"
+  },
+  "logistics": {
+    "title": "Logistics",
+    "resource": "Resource",
+    "shelter": "Shelter",
+    "noShelterData": "No shelter capacity data.",
+    "shelterCapacity": "Shelter capacity",
+    "shelterCapacityVsDemand": "Shelter capacity vs demand",
+    "overCapacity": "Over capacity",
+    "withinCapacity": "Within capacity",
+    "resourceToTask": "Resource to task",
+    "selectResource": "Select resource…",
+    "lifecycleTransition": "Lifecycle transition",
+    "transition": {
+      "PROPOSED": "PROPOSED",
+      "ASSIGNED": "ASSIGNED",
+      "EN_ROUTE": "EN_ROUTE",
+      "ON_SCENE": "ON_SCENE",
+      "CLEARED": "CLEARED"
+    },
+    "task": "Task",
+    "taskingRejected": "Tasking rejected ({code}): {message}",
+    "resourcesUnavailable": "Resources unavailable",
+    "noResourcesTitle": "No resources",
+    "noResourcesDescription": "No taskable resources in scope.",
+    "prePositioning": {
+      "heading": "Pre-positioning suggestions",
+      "advisory": "Advisory — human decides",
+      "listLabel": "Pre-positioning suggestion list",
+      "noIncidentTitle": "No incident selected",
+      "noIncidentDescription": "Select an incident to see pre-positioning suggestions.",
+      "unavailable": "Pre-positioning unavailable",
+      "noExtentTitle": "No projected extent yet",
+      "noExtentDescription": "Suggestions appear once a hazard projection is available for this incident.",
+      "noAssetsTitle": "No nearby assets",
+      "noAssetsDescription": "No AVAILABLE resources or OPEN shelters found near the projected extent."
+    }
+  },
+  "map": {
+    "layersLegend": "Map layers",
+    "errorBoundaryLabel": "Map",
+    "unavailableTitle": "Interactive map unavailable",
+    "unavailableDescription": "WebGL isn’t available here. All map data is listed below as an accessible alternative.",
+    "layer": {
+      "fire": "Fire (hotspots & perimeter)",
+      "flood": "Flood extent & gauges",
+      "storm": "Storm track, cone & surge",
+      "floodzone": "Flood zones (NFHL)",
+      "infra": "Infrastructure",
+      "weather": "Weather (wind)",
+      "cameras": "Live cameras",
+      "outage": "Power outages",
+      "cell": "Cell coverage",
+      "exposure": "Exposure (nodes in hazard)",
+      "reports": "Reports / SOS",
+      "prediction": "Prediction cone",
+      "route": "Evacuation route",
+      "shelters": "Shelters"
+    },
+    "caveat": {
+      "fire": "FIRMS hotspots are thermal detections, not confirmed fire perimeters.",
+      "floodzone": "Regulatory flood zones — not a live extent",
+      "weather": "Observation point — not a forecast grid",
+      "camera": "Live cameras — opens the source's site in a new tab",
+      "outage": "County-granular (EAGLE-I): areas are assumed-offline estimates, not confirmed per-address outages.",
+      "cell": "OpenCelliD-derived coverage estimate — indicative, not a guaranteed signal map.",
+      "storm": "Agency cyclone product drawn verbatim — BEACON does not model storm tracks, winds or surge."
+    },
+    "tooltip": {
+      "layer": "Layer: {group}",
+      "clickToOpen": "click to open ↗"
+    },
+    "region": {
+      "label": "Region",
+      "default": "Default region",
+      "overlaysLegend": "Satellite overlays",
+      "attribution": "Satellite imagery: NASA EOSDIS GIBS"
+    },
+    "gibs": {
+      "truecolor": "True color (VIIRS)",
+      "fires": "Active fires (VIIRS)",
+      "flood": "Flood (MODIS)",
+      "aerosol": "Aerosol optical depth"
+    },
+    "list": {
+      "regionLabel": "Map features (accessible list)",
+      "empty": "No map features in the current view.",
+      "caption": "Accessible list of all map features — the keyboard alternative to the interactive map.",
+      "colType": "Type",
+      "colFeature": "Feature",
+      "colDetail": "Detail",
+      "colLocation": "Location",
+      "colAction": "Action",
+      "focus": "Focus {label}"
+    },
+    "group": {
+      "fire": "Fire detection",
+      "gauge": "Flood gauge",
+      "infra": "Infrastructure",
+      "exposure": "Exposure",
+      "report": "Report / SOS",
+      "shelter": "Shelter"
+    },
+    "detail": {
+      "severity": "Severity {severity}",
+      "thermalHotspot": "Thermal hotspot",
+      "stage": "Stage {stage}",
+      "gauge": "Gauge",
+      "node": "Node",
+      "infra": "{kind} — {status}",
+      "inHazard": "In hazard: {hazard}",
+      "nodeInHazard": "Node in hazard"
+    },
+    "outage": {
+      "assumedOffline": "ASSUMED offline",
+      "reportedOffline": "Reported offline",
+      "withCount": "{count} customers out — {state}"
+    },
+    "zone": {
+      "label": "Zone {zone}"
+    },
+    "storm": {
+      "trackLabel": "Cyclone centre track — advisory, not an impact area",
+      "coneLabel": "Forecast cone — track-centre uncertainty, not an impact area",
+      "surgeLabel": "Storm-surge extent — impact area, included in exposure",
+      "coneCaveat": "Forecast cone from {agency}, advisory {advisoryAt} — shows where the storm centre may track, NOT the extent of hazardous conditions.",
+      "coneCaveatUnattributed": "Forecast cone shows where the storm centre may track — NOT the extent of hazardous conditions."
+    },
+    "shelter": {
+      "capacity": "Cap {capacity} · Need {demand}"
+    },
+    "weather": {
+      "label": "Wind {speed} km/h from {compass} ({deg}°), obs {observedAt}"
+    },
+    "compass": {
+      "N": "N",
+      "NE": "NE",
+      "E": "E",
+      "SE": "SE",
+      "S": "S",
+      "SW": "SW",
+      "W": "W",
+      "NW": "NW"
+    },
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "recenter": "Re-center map"
+  },
+  "anticipatory": {
+    "title": "Anticipatory action",
+    "tab": "Anticipatory",
+    "sectionLabel": "Anticipatory action — early action protocol",
+    "methodHeading": "Method, inputs and uncertainty",
+    "ladderHeading": "Trigger ladder",
+    "cycleHeading": "Evaluation {index, number} of {total, number}",
+    "inputs": "Inputs",
+    "members": "{over, number} of {total, number} forecast members over {threshold, number} {unit}",
+    "leadTimeLabel": "Lead time",
+    "leadTime": "{hours, number} h, as stated by the source. BEACON does not model hazard travel time.",
+    "vintage": "Forecast run and issue instant",
+    "methodLabel": "Method and class",
+    "fired": "Fired",
+    "notFired": "Not fired",
+    "stageGate": "Gate: at least {fraction, number} of forecast members over {threshold, number} {unit}, class {klass} or higher, within {hours, number} h lead time.",
+    "ledgerHeading": "Governance records this cycle produces:",
+    "actionsHeading": "Pre-agreed actions",
+    "suggested": "Suggested",
+    "approvalHeading": "Human approval",
+    "pending": "Awaiting human approval by: {roles}",
+    "noEmission": "Suggestions only. Nothing on this panel dispatches a resource or emits a public alert; a named human must approve every early action.",
+    "stopMechanism": "Stop mechanism: {role} may stop the activation on a pre-agreed condition, and the engine stops it automatically after {hours, number} h.",
+    "replay": "Fixture-fed replay: each recorded forecast run is re-evaluated {lag, number} h after the issue instant stated in the file. Not live data — BEACON queries no ensemble product at runtime.",
+    "noProtocolTitle": "No early action protocol for this region",
+    "noProtocolBody": "BEACON ships no early action protocol whose scope names this region, so there is nothing to evaluate. Protocols are configuration (config/eap/), not code.",
+    "noForecastTitle": "No recorded forecast for this protocol",
+    "noForecastBody": "The protocol ships, but no recorded forecast file ships with it, so no evaluation can be replayed. BEACON has no wired live ensemble source.",
+    "engineRefusedTitle": "The anticipatory engine refused this input",
+    "engineRefusedBody": "The engine refused the input rather than showing a partial evaluation."
+  },
+  "outlook": {
+    "title": "Outlook",
+    "sectionLabel": "Ranked outlook",
+    "eta": "in ~{hours, number} h",
+    "noEta": "no lead time from source",
+    "unclassified": "not classified",
+    "uncertainty": "uncertainty {value, number}"
+  },
+  "panels": {
+    "sitrepTitle": "Situation report",
+    "logisticsTitle": "Logistics"
+  },
+  "shell": {
+    "sitrepDock": "Situation Report",
+    "logisticsDock": "Logistics",
+    "mapLabel": "Common operating picture map",
+    "panelsLabel": "COP panels",
+    "expand": "Expand {label}",
+    "collapse": "Collapse {label}",
+    "region": {
+      "us-ca": "California (US)",
+      "ro": "Romania (EU)",
+      "es": "Spain (EU)",
+      "gr": "Greece (EU)",
+      "ph": "Philippines"
+    }
+  },
+  "sitrep": {
+    "title": "Situation Report",
+    "uncited": "Uncited — missing source (F2)",
+    "noPriorities": "No ranked priorities.",
+    "rankedPriorities": "Ranked priorities",
+    "deterministicOnly": "deterministic-only",
+    "aiGenerated": "AI-generated",
+    "trendLabel": "Trend:",
+    "priorities": "Priorities",
+    "noIncidentTitle": "No incident selected",
+    "noIncidentDescription": "Pick an incident to see its SitRep.",
+    "unavailable": "SitRep unavailable",
+    "provenance": "Provenance",
+    "externalViews": "External views"
+  },
+  "suppliesPanel": {
+    "title": "Relief supplies",
+    "unavailable": "Supplies unavailable",
+    "emptyTitle": "No supply lots",
+    "emptyDescription": "No relief supply stock is registered.",
+    "expires": "Expires {when}",
+    "asOf": "As of {when}",
+    "provenance": "Provenance"
+  },
+  "volunteerTeamsPanel": {
+    "title": "Volunteer teams",
+    "unavailable": "Volunteer teams unavailable",
+    "emptyTitle": "No volunteer teams",
+    "emptyDescription": "No team units are registered.",
+    "headcount": "Headcount {count}",
+    "skills": "Capabilities",
+    "asOf": "As of {when}",
+    "provenance": "Provenance"
+  },
+  "shelterStatusPanel": {
+    "title": "Shelter status",
+    "unavailable": "Shelter status unavailable",
+    "emptyTitle": "No shelter rows",
+    "emptyDescription": "No shelters to report.",
+    "shelters": "Shelters",
+    "capacity": "Capacity",
+    "occupancy": "Occupancy",
+    "availableOpen": "Open spare capacity",
+    "utilization": "Utilization",
+    "available": "Spare",
+    "provenance": "Provenance"
+  },
+  "damageReportsPanel": {
+    "title": "Damage & needs",
+    "unavailable": "Damage reports unavailable",
+    "emptyTitle": "No assessment entries",
+    "emptyDescription": "No damage or needs reports in scope.",
+    "entries": "Entries",
+    "sites": "Sites (self-reported)",
+    "worstSeverity": "Worst severity",
+    "needs": "Needs",
+    "asOf": "As of {when}",
+    "provenance": "Provenance"
+  },
+  "emsOverlayPanel": {
+    "title": "Copernicus EMS overlay",
+    "unavailable": "EMS overlay unavailable",
+    "emptyTitle": "No published products",
+    "emptyDescription": "No damage-assessment products are published for this view.",
+    "open": "Open product page",
+    "attribution": "Attribution",
+    "notShown": "Not shown",
+    "asOf": "As of {when}",
+    "provenance": "Provenance"
+  },
+  "sos": {
+    "errors": {
+      "tooShort": "Describe the emergency in at least 10 characters.",
+      "tooLong": "Keep the description under 2000 characters.",
+      "generic": "Please check the form."
+    }
+  },
+  "tabs": {
+    "sitrep": "SitRep",
+    "decision": "Decision",
+    "drafts": "Draft alerts",
+    "resources": "Resources",
+    "verify": "Verify",
+    "report": "Report SOS",
+    "route": "Evac route"
+  },
+  "theme": {
+    "toLight": "Switch to light theme",
+    "toDark": "Switch to dark theme"
+  },
+  "toolbar": {
+    "layers": "Layers",
+    "legend": "Legend",
+    "devBadge": "dev",
+    "actingRole": "Acting role (demo)",
+    "roleSwitcherTitle": "Demo only — spoofs x-beacon-role; the server still authorizes (AUTH_DEV_TRUST_HEADER)",
+    "devLoginUserId": "dev-login user id",
+    "devLoginUserPlaceholder": "user id",
+    "devLogin": "dev-login",
+    "signedIn": "signed in",
+    "loginUserLabel": "user id",
+    "loginUserPlaceholder": "user",
+    "loginPasswordLabel": "password",
+    "loginPasswordPlaceholder": "password",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "signInFailed": "Sign-in failed",
+    "liveBadge": "live",
+    "liveBadgeTitle": "Production deployment — roles come only from signed-in accounts.",
+    "currentRole": "Current role"
+  },
+  "ui": {
+    "severity": {
+      "MINOR": "Minor",
+      "MODERATE": "Moderate",
+      "SEVERE": "Severe",
+      "EXTREME": "Extreme"
+    },
+    "mode": {
+      "LIVE": "Live",
+      "CACHED": "Cached",
+      "MOCK": "Mock"
+    },
+    "freshness": {
+      "fresh": "Live",
+      "stale": "Stale",
+      "unavailable": "Unavailable"
+    },
+    "unverified": "Unverified",
+    "dialog": {
+      "close": "Close dialog"
+    },
+    "skeleton": {
+      "loading": "Loading"
+    },
+    "errorState": {
+      "title": "Something went wrong",
+      "retry": "Try again"
+    },
+    "errorBoundary": {
+      "title": "This panel failed to render",
+      "labelledTitle": "{label} failed to render"
+    },
+    "provenance": {
+      "trigger": "Provenance",
+      "triggerAria": "{label} — {count, plural, one {# source} other {# sources}}",
+      "heading": "Sources",
+      "empty": "No provenance recorded."
+    },
+    "legend": {
+      "regionLabel": "Map legend",
+      "severityHeading": "Hazard severity",
+      "statusHeading": "Data status",
+      "modeHeading": "Source mode",
+      "status": {
+        "fresh": "Fresh",
+        "stale": "Stale",
+        "unavailable": "Unavailable",
+        "unverified": "Unverified"
+      }
+    },
+    "externalViews": {
+      "caption": "External context — opens third-party sites.",
+      "captionFor": "External context — opens third-party sites for {label}.",
+      "listLabel": "External context links",
+      "kind": {
+        "map": "Map",
+        "satellite": "Satellite",
+        "street": "Street",
+        "3d": "3D",
+        "weather": "Weather",
+        "imagery": "Imagery",
+        "fire": "Fire",
+        "flood": "Flood"
+      }
+    },
+    "relativeTime": {
+      "unknown": "unknown",
+      "seconds": "{value}s ago",
+      "minutes": "{value}m ago",
+      "hours": "{value}h ago",
+      "days": "{value}d ago"
+    }
+  },
+  "warning": {
+    "headline": "{event} — {severity}",
+    "label": {
+      "what": "WHAT",
+      "where": "WHERE",
+      "when": "WHEN",
+      "impacts": "IMPACTS",
+      "action": "ACTION"
+    },
+    "what": "{event}, severity {severity}.",
+    "where": "{area}.",
+    "when": "{when}.",
+    "impacts": "{impacts}",
+    "action": {
+      "Shelter": "Shelter in place now. Stay inside in {area}, away from windows, until an all-clear is given.",
+      "Evacuate": "Leave {area} now. Take your go-bag, use the marked route, and do not go back until an all-clear is given.",
+      "Prepare": "Get ready to leave {area}. Pack a go-bag, fuel your car, and keep this channel open.",
+      "Execute": "Carry out the plan you were given for {area} now.",
+      "Avoid": "Stay out of {area}. Do not travel into the area.",
+      "Monitor": "Watch for updates about {area}. Be ready to act if this warning changes.",
+      "Assess": "Check your own situation in {area} and report what you see.",
+      "AllClear": "The danger in {area} has ended. You may go back. Follow local guidance.",
+      "None": "No action is needed in {area} now."
+    },
+    "event": {
+      "Fire": "Wildfire",
+      "Met": "Flood or severe weather",
+      "Safety": "Public safety hazard"
+    },
+    "allClear": {
+      "headline": "ALL CLEAR — {event}",
+      "description": "The {event} in {area} has ended."
+    }
+  },
+  "content": {
+    "originalLanguage": "EN",
+    "untranslatedHint": "Shown in English — not translated"
+  }
+}

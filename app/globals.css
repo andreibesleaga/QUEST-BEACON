@@ -1,0 +1,153 @@
+/* BEACON — global styles + design tokens (E8·T-345/T-347; UI/UX Charter §1). Dark-first, light-capable.
+   All colors are SEMANTIC design tokens as CSS variables → mapped to Tailwind utilities via @theme inline.
+   Components must use token utilities (bg-surface, text-fg, border-line, …), never raw hex (lint/T-345).
+   No CDN: Inter is self-hosted via @fontsource-variable/inter (imported in layout.tsx). Offline-identical. */
+@import 'tailwindcss';
+
+/* Theme toggling: [data-theme] on <html> wins in both directions; default (no attr) = dark (EOC night ops). */
+@custom-variant light (&:where([data-theme='light'], [data-theme='light'] *));
+
+:root,
+[data-theme='dark'] {
+  --bg: #0b0f14; /* app background */
+  --surface: #121a24; /* panels/cards */
+  --surface-2: #1a2532; /* raised/hover */
+  --overlay: #0e1620e6; /* glass overlay base (alpha) */
+  --line: #26313f; /* 1px borders */
+  --fg: #e8eef5; /* primary text (≥ 12:1 on bg) */
+  --fg-muted: #9fb0c3; /* secondary text (≥ 4.5:1 on bg) */
+  --primary: #4aa3ff; /* interactive accent */
+  --primary-fg: #04121f;
+  --focus: #7cc0ff; /* focus ring (2px, offset) */
+  /* Hazard severities (color is NEVER the only signal — always paired with icon/shape/text, T-346) */
+  --sev-minor: #59c3a5;
+  --sev-moderate: #e2b53d;
+  --sev-severe: #ef8a3c;
+  --sev-extreme: #f2565f;
+  /* Status: alert red is RESERVED for alerts only */
+  --alert: #f2565f;
+  --ok: #59c3a5;
+  --warn: #e2b53d;
+  /* Warn colour for SMALL text (<14pt): the dark-theme warn already clears 4.5:1, so it is the same hue. */
+  --warn-strong: #e2b53d;
+  --stale: #9fb0c3; /* cached/degraded label */
+  --unverified: #b892ff; /* unverified badge (distinct hue + icon) */
+}
+
+[data-theme='light'] {
+  --bg: #f6f8fb;
+  --surface: #ffffff;
+  --surface-2: #eef2f7;
+  --overlay: #ffffffe6;
+  --line: #d6dee8;
+  --fg: #0d1826; /* ≥ 12:1 on bg */
+  --fg-muted: #4a5b6e; /* ≥ 4.5:1 on bg */
+  --primary: #0b6bd6;
+  --primary-fg: #ffffff;
+  --focus: #0b6bd6;
+  --sev-minor: #1f8a6d;
+  --sev-moderate: #9a6b00;
+  --sev-severe: #b5521a;
+  --sev-extreme: #c11f2c;
+  --alert: #c11f2c;
+  --ok: #1f8a6d;
+  --warn: #9a6b00;
+  /* #9a6b00 measures 4.41:1 on the light surface — under AA for text below 14pt. This darker variant
+     measures 5.31:1, so small warn text (e.g. the machine-translation notice) stays readable. */
+  --warn-strong: #8a5f00;
+  --stale: #4a5b6e;
+  --unverified: #6b3fd1;
+}
+
+/* Map CSS vars → Tailwind theme tokens (utilities: bg-surface, text-fg, border-line, text-sev-severe, …). */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-focus: var(--focus);
+  --color-sev-minor: var(--sev-minor);
+  --color-sev-moderate: var(--sev-moderate);
+  --color-sev-severe: var(--sev-severe);
+  --color-sev-extreme: var(--sev-extreme);
+  --color-alert: var(--alert);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-warn-strong: var(--warn-strong);
+  --color-stale: var(--stale);
+  --color-unverified: var(--unverified);
+  /* One stack for every locale (ADR-030; FR-I18N-8). Fonts are matched PER GLYPH: Latin/Greek/Cyrillic
+     resolve to Inter, and only a glyph Inter lacks falls through to the bundled Noto script face — so a
+     reader never downloads a script they are not looking at. CJK deliberately uses the SYSTEM stack: a
+     usable Simplified-Chinese face is 5–10 MB even subsetted by unicode-range, which would blow both the
+     1 MB font budget and the repo-size budget; every system able to display Chinese already has one, and a
+     system font is local, so this keeps the air-gapped guarantee. Stated in SPEC "Known limitations". */
+  --font-sans:
+    'Inter Variable', 'Noto Sans Arabic', 'Noto Sans Devanagari', 'Noto Sans Bengali', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', 'Source Han Sans SC', ui-sans-serif,
+    system-ui, sans-serif;
+  --radius-lg: 0.625rem;
+}
+
+html {
+  color-scheme: dark;
+  /* A DEFINITE height for the whole chain (added 2026-08-04). Without it nothing above CopLayout had one,
+     so its `h-full` resolved to auto: the map slot was content-sized (it renders one `absolute inset-0`
+     child, contributing zero height — finding F-414), the side dock's `overflow-y-auto` never engaged, and
+     a long SitRep grew the PAGE instead. Net effect for an operator: the whole screen scrolled and the map
+     scrolled away with it. Height is applied at `lg` and up only (see #main) so the phone/tablet stacked
+     dock keeps its natural page-scroll behaviour. */
+  height: 100%;
+}
+[data-theme='light'] {
+  color-scheme: light;
+}
+
+body {
+  height: 100%; /* see the note on html — carries the definite height down to #main */
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-feature-settings: 'tnum' 1; /* tabular numbers in data tables/badges (UI/UX §1) */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Visible, token-colored focus ring everywhere (WCAG 2.2 §2.4.11 — focus never obscured). */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Motion honored: reduce to opacity/instant when the user asks (UI/UX §2). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Skip-to-content link (keyboard landmark). LOGICAL inset so it parks off-screen on the correct side in
+   both writing directions — in an RTL locale `left: -9999px` would fly it off the wrong edge (ADR-030). */
+.skip-link {
+  position: absolute;
+  inset-inline-start: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.5rem 0.75rem;
+  background: var(--surface);
+  color: var(--fg);
+  border: 1px solid var(--line);
+}
+.skip-link:focus {
+  inset-inline-start: 0.5rem;
+  top: 0.5rem;
+}

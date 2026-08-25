@@ -1,0 +1,54 @@
+{
+  "$comment": "BEACON golden dataset — California wildfire (LIVE flagship). Deterministic Camp-Fire-equivalent scenario in the Sierra foothills near Paradise. Coordinates inside us-ca bbox. Powers the golden-path e2e (E9·T-401a/T-421) and the redundancy suites. Synthetic — no real PII.",
+  "regionId": "us-ca",
+  "regionName": "California (Flagship)",
+  "scope": "STATE",
+  "bbox": [-124.48, 32.53, -114.13, 42.01],
+  "enabledAdapters": ["firms", "nws", "overpass", "nwps", "usgs-water", "ors"],
+  "mode": "LIVE",
+  "incident": { "id": "inc-ca-camp", "type": "WILDFIRE", "status": "ACTIVE" },
+  "sources": [
+    { "id": "src-firms", "source": "NASA FIRMS", "adapter": "firms-adapter", "fetchedAt": "2026-06-15T12:00:00.000Z", "license": "NASA open data", "mode": "LIVE" },
+    { "id": "src-nws", "source": "NOAA NWS", "adapter": "nws-adapter", "fetchedAt": "2026-06-15T11:45:00.000Z", "license": "US Gov public domain", "mode": "LIVE" },
+    { "id": "src-overpass", "source": "OpenStreetMap Overpass", "adapter": "osm-overpass-adapter", "fetchedAt": "2026-06-15T10:00:00.000Z", "license": "ODbL", "mode": "LIVE" },
+    { "id": "src-nwps", "source": "NOAA NWPS", "adapter": "nwps-adapter", "fetchedAt": "2026-06-15T11:00:00.000Z", "license": "US Gov public domain", "mode": "LIVE" }
+  ],
+  "hazards": [
+    {
+      "id": "haz-ca-perimeter",
+      "kind": "PERIMETER",
+      "sourceId": "src-firms",
+      "observedAt": "2026-06-15T12:00:00.000Z",
+      "intensity": 0.85,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-121.66, 39.71], [-121.54, 39.71], [-121.54, 39.81], [-121.66, 39.81], [-121.66, 39.71]]]
+      }
+    }
+  ],
+  "gauges": [
+    { "id": "gauge-ca-feather", "lon": -121.55, "lat": 39.72, "floodCategory": "MINOR", "stage": 12.4, "crestForecast": 15.1, "crestTime": "2026-06-16T06:00:00.000Z", "sourceId": "src-nwps" }
+  ],
+  "infrastructure": [
+    { "id": "infra-ca-hospital", "type": "HOSPITAL", "lon": -121.6, "lat": 39.76, "status": "ONLINE", "sourceId": "src-overpass" },
+    { "id": "infra-ca-nursing-a", "type": "NURSING_HOME", "lon": -121.58, "lat": 39.77, "status": "AT_RISK", "sourceId": "src-overpass" },
+    { "id": "infra-ca-nursing-b", "type": "NURSING_HOME", "lon": -121.62, "lat": 39.74, "status": "OFFLINE", "sourceId": "src-overpass" },
+    { "id": "infra-ca-power", "type": "POWER", "lon": -121.7, "lat": 39.79, "status": "ONLINE", "sourceId": "src-overpass" }
+  ],
+  "report": {
+    "id": "report-ca-1",
+    "source": "WEB",
+    "status": "UNVERIFIED",
+    "confidence": 0.62,
+    "components": { "geocode": 0.9, "authority": 0.3, "classifier": 0.7, "corroboration": 0.5 },
+    "generalized": [-121.6, 39.75],
+    "precise": [-121.605, 39.752],
+    "purgeAfter": "2026-08-01T00:00:00.000Z"
+  },
+  "expectedExposures": [
+    { "nodeId": "infra-ca-hospital", "reason": "IN_POLYGON", "insideHazard": true, "distanceM": 0 },
+    { "nodeId": "infra-ca-nursing-a", "reason": "IN_POLYGON", "insideHazard": true, "distanceM": 0 },
+    { "nodeId": "infra-ca-nursing-b", "reason": "IN_POLYGON", "insideHazard": true, "distanceM": 0 },
+    { "nodeId": "infra-ca-power", "reason": "IN_BUFFER", "insideHazard": false, "distanceM": 3200 }
+  ]
+}

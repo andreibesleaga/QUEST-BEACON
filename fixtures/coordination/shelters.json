@@ -1,0 +1,13 @@
+{
+  "_meta": {
+    "purpose": "D5.3 shelter-status fixture. Shapes are `MakeShelterInput` (src/domain/shelter.ts) and are fed through the REAL makeShelter factory, so every domain invariant (occupancy ≤ capacity, FULL ⇔ occupancy == capacity) is enforced on the fixture itself — a fixture that could not exist in production is not a fixture.",
+    "provenance": "HAND-SEEDED demo data. There is still no shelter source adapter in BEACON (findings F-35/F-154), which is exactly why the board takes a REQUIRED SourceMode: this fixture is consumed as MOCK and the board says so.",
+    "coverage": "one OPEN with spare capacity, one FULL (occupancy == capacity), one CLOSED, and one zero-capacity OPEN (the ratio-with-no-denominator case)"
+  },
+  "shelters": [
+    { "id": "shelter-civic-center", "geom": { "type": "Point", "coordinates": [-118.25, 34.05] }, "capacity": 250, "occupancy": 90, "status": "OPEN" },
+    { "id": "shelter-north-high", "geom": { "type": "Point", "coordinates": [-118.31, 34.11] }, "capacity": 120, "occupancy": 120, "status": "FULL" },
+    { "id": "shelter-riverside-gym", "geom": { "type": "Point", "coordinates": [-118.19, 34.02] }, "capacity": 80, "occupancy": 0, "status": "CLOSED" },
+    { "id": "shelter-annex-standby", "geom": { "type": "Point", "coordinates": [-118.27, 34.08] }, "capacity": 0, "occupancy": 0, "status": "OPEN" }
+  ]
+}

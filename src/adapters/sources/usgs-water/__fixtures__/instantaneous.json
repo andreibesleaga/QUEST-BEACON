@@ -1,0 +1,37 @@
+{
+  "value": {
+    "timeSeries": [
+      {
+        "sourceInfo": {
+          "siteName": "SACRAMENTO R A FREEPORT CA",
+          "siteCode": [{ "value": "11447650" }],
+          "geoLocation": { "geogLocation": { "latitude": 38.4555, "longitude": -121.5008 } }
+        },
+        "variable": { "variableCode": [{ "value": "00065" }], "unit": { "unitCode": "ft" } },
+        "values": [
+          {
+            "value": [
+              { "value": "14.20", "dateTime": "2026-07-05T20:30:00.000-07:00" },
+              { "value": "14.63", "dateTime": "2026-07-05T20:45:00.000-07:00" }
+            ]
+          }
+        ]
+      },
+      {
+        "sourceInfo": {
+          "siteName": "FEATHER R A NICOLAUS CA",
+          "siteCode": [{ "value": "11425500" }],
+          "geoLocation": { "geogLocation": { "latitude": 38.9016, "longitude": -121.5883 } }
+        },
+        "variable": { "variableCode": [{ "value": "00065" }], "unit": { "unitCode": "ft" } },
+        "values": [
+          {
+            "value": [
+              { "value": "31.08", "dateTime": "2026-07-05T20:45:00.000-07:00" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

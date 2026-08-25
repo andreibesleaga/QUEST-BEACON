@@ -1,0 +1,222 @@
+{
+ "type": "FeatureCollection",
+ "crs": {
+  "type": "name",
+  "properties": {
+   "name": "EPSG:4326"
+  }
+ },
+ "properties": {
+  "exceededTransferLimit": true
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "id": 865,
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -121.726151000282,
+     39.6752249998388
+    ]
+   },
+   "properties": {
+    "OBJECTID": 865,
+    "NAME": "Butte County (CA) LFG",
+    "PLANT_OPER": "Ameresco Butte County LLC",
+    "PHONE_NUM": " ",
+    "ADDRESS_1": "1023 Neal Rd",
+    "CITY": "Paradise, CA",
+    "STATE": "CA",
+    "ZIP_CODE": "95969",
+    "COUNTRY": "United States",
+    "WEBSITE": "www.ameresco.com",
+    "LATITUDE": 39.675225,
+    "LONGITUDE": -121.726151,
+    "DESC_": "Renewable Energy Power Plant (4.3 MW of operating capacity, 0 MW of planned capacity, and 0 MW of retired capacity)",
+    "OP_CAP": 4.3,
+    "S_CAP_MW": 4.3,
+    "W_CAP_MW": 4.3,
+    "PLAN_CAP": 0,
+    "RET_CAP": 0,
+    "OPER_UNITS": 2,
+    "PLAN_UNITS": 0,
+    "RET_UNITS": 0,
+    "FUEL1": "Renew",
+    "FUEL2": " ",
+    "COAL_QUANT": 0,
+    "NG_QUANT": 0,
+    "OIL_QUANT": 0,
+    "NET_GENMWH": 0,
+    "CAP_FACTOR": 0,
+    "SUB_1": "Butte County (CA) LFG",
+    "SUB_2": " ",
+    "NUM_LINES": 0,
+    "NAICS_CODE": 221119,
+    "NAICS_DESC": "Other Electric Power Generation",
+    "SIC_CODE": 491,
+    "POSIT_REL": "3",
+    "SOURCE": "Ventyx Research",
+    "SOURCEDATE": "10/2011",
+    "UNIQUE_ID": 14146,
+    "FEAT_TYPE": "Point"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 896,
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -121.611943000315,
+     39.8718249999586
+    ]
+   },
+   "properties": {
+    "OBJECTID": 896,
+    "NAME": "Centerville (CA)",
+    "PLANT_OPER": "Pacific Gas & Electric Co",
+    "PHONE_NUM": "415-973-6524",
+    "ADDRESS_1": "Nimshew Stage Road",
+    "CITY": "Magalia, CA",
+    "STATE": "CA",
+    "ZIP_CODE": "95954",
+    "COUNTRY": "United States",
+    "WEBSITE": "www.pge.com",
+    "LATITUDE": 39.871825,
+    "LONGITUDE": -121.611943,
+    "DESC_": "Hydroelectric Power Plant (6.4 MW of operating capacity, 0 MW of planned capacity, and 0 MW of retired capacity)",
+    "OP_CAP": 6.4,
+    "S_CAP_MW": 7.3,
+    "W_CAP_MW": 7.3,
+    "PLAN_CAP": 0,
+    "RET_CAP": 0,
+    "OPER_UNITS": 2,
+    "PLAN_UNITS": 0,
+    "RET_UNITS": 0,
+    "FUEL1": "Water",
+    "FUEL2": " ",
+    "COAL_QUANT": 0,
+    "NG_QUANT": 0,
+    "OIL_QUANT": 0,
+    "NET_GENMWH": 0,
+    "CAP_FACTOR": 0,
+    "SUB_1": "Centerville (CA)",
+    "SUB_2": " ",
+    "NUM_LINES": 4,
+    "NAICS_CODE": 221111,
+    "NAICS_DESC": "Hydroelectric Power Generation",
+    "SIC_CODE": 491,
+    "POSIT_REL": "1",
+    "SOURCE": "Aerial Imagery",
+    "SOURCEDATE": "9/2004",
+    "UNIQUE_ID": 7535,
+    "FEAT_TYPE": "Point"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 918,
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -121.598248000346,
+     39.6277779998454
+    ]
+   },
+   "properties": {
+    "OBJECTID": 918,
+    "NAME": "Coal Canyon",
+    "PLANT_OPER": "Pacific Gas & Electric Co",
+    "PHONE_NUM": "415-973-6524",
+    "ADDRESS_1": "Coal Canyon Rd. Rural Route 1",
+    "CITY": "Oroville, CA",
+    "STATE": "CA",
+    "ZIP_CODE": "95965",
+    "COUNTRY": "United States",
+    "WEBSITE": "www.pge.com",
+    "LATITUDE": 39.627778,
+    "LONGITUDE": -121.598248,
+    "DESC_": "Hydroelectric Power Plant (1 MW of operating capacity, 0 MW of planned capacity, and 0 MW of retired capacity)",
+    "OP_CAP": 1,
+    "S_CAP_MW": 0.9,
+    "W_CAP_MW": 0.9,
+    "PLAN_CAP": 0,
+    "RET_CAP": 0,
+    "OPER_UNITS": 1,
+    "PLAN_UNITS": 0,
+    "RET_UNITS": 0,
+    "FUEL1": "Water",
+    "FUEL2": " ",
+    "COAL_QUANT": 0,
+    "NG_QUANT": 0,
+    "OIL_QUANT": 0,
+    "NET_GENMWH": 0,
+    "CAP_FACTOR": 0,
+    "SUB_1": "Coal Canyon",
+    "SUB_2": " ",
+    "NUM_LINES": 2,
+    "NAICS_CODE": 221111,
+    "NAICS_DESC": "Hydroelectric Power Generation",
+    "SIC_CODE": 491,
+    "POSIT_REL": "3",
+    "SOURCE": "Regional Maps",
+    "SOURCEDATE": "9/2004",
+    "UNIQUE_ID": 7537,
+    "FEAT_TYPE": "Point"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 962,
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -121.409749000436,
+     39.8259499995841
+    ]
+   },
+   "properties": {
+    "OBJECTID": 962,
+    "NAME": "Cresta",
+    "PLANT_OPER": "Pacific Gas & Electric Co",
+    "PHONE_NUM": "415-973-6524",
+    "ADDRESS_1": " ",
+    "CITY": "Concow, CA",
+    "STATE": "CA",
+    "ZIP_CODE": "95965",
+    "COUNTRY": "United States",
+    "WEBSITE": "www.pge.com",
+    "LATITUDE": 39.82595,
+    "LONGITUDE": -121.409749,
+    "DESC_": "Hydroelectric Power Plant (73.8 MW of operating capacity, 0 MW of planned capacity, and 0 MW of retired capacity)",
+    "OP_CAP": 73.8,
+    "S_CAP_MW": 70.4,
+    "W_CAP_MW": 70.4,
+    "PLAN_CAP": 0,
+    "RET_CAP": 0,
+    "OPER_UNITS": 2,
+    "PLAN_UNITS": 0,
+    "RET_UNITS": 0,
+    "FUEL1": "Water",
+    "FUEL2": " ",
+    "COAL_QUANT": 0,
+    "NG_QUANT": 0,
+    "OIL_QUANT": 0,
+    "NET_GENMWH": 0,
+    "CAP_FACTOR": 0,
+    "SUB_1": "Cresta",
+    "SUB_2": " ",
+    "NUM_LINES": 0,
+    "NAICS_CODE": 221111,
+    "NAICS_DESC": "Hydroelectric Power Generation",
+    "SIC_CODE": 491,
+    "POSIT_REL": "1",
+    "SOURCE": "Aerial Imagery",
+    "SOURCEDATE": "4/2006",
+    "UNIQUE_ID": 7546,
+    "FEAT_TYPE": "Point"
+   }
+  }
+ ]
+}

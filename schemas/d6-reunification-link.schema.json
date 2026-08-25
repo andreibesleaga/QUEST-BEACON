@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/d6-reunification-link.schema.json",
+  "title": "BEACON D6-3 Family-reunification LINK-OUT — a hyperlink, not a registry",
+  "description": "FR-D6-3 (ADR-035 §4): one deterministic deep-link to the OFFICIAL family-reunification service for a region (ICRC Restoring Family Links / the national Red Cross or Red Crescent society). What makes this constitutional is what the shape CANNOT express: there is no query field, no surname field, no date-of-birth field, no photo, no case id and no result — BEACON handles ZERO reunification data, because a safe-and-well / reunification REGISTRY is the single highest-harm dataset in disaster response and is PERMANENTLY OUT of scope (ADR-035 §4; CURRENT-PLAN-3-DIFFERENTIATORS.md:134-137). The user leaves BEACON and searches on the responsible organisation's own site, under that organisation's own governance. Link-only doctrine, same posture as ADR-028's external views (src/application/external-views/external-views.ts): pure function of a region id → urls; no network, no key, no clock, no state, no POST. Layer B walks this file automatically via tests/architecture/d6-no-pii.test.ts's schemas/d6-*.schema.json glob.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["label", "provider", "rung", "url"],
+  "properties": {
+    "label": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "The link text shown to the user. Operator-facing English here; the UI is free to render a translated string from the message catalog instead (the same rule region labels follow — finding F-22)."
+    },
+    "provider": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "The ORGANISATION that owns the linked service and the data behind it (e.g. 'ICRC', 'American Red Cross'). An organisation, never a person — this field is what makes it explicit that the responsibility for reunification data sits outside BEACON."
+    },
+    "rung": {
+      "type": "string",
+      "enum": ["NATIONAL", "GLOBAL"],
+      "description": "Which rung of the Art. XVI ladder served this link. NATIONAL = the region's own national society; GLOBAL = the ICRC Family Links network, which is ALWAYS emitted so a region with no national entry is degraded-and-labelled rather than a dead end."
+    },
+    "iso": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "description": "ISO-3166-1 alpha-2 of the country a NATIONAL rung link serves; absent on the GLOBAL rung. Derived from config/regions.json via src/config/regions.ts (shippedRegion), never re-declared here."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://",
+      "description": "The provider's own https URL, opened in a new tab. HTTPS is pinned by pattern. HONEST LIMITATION: BEACON cannot guarantee a third party's URL still resolves — these are static, human-curated links checked at authoring time, not monitored endpoints, and no BEACON code ever fetches, follows, embeds or parses one (which is precisely why a stale link degrades to a broken hyperlink and never to a wrong fact or a leaked query)."
+    }
+  }
+}

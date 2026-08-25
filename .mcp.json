@@ -1,0 +1,47 @@
+{
+  "_comment": "BEACON project MCP servers (Claude Code format). Derived from GABBE agents/templates/core/MCP_CONFIG_TEMPLATE.json — a BEACON-relevant subset. Set the referenced env vars in .env (gitignored). Enable per-need; npx servers self-install on first run.",
+  "mcpServers": {
+    "context7": {
+      "_description": "Up-to-date SDK/library docs — prevents API hallucination (Next.js, MapLibre, Turf, Prisma, etc.). HIGHLY RECOMMENDED.",
+      "command": "npx",
+      "args": ["-y", "@context7/mcp-server"],
+      "env": {}
+    },
+    "sequential-thinking": {
+      "_description": "Structured chain-of-thought before acting on complex SDLC/spec reasoning.",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "env": {}
+    },
+    "filesystem": {
+      "_description": "RAG over the local project (specs, audit, agents kit).",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "./"],
+      "env": {}
+    },
+    "brave-search": {
+      "_description": "Authoritative web research — used to re-verify data-source availability/licensing (audit policy).",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+      "env": { "BRAVE_API_KEY": "${BRAVE_API_KEY}" }
+    },
+    "github": {
+      "_description": "PR review, code search, issues — for S05+.",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}" }
+    },
+    "postgres-dev": {
+      "_description": "Read-write dev Postgres (BEACON canonical store). Enable at S05 when the DB exists.",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": { "POSTGRES_CONNECTION_STRING": "${DATABASE_URL_DEV}" }
+    },
+    "playwright": {
+      "_description": "Browser automation for golden-path e2e tests + demo capture. Enable at S06.",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp"],
+      "env": {}
+    }
+  }
+}

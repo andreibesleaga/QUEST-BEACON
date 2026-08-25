@@ -1,0 +1,82 @@
+{
+  "_provenance": "BEACON fixture note (not an upstream field, ignored by the ACL parser): a live curl of https://public.api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=wildfire&limit=25 was attempted from the build sandbox on 2026-07-15 (confirmed real egress to Bluesky's infra — app.bsky.actor.getProfile returned 200 with a genuine profile document) but app.bsky.feed.searchPosts specifically returned a persistent 403 from Bluesky's Bunny-CDN edge (bot/datacenter-IP protection on the search endpoint), reproducible across headers/retries/query variants. This fixture is therefore NOT a literal capture; it is schema-accurate to the official AT Protocol `app.bsky.feed.defs#postView` / `app.bsky.feed.searchPosts` lexicon (docs.bsky.app), trimmed to 4 posts, with entirely fictitious wildfire-corroboration sample text and placeholder handles (example-*.bsky.social) — no real person's content or PII was captured or redacted, because none was ever fetched.",
+  "posts": [
+    {
+      "uri": "at://did:plc:examplea1b2c3d4e5f6g7h8/app.bsky.feed.post/3kexamplepost01",
+      "cid": "bafyexamplecid000000000000000000000000000000001",
+      "author": {
+        "did": "did:plc:examplea1b2c3d4e5f6g7h8",
+        "handle": "example-reporter.bsky.social",
+        "displayName": "Example Reporter"
+      },
+      "record": {
+        "$type": "app.bsky.feed.post",
+        "text": "Wildfire smoke visible from the ridge above the valley this morning — evacuation advisory posted for the north side of town.",
+        "createdAt": "2026-07-10T14:32:00.000Z"
+      },
+      "indexedAt": "2026-07-10T14:32:05.000Z",
+      "replyCount": 3,
+      "repostCount": 12,
+      "likeCount": 40,
+      "quoteCount": 1
+    },
+    {
+      "uri": "at://did:plc:exampleb2c3d4e5f6g7h8i9/app.bsky.feed.post/3kexamplepost02",
+      "cid": "bafyexamplecid000000000000000000000000000000002",
+      "author": {
+        "did": "did:plc:exampleb2c3d4e5f6g7h8i9",
+        "handle": "example-newsdesk.bsky.social",
+        "displayName": "Example Local Newsdesk"
+      },
+      "record": {
+        "$type": "app.bsky.feed.post",
+        "text": "Unconfirmed reports of a new fire start near the reservoir trailhead.\nWaiting on official confirmation before sharing more.",
+        "createdAt": "2026-07-10T15:05:41.000Z"
+      },
+      "indexedAt": "2026-07-10T15:05:44.000Z",
+      "replyCount": 8,
+      "repostCount": 21,
+      "likeCount": 63,
+      "quoteCount": 2
+    },
+    {
+      "uri": "at://did:plc:examplec3d4e5f6g7h8i9j0/app.bsky.feed.post/3kexamplepost03",
+      "cid": "bafyexamplecid000000000000000000000000000000003",
+      "author": {
+        "did": "did:plc:examplec3d4e5f6g7h8i9j0",
+        "handle": "example-fieldvolunteer.bsky.social",
+        "displayName": "Example Field Volunteer"
+      },
+      "record": {
+        "$type": "app.bsky.feed.post",
+        "text": "Shelter at the community center is open and taking evacuees, plenty of space and supplies as of right now.",
+        "createdAt": "2026-07-10T16:12:19.000Z"
+      },
+      "indexedAt": "2026-07-10T16:12:22.000Z",
+      "replyCount": 1,
+      "repostCount": 35,
+      "likeCount": 88,
+      "quoteCount": 0
+    },
+    {
+      "uri": "at://did:plc:exampled4e5f6g7h8i9j0k1/app.bsky.feed.post/3kexamplepost04",
+      "cid": "bafyexamplecid000000000000000000000000000000004",
+      "author": {
+        "did": "did:plc:exampled4e5f6g7h8i9j0k1",
+        "handle": "example-weatherwatch.bsky.social",
+        "displayName": "Example Weather Watch"
+      },
+      "record": {
+        "$type": "app.bsky.feed.post",
+        "text": "Wind shift expected around 18:00 local — could push the fire line toward the eastern subdivision, residents should stay alert.",
+        "createdAt": "2026-07-10T17:48:03.000Z"
+      },
+      "indexedAt": "2026-07-10T17:48:06.000Z",
+      "replyCount": 5,
+      "repostCount": 47,
+      "likeCount": 120,
+      "quoteCount": 3
+    }
+  ],
+  "cursor": "example-cursor-0001"
+}

@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/d5-damage-assessment.schema.json",
+  "title": "BEACON D5 damage / needs assessment (FR-D4-4, FEV-23)",
+  "description": "The wire shape of the damage & needs assessment (src/application/coordination/damage-assessment.ts). Structurally there is ONE BUCKET PER TRIAGE STATE and NO grand total: a figure that mixes VERIFIED with UNVERIFIED reports cannot be expressed in this document, which is the point (Art. XIII — no public action originates from an unverified report). `verified` is the VERIFIED bucket repeated for callers that must quote only verified figures; `unverifiedLabel` is the exact wording every other figure must carry. AGGREGATE-ONLY (Art. XIV): every leaf is a COUNT. There is no casualty, injury, age or person field anywhere — an aggregate casualty tally is FR-D6-5 and belongs to the D6 lane.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["incidentId", "byTriageStatus", "verified", "unverifiedLabel", "caveat"],
+  "properties": {
+    "incidentId": { "type": "string", "minLength": 1 },
+    "byTriageStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["UNVERIFIED", "TRIAGED", "VERIFIED", "REJECTED"],
+      "description": "PUBLIC_REPORT_STATUSES verbatim (src/domain/public-report.ts:12) — one bucket per state, pinned by test.",
+      "properties": {
+        "UNVERIFIED": { "$ref": "#/$defs/counts" },
+        "TRIAGED": { "$ref": "#/$defs/counts" },
+        "VERIFIED": { "$ref": "#/$defs/counts" },
+        "REJECTED": { "$ref": "#/$defs/counts" }
+      }
+    },
+    "verified": { "$ref": "#/$defs/counts" },
+    "unverifiedLabel": { "const": "unverified — not authoritative" },
+    "caveat": { "type": "string", "minLength": 1 }
+  },
+  "$defs": {
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entries", "byCategory", "bySeverity", "byNeed", "siteCount"],
+      "properties": {
+        "entries": { "type": "integer", "minimum": 0 },
+        "byCategory": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["SOS", "DAMAGE", "NEED"],
+          "description": "DAMAGE_REPORT_CATEGORIES verbatim (src/domain/damage-assessment.ts). Pinned by test.",
+          "properties": {
+            "SOS": { "type": "integer", "minimum": 0 },
+            "DAMAGE": { "type": "integer", "minimum": 0 },
+            "NEED": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "bySeverity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["MINOR", "MODERATE", "SEVERE", "DESTROYED"],
+          "description": "DAMAGE_SEVERITIES verbatim — aggregate SITE-level severity, never a person's condition.",
+          "properties": {
+            "MINOR": { "type": "integer", "minimum": 0 },
+            "MODERATE": { "type": "integer", "minimum": 0 },
+            "SEVERE": { "type": "integer", "minimum": 0 },
+            "DESTROYED": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "byNeed": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["WATER", "FOOD", "SHELTER", "HEALTH", "POWER", "ACCESS"],
+          "description": "NEED_KINDS verbatim — sector-level unmet needs, never an individual's need.",
+          "properties": {
+            "WATER": { "type": "integer", "minimum": 0 },
+            "FOOD": { "type": "integer", "minimum": 0 },
+            "SHELTER": { "type": "integer", "minimum": 0 },
+            "HEALTH": { "type": "integer", "minimum": 0 },
+            "POWER": { "type": "integer", "minimum": 0 },
+            "ACCESS": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "siteCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Σ of self-reported affected SITE counts in this bucket — structures/parcels, never people."
+        },
+        "worstSeverity": {
+          "type": "string",
+          "enum": ["MINOR", "MODERATE", "SEVERE", "DESTROYED"],
+          "description": "Worst severity present in this bucket; absent when the bucket carries no severity."
+        }
+      }
+    }
+  }
+}

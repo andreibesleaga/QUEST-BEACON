@@ -1,0 +1,3624 @@
+# BEACON — OpenAPI 3.1 specification (GABBE SDLC S03)
+#
+# Browser-based Emergency Awareness & Coordination Open Network.
+# Authored by the prod-tech-lead persona from:
+#   - docs/requirements/PRD.md          (§5 EARS, §8 API sketch)
+#   - docs/architecture/DOMAIN_MODEL.md (entities → schema components)
+#   - docs/architecture/CONFIGURATION.md
+#   - audit/CLARIFICATIONS.md           (§B.Q6 RBAC matrix)
+#
+# CONTRACT INVARIANTS encoded here (DOMAIN_MODEL §6, AGENTS §4/§14):
+#   - Every data response carries `provenance[]` (→ SOURCE_RECORD) + `freshness` (U1).
+#   - Every SitRep response additionally carries `citations[]` (U2).
+#   - No number/ranking/distance/exposure is LLM-produced (U3) — fields are deterministic.
+#   - No ALERT reaches ACTUAL without `approvedBy` (Art. XIII / ST1 / UW5).
+#   - `geomPrecise` (precise PII location) is responder-only (ST3 / Art. XIV).
+#   - Degraded data GETs return 200 + envelope `meta.status=degraded` carrying last-known-good
+#     cache/mock (UW2 / OP3 — never a dead-end). 503 is reserved for the genuine total-outage /
+#     no-fallback case (no cache, no mock).
+#
+# RBAC (CLARIFICATIONS §B.Q6) is expressed two ways per operation:
+#   - the `security` block (which auth is accepted), and
+#   - an `x-required-role` extension + a tag naming the minimum role.
+
+openapi: 3.1.0
+
+info:
+  title: BEACON API
+  version: 1.0.0
+  summary: Common operating picture, situational intelligence, SOS intake, and responder logistics for wildfires and floods.
+  description: |
+    BEACON is an open-source, local-first, near-real-time common operating picture (COP)
+    for wildfires and floods. It unifies free/authoritative data behind a pluggable adapter
+    spine, computes exposure/risk deterministically, narrates it as a source-cited AI
+    situational report, and ties it to responder logistics.
+
+    ## Response envelope
+    Every successful data response uses the universal envelope:
+    `{ data, provenance[], freshness, meta?, errors? }`. `provenance[]` (→ `SourceRef`)
+    and `freshness` (ISO-8601 timestamp) are **mandatory** on all data responses.
+    A SitRep response additionally carries `citations[]` (→ `Citation`).
+
+    ## Determinism
+    All numbers, rankings, distances, exposures, crest values, and scores are computed
+    deterministically (Turf.js / SQL / typed code). The LLM only narrates cited facts.
+
+    ## Degradation (last-known-good)
+    When a source is degraded but a fallback rung (last-known-good cache or recorded mock)
+    exists, data GETs return **200** with `meta.status=degraded` (and `meta.degraded=true`);
+    `provenance[]` + `freshness` still describe the cache/mock served. Never a dead-end
+    (UW2 / OP3). A **503** is returned ONLY for a genuine total outage where no fallback rung
+    exists (no cache, no mock) — `meta.status=unavailable`.
+
+    ## Authorization
+    Roles (ascending privilege): `PUBLIC`, `RESPONDER`, `VERIFIER`, `EM`.
+    See the per-operation `x-required-role` extension and the RBAC matrix in
+    `audit/CLARIFICATIONS.md` §B.Q6.
+
+    ## Envelope canonicity (single source of truth)
+    This document (`docs/api/openapi.yaml`) is the **canonical** definition of the API-boundary
+    response envelope (`ResponseEnvelope` / `SourceRef`). `schemas/source-ref.schema.json` is the
+    contract-test / adapter-internal copy of the same envelope. CI MUST assert parity between the
+    two so they never drift.
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  contact:
+    name: BEACON team
+    url: https://github.com/IEEE/Quest
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local / air-gapped (docker compose up)
+  - url: https://{host}/api/v1
+    description: Cloud free-tier deployment
+    variables:
+      host:
+        default: beacon.example.org
+
+tags:
+  - name: Regions
+    description: Region registry and incidents (role PUBLIC).
+  - name: Incidents
+    description: Incident detail, SitRep, exposure (role PUBLIC).
+  - name: Reports
+    description: Consented SOS intake and verification lifecycle.
+  - name: Routing
+    description: Hazard-avoiding evacuation routes (role PUBLIC).
+  - name: Resources
+    description: Resource registry and tasking (role RESPONDER/EM).
+  - name: Alerts
+    description: CAP v1.2 alert emission (role VERIFIER/EM).
+  - name: Interop
+    description: EDXL-RM mutual-aid round-trip and EDXL-SitRep (role EM).
+  - name: Stream
+    description: SSE delta channel keyed by region (role PUBLIC).
+  - name: Channels
+    description: |
+      Inbound driving adapters for non-web channels (ADR-023). Currently: the Telegram Bot API
+      webhook. Shares the same `InteractionPort` core as every other channel (zero core change).
+  - name: Sustainability
+    description: |
+      Out-of-band, machine-readable energy/carbon disclosure (ADR-020). Served at the origin root
+      `/.well-known/sustainability` (RFC 8615), NOT under `/api/v1`. Modeled/estimated values, heavily cached.
+  - name: System
+    description: Operational health of source adapters — backs the stale/unavailable UI badge (role PUBLIC).
+
+# Default security: most reads accept PUBLIC (anonymous) OR an authenticated session/JWT.
+# Operations that require a role override this with their own `security` + `x-required-role`.
+security:
+  - {}
+  - sessionAuth: []
+  - bearerAuth: []
+
+paths:
+
+  /health:
+    get:
+      operationId: getHealth
+      tags: [Regions]
+      summary: Process liveness probe
+      description: |
+        Bare liveness check for orchestrators (docker healthcheck). A plain object, NOT the data
+        envelope — it carries no data-plane content. Unauthenticated by design.
+      responses:
+        '200':
+          description: Process is up.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status: { type: string, enum: [ok] }
+
+  /status:
+    get:
+      operationId: getStatus
+      tags: [Regions]
+      summary: Region monitor overview (incident counts + headlines)
+      description: |
+        The `status` Command verb (`src/application/interaction/command-router.ts` `handleStatus`) —
+        the SAME dispatch every channel (HTTP/CLI/messaging) shares (ADR-023). Returns the region's
+        incident count plus a lightweight per-incident summary (id/type/status/headline). Role PUBLIC.
+        Added to this document 2026-07-15 (W5 audit-debt sweep) — the route has been served since S05
+        but was missing from the spec (OpenAPI drift).
+      x-required-role: PUBLIC
+      parameters:
+        - name: regionId
+          in: query
+          required: false
+          description: Defaults to the deployment's configured default region.
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: |
+            Region status overview with provenance + freshness (non-empty even with 0 incidents, F1).
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        required: [regionId, incidentCount, incidents]
+                        properties:
+                          regionId: { type: string, format: uuid }
+                          incidentCount: { type: integer }
+                          incidents:
+                            type: array
+                            items:
+                              type: object
+                              required: [id, type, status, headline]
+                              properties:
+                                id: { type: string, format: uuid }
+                                type: { type: string, enum: [WILDFIRE, FLOOD] }
+                                status: { type: string, enum: [ACTIVE, CONTAINED, CLOSED] }
+                                headline: { type: string }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /regions:
+    get:
+      operationId: listRegions
+      tags: [Regions]
+      summary: List configured regions
+      description: |
+        EV1 — the shipped-zone registry a client reads instead of hardcoding the regions it knows
+        (FR-ZONE-1, ADR-031 §Decision-4). Role PUBLIC: this is identity, geography and locale
+        metadata only. It deliberately does **not** expose `enabled_adapters` or
+        `source_mode_overrides` — those are operational posture, and `GET /sources` is the
+        provenance-transparency surface for per-source LIVE/CACHED/MOCK modes.
+
+        SERVED since 2026-07-27 (backlog B1.2, finding F-01) via the `regions` command verb
+        (`src/ports/interaction.ts`) routed in `src/adapters/channels/http/routing.ts` and handled in
+        `src/application/interaction/command-router.ts` over the injected `RegionReadModel`. The
+        collection takes NO parameters: the registry is deployment-wide, so a `regionId` filter on the
+        list of regions would be circular.
+
+        `provenance[]` carries exactly one entry, `sourceId: region-registry`, `mode: LIVE`, whose
+        `fetchedAt` (= `freshness`) is the server clock at read time: this data comes from the
+        deployment's own region configuration, not from an upstream feed, so it is never attributed to
+        one. For the same reason there is no degraded/unavailable rung here — no source is fetched, so
+        this endpoint does not return `meta.status=degraded` or 503.
+      x-required-role: PUBLIC
+      security:
+        - {}
+        - sessionAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: |
+            The configured regions, wrapped in the standard envelope with `provenance[]` + `freshness`.
+            In the default (config-backed) profile they are returned in registry order —
+            `config/regions.json` order, which is also the client's selector order; the
+            `FEATURE_STORE=postgres` projection returns them in table order, so a client that cares
+            about ordering must not rely on it as a contract.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        type: object
+                        required: [regions]
+                        properties:
+                          regions:
+                            type: array
+                            description: |
+                              Empty array when the deployment configures no region (still a 200 with
+                              non-empty `provenance[]`).
+                            items: { $ref: '#/components/schemas/Region' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+
+  /regions/{id}/incidents:
+    parameters:
+      - $ref: '#/components/parameters/RegionId'
+    get:
+      operationId: listRegionIncidents
+      tags: [Regions]
+      summary: List incidents in a region
+      description: EV1 — load all relevant incidents/layers for the selected region. Role PUBLIC.
+      x-required-role: PUBLIC
+      parameters:
+        - $ref: '#/components/parameters/IncidentStatusFilter'
+        - $ref: '#/components/parameters/IncidentTypeFilter'
+      responses:
+        '200':
+          description: |
+            Incident collection with provenance + freshness. Degraded sources (cache/mock
+            available) still return **200** with `meta.status=degraded` (UW2).
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/Incident' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /incidents/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IncidentId'
+    get:
+      operationId: getIncident
+      tags: [Incidents]
+      summary: Get one incident record (the detail row of GET /regions/{id}/incidents)
+      description: |
+        SERVED (`src/adapters/channels/http/routes/incidents.ts` → `handleIncidentGet`, wired in the
+        feature router's 2-segment GET table). Role **PUBLIC** — the same rank the `incidents` verb
+        carries, so the detail read can never be looser than the collection it is a row of.
+
+        The payload is the SAME `IncidentDetail` the collection serves as an element: the incident's
+        identity, its engine-derived grounded `facts[]` and ranked `priorities[]`, plus `predictions[]`
+        and `trend` when the derivation produced them. It is resolved through the shared core
+        (`InteractionPort`), so there is exactly ONE declaration of the incident contract — this route
+        does not carry a second copy of it.
+
+        `?regionId=` is an OPTIONAL narrowing hint. An incident id carries no region, so when it is
+        absent the configured region registry is walked in order; supplying it consults that region only
+        (and 404s if that region does not hold the incident, rather than silently widening the search).
+      x-required-role: PUBLIC
+      parameters:
+        - name: regionId
+          in: query
+          required: false
+          description: Optional narrowing hint — consult only this region instead of the whole registry.
+          schema: { type: string }
+      responses:
+        '200':
+          description: |
+            Incident detail with NON-EMPTY `provenance[]` + `freshness` (F1). Degraded sources
+            (cache/mock available) still return **200**; the served mode rides `provenance[].mode`.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/IncidentDetail' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /incidents/{id}/sitrep:
+    parameters:
+      - $ref: '#/components/parameters/IncidentId'
+    get:
+      operationId: getIncidentSitrep
+      tags: [Incidents]
+      summary: Get the cited AI situational report
+      description: |
+        EV3 / FR-4. Returns a generated SitRep with ranked priorities and escalation trend.
+        Per U2 the SitRep response additionally carries `citations[]`, one per grounded field.
+        If the LLM is unavailable the SitRep is returned in `aiMode=deterministic-only`
+        (UW1/UW3): numbers and priorities are still present, narrative may be reduced.
+
+        There is no `refresh` parameter: nothing is cached — EVERY read recomputes the report
+        from current inputs, so a plain re-request IS the refresh. (A documented-but-unread
+        `?refresh` param was removed 2026-08-10 rather than implemented as a no-op.)
+      x-required-role: PUBLIC
+      responses:
+        '200':
+          description: SitRep with provenance, freshness AND citations.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SitrepEnvelope' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422':
+          description: Generated SitRep failed citation/schema validation; deterministic fallback returned.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SitrepEnvelope' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /incidents/{id}/exposure:
+    parameters:
+      - $ref: '#/components/parameters/IncidentId'
+    get:
+      operationId: getIncidentExposure
+      tags: [Incidents]
+      summary: Get the deterministic exposure rows for an incident
+      description: |
+        EV2 / FR-3. SERVED (`src/adapters/channels/http/routes/incidents.ts` → `handleIncidentExposure`).
+        Exposure rows are computed deterministically (Turf/SQL) — never by the LLM (U3).
+
+        **The engine is not re-implemented here.** This route resolves the incident, then serves the
+        exposure slice the COP derivation ALREADY computes — byte-identical to `GET /regions/{id}/map`
+        `data.exposure[]` (pinned by test). Consequently the scope is stated honestly: the derivation
+        derives exposure PER REGION (`MapSource` carries one `incidentType`), so these are the rows for
+        the incident's region, reached by incident id — not a per-incident partition the engine does not
+        compute.
+
+        Role **PUBLIC** and role-INDEPENDENT: an exposure row names an INFRASTRUCTURE NODE and its
+        relationship to a hazard — a public asset, never a person. The Art. XIV precise-geometry gate in
+        `projectMap` applies to the `reports` slice, which this route does not serve.
+
+        `?regionId=` is the same optional narrowing hint `GET /incidents/{id}` accepts.
+      x-required-role: PUBLIC
+      parameters:
+        - name: regionId
+          in: query
+          required: false
+          description: Optional narrowing hint — consult only this region instead of the whole registry.
+          schema: { type: string }
+      responses:
+        '200':
+          description: |
+            Exposure collection with NON-EMPTY `provenance[]` + `freshness` (F1). Degraded sources
+            (cache/mock available) still return **200**; the served mode rides `provenance[].mode`.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/IncidentExposure' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404':
+          description: |
+            No such incident, OR the incident resolved but its region carries no COP source. The message
+            names BOTH so the two cases are distinguishable.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /incidents/{id}/summary:
+    parameters:
+      - $ref: '#/components/parameters/IncidentId'
+    get:
+      operationId: getIncidentSummary
+      tags: [Incidents]
+      summary: Incident-close export (CSV/JSON) of already-held aggregates
+      description: |
+        FR-D6-4 (ADR-035 §4; closes F-172/F-143/F-35). A thin adapter over the pure, already-guarded
+        `buildIncidentSummary` (`src/application/aggregate/incident-summary.ts`): it reads ONLY figures
+        BEACON already holds (alerts issued, tasks completed, shelter usage, affected area) and collects
+        nothing new (FEV-28). **Aggregate-only (Art. XIV):** every response is re-verified at export time
+        by a fail-closed runtime key walk (`guardAggregateOnly`, ADR-035 §4 Layer D) — a payload carrying
+        a person-identifying field is BLOCKED (`422`) and the document is never returned beside the error.
+
+        **`figures` query param (required):** a JSON-encoded object carrying the already-computed
+        aggregate inputs (`alertsIssued`, `tasksCompleted` required; `regionId`, `closedAt`, `tasksTotal`,
+        `sheltersOpen`, `shelterOccupancyPeak`, `shelterCapacityTotal`, `affectedAreaKm2`, `casualtyTally`
+        optional; `provenance[]` required, non-empty). **Honest limitation:** no incident-scoped
+        task/shelter/casualty aggregation store is reachable from the HTTP layer today (verified —
+        `LogisticsAdapter` exposes no task-listing method, `findShelters` is a location-ranked lookup, not
+        an incident-scoped inventory, and `makeCasualtyTally` has no adapter call site yet), so this route
+        does not compute those figures itself; the caller (an EM/operator closing the incident) already
+        holds them. `incidentId` (path) and `generatedAt` (the server's injected clock — Art. XII, never
+        client-set) are supplied by the server, never the client.
+
+        Response format is selected by `?format=csv|json` (default `json`); both carry a
+        `Content-Disposition: attachment` header. CSV rendering reuses the shared RFC 4180 +
+        OWASP-formula-injection-safe primitive built for the shelter-status export
+        (`src/application/coordination/csv.ts`) — one document row (a summary is ONE incident) plus its
+        header record.
+
+        Gated behind `FEATURE_D6_INCIDENT_EXPORT` (**default ON**, `config/index.ts`). When OFF, this
+        route returns the SAME generic 404 an unmatched route returns — it never confirms the route
+        exists but is disabled (same posture as `POST /auth/dev-login` when unconfigured).
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      parameters:
+        - name: figures
+          in: query
+          required: true
+          description: |
+            JSON-encoded `IncidentSummaryWireFigures` (see description above) — the already-computed
+            aggregate inputs `buildIncidentSummary` needs, everything except `incidentId`/`generatedAt`.
+          schema: { type: string }
+        - name: format
+          in: query
+          required: false
+          schema: { type: string, enum: [csv, json], default: json }
+      responses:
+        '200':
+          description: |
+            The incident summary document. `application/json` carries the full `IncidentSummary` object
+            (see `schemas/d6-incident-summary.schema.json`); `text/csv` carries one RFC-4180 header +
+            data record. Both carry `Content-Disposition: attachment; filename="incident-<id>-summary.<ext>"`.
+          headers:
+            Content-Disposition:
+              schema: { type: string }
+              description: 'attachment; filename="incident-<incidentId>-summary.csv|json"'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/IncidentSummary' }
+            text/csv:
+              schema: { type: string }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422':
+          description: |
+            Either a `buildIncidentSummary` invariant violation (bad/absent figures) OR Layer D's guard
+            fired (a person-identifying field was present in the constructed document, e.g. a
+            `casualtyTally.reporterId` bypassing the typed factory) — VALIDATION_ERROR either way; the
+            document is never returned beside the error (Art. XIV).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+
+  /regions/{id}/map:
+    parameters:
+      - $ref: '#/components/parameters/RegionId'
+    get:
+      operationId: getRegionMap
+      tags: [Regions]
+      summary: Get the region's map projection (COP geometry)
+      description: |
+        EV1 / FR-1. The deterministic, DOMAIN-shaped map projection for a region — hazard footprints,
+        gauges, lifeline infrastructure, exposure, shelters, VERIFIED public reports, a labelled first-order
+        prediction cone, and an evac route. All numbers/geometry come from the domain (U3 / Art. XII); the
+        client never invents them. PUBLIC-readable. Precise report/PII geometry (`precisePosition`) is
+        withheld from PUBLIC and revealed only to RESPONDER+ (server-side gate, Art. XIV / ST3).
+      x-required-role: PUBLIC
+      responses:
+        '200':
+          description: |
+            Map projection with provenance + freshness (non-empty provenance, U1). Degraded sources
+            (cache/mock) still return **200** with `meta.status=degraded` (UW2).
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/MapProjection' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /reports:
+    get:
+      operationId: listReports
+      tags: [Reports]
+      summary: List the verifier triage queue
+      description: |
+        FR-6 / T-378. The report queue a VERIFIER/EM triages. **VERIFIER+ only** (Art. XIII: only a
+        verifier/EM triages a report). Precise reporter geometry (`geomPrecise`) is withheld from anyone
+        below RESPONDER and revealed only to RESPONDER+ (Art. XIV) — the gate is enforced server-side.
+        Every response carries non-empty `provenance[]` + `freshness` (F1).
+      x-required-role: VERIFIER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [pending]
+          description: |
+            `pending` returns only UNVERIFIED/TRIAGED rows — the queue view. Any other value
+            is rejected with 400. Absent → all statuses.
+      responses:
+        '200':
+          description: The report queue (object with a `reports[]` array) + provenance + freshness.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        type: object
+                        required: [reports]
+                        properties:
+                          reports:
+                            type: array
+                            items: { $ref: '#/components/schemas/ReportQueueItem' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+    post:
+      operationId: submitReport
+      tags: [Reports]
+      summary: Submit a consented public SOS report
+      description: |
+        EV4 / FR-5. Stored as `UNVERIFIED`, AI-triaged (geocode, urgency, deterministic
+        confidence blend), surfaced badged "Unverified". Consent is REQUIRED.
+        Precise location (`geomPrecise`) is accepted but never returned to non-responders (ST3).
+      x-required-role: PUBLIC
+      security:
+        - {}
+        - sessionAuth: []
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PublicReportCreate' }
+      responses:
+        '201':
+          description: Report accepted as UNVERIFIED. Public view (generalized location only).
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/PublicReport' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '422':
+          description: Consent missing or payload failed validation.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResponseEnvelope' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /reports/{id}:
+    parameters:
+      - $ref: '#/components/parameters/ReportId'
+    patch:
+      operationId: transitionReport
+      tags: [Reports]
+      summary: Transition report state (triage / verify / reject)
+      description: |
+        EV5 / FR-6 / ST1. VERIFIER or EM transitions the report through its lifecycle
+        (UNVERIFIED → TRIAGED → VERIFIED|REJECTED). A terminal decision (VERIFIED/REJECTED)
+        on an UNVERIFIED report performs the mandatory TRIAGED hop server-side — both hops
+        are written to the audit trail. On transition to **VERIFIED** the system
+        MAY emit a CAP Alert; the response is **202 Accepted** and carries the emitted draft
+        Alert reference in `meta`. No outbound action is permitted while UNVERIFIED/TRIAGED
+        (ST1/UW5). Writes an AUDIT_EVENT.
+      x-required-role: VERIFIER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReportTransition' }
+      responses:
+        '202':
+          description: |
+            Transition accepted. On VERIFIED an Alert (DRAFT) is emitted and referenced in
+            `meta.emittedAlert`. The response returns the responder view of the report
+            (may include precise PII location).
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/PublicReportResponderView' }
+                      meta:
+                        type: object
+                        properties:
+                          emittedAlert: { $ref: '#/components/schemas/Alert' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: Illegal state transition (e.g. VERIFIED → UNVERIFIED, or report already terminal).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResponseEnvelope' }
+        '422': { $ref: '#/components/responses/UnprocessableEntity' }
+
+  /routes:
+    post:
+      operationId: createRoute
+      tags: [Routing]
+      summary: Compute a hazard-avoiding evacuation route
+      description: |
+        EV7 / FR-7. Returns a route that avoids the incident hazard polygon plus the nearest
+        shelter(s). Routing degrades ORS → Valhalla/OSRM → straight-line+avoid heuristic
+        (FEATURE_ROUTING); the chosen engine is reported in `meta.routingEngine`.
+      x-required-role: PUBLIC
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RouteRequest' }
+      responses:
+        '201':
+          description: Route created (avoids hazard) with nearest shelters.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/EvacRoute' }
+                      meta:
+                        type: object
+                        properties:
+                          routingEngine:
+                            type: string
+                            enum: [ors, valhalla, osrm, heuristic]
+                          nearestShelters:
+                            type: array
+                            items: { $ref: '#/components/schemas/Shelter' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/UnprocessableEntity' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /resources:
+    get:
+      operationId: listResources
+      tags: [Resources]
+      summary: List resources (crews, apparatus, aircraft, medical, supplies)
+      description: EV9 / FR-8. Role RESPONDER (own org) or EM.
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      parameters:
+        - name: incidentId
+          in: query
+          required: false
+          schema: { type: string, format: uuid }
+        - name: status
+          in: query
+          required: false
+          schema: { type: string, enum: [AVAILABLE, ASSIGNED, OOS] }
+        - name: org
+          in: query
+          required: false
+          schema: { type: string }
+      responses:
+        '200':
+          description: Resource collection with provenance + freshness.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/Resource' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+    post:
+      operationId: registerResource
+      tags: [Resources]
+      summary: Register a resource
+      description: EV9 / FR-8. RESPONDER may register for their own org; EM for any org. Writes AUDIT_EVENT.
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ResourceCreate' }
+      responses:
+        '201':
+          description: Resource registered.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Resource' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409':
+          description: Resource with the same identity already registered.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResponseEnvelope' }
+        '422': { $ref: '#/components/responses/UnprocessableEntity' }
+
+  /resource-tasks:
+    post:
+      operationId: createResourceTask
+      tags: [Resources]
+      summary: Task a resource to an incident
+      description: |
+        EV9 / FR-8. Creates a RESOURCE_TASK in the lifecycle
+        PROPOSED→TASKED→ENROUTE→ONSCENE→CLEARED. A task may NOT originate from an
+        UNVERIFIED/TRIAGED report (ST1/UW5). Role RESPONDER (own org) or EM. Writes AUDIT_EVENT.
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ResourceTaskCreate' }
+      responses:
+        '201':
+          description: Resource task created.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/ResourceTask' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: Resource unavailable, or task would violate ST1 (origin report not VERIFIED).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResponseEnvelope' }
+        '422': { $ref: '#/components/responses/UnprocessableEntity' }
+
+  /pre-positioning:
+    get:
+      operationId: getPrePositioning
+      tags: [Resources]
+      summary: Advisory resource/shelter pre-positioning suggestions near the projected hazard extent
+      description: |
+        W2d (PRD flagship-4 "pre-positioning from predictions") — the deterministic
+        `suggestPrePositioning` use-case (`src/application/pre-positioning/pre-positioning.ts`) ranks
+        AVAILABLE resources + OPEN shelters with spare capacity that sit NEAR — but NOT inside — the
+        incident's projected hazard extent (the `Prediction` geometry). Engine SUGGESTS, a human
+        DECIDES (Art. XII/XIII) — this is advisory-only and never auto-tasks a resource. Role
+        RESPONDER+ (same gate as `/resources`). Added to this document 2026-07-15 (W5 audit-debt
+        sweep); the route has been served since W2d but was missing from the spec (OpenAPI drift).
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      parameters:
+        - name: incidentId
+          in: query
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: |
+            Advisory suggestions (`data` is an OBJECT, not an array). `extentAvailable:false` + an
+            empty `suggestions[]` — never a dead-end (Art. XVI) — when no projected hazard extent is
+            known yet for the incident.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        type: object
+                        required: [method, extentAvailable, suggestions]
+                        properties:
+                          method: { type: string, description: 'Deterministic ranking method label.' }
+                          extentAvailable:
+                            type: boolean
+                            description: False when no projected hazard extent exists yet for the incident.
+                          suggestions:
+                            type: array
+                            items:
+                              type: object
+                              required: [kind, refId, distanceMeters]
+                              properties:
+                                kind: { type: string, enum: [RESOURCE, SHELTER] }
+                                refId: { type: string }
+                                distanceMeters: { type: number }
+                                resourceKind: { type: string, description: 'Present for kind=RESOURCE.' }
+                                capacity: { type: integer, description: 'Present for kind=SHELTER.' }
+                                occupancy: { type: integer, description: 'Present for kind=SHELTER.' }
+                      meta:
+                        type: object
+                        properties:
+                          note: { type: string }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /alerts:
+    get:
+      operationId: listAlerts
+      tags: [Alerts]
+      summary: List the computed DRAFT alert queue
+      description: |
+        FR-11 / T-387 / Art. XIII. The DRAFT alerts the threshold engine COMPUTED from the current
+        readings (never hand-seeded literals) — the review queue for the HITL approve gate. **VERIFIER+
+        only** (SPEC §2.2: the alert/CAP family is VERIFIER+). Every row is `state=DRAFT`; promotion to
+        ACTUAL is the separate authenticated `POST /alerts/{id}/approve` (this read never emits). Response
+        carries non-empty `provenance[]` + `freshness` (F1).
+      x-required-role: VERIFIER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: The DRAFT alert queue (object with an `alerts[]` array) + provenance + freshness.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    required: [data]
+                    properties:
+                      data:
+                        type: object
+                        required: [alerts]
+                        properties:
+                          alerts:
+                            type: array
+                            items: { $ref: '#/components/schemas/AlertQueueItem' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+    post:
+      operationId: createAlert
+      tags: [Alerts]
+      summary: Emit a CAP v1.2 alert
+      description: |
+        EV6/EV10 / FR-9 / Art. XIII. Produces a CAP v1.2 alert. An ACTUAL alert REQUIRES an
+        approver (`approvedBy`); without one the alert is rejected as **409**. Threshold-fired
+        alerts are DRAFT only and never auto-promoted. BEACON validates CAP but never performs
+        live IPAWS origination. Role VERIFIER or EM. Writes AUDIT_EVENT.
+      x-required-role: VERIFIER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: CAP v1.2 alert payload.
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CapAlertCreate' }
+      responses:
+        '201':
+          description: Alert created (DRAFT or, with an approver, ACTUAL).
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Alert' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409':
+          description: ACTUAL requested without an approver (Art. XIII) — rejected.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResponseEnvelope' }
+        '422': { $ref: '#/components/responses/UnprocessableEntity' }
+
+  /alerts/{id}/approve:
+    post:
+      operationId: approveAlert
+      tags: [Alerts]
+      summary: Approve a DRAFT alert → ACTUAL (the HITL emit gate)
+      description: |
+        FR-11 / Art. XIII. Promotes a threshold-fired **DRAFT** alert to **ACTUAL** with the
+        authenticated approver recorded as `approvedBy`, emits it through the alert sink, and — when
+        the Telegram channel is configured live (ADR-026) — broadcasts a PII-free digest to the
+        subscriber registry strictly AFTER the emit succeeds. A broadcast failure is audited but
+        never fails the approval (no 5xx). Role VERIFIER or EM. Writes AUDIT_EVENT.
+      x-required-role: VERIFIER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+          description: The DRAFT alert id.
+      responses:
+        '201':
+          description: Alert approved, emitted as ACTUAL (and broadcast when the channel is live).
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Alert' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: The alert is not in DRAFT state (already approved/expired) — rejected.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResponseEnvelope' }
+
+  # ADDED 2026-08-01 (finding F-411). This route IS served — feature-router.ts dispatches it to
+  # `handleAlertAllClear` (interop.ts) — but it had no entry here at all. The audit that found five
+  # DOCUMENTED-BUT-UNSERVED paths (F-323) also found this one gap in the opposite direction: SERVED BUT
+  # UNDOCUMENTED. Both are the same failure to keep one contract, and both are equally misleading.
+  /alerts/{id}/all-clear:
+    post:
+      operationId: authorAllClear
+      tags: [Alerts]
+      summary: Author an ALL-CLEAR follow-up to a public alert (DRAFT)
+      description: |
+        D3.2 / ADR-036 §2 / Art. XIII. Authors a CAP **CANCEL** message referencing an alert that was
+        actually made public, and saves it as a **DRAFT**. It is NOT emitted here: the all-clear goes back
+        through the SAME `POST /alerts/{id}/approve` HITL gate as the warning it clears, so standing down
+        the public is as deliberate an act as warning them. Role VERIFIER or EM.
+      x-required-role: VERIFIER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+          description: The ACTUAL (already-public) alert being cleared.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Optional operator-authored warning text; sensible CAP defaults are derived otherwise.
+              properties:
+                headline: { type: string }
+                description: { type: string }
+                instruction: { type: string }
+      responses:
+        '201':
+          description: |
+            ALL-CLEAR authored as a **DRAFT** CANCEL referencing the original. Nothing was sent, and the
+            response says so rather than leaving it to be inferred: `meta.emitted=false`,
+            `meta.requiresApproval=true`, and `meta.references[]` carries the original alert id(s).
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          alert: { $ref: '#/components/schemas/Alert' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: |
+            The alert was never made public (`cap_status` ≠ ACTUAL) — there is nothing to clear. Clearing a
+            warning nobody received would itself be a misleading public message.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResponseEnvelope' }
+
+  /edxl/rm:
+    post:
+      operationId: postEdxlResourceMessage
+      tags: [Interop]
+      summary: Import/exchange an EDXL-RM mutual-aid message
+      description: |
+        EV10 / FR-9 / U1. Full mutual-aid round-trip — accepts any EDXL-RM 1.0 message in the
+        lifecycle (RequestResource, CommitResource, ResponseToRequestResource,
+        OfferUnsolicitedResource, ReleaseResource, RequestReturn, …). The message is
+        mapped to canonical RESOURCE/RESOURCE_TASK entities (anti-corruption boundary) and
+        assigned a server `messageId` for the round-trip. Role RESPONDER (own-org;
+        BFLA/org-ownership checked, T2.8) or EM (CLARIF §B.Q6, SPEC §2.2/§7.2). Writes AUDIT_EVENT.
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EdxlRmMessage' }
+      responses:
+        '201':
+          description: EDXL-RM message accepted; round-trip id assigned.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/EdxlRmMessage' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/UnprocessableEntity' }
+
+  /edxl/rm/{id}:
+    parameters:
+      - $ref: '#/components/parameters/EdxlMessageId'
+    get:
+      operationId: getEdxlResourceMessage
+      tags: [Interop]
+      summary: Export an EDXL-RM message (round-trip read)
+      description: |
+        EV10 / FR-9. Returns the EDXL-RM message and the full mutual-aid round-trip chain
+        (request → commit → response) it belongs to. Role RESPONDER (own-org; org-ownership
+        checked) or EM (CLARIF §B.Q6, SPEC §2.2/§7.2).
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: EDXL-RM message with its round-trip chain.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/EdxlRmRoundTrip' }
+            application/xml:
+              schema: { $ref: '#/components/schemas/EdxlRmMessage' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /edxl/sitrep:
+    post:
+      operationId: postEdxlSitrep
+      tags: [Interop]
+      summary: Export an EDXL-SitRep situation summary
+      description: |
+        EV10 / FR-9. Serializes an incident situation summary as EDXL-SitRep 1.0 for
+        inter-agency exchange. Role EM. Writes AUDIT_EVENT.
+      x-required-role: EM
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EdxlSitrepCreate' }
+      responses:
+        '201':
+          description: EDXL-SitRep created.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/EdxlSitrep' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/UnprocessableEntity' }
+
+  /me:
+    get:
+      operationId: getCurrentUser
+      tags: [Regions]
+      summary: Get the authenticated caller's role (+ JWT subject)
+      description: |
+        Returns the caller's effective role and, when authenticated via JWT, the verified `sub` identity.
+        Operational identity endpoint — a bare object, NOT the data envelope (like `/health`); it carries
+        no data-plane content, so provenance/freshness do not apply. Any authenticated role.
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: The caller's role (and JWT `sub` when present).
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [role]
+                properties:
+                  role: { type: string, enum: [PUBLIC, RESPONDER, VERIFIER, EM] }
+                  sub: { type: string, description: Verified per-user JWT subject (absent for header/session trust). }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [Regions]
+      summary: Named-account sign-in — mint a session bearer JWT for a CONFIGURED account
+      description: |
+        `src/adapters/channels/http/routing.ts` `loginCommand` + `http-dispatcher.ts` `handleLogin`.
+        The REAL auth surface, and the one a deployed BEACON uses: unlike `POST /auth/dev-login` it is
+        **available in every posture including `DEPLOY_MODE=cloud`**, because it grants only the role the
+        configured account already carries — the request cannot ask for a role at all.
+
+        Accounts come from `AUTH_USERS` (`id:ROLE:password` triples). Passwords are never stored or
+        compared as plaintext: each is stretched with scrypt under a salt bound to `AUTH_SECRET` and
+        compared with `timingSafeEqual`; an unknown user still performs a full derivation so response
+        timing cannot enumerate accounts. The minted JWT's `sub` is the real account id, so the
+        hash-chained triage audit records a PERSON rather than `role:<ROLE>`.
+
+        **Disabled** (generic, non-disclosing 404) when `AUTH_SECRET` is unset or no accounts are
+        configured — the offline/e2e posture, which keeps those flows on the dev header.
+      x-required-role: PUBLIC
+      security:
+        - {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, password]
+              properties:
+                userId: { type: string, description: The configured account id. }
+                password: { type: string, format: password }
+      responses:
+        '200':
+          description: Signed in; a 12-hour session bearer is returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [token, role, userId]
+                properties:
+                  token: { type: string, description: '12h HS256 bearer JWT; `sub` is the account id.' }
+                  role:
+                    type: string
+                    enum: [RESPONDER, VERIFIER, EM]
+                    description: The role the ACCOUNT carries — never one the request asked for.
+                  userId: { type: string }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401':
+          description: |
+            Invalid credentials. Deliberately identical for "no such user" and "wrong password" so the
+            endpoint cannot be used to enumerate accounts.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+        '404':
+          description: |
+            Login disabled (no `AUTH_SECRET` or no configured accounts) — a generic `NOT_FOUND` body
+            identical to an unrouted path (non-disclosing).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+
+  /auth/dev-login:
+    post:
+      operationId: devLogin
+      tags: [Regions]
+      summary: Demo IdP — mint a short-lived role-scoped bearer JWT (NOT production issuance)
+      description: |
+        `src/adapters/channels/http/routing.ts` `devLoginCommand` + `http-dispatcher.ts` `handleDevLogin`
+        (ADR-025). Mints a 1-hour HS256 JWT `{role, sub:userId}` for the offline/e2e demo posture —
+        **never a real IdP**. Added to this document 2026-07-15 (W5 audit-debt sweep); the route has
+        been served since Phase-B but was missing from the spec (OpenAPI drift).
+
+        **Hard-off** (generic 404, non-disclosing) whenever `NODE_ENV=production` or
+        `DEPLOY_MODE=cloud`, and opt-in even in dev/local: requires BOTH `AUTH_SECRET` set AND
+        `AUTH_DEV_LOGIN=on` explicitly. With no secret / not enabled / prod / cloud, the response is
+        the SAME generic `{errors:[{code:'NOT_FOUND', message:'no such route'}]}` body as any unknown
+        route — posture is never disclosed by the shape of the 404.
+      x-required-role: PUBLIC
+      security:
+        - {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [role, userId]
+              properties:
+                role:
+                  type: string
+                  enum: [PUBLIC, RESPONDER, VERIFIER, EM]
+                userId:
+                  type: string
+                  description: Becomes the JWT `sub` claim (the demo per-user identity).
+      responses:
+        '200':
+          description: Token minted (demo IdP only).
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [token]
+                properties:
+                  token: { type: string, description: 'Short-lived (1h) HS256 bearer JWT.' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404':
+          description: |
+            Demo IdP disabled (no `AUTH_SECRET`, `AUTH_DEV_LOGIN` not `on`, or a production/cloud
+            profile) — a generic `NOT_FOUND` body identical to an unrouted path (non-disclosing).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+
+  /sources:
+    get:
+      operationId: listSources
+      tags: [Regions]
+      summary: List source records (provenance catalog)
+      description: |
+        Returns the SOURCE_RECORD catalog every datum anchors to (Art. XI), including each
+        source's effective mode (LIVE|CACHED|MOCK) and freshness. Role PUBLIC.
+      x-required-role: PUBLIC
+      responses:
+        '200':
+          description: |
+            Source record collection. Degraded sources (cache/mock available) still return
+            **200** with `meta.status=degraded` (UW2).
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/SourceRecord' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  # ── S3 dock-panel reads (2026-08-08) — five RESPONDER+-gated envelope GETs, one per D4/D6 module.
+  # All five: fixture-fed MOCK today (labelled so in provenance[] — no supply/volunteer/shelter/EMS source
+  # adapter exists yet), role-scoped only (no region/incident query), and flag-gated in the feature router:
+  # when the server flag is OFF the route returns the SAME generic 404 an unmatched route returns (the
+  # incident-summary posture — never confirming a disabled route exists).
+  /supplies:
+    get:
+      operationId: getSupplies
+      tags: [Logistics]
+      summary: Relief supply lots (FR-D6-2)
+      description: |
+        The relief-supply stock list, via `aggregate/supplies.ts` (`makeSupplyFields`). Gated by
+        `FEATURE_D6_SUPPLIES` (default ON). Provenance is MOCK-labelled: the rows come from a recorded
+        fixture, not a live inventory feed — stated rather than dressed up as one (Art. XVI).
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Supply lots in the standard envelope (`data.supplies[]`).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResponseEnvelope' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /volunteer-teams:
+    get:
+      operationId: getVolunteerTeams
+      tags: [Logistics]
+      summary: Volunteer team units (FR-D6-1)
+      description: |
+        The volunteer team-unit registry view, via `aggregate/volunteer-team.ts`. Gated by
+        `FEATURE_D6_VOLUNTEER_TEAMS` (default ON). Fixture-fed MOCK, labelled in provenance.
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Team units in the standard envelope (`data.teams[]`).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResponseEnvelope' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /shelter-status:
+    get:
+      operationId: getShelterStatus
+      tags: [Logistics]
+      summary: Aggregate shelter supply board (FR-D4-3)
+      description: |
+        The shelter board via `coordination/shelter-status.ts` — includes FULL/CLOSED shelters a
+        location-ranked `findShelters` lookup would hide (a status board must show them). `asOf` is the
+        server's injected clock (Art. XII). Gated by `FEATURE_D4_SHELTER_STATUS` (default ON).
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: The shelter board in the standard envelope (`data.board`).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResponseEnvelope' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /damage-reports:
+    get:
+      operationId: getDamageReports
+      tags: [Incidents]
+      summary: Damage & needs assessment buckets (FR-D4-4)
+      description: |
+        Triage-status buckets via `coordination/damage-assessment.ts` — counts of reports, not a survey
+        (the module's own caveat is served verbatim and rendered verbatim, Art. XIII). Aggregates the
+        recorded fixture, not the live report store — wiring the report pipeline into
+        `DamageAssessmentEntry`s is recorded future work. Gated by `FEATURE_D4_DAMAGE_REPORTS` (default ON).
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: The assessment buckets in the standard envelope (`data.assessment`).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResponseEnvelope' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /ems-overlay:
+    get:
+      operationId: getEmsOverlay
+      tags: [Incidents]
+      summary: Copernicus EMS activation link-outs (FR-D4-5)
+      description: |
+        EMS Rapid Mapping products as LINK-OUTS via `coordination/ems-overlay.ts` (never rehosted —
+        the same link-only posture as the camera sources); rejected products are listed with reasons,
+        not silently dropped. Gated by `FEATURE_D4_EMS_OVERLAY` (default ON).
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: The overlay products + rejections in the standard envelope (`data.overlay`).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ResponseEnvelope' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /health/adapters:
+    get:
+      operationId: getAdapterHealth
+      tags: [System]
+      summary: Per-adapter operational health (effective mode, freshness age, ladder verdict)
+      description: |
+        SERVED (`src/adapters/channels/http/routes/adapter-health.ts` → `handleAdapterHealth`, wired in
+        the feature router's 2-segment GET table). Backs the "stale/unavailable" UI badge (FR-2 / UW2)
+        and the registry health view (adapter-contract §3; ADR-009).
+
+        **Role RESPONDER+ — deliberately NOT public.** `GET /sources` remains the PUBLIC provenance
+        catalogue (per-source mode + freshness). This endpoint adds the deployment's DEGRADATION POSTURE
+        — which sources are on a fallback rung right now, which are stale — which is operational
+        reconnaissance about the deployment rather than data about the emergency. The earlier `PUBLIC`
+        marking here (and in SPEC §2.2) described a route that returned 404; the role is tightened as it
+        is implemented.
+
+        It DOES return the standard `{data, provenance[], freshness}` envelope. The former "operational
+        endpoint, not a data endpoint" special-casing is withdrawn: one envelope on every JSON response
+        is the cheaper contract, and this response genuinely has provenance (the region's sources).
+
+        **Honest limitation (states the boundary rather than faking it).** A literal cockatiel breaker
+        state (`CLOSED|OPEN|HALF_OPEN`) is NOT reported, because it cannot be observed from a request:
+        `ManagedBreaker` lives inside a per-composition adapter instance and the live composition builds
+        and discards those per seed assembly — there is no process-wide breaker registry. What IS
+        reported is the breaker's OUTCOME: `degraded` (the served rung is CACHED/MOCK, i.e. the ladder
+        descended) and `stale` (the newest datum is older than `staleAfterSec`, the adapter-contract §5
+        default cache TTL). Reporting a literal state requires the composition root to retain the
+        registry — tracked in `docs/audit/UNIMPLEMENTED_REGISTER.md`, not papered over here.
+
+        `?regionId=` selects the region whose configured sources are reported (default region otherwise).
+      x-required-role: RESPONDER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      parameters:
+        - name: regionId
+          in: query
+          required: false
+          schema: { type: string }
+      responses:
+        '200':
+          description: |
+            Adapter health report — aggregate `status`, per-adapter effective mode + freshness age +
+            derived `stale`/`degraded` verdicts, and rung counts. Always **200** for an authorized
+            caller, even when every adapter is degraded: a monitoring endpoint that fails when the thing
+            it monitors is unhealthy cannot be used to see that it is unhealthy (Art. XVI).
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/AdaptersHealthReport' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /threshold-rules:
+    get:
+      operationId: listThresholdRules
+      tags: [Alerts]
+      summary: List the configured threshold rules
+      description: |
+        Q5 / FR-11. SERVED (`src/adapters/channels/http/routes/threshold-rules.ts` →
+        `handleThresholdRules`). Role **EM** — configuring threshold rules is an EM-only capability
+        (CLARIFICATIONS §B.Q6) and so is reading the configuration.
+
+        The rules returned are the ones the running composition ACTUALLY evaluates — the same objects
+        `deriveDraftAlerts` fires on (`HttpFeatureDeps.thresholdRules`, supplied by `buildFeatureDeps`),
+        not a parallel description of them. A deployment that configures no rules answers **200** with
+        `count: 0`; that is an honest empty configuration, not an error.
+
+        There is no mutation counterpart in v1: rules are config-seeded. Firing a rule creates a DRAFT
+        alert and nothing else (Art. XIII).
+
+        `provenance[]` names the CONFIGURATION (`threshold-rule-config`, mode `LIVE`), not an upstream
+        feed — attributing configuration to a data source would misreport where it came from.
+      x-required-role: EM
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Threshold rule collection with NON-EMPTY `provenance[]` + `freshness` (F1).
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        required: [rules, count]
+                        properties:
+                          rules:
+                            type: array
+                            items: { $ref: '#/components/schemas/ThresholdRule' }
+                          count: { type: integer, minimum: 0 }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /audit-events:
+    get:
+      operationId: listAuditEvents
+      tags: [Alerts]
+      summary: Read one page of the hash-chained audit log
+      description: |
+        RBAC §B.Q6 — "View audit log" is a VERIFIER/EM capability. SERVED
+        (`src/adapters/channels/http/routes/audit-events.ts` → `handleAuditEvents`).
+
+        Reads the EXISTING chain — `AlertSink.audit` (`src/adapters/compliance/audit-chain.ts`), the same
+        append-only hash chain the CAP emission path and the governance ledger (ADR-034 §5) write to.
+        There is no second log and no projection copy.
+
+        **Chain order, oldest first.** Each row's `prevHash` is its predecessor's `hash`, so append order
+        (not "newest first") is what lets a client re-link and independently verify the page it received.
+        Pagination is `limit`/`offset` for the same reason — a stable, re-linkable window; `nextCursor`
+        on `meta.page` is simply the next offset. `data.chainVerified` is the chain's OWN `verify()`,
+        recomputed over every row on this read (fail-closed: any broken link makes it `false`).
+
+        **PII-free by construction** (Art. XIV, THREAT §9.3): the chain stores ids, actions, targets,
+        instants, an optional evidence digest and cost figures only. This endpoint adds no field and
+        resolves no identity. `provenance[]` names the chain itself (`beacon-audit-chain`, mode `LIVE`).
+
+        **Scope, stated honestly:** the chain reachable from the HTTP composition is the alert-sink /
+        governance chain. The report-triage audit (`TriageAuditRecord`, written by the report store) is a
+        separate record not exposed by this route in v1.
+
+        A fresh process legitimately returns an EMPTY, verified chain — nothing has been audited yet.
+      x-required-role: VERIFIER
+      security:
+        - sessionAuth: []
+        - bearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: Page size; defaults to 50, clamped to [1, 500]. A malformed value is a 400.
+          schema: { type: integer, minimum: 1, maximum: 500, default: 50 }
+        - name: offset
+          in: query
+          required: false
+          description: Zero-based offset into the chain. A malformed/negative value is a 400.
+          schema: { type: integer, minimum: 0, default: 0 }
+      responses:
+        '200':
+          description: |
+            One page of the chain with NON-EMPTY `provenance[]` + `freshness` (F1) and a `meta.page`
+            pagination block. An offset past the end is an empty page, not an error.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        required: [events, total, chainVerified]
+                        properties:
+                          events:
+                            type: array
+                            items: { $ref: '#/components/schemas/AuditEvent' }
+                          total:
+                            type: integer
+                            minimum: 0
+                            description: Rows in the WHOLE chain (not in this page).
+                          chainVerified:
+                            type: boolean
+                            description: The chain's own integrity check over every row, recomputed on this read.
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /stream:
+    get:
+      operationId: streamDeltas
+      tags: [Stream]
+      summary: Subscribe to canonical-model delta events (SSE)
+      description: |
+        EV2 / Q7. Server-Sent Events delta channel keyed by region. The response is a
+        `text/event-stream`: each event is a canonical-model delta (incident, exposure,
+        report, resource, alert, or heartbeat), debounced per region (`SSE_DEBOUNCE_MS`)
+        with a periodic heartbeat (`SSE_HEARTBEAT_SEC`). Clients reconnect with the
+        `Last-Event-ID` header to backfill missed deltas. If SSE drops, clients fall back to
+        polling (FEATURE_REALTIME). Role PUBLIC (generalized data only; precise PII never
+        streamed on the public channel — ST3).
+      x-required-role: PUBLIC
+      parameters:
+        - name: regionId
+          in: query
+          required: true
+          description: Region whose deltas to subscribe to.
+          schema: { type: string, format: uuid }
+        - name: Last-Event-ID
+          in: header
+          required: false
+          description: Last received event id, for reconnect/backfill.
+          schema: { type: string }
+      responses:
+        '200':
+          description: |
+            An open SSE stream. Media type `text/event-stream`. Each event payload is a
+            JSON `StreamEvent`. The stream stays open; heartbeats keep it alive.
+          headers:
+            Cache-Control:
+              schema: { type: string, example: 'no-cache' }
+            Connection:
+              schema: { type: string, example: 'keep-alive' }
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: |
+                  Newline-delimited SSE frames. Each frame:
+                  `id: <eventId>\nevent: <type>\ndata: <StreamEvent JSON>\n\n`.
+                  The JSON in each `data:` field conforms to the `StreamEvent` schema.
+              examples:
+                delta:
+                  summary: An exposure delta frame
+                  value: |
+                    id: 42
+                    event: exposure
+                    data: {"type":"exposure","regionId":"...","incidentId":"...","at":"2026-06-27T18:00:00Z","payload":{}}
+
+                heartbeat:
+                  summary: A heartbeat frame
+                  value: |
+                    : heartbeat
+                    id: 43
+                    event: heartbeat
+                    data: {"type":"heartbeat","at":"2026-06-27T18:00:20Z"}
+            application/json:
+              schema:
+                description: |
+                  Polling-fallback representation (FEATURE_REALTIME=polling): when SSE is
+                  unavailable the client polls and receives the same deltas as a JSON array of
+                  StreamEvent objects since `Last-Event-ID`.
+                type: array
+                items: { $ref: '#/components/schemas/StreamEvent' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /channels/telegram/webhook:
+    post:
+      operationId: telegramWebhook
+      tags: [Channels]
+      summary: Telegram Bot API inbound webhook (ADR-023, ADR-026)
+      description: |
+        `app/api/v1/channels/telegram/webhook/route.ts` → `handleTelegramWebhook`
+        (`src/adapters/channels/messaging/telegram-webhook.ts`). A registered Telegram bot POSTs each
+        `Update` here; authenticity is the `X-Telegram-Bot-Api-Secret-Token` header, **constant-time**
+        compared to `TELEGRAM_WEBHOOK_SECRET` (`node:crypto timingSafeEqual`) — never an early-out
+        string compare. A verified message is self-signed and re-enters the SAME inbound trust
+        pipeline every channel uses (allow-list → replay → rate → firewall → parse,
+        `src/adapters/channels/messaging/trust.ts`); the inbound allow-list is seeded from the SAME
+        `TELEGRAM_ALERT_CHAT_IDS` operator chat-id list the approved-alert broadcast fans out to
+        (accepted-risk design decision, see THREAT_MODEL.md TB6 T7.11 and ADR-026 §Consequences).
+
+        **Response shape is intentionally NOT the standard `{data, provenance[], freshness}` envelope**
+        (same special-casing as `/health/adapters` and `/stream`) — Telegram only needs an HTTP status
+        + a tiny ack/error body. **Posture is non-disclosing**: an unconfigured secret and a bad/absent
+        token both look like "route not found" / "unauthorized" with zero config detail leaked.
+
+        **200-always-on-verified semantics**: once the secret-token check passes, EVERY outcome —
+        including an unparseable body, a non-message update, or a downstream trust-pipeline rejection
+        (unlisted sender, replay, rate-limited, firewalled) — still returns **200 `{ok:true}`**. This is
+        deliberate: Telegram retries non-2xx responses, and a malformed/rejected update must never loop.
+        Mutually exclusive with `scripts/telegram-poll.ts` (Bot API forbids `getUpdates` while a webhook
+        is registered) — `setWebhook` is an explicit operator action, never boot-time.
+      x-required-role: PUBLIC
+      security:
+        - {}
+      parameters:
+        - name: X-Telegram-Bot-Api-Secret-Token
+          in: header
+          required: false
+          description: |
+            Telegram's shared inbound secret, set via `setWebhook`'s `secret_token` param. Compared
+            constant-time to `TELEGRAM_WEBHOOK_SECRET`. Absent/mismatched ⇒ 401.
+          schema: { type: string }
+      requestBody:
+        required: true
+        description: A raw Telegram Bot API `Update` object. Only `message.text`/`message.chat.id` are read; all other fields are ignored.
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Telegram Bot API `Update` (see core.telegram.org/bots/api#update) — treated as untrusted data, never instructions.
+      responses:
+        '200':
+          description: |
+            Ack. Returned both on a successfully-dispatched inbound command AND on any
+            verified-but-unusable outcome (unparseable JSON, non-message update, trust-pipeline
+            rejection) — Telegram retry semantics (never loop a webhook).
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok: { type: boolean, const: true }
+        '401':
+          description: Missing/incorrect secret token (generic body — no config disclosure).
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [error]
+                properties:
+                  error:
+                    type: object
+                    required: [code, message]
+                    properties:
+                      code: { type: string, const: UNAUTHORIZED }
+                      message: { type: string }
+        '404':
+          description: |
+            `TELEGRAM_WEBHOOK_SECRET` not configured — the route is disabled. Body is the SAME generic
+            `NOT_FOUND` shape as any unrouted path (posture non-disclosure, mirrors `/auth/dev-login`).
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [error]
+                properties:
+                  error:
+                    type: object
+                    required: [code, message]
+                    properties:
+                      code: { type: string, const: NOT_FOUND }
+                      message: { type: string }
+
+  /.well-known/sustainability:
+    get:
+      operationId: getSustainabilityReport
+      tags: [Sustainability]
+      summary: Get the modeled energy/carbon sustainability report
+      description: |
+        Optional out-of-core plugin / basic alignment example (non-blocking; not a core acceptance gate). ADR-020 / FR-14. Out-of-band, discoverable, machine-readable sustainability disclosure
+        (RFC 8615 well-known URI; RFC `draft-besleaga-green-sustainability-wellknown-05`).
+
+        **Served at the origin ROOT — `https://<host>/.well-known/sustainability` — OUTSIDE the
+        `/api/v1` base path** (the `servers` base does not apply to this path). It is intentionally
+        out-of-band so it adds **zero** per-request overhead to the crisis hot path (Article XVI).
+
+        Values are **estimated / modeled (demo)**: `measurement-method` is `third-party-modeled` and
+        `methodology-uri` resolves to `docs/SUSTAINABILITY.md`. Numbers are deterministic/modeled —
+        never LLM-produced (Article XII). Aligns with GHG Protocol scopes, GSF Software Carbon
+        Intensity (ISO/IEC 21031:2024), and CSRD/ESRS-E1 optional fields.
+
+        A Basic response is a single `SustainabilityReport` object; an extended trend request
+        (`granularity`) returns an ARRAY of them (capped at 366 objects per the draft's DoS guidance).
+        Read-only and unauthenticated; gated by `SUSTAINABILITY_ENABLED` (CONFIGURATION §5a).
+      x-required-role: PUBLIC
+      x-served-at-origin-root: true
+      security:
+        - {}
+      parameters:
+        - name: period
+          in: query
+          required: false
+          description: |
+            OPTIONAL (extended). Reporting period to report on, RFC 3339 form `YYYY | YYYY-MM |
+            YYYY-MM-DD`. Basic level defaults to the most recently completed full calendar month.
+          schema: { type: string, pattern: '^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$' }
+        - name: granularity
+          in: query
+          required: false
+          description: |
+            OPTIONAL (extended). Slice the `period` into a trend; the response becomes an ARRAY of
+            `SustainabilityReport` objects (≤366; draft Array-Size limit).
+          schema: { type: string, enum: [daily, monthly, yearly] }
+        - name: target
+          in: query
+          required: false
+          description: |
+            OPTIONAL (extended). Report on a specific resource path instead of the whole origin;
+            echoed back as `target-path` on the object.
+          schema: { type: string }
+      responses:
+        '200':
+          description: |
+            A modeled, schema-valid sustainability report — a single object (Basic) OR an array of
+            them (extended trend). Mirrors `schemas/sustainability-v05.schema.json`.
+
+            **Caching:** the document is heavily cached (ADR-020 / draft Operational Considerations):
+            responses carry `Cache-Control: public, max-age=...`, `ETag`, and `Last-Modified`; clients
+            SHOULD honor them and avoid frequent re-fetches.
+          headers:
+            Cache-Control:
+              schema: { type: string, example: 'public, max-age=86400' }
+            ETag:
+              schema: { type: string }
+            Last-Modified:
+              schema: { type: string }
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/SustainabilityReport'
+                  - type: array
+                    description: |
+                      Trend response (extended `granularity`). Capped at 366 objects per the draft's
+                      Array-Size Limits security consideration.
+                    minItems: 1
+                    maxItems: 366
+                    items: { $ref: '#/components/schemas/SustainabilityReport' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404':
+          description: Sustainability reporting disabled (`SUSTAINABILITY_ENABLED=off`) — the well-known URI is not served.
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+components:
+
+  securitySchemes:
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: beacon_session
+      description: Session cookie issued at login (AUTH_MODE dev|oauth|oidc).
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT signed with AUTH_SECRET. Carries the user's role claim (PUBLIC|RESPONDER|VERIFIER|EM).
+
+  parameters:
+    RegionId:
+      name: id
+      in: path
+      required: true
+      description: Region id.
+      schema: { type: string, format: uuid }
+    IncidentId:
+      name: id
+      in: path
+      required: true
+      description: Incident id.
+      schema: { type: string, format: uuid }
+    ReportId:
+      name: id
+      in: path
+      required: true
+      description: Public report id.
+      schema: { type: string, format: uuid }
+    EdxlMessageId:
+      name: id
+      in: path
+      required: true
+      description: EDXL-RM message / round-trip id.
+      schema: { type: string }
+    IncidentStatusFilter:
+      name: status
+      in: query
+      required: false
+      schema: { type: string, enum: [ACTIVE, CONTAINED, CLOSED] }
+    IncidentTypeFilter:
+      name: type
+      in: query
+      required: false
+      schema: { type: string, enum: [WILDFIRE, FLOOD] }
+
+  responses:
+    BadRequest:
+      description: Malformed request (400).
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ResponseEnvelope'
+              - type: object
+                properties:
+                  errors:
+                    type: array
+                    items: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Missing or invalid authentication (401).
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    Forbidden:
+      description: Authenticated but role lacks the capability per RBAC matrix (403).
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    NotFound:
+      description: Resource not found (404).
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    UnprocessableEntity:
+      description: Semantically invalid (e.g. consent missing, schema/citation validation failed) (422).
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    ServiceUnavailable:
+      description: |
+        Genuine total outage with NO fallback rung (503): the source is down AND there is no
+        last-known-good cache and no recorded mock to serve. This is the ONLY case a data GET
+        returns 5xx — a degraded source that still has cache/mock returns **200** with
+        `meta.status=degraded` instead (UW2 / OP3 — never a dead-end). `Retry-After` indicates
+        when to retry. The body MAY carry an `errors[]` entry (`UPSTREAM_UNAVAILABLE`) and
+        `meta.status=unavailable`.
+      headers:
+        Retry-After:
+          schema: { type: integer, example: 30 }
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorEnvelope'
+              - type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        const: unavailable
+
+  schemas:
+
+    # ---------------------------------------------------------------------------
+    # Universal response envelope + provenance/citation primitives
+    # ---------------------------------------------------------------------------
+
+    ResponseEnvelope:
+      type: object
+      description: |
+        Universal BEACON response envelope. `provenance[]` and `freshness` are MANDATORY on
+        every data response (U1). `data` shape is specialized per endpoint via allOf.
+      required: [data, provenance, freshness]
+      properties:
+        data:
+          description: Endpoint-specific payload (object or array).
+        provenance:
+          type: array
+          description: One SourceRef per contributing SOURCE_RECORD.
+          items: { $ref: '#/components/schemas/SourceRef' }
+        freshness:
+          type: string
+          format: date-time
+          description: Timestamp of the freshest contributing datum (ISO-8601).
+        meta:
+          type: object
+          additionalProperties: true
+          description: |
+            Optional pagination / degradation / engine metadata. `status` reports the
+            degradation state of this response (UW2): `ok` (live), `degraded` (served from a
+            fallback rung — cache/mock — still a 200), `unavailable` (no data available). When
+            degraded, `degraded=true` and the served `mode` (CACHED|MOCK) is reported; the
+            `provenance[]` + `freshness` describe the cache/mock actually served.
+          properties:
+            status:
+              type: string
+              enum: [ok, degraded, unavailable]
+              description: Degradation state of this response (200-degraded primary path, UW2).
+            degraded:
+              type: boolean
+              description: True when any layer was served from a fallback rung (cache/mock).
+            mode:
+              type: string
+              enum: [LIVE, CACHED, MOCK]
+              description: Effective served mode when degraded.
+            page:
+              type: object
+              description: Cursor pagination block (collection endpoints).
+              properties:
+                nextCursor: { type: [string, 'null'] }
+                hasMore: { type: boolean }
+                limit: { type: integer }
+        errors:
+          type: array
+          description: |
+            Non-fatal warnings accompanying a successful response — e.g. a `SOURCE_DEGRADED`
+            informational entry inside a 200 when a layer fell back to cache/mock.
+          items: { $ref: '#/components/schemas/Error' }
+
+    SitrepEnvelope:
+      description: |
+        SitRep response envelope. Extends the universal envelope with the MANDATORY
+        `citations[]` (U2) — one Citation per grounded SitRep field.
+      allOf:
+        - $ref: '#/components/schemas/ResponseEnvelope'
+        - type: object
+          required: [data, citations]
+          properties:
+            data: { $ref: '#/components/schemas/Sitrep' }
+            citations:
+              type: array
+              items: { $ref: '#/components/schemas/Citation' }
+
+    ErrorEnvelope:
+      type: object
+      description: Envelope for error responses (no data payload).
+      required: [errors]
+      properties:
+        errors:
+          type: array
+          items: { $ref: '#/components/schemas/Error' }
+        provenance:
+          type: array
+          items: { $ref: '#/components/schemas/SourceRef' }
+        freshness:
+          type: [string, 'null']
+          format: date-time
+        meta:
+          type: object
+          additionalProperties: true
+
+    # ---------------------------------------------------------------------------
+    # Map projection (GET /regions/{id}/map) — DOMAIN-shaped COP geometry
+    # ---------------------------------------------------------------------------
+
+    ProjectedFeature:
+      type: object
+      description: |
+        A geolocated projected feature. `precisePosition` is present ONLY for RESPONDER+ (Art. XIV);
+        PUBLIC callers receive the generalized `position` only.
+      required: [id, position]
+      properties:
+        id: { type: string }
+        position: { $ref: '#/components/schemas/Position' }
+        precisePosition:
+          allOf: [{ $ref: '#/components/schemas/Position' }]
+          description: Precise (PII) location — RESPONDER+ only; omitted for PUBLIC (Art. XIV).
+
+    ProjectedHazard:
+      type: object
+      description: A hazard footprint carried through unchanged (routed to fire/flood by kind).
+      required: [id, kind, geometry, observedAt]
+      properties:
+        id: { type: string }
+        kind: { type: string, description: 'Hazard kind, e.g. PERIMETER, HOTSPOT, FLOOD_REACH.' }
+        geometry: { $ref: '#/components/schemas/Geometry' }
+        observedAt: { type: string, format: date-time }
+        intensity: { type: number, description: 'Optional intensity (e.g. FRP for a hotspot).' }
+
+    ProjectedGauge:
+      description: A flood gauge, projected.
+      allOf:
+        - $ref: '#/components/schemas/ProjectedFeature'
+        - type: object
+          required: [floodCategory]
+          properties:
+            floodCategory: { type: string }
+            stage: { type: number }
+
+    ProjectedInfra:
+      description: A lifeline infrastructure node, projected.
+      allOf:
+        - $ref: '#/components/schemas/ProjectedFeature'
+        - type: object
+          required: [kind, status]
+          properties:
+            kind: { type: string }
+            status: { type: string }
+
+    ProjectedExposure:
+      description: An asset/person inside hazard geometry (deterministic exposure), projected.
+      allOf:
+        - $ref: '#/components/schemas/ProjectedFeature'
+        - type: object
+          required: [reason, insideHazard]
+          properties:
+            reason: { type: string }
+            insideHazard: { type: boolean }
+
+    ProjectedShelter:
+      description: A shelter with capacity/demand, projected.
+      allOf:
+        - $ref: '#/components/schemas/ProjectedFeature'
+        - type: object
+          required: [capacity, demand, status]
+          properties:
+            capacity: { type: integer }
+            demand: { type: integer }
+            status: { type: string }
+
+    ProjectedReport:
+      description: |
+        A VERIFIED public report, projected. `position` is the generalized (coarsened) location; the
+        precise location rides `precisePosition` only for RESPONDER+ (Art. XIV / ST3).
+      allOf:
+        - $ref: '#/components/schemas/ProjectedFeature'
+        - type: object
+          required: [status]
+          properties:
+            status: { type: string }
+            confidence: { type: number, description: 'Numeric confidence blend (0..1).' }
+
+    ProjectedPrediction:
+      type: object
+      description: |
+        A labelled first-order prediction (Art. XII) — carries method, inputs and uncertainty; no
+        physics-grade claim.
+      required: [id, geometry, method, inputs, uncertainty]
+      properties:
+        id: { type: string }
+        geometry: { $ref: '#/components/schemas/Geometry' }
+        method: { type: string }
+        inputs: { type: string, description: 'Deterministically stringified inputs (labelled).' }
+        uncertainty: { type: string, description: 'Human-readable uncertainty, e.g. "±40%".' }
+
+    ProjectedRoute:
+      type: object
+      description: An evacuation route path with a hazard-avoidance flag.
+      required: [id, path, avoidsHazard]
+      properties:
+        id: { type: string }
+        path:
+          type: array
+          items: { $ref: '#/components/schemas/Position' }
+        avoidsHazard: { type: boolean }
+
+    ProjectedCamera:
+      type: object
+      description: |
+        A location-pinned LIVE camera surfaced on the COP as a link-out pin (E11 "Live Views", ADR-027).
+        `viewUrl` is the provider's own external live-view PAGE (always `https:`, host-validated — the
+        href-injection guard); BEACON never embeds/proxies/rehosts the video (link-only, Art. XII). The
+        engine and the LLM never read a pixel from it. `isLive:false` ⇒ a periodic snapshot, labelled
+        honestly. The `cameras` layer is default-OFF (opt-in, `FEATURE_CAMERAS`) and map-only (not in
+        `/status`).
+      required: [id, position, kind, title, provider, viewUrl, isLive]
+      properties:
+        id: { type: string }
+        position: { $ref: '#/components/schemas/Position' }
+        kind:
+          type: string
+          enum: [FIRE_CAMERA, TRAFFIC_CCTV, WEBCAM, CITIZEN_STREAM]
+          description: |
+            FIRE_CAMERA (ALERTWildfire/ALERTCalifornia), TRAFFIC_CCTV (Caltrans/511/CNADNR), WEBCAM
+            (Windy), or CITIZEN_STREAM (consent-gated "Unofficial" — ADR-029, never merged with agency
+            pins).
+        title: { type: string, description: 'Human-facing camera name.' }
+        provider:
+          type: string
+          description: 'Attribution source, e.g. "ALERTCalifornia | UC San Diego", "Caltrans", "windy.com".'
+        viewUrl:
+          type: string
+          format: uri
+          description: 'External live-view page (always https, host-validated) — opened in a new tab, never embedded.'
+        isLive:
+          type: boolean
+          description: 'true = live stream; false = periodic snapshot (labelled honestly).'
+
+    MapProjection:
+      type: object
+      description: |
+        The full DOMAIN-shaped map projection for one region (GET /regions/{id}/map). Each slice may be
+        empty (an absent layer is `[]`); `route`/`cameras` are optional. All geometry/numbers
+        are domain-built (U3 / Art. XII) — never client-invented. Precise report geometry is RESPONDER-gated.
+        The optional `cameras` slice (E11 "Live Views", ADR-027) carries link-out camera pins; per-layer
+        provenance/freshness for it (and every other layer) rides `layerSources` in the response envelope's
+        `meta` (the `LayerId → sourceId`/`fetchedAt`/`mode` map), not this domain projection — cameras are
+        a map-only overlay, not part of `/status`.
+      required: [regionId, incidentType, hazards, gauges, infrastructure, exposure, shelters, reports, predictions]
+      properties:
+        regionId: { type: string }
+        incidentType: { type: string, description: 'e.g. WILDFIRE, FLOOD.' }
+        hazards:
+          type: array
+          items: { $ref: '#/components/schemas/ProjectedHazard' }
+        gauges:
+          type: array
+          items: { $ref: '#/components/schemas/ProjectedGauge' }
+        infrastructure:
+          type: array
+          items: { $ref: '#/components/schemas/ProjectedInfra' }
+        exposure:
+          type: array
+          items: { $ref: '#/components/schemas/ProjectedExposure' }
+        shelters:
+          type: array
+          items: { $ref: '#/components/schemas/ProjectedShelter' }
+        reports:
+          type: array
+          items: { $ref: '#/components/schemas/ProjectedReport' }
+        cameras:
+          type: array
+          description: 'Optional link-out camera pins (E11 "Live Views", ADR-027). Absent/[] when FEATURE_CAMERAS is off or no cameras cover the region.'
+          items: { $ref: '#/components/schemas/ProjectedCamera' }
+        predictions:
+          type: array
+          description: |
+            Every map-plottable prediction for the region, in derivation order (ADR-033 §3.1). `[]` when the
+            region has none. Each entry carries its OWN method, inputs and uncertainty, so N predictions are
+            N separately-labelled cones — never one merged geometry with an averaged caveat (Art. XII).
+          items: { $ref: '#/components/schemas/ProjectedPrediction' }
+        prediction:
+          allOf: [{ $ref: '#/components/schemas/ProjectedPrediction' }]
+          deprecated: true
+          description: |
+            DEPRECATED — use `predictions`. An additive-compatibility mirror of `predictions[0]`, kept so a
+            v1 client that never learned the plural field keeps rendering the first cone exactly as before.
+            Absent when `predictions` is empty (identical to the pre-plural behaviour).
+        route: { $ref: '#/components/schemas/ProjectedRoute' }
+
+    Error:
+      type: object
+      description: A single structured error or warning.
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          description: Stable machine code, e.g. CONSENT_REQUIRED, FORBIDDEN_ROLE, SOURCE_DEGRADED.
+        message: { type: string }
+        field:
+          type: string
+          description: JSON pointer / field path the error applies to.
+        detail:
+          type: object
+          additionalProperties: true
+
+    SourceRef:
+      type: object
+      description: |
+        Provenance reference → SOURCE_RECORD (U1). Carries enough to attribute and assess
+        freshness/licensing of the datum without a second fetch.
+      required: [sourceId, source, adapter, fetchedAt, license, mode]
+      properties:
+        sourceId:
+          type: string
+          format: uuid
+          description: Id of the SourceRecord this reference resolves to.
+        source:
+          type: string
+          description: Logical source name, e.g. FIRMS, NWS, NWPS, OVERPASS.
+        adapter:
+          type: string
+          description: Adapter id that fetched/normalized the datum.
+        fetchedAt:
+          type: string
+          format: date-time
+        license:
+          type: string
+          description: License/terms string for the datum.
+        mode:
+          type: string
+          enum: [LIVE, CACHED, MOCK]
+          description: Effective source mode at fetch time (degradation ladder).
+
+    Citation:
+      type: object
+      description: Grounds a single SitRep field to a source (U2). → CITATION entity.
+      required: [field, sourceId, claim]
+      properties:
+        field:
+          type: string
+          description: Which SitRep field this citation grounds (e.g. summary, priorities[0]).
+        sourceId:
+          type: string
+          format: uuid
+          description: SourceRecord id the claim is grounded in.
+        claim:
+          type: string
+          description: The specific factual claim attributed to the source.
+
+    # ---------------------------------------------------------------------------
+    # GeoJSON geometry (RFC 7946) — used by all geo-bearing entities
+    # ---------------------------------------------------------------------------
+
+    Position:
+      type: array
+      description: GeoJSON position [lon, lat] or [lon, lat, elevation].
+      minItems: 2
+      maxItems: 3
+      items: { type: number }
+
+    PointGeometry:
+      type: object
+      required: [type, coordinates]
+      properties:
+        type: { type: string, const: Point }
+        coordinates: { $ref: '#/components/schemas/Position' }
+
+    LineStringGeometry:
+      type: object
+      required: [type, coordinates]
+      properties:
+        type: { type: string, const: LineString }
+        coordinates:
+          type: array
+          minItems: 2
+          items: { $ref: '#/components/schemas/Position' }
+
+    PolygonGeometry:
+      type: object
+      required: [type, coordinates]
+      properties:
+        type: { type: string, const: Polygon }
+        coordinates:
+          type: array
+          items:
+            type: array
+            minItems: 4
+            items: { $ref: '#/components/schemas/Position' }
+
+    MultiPolygonGeometry:
+      type: object
+      required: [type, coordinates]
+      properties:
+        type: { type: string, const: MultiPolygon }
+        coordinates:
+          type: array
+          items:
+            type: array
+            items:
+              type: array
+              minItems: 4
+              items: { $ref: '#/components/schemas/Position' }
+
+    Geometry:
+      description: Any supported GeoJSON geometry.
+      oneOf:
+        - $ref: '#/components/schemas/PointGeometry'
+        - $ref: '#/components/schemas/LineStringGeometry'
+        - $ref: '#/components/schemas/PolygonGeometry'
+        - $ref: '#/components/schemas/MultiPolygonGeometry'
+
+    BBox:
+      type: array
+      description: GeoJSON bounding box [west, south, east, north].
+      minItems: 4
+      maxItems: 4
+      items: { type: number }
+
+    # ---------------------------------------------------------------------------
+    # Canonical domain entities (DOMAIN_MODEL §1–§2)
+    # ---------------------------------------------------------------------------
+
+    Region:
+      type: object
+      description: |
+        One configured region, as `GET /regions` serves it (the `RegionView` projection in
+        `src/application/interaction/command-router.ts`). `id` + `name` are always present. The
+        geography/locale fields are served EXACTLY as the wired read-model projects them and are
+        OMITTED — never defaulted, never borrowed from another region (finding F-06) — when it does not
+        carry them: the default config-backed registry supplies all four for every shipped zone, while
+        the `FEATURE_STORE=postgres` projection serves only `id` and `name`, because the `region` table
+        has no `iso`/`tz`/`languages` column.
+
+        The region's operational posture (`enabled_adapters`, `source_mode_overrides`) is deliberately
+        NOT part of this schema: it is server-side configuration, and no endpoint exposes it. Per-source
+        LIVE/CACHED/MOCK modes are observable through `GET /sources`.
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          description: |
+            Registry id from `config/regions.json` (e.g. `us-ca`, `ro`) — a slug, NOT a uuid. This is
+            the id every other region-scoped route and the `regionId` query parameter take.
+          example: us-ca
+        name:
+          type: string
+          description: |
+            Operator-facing English label. It is NOT a localized display string: UI labels come from
+            the message catalog (`shell.region.<id>`, ADR-030), and machine values are never
+            translated (FR-I18N-6).
+          example: California (US)
+        iso:
+          type: string
+          description: ISO-3166-1 alpha-2 of the containing country — decides country-scoped source coverage.
+          example: US
+        tz:
+          type: string
+          description: IANA timezone in which this region's timestamps are displayed (FU-8).
+          example: America/Los_Angeles
+        languages:
+          type: array
+          description: BCP-47 tags, most significant first. Outbound alerts carry these AND English (FR-I18N-6).
+          items: { type: string }
+          example: [en]
+        bbox: { $ref: '#/components/schemas/BBox' }
+
+    Incident:
+      type: object
+      required: [id, regionId, type, status, updatedAt]
+      properties:
+        id: { type: string, format: uuid }
+        regionId: { type: string, format: uuid }
+        type:
+          type: string
+          enum: [WILDFIRE, FLOOD]
+        status:
+          type: string
+          enum: [ACTIVE, CONTAINED, CLOSED]
+        updatedAt: { type: string, format: date-time }
+
+    IncidentDetail:
+      type: object
+      description: |
+        One incident as the core projects it (`IncidentView`, src/application/interaction/
+        command-router.ts) — the element `GET /regions/{id}/incidents` lists AND the payload
+        `GET /incidents/{id}` serves. ONE declaration, deliberately: a separate "detail" shape would be
+        a second contract free to drift from the collection it details.
+
+        `facts[]` and `priorities[]` are DETERMINISTIC engine output (Art. XII — never LLM-produced).
+        Hazard geometry and gauges are NOT inlined here: map-plottable geometry is served by
+        `GET /regions/{id}/map`, and duplicating it onto this record would be a second copy of the COP.
+      required: [id, regionId, type, status, headline, facts, priorities, provenance]
+      properties:
+        id: { type: string }
+        regionId: { type: string }
+        type:
+          type: string
+          description: 'e.g. WILDFIRE | FLOOD'
+        status:
+          type: string
+          description: 'e.g. ACTIVE | CONTAINED | CLOSED'
+        headline: { type: string }
+        facts:
+          type: array
+          description: Deterministic grounded facts, each citing its SOURCE_RECORD (F2).
+          items:
+            type: object
+            additionalProperties: true
+        priorities:
+          type: array
+          description: Engine-ranked attention areas (FR-13, SPEC §5.2).
+          items:
+            type: object
+            additionalProperties: true
+        predictions:
+          type: array
+          description: Labeled first-order projections, in derivation order. Omitted when none projected.
+          items: { $ref: '#/components/schemas/Prediction' }
+        trend:
+          type: object
+          description: Escalation trend, when the derivation produced one.
+          additionalProperties: true
+        news:
+          type: array
+          description: Region-scoped news/social batch used for the deterministic grounding pass.
+          items:
+            type: object
+            additionalProperties: true
+        provenance:
+          type: array
+          description: The incident's own SourceRefs (also aggregated onto the envelope's provenance[]).
+          items: { $ref: '#/components/schemas/SourceRef' }
+        freshness: { type: string, format: date-time }
+
+    ProjectedExposureRow:
+      type: object
+      description: |
+        One exposure row as the COP projection emits it (`ProjectedExposure`) — the wire shape shared by
+        `GET /regions/{id}/map` `data.exposure[]` and `GET /incidents/{id}/exposure`. Anonymous by
+        construction: it names an infrastructure NODE and its relationship to the hazard, never a person.
+      required: [id, position, reason, insideHazard]
+      properties:
+        id: { type: string, description: 'The exposed InfrastructureNode id.' }
+        position:
+          type: array
+          description: '[lon, lat] — GeoJSON axis order.'
+          items: { type: number }
+          minItems: 2
+          maxItems: 2
+        reason:
+          type: string
+          enum: [IN_POLYGON, IN_BUFFER, OUTAGE]
+        insideHazard: { type: boolean }
+
+    IncidentExposure:
+      type: object
+      description: |
+        The `GET /incidents/{id}/exposure` payload. `exposure[]` is byte-identical to the region map's
+        exposure slice (one computation, two doors); `regionId` states WHICH region's derivation answered.
+      required: [incidentId, regionId, exposure, count]
+      properties:
+        incidentId: { type: string }
+        regionId: { type: string }
+        exposure:
+          type: array
+          items: { $ref: '#/components/schemas/ProjectedExposureRow' }
+        count: { type: integer, minimum: 0 }
+
+    IncidentSummary:
+      description: |
+        FR-D6-4 incident-close export document (ADR-035 §4; `GET /incidents/{id}/summary`). Mirrors
+        `schemas/d6-incident-summary.schema.json` exactly — every field is a COUNT, an AREA, an INSTANT
+        or a PROVENANCE row; there is no per-person row anywhere (Art. XIV aggregate-only, enforced at
+        this export boundary by a fail-closed runtime key walk, ADR-035 §4 Layer D).
+      type: object
+      required: [incidentId, generatedAt, alertsIssued, tasksCompleted, provenance, freshness, caveats]
+      properties:
+        incidentId: { type: string, description: 'The incident this summary closes out — an entity id.' }
+        regionId: { type: string, description: 'Region registry id — a place, not a person.' }
+        generatedAt: { type: string, format: date-time, description: 'Server-injected clock instant (Art. XII) — never client-set.' }
+        closedAt: { type: string, format: date-time }
+        alertsIssued: { type: integer, minimum: 0 }
+        tasksCompleted: { type: integer, minimum: 0 }
+        tasksTotal: { type: integer, minimum: 0 }
+        sheltersOpen: { type: integer, minimum: 0 }
+        shelterOccupancyPeak: { type: integer, minimum: 0 }
+        shelterCapacityTotal: { type: integer, minimum: 0 }
+        affectedAreaKm2: { type: number, minimum: 0 }
+        casualtyTally: { $ref: '#/components/schemas/IncidentSummaryCasualtyTally' }
+        provenance:
+          type: array
+          items: { $ref: '#/components/schemas/IncidentSummaryProvenance' }
+        freshness:
+          type: object
+          required: [fetchedAt]
+          description: The OLDEST fetchedAt across provenance — the document is only as fresh as its stalest input.
+          properties:
+            fetchedAt: { type: string, format: date-time }
+        caveats:
+          type: array
+          items: { type: string }
+          description: |
+            Limitation strings derived from the document's own content (Art. XVI); ALWAYS includes the
+            aggregate-only statement, regardless of input.
+
+    IncidentSummaryCasualtyTally:
+      description: FR-D6-5 aggregate casualty tally — a COUNT, never a per-person record.
+      type: object
+      required: [count, label, authoritative]
+      properties:
+        reportId: { type: string, description: 'Id of the damage report this tally summarises — an entity id, never a reporter.' }
+        count: { type: integer, minimum: 0 }
+        asOf: { type: string, format: date-time }
+        label: { type: string, enum: ['unverified — not authoritative'] }
+        authoritative: { type: boolean, enum: [false] }
+
+    IncidentSummaryProvenance:
+      description: One provenance row — `SourceRecord` at the export boundary, `id` carried as `sourceId`.
+      type: object
+      required: [sourceId, source, adapter, fetchedAt, license, mode]
+      properties:
+        sourceId: { type: string }
+        source: { type: string }
+        adapter: { type: string }
+        fetchedAt: { type: string, format: date-time }
+        license: { type: string }
+        mode:
+          type: string
+          enum: [LIVE, CACHED, MOCK]
+
+    HazardGeometry:
+      type: object
+      description: |
+        CANONICAL DOMAIN entity, documented for reference — **no v1 path emits this shape verbatim**.
+        Hazard footprints reach a client through `GET /regions/{id}/map` `data.hazards[]`, which is the
+        anonymous PROJECTED wire shape (id, kind, geometry, observedAt, intensity?) with the raw source
+        id stripped. Stated here rather than left as a silent unused definition.
+      required: [id, incidentId, kind, geom, observedAt, sourceId]
+      properties:
+        id: { type: string, format: uuid }
+        incidentId: { type: string, format: uuid }
+        kind:
+          type: string
+          enum: [HOTSPOT, PERIMETER, FLOOD_REACH, SPREAD_CONE]
+        geom: { $ref: '#/components/schemas/Geometry' }
+        intensity:
+          type: number
+          description: Deterministic intensity value (never LLM-produced).
+        observedAt: { type: string, format: date-time }
+        sourceId:
+          type: string
+          format: uuid
+          description: SourceRecord provenance.
+
+    Gauge:
+      type: object
+      description: |
+        CANONICAL DOMAIN entity, documented for reference — **no v1 path emits this shape verbatim**.
+        Gauges reach a client through `GET /regions/{id}/map` `data.gauges[]` (projected: id, position,
+        floodCategory, stage?).
+      required: [id, geom, stage, floodCategory, sourceId]
+      properties:
+        id: { type: string, format: uuid }
+        geom: { $ref: '#/components/schemas/PointGeometry' }
+        stage: { type: number }
+        floodCategory:
+          type: string
+          enum: [NONE, ACTION, MINOR, MODERATE, MAJOR]
+        crestForecast:
+          type: [number, 'null']
+        crestTime:
+          type: [string, 'null']
+          format: date-time
+        sourceId: { type: string, format: uuid }
+
+    InfrastructureNode:
+      type: object
+      required: [id, type, geom, status, sourceId]
+      properties:
+        id: { type: string, format: uuid }
+        type:
+          type: string
+          enum: [HOSPITAL, NURSING_HOME, POWER, CELL, ROAD, RAIL, SHELTER]
+        geom: { $ref: '#/components/schemas/Geometry' }
+        status:
+          type: string
+          enum: [ONLINE, AT_RISK, OFFLINE]
+        sourceId: { type: string, format: uuid }
+
+    Exposure:
+      type: object
+      description: |
+        CANONICAL DOMAIN exposure row (U3) — node relationship to a hazard. Documented for reference:
+        **no v1 path emits this shape verbatim.** The wire shape both exposure surfaces
+        (`GET /regions/{id}/map` `data.exposure[]` and `GET /incidents/{id}/exposure`) actually serve is
+        `ProjectedExposureRow`, which carries no `distanceM`/`computedAt` because the projection does not
+        emit them. Kept so the fuller domain record stays legible beside the projected one.
+      required: [id, incidentId, nodeId, insideHazard, reason, computedAt]
+      properties:
+        id: { type: string, format: uuid }
+        incidentId: { type: string, format: uuid }
+        nodeId: { type: string, format: uuid }
+        node:
+          $ref: '#/components/schemas/InfrastructureNode'
+        insideHazard: { type: boolean }
+        distanceM:
+          type: number
+          description: Deterministic distance in metres (Turf/SQL).
+        reason:
+          type: string
+          enum: [IN_POLYGON, IN_BUFFER, OUTAGE]
+        computedAt: { type: string, format: date-time }
+
+    Prediction:
+      type: object
+      description: Labeled first-order projection with method, inputs and uncertainty.
+      required: [id, incidentId, kind, method]
+      properties:
+        id: { type: string, format: uuid }
+        incidentId: { type: string, format: uuid }
+        kind:
+          type: string
+          enum: [FIRE_CONE, FLOOD_INUNDATION, IMPACT_OVER_TIME, ESCALATION]
+        geom: { $ref: '#/components/schemas/Geometry' }
+        method:
+          type: string
+          description: Labeled first-order method description.
+        inputs:
+          type: object
+          additionalProperties: true
+        uncertainty:
+          type: number
+          description: Deterministic uncertainty measure.
+        horizon: { type: string, format: date-time }
+        sourceId:
+          type: [string, 'null']
+          format: uuid
+          description: |
+            SourceRecord provenance for the inputs this projection was derived from
+            (DDL `prediction.source_id`). Predictions are derived but still anchor to the
+            triggering source(s) for traceability.
+
+    PublicReport:
+      type: object
+      description: |
+        Public view of a consented SOS report. Precise location/contact (PII) is NEVER
+        present here — only generalized location (ST3 / Art. XIV).
+      required: [id, source, status, consent]
+      properties:
+        id: { type: string, format: uuid }
+        incidentId:
+          type: [string, 'null']
+          format: uuid
+        source:
+          type: string
+          enum: [WEB, SMS, SOCIAL]
+        status:
+          type: string
+          enum: [UNVERIFIED, TRIAGED, VERIFIED, REJECTED]
+        text:
+          type: string
+          maxLength: 2000
+          description: |
+            The reporter's own words — the CLAIM a verifier approves or rejects (Art. XIII). Served on
+            GET /reports, which is VERIFIER+ only; that endpoint gate is the audience control, so the
+            field is not separately role-gated. Purged with its row at purgeAfter (Art. XIV). Absent for
+            rows written before migration 0006.
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Deterministic weighted blend (Q4). Surfaced with its components.
+        confidenceComponents:
+          type: object
+          description: geocode | authority | classifier | corroboration sub-scores.
+          properties:
+            geocode: { type: number }
+            authority: { type: number }
+            classifier: { type: number }
+            corroboration: { type: number }
+        geomGeneralized:
+          $ref: '#/components/schemas/Geometry'
+        consent: { type: boolean }
+        createdAt: { type: string, format: date-time }
+
+    PublicReportResponderView:
+      description: |
+        Responder-authenticated view — includes precise PII location and contact
+        (RESPONDER/VERIFIER/EM only — ST3 / Art. XIV). Never returned to PUBLIC.
+      allOf:
+        - $ref: '#/components/schemas/PublicReport'
+        - type: object
+          properties:
+            geomPrecise:
+              allOf:
+                - $ref: '#/components/schemas/PointGeometry'
+              description: RESPONDER-ONLY precise location (PII). Never exposed to PUBLIC.
+            contact:
+              type: string
+              description: RESPONDER-ONLY reporter contact (PII). Purged after incident lifecycle.
+            purgeAfter:
+              type: string
+              format: date-time
+              description: PII purge deadline (incident lifecycle; no PII retention).
+
+    # CORRECTED 2026-08-01 (finding F-405) — this schema described a body the server has never parsed.
+    # It required `source`, `geomPrecise` and `description`; `reportCommand` (src/adapters/channels/http/
+    # routing.ts) reads `text`, `consent`, top-level `lat`/`lng`, `incidentId` and `liveViewUrl`, and
+    # `source` is fixed to WEB server-side (command-router.ts handleReport). Three vocabularies were in play
+    # at once — this document, the client, and the parser — which is how F-360 shipped: the client mirrored
+    # neither, sent a nested `location`, and was answered 201 Created with the coordinate discarded.
+    # THE CODE IS THE GROUND TRUTH HERE. This schema now matches `SubmitReportWireBody`, the single
+    # declaration the parser itself is keyed by; the client type is derived from that same declaration.
+    PublicReportCreate:
+      type: object
+      required: [consent, text]
+      properties:
+        consent:
+          type: boolean
+          description: Must be true; enforced at 422 CONSENT_REQUIRED if absent or false (EV4/UW6).
+        text:
+          type: string
+          description: Free-text situation description (AI-classified, never auto-trusted).
+        lat:
+          type: number
+          description: |
+            Reporter precise latitude (PII) — stored responder-only, generalized for public (Art. XIV).
+            Sent as a TOP-LEVEL pair with `lng`, not as a nested object or a GeoJSON geometry. Both must be
+            present for a location to be recorded; either alone is ignored.
+        lng:
+          type: number
+          description: Reporter precise longitude (PII). Note the spelling — `lng`, not `lon`.
+        incidentId:
+          type: string
+          description: |
+            Optional incident this SOS belongs to (`public_report.incident_id`, a nullable FK). When present,
+            a later `VERIFIED` + `emitCap` transition can scope its DRAFT CAP alert to THIS incident; an
+            unlinked report drafts nothing and says so (F-362). Absent means "not linked", never a guess.
+        liveViewUrl:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: |
+            Optional consent-gated citizen live-view link (E11 "Live Views" v1.2, ADR-029) — **gated by
+            `FEATURE_CITIZEN_STREAM` (default OFF)**. When present it becomes a distinct `CITIZEN_STREAM`
+            camera, permanently badged "Live Feed — Unofficial", HITL-reviewed, 2 h TTL, **never fetched
+            server-side**. STRICT https host allow-list: `youtube.com`/`www.youtube.com` (path
+            `/watch` or `/live`), `youtu.be`, `twitch.tv`, `facebook.com`/`www.facebook.com` (non-root
+            path); no http/IP-literal/userinfo/private host (SSRF guard). **Posture when the feature is
+            OFF: the field is REJECTED with a 400** (honest — not silently dropped). A disallowed value is
+            likewise a 400.
+
+    # CORRECTED 2026-08-01 (finding F-405). The transition field is `decision`, not `toStatus` —
+    # `verifyCommand` (routing.ts) has always read `decision`, so a caller following this document was
+    # answered 400 on every request. `reason` is documented but read by nothing and is marked accordingly
+    # rather than quietly deleted (the honest-limitations rule). `emitCap` is now genuinely implemented
+    # (F-362) after being documented here since S03 and read by no code at all.
+    ReportTransition:
+      type: object
+      required: [decision]
+      properties:
+        decision:
+          type: string
+          enum: [TRIAGED, VERIFIED, REJECTED]
+          description: |
+            The human triage decision. Legal hops are enforced by the domain: `UNVERIFIED → TRIAGED →
+            VERIFIED|REJECTED`. `UNVERIFIED → VERIFIED` is REFUSED (409) — a report is triaged before it
+            is verified, and that ordering is the Art. XIII gate, not a formality.
+        emitCap:
+          type: boolean
+          default: false
+          description: |
+            On `VERIFIED`, draft a CAP alert for the report's linked incident and return it in
+            `meta.emittedAlert` (202). Must be a boolean — a string is rejected 400 rather than coerced,
+            because a truthy `"false"` deciding whether a public alert is drafted is precisely what
+            Art. XIII exists to prevent.
+
+            **DRAFT ONLY.** Promotion to ACTUAL remains a separate authenticated approval that records the
+            approver (`POST /alerts/{id}/approve`); `AlertSinkPort.emit` accepts only an approved ACTUAL
+            alert *at the type level*, so this path cannot reach a public sink however it is called.
+            Ignored on `TRIAGED`/`REJECTED` — no outbound action from a report that was never verified.
+            A report with no `incidentId` drafts nothing and returns `meta.capNotEmitted` explaining why.
+        reason:
+          type: string
+          description: |
+            **NOT READ (v1).** Documented since S03 but no parser consumes it — a REJECTED report records
+            no free-text reason today. Listed here rather than removed so the gap is visible; sending it is
+            harmless (unknown fields are ignored) but has no effect.
+        visionAssist:
+          type: object
+          description: |
+            Optional advisory vision-assist attached to the decision (E6·T-290/T-291). Consent + PII-screen
+            gated at the compliance gateway. ADVISORY ONLY — it runs after the decision is committed and can
+            never block or alter it (Art. XII/XIII/XIV); any finding is surfaced in `meta.visionFinding`.
+
+    Sitrep:
+      type: object
+      description: |
+        Generated situational report. All numbers/rankings/trend are deterministic (U3);
+        each field is grounded by a Citation in the SitrepEnvelope.citations[] (U2).
+      required: [id, incidentId, generatedAt, summary, priorities, outlook, trend, aiMode]
+      properties:
+        id: { type: string, format: uuid }
+        incidentId: { type: string, format: uuid }
+        generatedAt: { type: string, format: date-time }
+        summary:
+          type: string
+          description: Narrative synthesis of cited facts (LLM narration only).
+        priorities:
+          type: array
+          description: Deterministically ranked attention areas (not LLM-ranked).
+          items:
+            type: object
+            required: [rank, label]
+            properties:
+              rank: { type: integer }
+              label: { type: string }
+              detail: { type: string }
+        outlook:
+          type: array
+          description: |
+            FEV-8 / ADR-033 §5. Every prediction of the incident, ranked by the ENGINE
+            (likelihood class DESC, then soonest ETA ASC, then severity DESC) — not LLM-ranked,
+            and never re-sorted by a client. `[]` when the incident has no prediction.
+            This is the surface that carries geometry-less kinds (ESCALATION, IMPACT_OVER_TIME):
+            `MapProjection.predictions[]` requires a geometry and therefore omits them (finding F-77).
+            Every row carries the method + uncertainty a labeled first-order projection must travel
+            with; `likelihoodClass`/`etaHours` are absent whenever no SOURCE signal supported one
+            (FUW-3 — never an invented probability or lead time).
+          items:
+            type: object
+            required: [rank, predictionId, kind, method, uncertainty]
+            properties:
+              rank:
+                type: integer
+                description: 1-based engine-assigned position (deterministic; ties keep derivation order).
+              predictionId: { type: string }
+              kind:
+                type: string
+                enum: [FIRE_CONE, FLOOD_INUNDATION, IMPACT_OVER_TIME, ESCALATION]
+              method:
+                type: string
+                description: The labeled first-order method, verbatim from the prediction.
+              uncertainty:
+                type: number
+                minimum: 0
+                maximum: 1
+              likelihoodClass:
+                type: string
+                enum: [POSSIBLE, LIKELY, VERY_LIKELY]
+                description: Present only when a source-provided probability signal supported one (FU-11).
+              etaHours:
+                type: number
+                minimum: 0
+                description: Source-supported lead time in hours, unrounded.
+              hazardArrival:
+                type: string
+                format: date-time
+                description: generatedAt + etaHours, computed server-side from the report's own instant (FU-12).
+        trend:
+          type: string
+          enum: [ESCALATING, STEADY, DEESCALATING]
+        aiMode:
+          type: string
+          enum: [cloud, local, deterministic-only]
+          description: Which rung of the AI ladder produced this SitRep (UW1).
+
+    ReportQueueItem:
+      type: object
+      description: |
+        One row of the verifier triage queue (GET /reports). `geomPrecise` is present ONLY for
+        RESPONDER+ responses (Art. XIV) — withheld from lower roles even though the queue itself is
+        VERIFIER+. `confidence` is the deterministic blend (Art. XII), never LLM-produced.
+      required: [id, status]
+      properties:
+        id: { type: string }
+        status:
+          type: string
+          enum: [UNVERIFIED, TRIAGED, VERIFIED, REJECTED]
+        confidence: { type: number, minimum: 0, maximum: 1 }
+        geomPrecise:
+          description: Precise SOS geometry (GeoJSON) — RESPONDER+ only (Art. XIV).
+          $ref: '#/components/schemas/Geometry'
+
+    AlertQueueItem:
+      type: object
+      description: |
+        One row of the DRAFT alert review queue (GET /alerts). Always `state=DRAFT` — a threshold fire
+        never produces an ACTUAL alert (Art. XIII); promotion is the separate HITL approve gate.
+      required: [id, state, category, severity, incidentId]
+      properties:
+        id: { type: string }
+        state:
+          type: string
+          enum: [DRAFT]
+        category:
+          type: string
+          enum: [Fire, Met, Safety]
+        severity:
+          type: string
+          enum: [MINOR, MODERATE, SEVERE, EXTREME]
+        incidentId: { type: string }
+
+    SourceRecord:
+      type: object
+      description: Canonical provenance record every datum anchors to (Art. XI).
+      required: [id, source, adapter, fetchedAt, license, mode]
+      properties:
+        id: { type: string, format: uuid }
+        source: { type: string }
+        adapter: { type: string }
+        fetchedAt: { type: string, format: date-time }
+        license: { type: string }
+        mode:
+          type: string
+          enum: [LIVE, CACHED, MOCK]
+
+    AdapterHealth:
+      type: object
+      description: |
+        Operational health of one configured source (adapter-contract §3; ADR-009). Drives the
+        stale/unavailable UI badge (FR-2/UW2).
+
+        `stale` and `degraded` are DERIVED VERDICTS this server computes, never claims copied from
+        upstream. A literal circuit-breaker state (CLOSED/OPEN/HALF_OPEN) is deliberately ABSENT — see
+        the `GET /health/adapters` description for why it cannot be observed from a request, and what is
+        reported in its place.
+      required: [adapterId, mode, fetchedAt, stale, degraded]
+      properties:
+        adapterId: { type: string, description: 'e.g. "firms" — the provenance sourceId.' }
+        mode:
+          type: string
+          description: The EFFECTIVE rung the redundancy ladder served this source from.
+          enum: [LIVE, CACHED, MOCK]
+        fetchedAt: { type: string, description: 'Fetch instant of this source''s newest datum (ISO-8601).' }
+        ageSec:
+          type: integer
+          minimum: 0
+          description: Age of that datum in whole seconds. OMITTED when `fetchedAt` cannot be parsed.
+        stale:
+          type: boolean
+          description: |
+            True when `ageSec` exceeds the report's `staleAfterSec` — or when `fetchedAt` is unreadable
+            (fails pessimistic: a broken timestamp must never render as a green badge).
+        degraded:
+          type: boolean
+          description: True when the served rung is CACHED or MOCK — i.e. the ladder descended (Art. XVI).
+
+    AdaptersHealthReport:
+      type: object
+      description: |
+        Aggregate adapter-health report for one region — the `data` payload of `GET /health/adapters`
+        (carried inside the standard response envelope like every other JSON response).
+      required: [regionId, status, generatedAt, staleAfterSec, adapters, counts]
+      properties:
+        regionId: { type: string }
+        status:
+          type: string
+          description: '`ok` only when EVERY adapter is LIVE and fresh; `degraded` otherwise.'
+          enum: [ok, degraded]
+        generatedAt: { type: string, format: date-time, description: 'Injected clock instant (Art. XII).' }
+        staleAfterSec:
+          type: integer
+          description: |
+            The staleness threshold applied to every row — the adapter-contract §5 default cache TTL
+            (900 s), i.e. the point at which a degraded adapter's last-known-good copy is itself expired.
+        adapters:
+          type: array
+          items: { $ref: '#/components/schemas/AdapterHealth' }
+        counts:
+          type: object
+          description: Per-rung tallies over `adapters[]` (`live + cached + mock == total`).
+          required: [total, live, cached, mock, stale]
+          properties:
+            total: { type: integer, minimum: 0 }
+            live: { type: integer, minimum: 0 }
+            cached: { type: integer, minimum: 0 }
+            mock: { type: integer, minimum: 0 }
+            stale: { type: integer, minimum: 0 }
+
+    Alert:
+      type: object
+      description: |
+        CAP/EDXL alert. An ACTUAL alert MUST carry `approvedBy` (Art. XIII); threshold-fired
+        alerts are DRAFT only.
+      required: [id, capStatus, category, severity, edxlKind]
+      properties:
+        id: { type: string, format: uuid }
+        incidentId:
+          type: [string, 'null']
+          format: uuid
+        capStatus:
+          type: string
+          enum: [DRAFT, ACTUAL]
+        category:
+          type: string
+          enum: [Fire, Met, Safety]
+        severity:
+          type: string
+          enum: [MINOR, MODERATE, SEVERE, EXTREME]
+        area: { $ref: '#/components/schemas/Geometry' }
+        edxlKind:
+          type: string
+          enum: [CAP, EDXL_RM, EDXL_SITREP]
+        sentAt:
+          type: [string, 'null']
+          format: date-time
+        approvedBy:
+          type: [string, 'null']
+          format: uuid
+          description: APP_USER id of the approver. REQUIRED before capStatus=ACTUAL (Art. XIII).
+        thresholdRuleId:
+          type: [string, 'null']
+          format: uuid
+          description: |
+            THRESHOLD_RULE that fired this alert, if it was threshold-triggered (DDL
+            `alert.threshold_rule_id` FK; EV6 traceability). Null for manually-composed alerts.
+
+    CapAlertCreate:
+      type: object
+      description: CAP v1.2 alert payload (subset of the canonical CAP elements).
+      required: [status, msgType, category, severity, urgency, certainty, headline, area]
+      properties:
+        identifier:
+          type: string
+          description: CAP identifier; assigned by server if omitted.
+        sender:
+          type: string
+          description: CAP sender identity (CAP_SENDER); defaults from config.
+        sent:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [Draft, Actual]
+          description: |
+            BEACON narrows CAP's `status` to `[Draft, Actual]` (cap-v1.2.schema.json + Art. XIII):
+            threshold-fired/composed alerts start as Draft; only an approved alert becomes Actual.
+            CAP's Exercise/System/Test statuses are intentionally not emitted by BEACON.
+        msgType:
+          type: string
+          enum: [Alert, Update, Cancel, Ack, Error]
+        scope:
+          type: string
+          enum: [Public, Restricted, Private]
+          default: Public
+        category:
+          type: string
+          enum: [Geo, Met, Safety, Security, Rescue, Fire, Health, Env, Transport, Infra, CBRNE, Other]
+        event:
+          type: string
+        urgency:
+          type: string
+          enum: [Immediate, Expected, Future, Past, Unknown]
+        severity:
+          type: string
+          enum: [Extreme, Severe, Moderate, Minor, Unknown]
+        certainty:
+          type: string
+          enum: [Observed, Likely, Possible, Unlikely, Unknown]
+        headline:
+          type: string
+        description:
+          type: string
+        instruction:
+          type: string
+        effective:
+          type: string
+          format: date-time
+        expires:
+          type: string
+          format: date-time
+        incidentId:
+          type: string
+          format: uuid
+        area:
+          type: object
+          description: CAP area block.
+          required: [areaDesc]
+          properties:
+            areaDesc: { type: string }
+            polygon: { $ref: '#/components/schemas/PolygonGeometry' }
+            geocode:
+              type: array
+              items:
+                type: object
+                properties:
+                  valueName: { type: string }
+                  value: { type: string }
+        approvedBy:
+          type: string
+          format: uuid
+          description: REQUIRED when status=Actual (Art. XIII); otherwise rejected with 409.
+
+    ThresholdRule:
+      type: object
+      description: |
+        Declarative early-warning rule (Q5, ADR-014) as `GET /threshold-rules` serves it — the DOMAIN
+        entity (`src/domain/threshold-rule.ts`) verbatim. Firing creates a DRAFT Alert only (Art. XIII).
+
+        NB: `hysteresis`/`cooldown` are NUMBERS here (the entity's shape), not the duration TOKENS
+        (`"15m"`) that `schemas/threshold-rule.schema.json` — an S03-era artifact — describes; `scope`
+        is an optional region id, not a required uuid. This entry documents what the API actually
+        returns. Reconciling that older JSON-Schema with the entity is tracked separately.
+      required: [id, target, operator, value]
+      properties:
+        id: { type: string, description: 'Stable rule id (a slug, e.g. "ca-hazard-buffer-rule").' }
+        target:
+          type: string
+          enum: [GAUGE_CATEGORY, HAZARD_BUFFER, FORECAST_GAUGE_CATEGORY]
+        operator:
+          type: string
+          enum: [crosses, gte, enters]
+        value:
+          type: string
+          description: e.g. MODERATE | <meters> | <infra_type>.
+        scope:
+          type: string
+          description: Optional region id the rule is scoped to. Absent ⇒ deployment-wide.
+        hysteresis:
+          type: number
+          minimum: 0
+          description: Minimum dwell (anti-flap). Absent ⇒ none configured.
+        cooldown:
+          type: number
+          minimum: 0
+          description: De-dup window suppressing repeat fires. Absent ⇒ none configured.
+
+    Resource:
+      type: object
+      required: [id, kind, status, org]
+      properties:
+        id: { type: string, format: uuid }
+        kind:
+          type: string
+          enum: [CREW, ENGINE, AIRCRAFT, MEDICAL, SUPPLY]
+        status:
+          type: string
+          enum: [AVAILABLE, ASSIGNED, OOS]
+        geom: { $ref: '#/components/schemas/PointGeometry' }
+        org:
+          type: string
+          description: Owning agency.
+
+    ResourceCreate:
+      type: object
+      required: [kind, org]
+      properties:
+        kind:
+          type: string
+          enum: [CREW, ENGINE, AIRCRAFT, MEDICAL, SUPPLY]
+        status:
+          type: string
+          enum: [AVAILABLE, ASSIGNED, OOS]
+          default: AVAILABLE
+        geom: { $ref: '#/components/schemas/PointGeometry' }
+        org:
+          type: string
+          description: RESPONDER may only register for own org; EM for any.
+
+    ResourceTask:
+      type: object
+      required: [id, resourceId, incidentId, status]
+      properties:
+        id: { type: string, format: uuid }
+        resourceId: { type: string, format: uuid }
+        incidentId: { type: string, format: uuid }
+        status:
+          type: string
+          enum: [PROPOSED, TASKED, ENROUTE, ONSCENE, CLEARED]
+        target: { $ref: '#/components/schemas/Geometry' }
+        edxlRmRef:
+          type: string
+          description: Mutual-aid round-trip id this task is bound to.
+
+    ResourceTaskCreate:
+      type: object
+      required: [resourceId, incidentId]
+      properties:
+        resourceId: { type: string, format: uuid }
+        incidentId: { type: string, format: uuid }
+        status:
+          type: string
+          enum: [PROPOSED, TASKED, ENROUTE, ONSCENE, CLEARED]
+          default: PROPOSED
+        target: { $ref: '#/components/schemas/Geometry' }
+        fromReportId:
+          type: string
+          format: uuid
+          description: Optional originating report; MUST be VERIFIED (ST1) or request is 409.
+
+    Shelter:
+      type: object
+      required: [id, geom, capacity, occupancy, status, org]
+      properties:
+        id: { type: string, format: uuid }
+        geom: { $ref: '#/components/schemas/PointGeometry' }
+        capacity: { type: integer }
+        occupancy: { type: integer }
+        status:
+          type: string
+          enum: [OPEN, FULL, CLOSED]
+        org:
+          type: string
+          description: Agency-entered/seeded.
+
+    EvacRoute:
+      type: object
+      required: [id, geom, avoidsHazard]
+      properties:
+        id: { type: string, format: uuid }
+        incidentId:
+          type: [string, 'null']
+          format: uuid
+        geom: { $ref: '#/components/schemas/LineStringGeometry' }
+        avoidsHazard:
+          type: boolean
+          description: Whether the route deterministically avoids the hazard polygon.
+        suggestedStart:
+          type: [string, 'null']
+          format: date-time
+        engine:
+          type: string
+          enum: [ors, heuristic]
+          description: >-
+            Which engine produced the geometry — real road routing (OpenRouteService, behind
+            FEATURE_ROUTING=ors) or the offline hazard-avoiding heuristic. Optional; a consumer
+            that receives no engine shows no engine label (added 2026-08-10).
+
+    # RECONCILED 2026-08-01 (findings F-361/F-405). This schema was RIGHT and the implementation was wrong:
+    # `destination` has been documented optional since S03 while `parseRoutes` hard-required it, so
+    # POST /routes 400'd on every submit from the evacuation panel (which collects only an origin). The
+    # server now honours the documented destination-less case. `profile` is marked NOT READ rather than
+    # deleted, per the honest-limitations rule.
+    RouteRequest:
+      type: object
+      required: [origin, incidentId]
+      properties:
+        origin: { $ref: '#/components/schemas/Position' }
+        destination:
+          allOf:
+            - $ref: '#/components/schemas/Position'
+          description: |
+            Optional; if omitted, the nearest **OPEN** shelter to the origin is the destination, chosen
+            deterministically server-side (Art. XII — the client never ranks or picks). Present-but-malformed
+            is a 400: silently ignoring a destination the caller meant would route them somewhere else.
+            With no open shelter in range the response is a typed 404, never a route to nowhere (Art. XVI).
+        incidentId:
+          type: string
+          description: Incident whose hazard polygon the route must avoid. Required.
+        avoidHazard:
+          type: boolean
+          description: Optional override of hazard avoidance; defaults to the use-case's own policy.
+        profile:
+          type: string
+          enum: [driving, walking]
+          default: driving
+          description: '**NOT READ (v1)** — no parser consumes it; the routing profile is not selectable yet.'
+
+    AppUser:
+      type: object
+      required: [id, role]
+      properties:
+        id: { type: string, format: uuid }
+        role:
+          type: string
+          enum: [PUBLIC, RESPONDER, VERIFIER, EM]
+        org: { type: string }
+
+    AuditEvent:
+      type: object
+      description: |
+        Append-only record of every state-changing action (CLARIFICATIONS §B.Q6). Cost-attribution
+        fields (ADR-022, F19) are populated on each LLM/Vision/adapter model call and NULL on non-AI
+        events; numbers are deterministic (tokens × tier rate, Art. XII). These map to the DDL columns
+        `cost_tokens_in / cost_tokens_out / cost_usd / model_tier` (schemas/schema.sql · DOMAIN_MODEL §2).
+      required: [id, action, target, at, hash]
+      properties:
+        id: { type: string, description: 'Chain-local surrogate id (e.g. "ae-1") — deliberately NOT part of the hashed payload.' }
+        actorId:
+          type: string
+          description: |
+            The server-derived acting identity. OPTIONAL: a system-originated event (a retention sweep,
+            a scheduled emission) has no human actor, and inventing one would be the misattribution the
+            audit trail exists to prevent.
+        action: { type: string, description: 'Closed-vocabulary action token, e.g. ALERT_EMIT.' }
+        target: { type: string, description: 'The entity acted on, e.g. "alert:ca-alert-draft-1".' }
+        at: { type: string, format: date-time }
+        evidenceDigest:
+          type: string
+          description: |
+            Content address of a bulky evidence record held BESIDE the chain (governance ledger,
+            ADR-034 §5) — the chain binds it cryptographically while staying small and PII-free.
+        costTokensIn:
+          type: [integer, 'null']
+          description: Input tokens for the model call (DDL cost_tokens_in); null on non-AI events.
+        costTokensOut:
+          type: [integer, 'null']
+          description: Output tokens for the model call (DDL cost_tokens_out); null on non-AI events.
+        costUsd:
+          type: [number, 'null']
+          description: Deterministic cost = tokens × tier rate (DDL cost_usd, Art. XII); null on non-AI events.
+        modelTier:
+          type: [string, 'null']
+          description: Model tier of the call (DDL model_tier); null on non-AI events.
+          enum: [CLOUD, LOCAL, DETERMINISTIC, VISION, null]
+        prevHash:
+          type: string
+          description: |
+            Predecessor event hash — the tamper-evident link (ADR-017/022). ABSENT (omitted, not null) on
+            the genesis event, which is how a client identifies the chain root. Over the wire the API
+            omits absent optional fields rather than emitting `null`; the DDL column `prev_hash` is
+            nullable, which is the same statement in SQL.
+        hash:
+          type: string
+          description: |
+            This event's hash = linkHash(prevHash, canonical(payload)) (DDL `hash`). Always present.
+            `GET /audit-events` serves rows in CHAIN ORDER so `events[n].prevHash == events[n-1].hash`,
+            and reports the server's own re-verification as `data.chainVerified` (fail-closed).
+
+    # ---------------------------------------------------------------------------
+    # EDXL interop (boundary serializations) + SSE stream event
+    # ---------------------------------------------------------------------------
+
+    EdxlRmMessage:
+      type: object
+      description: |
+        EDXL-RM 1.0 mutual-aid message. This is the inline summary view of the boundary
+        serialization; the FULL canonical schema (ContentObject/ResourceInformation/
+        ResponseInformation/ScheduleInformation/…) is authoritative in
+        `schemas/edxl-rm.schema.json`. `messageType` + `originatingMessageID` (round-trip
+        correlation id) mirror that schema. The full message set covers the complete mutual-aid
+        lifecycle (request → commit/response/offer → release/return).
+      required: [messageType, originatingMessageID]
+      properties:
+        messageId:
+          type: string
+          description: Server-assigned round-trip id (echoed on read). Maps to EDXL-RM <MessageID>.
+        messageType:
+          type: string
+          description: |
+            EDXL-RM message type — the FULL OASIS RM 1.0 set (mirrors
+            `schemas/edxl-rm.schema.json`).
+          enum:
+            - RequestResource
+            - ResponseToRequestResource
+            - RequisitionResource
+            - CommitResource
+            - RequestInformation
+            - ResponseToRequestInformation
+            - OfferUnsolicitedResource
+            - ReleaseResource
+            - RequestReturn
+            - ResponseToRequestReturn
+            - RequestQuote
+            - ResponseToRequestQuote
+            - RequestResourceDeploymentStatus
+            - ResponseToRequestResourceDeploymentStatus
+        messageContentType:
+          type: string
+          description: EDXL-RM <MessageContentType> — equals messageType (kept for spec fidelity).
+        originatingMessageID:
+          type: string
+          description: |
+            EDXL-RM <OriginatingMessageID> — round-trip CORRELATION id: the request and every
+            commit/response/status reply that answers it share this value.
+        precedingMessageID:
+          type: string
+          description: |
+            EDXL-RM <PrecedingMessageID> — the message this one directly replies to; forms the
+            reply chain within a round-trip (required on reply-type messages).
+        sentDateTime:
+          type: string
+          format: date-time
+        incidentId:
+          type: string
+          format: uuid
+        resourceInformation:
+          type: array
+          description: |
+            EDXL-RM ResourceInformation blocks mapped to canonical RESOURCE entities. Summary
+            shape; see `schemas/edxl-rm.schema.json` $defs.resourceInformation for the full form.
+          items:
+            type: object
+            properties:
+              resourceInfoElementID: { type: string }
+              resourceId: { type: string, format: uuid }
+              typeStructure: { type: string }
+              quantity: { type: integer }
+              status: { type: string }
+
+    EdxlRmRoundTrip:
+      type: object
+      description: The full request → commit → response chain for a mutual-aid exchange.
+      required: [messageId, chain]
+      properties:
+        messageId: { type: string }
+        chain:
+          type: array
+          items: { $ref: '#/components/schemas/EdxlRmMessage' }
+
+    EdxlSitrepCreate:
+      type: object
+      required: [incidentId]
+      properties:
+        incidentId: { type: string, format: uuid }
+        reportingPeriodStart:
+          type: string
+          format: date-time
+        reportingPeriodEnd:
+          type: string
+          format: date-time
+        narrative:
+          type: string
+
+    EdxlSitrep:
+      type: object
+      required: [id, incidentId, edxlVersion, generatedAt]
+      properties:
+        id: { type: string, format: uuid }
+        incidentId: { type: string, format: uuid }
+        edxlVersion:
+          type: string
+          default: '1.0'
+        generatedAt: { type: string, format: date-time }
+        narrative: { type: string }
+
+    StreamEvent:
+      type: object
+      description: JSON payload carried in the `data:` field of each SSE frame.
+      required: [type, at]
+      properties:
+        type:
+          type: string
+          enum: [incident, exposure, report, resource, alert, heartbeat]
+        regionId:
+          type: string
+          format: uuid
+        incidentId:
+          type: string
+          format: uuid
+        at: { type: string, format: date-time }
+        payload:
+          type: object
+          additionalProperties: true
+          description: Delta payload (generalized data only on the public channel — ST3).
+
+    # ---------------------------------------------------------------------------
+    # Sustainability disclosure (ADR-020) — mirrors schemas/sustainability-v05.schema.json
+    # ---------------------------------------------------------------------------
+
+    SustainabilityReport:
+      type: object
+      description: |
+        One modeled energy/carbon report object served at `GET /.well-known/sustainability`
+        (ADR-020; RFC `draft-besleaga-green-sustainability-wellknown-05`). Faithful to
+        `schemas/sustainability-v05.schema.json`. Mandatory fields per the draft's "Mandatory
+        Response Fields"; optional fields align with GHG Protocol scopes, GSF Software Carbon
+        Intensity (ISO/IEC 21031:2024 = `sci-score`), and CSRD/ESRS-E1. BEACON publishes
+        ESTIMATED / MODELED values (`measurement-method: third-party-modeled`,
+        `methodology-uri` → docs/SUSTAINABILITY.md). Unknown fields are permitted (forward
+        compatibility — clients MUST tolerate them).
+      additionalProperties: true
+      required:
+        - version
+        - updated
+        - capabilities
+        - provider
+        - measurement-method
+        - methodology-uri
+        - reporting-period
+        - energy-consumption
+        - energy-unit
+        - carbon-footprint
+        - carbon-unit
+      properties:
+        version:
+          type: string
+          pattern: '^[0-9]+\.[0-9]+$'
+          description: Document schema version `major.minor` (e.g. '1.0', '1.1').
+        updated:
+          type: string
+          format: date-time
+          description: RFC 3339 timestamp when the document was last updated (freshness anchor).
+        capabilities:
+          type: string
+          enum: [basic, extended]
+          description: Service level. `extended` indicates support for the optional query parameters.
+        provider:
+          type: string
+          minLength: 1
+          description: Entity operating the origin and publishing the metadata (e.g. 'BEACON (sustain@beacon.local)').
+        measurement-method:
+          type: string
+          minLength: 1
+          description: |
+            Methodology label/reference (e.g. hardware-metered, hardware-estimated, cloud-billing,
+            third-party-modeled). BEACON publishes `third-party-modeled` for the demo.
+        methodology-uri:
+          type: string
+          format: uri-reference
+          minLength: 1
+          description: Link to the full calculation methodology. For BEACON this resolves to docs/SUSTAINABILITY.md.
+        reporting-period:
+          type: string
+          pattern: '^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$'
+          description: Timeframe covered (RFC 3339 `YYYY | YYYY-MM | YYYY-MM-DD`; Basic defaults to the last full calendar month).
+        energy-consumption:
+          type: number
+          minimum: 0
+          description: Total energy consumed by the host (or target resource) during the reporting period.
+        energy-unit:
+          type: string
+          enum: [Wh, kWh, MWh, GWh]
+          description: Fixed literal energy unit (draft).
+        carbon-footprint:
+          type: number
+          minimum: 0
+          description: Total carbon impact expressed in `carbon-unit`.
+        carbon-unit:
+          type: string
+          enum: [gCO2e, kgCO2e, mtCO2e]
+          description: Fixed literal carbon unit (draft).
+        target-path:
+          type: string
+          pattern: '^/'
+          description: OPTIONAL. The resource path requested as `target` (e.g. '/api/v1/incidents').
+        carbon-accounting:
+          type: string
+          enum: [location-based, market-based]
+          description: OPTIONAL. GHG Protocol accounting basis (demo uses location-based).
+        scope-1:
+          type: number
+          minimum: 0
+          description: OPTIONAL. Estimated Scope 1 (direct) carbon emissions (≈0 for BEACON — no direct combustion).
+        scope-2:
+          type: number
+          minimum: 0
+          description: OPTIONAL. Estimated Scope 2 (indirect / purchased-energy) carbon emissions.
+        scope-3:
+          type: number
+          minimum: 0
+          description: OPTIONAL. Estimated Scope 3 (value-chain) carbon emissions.
+        sci-score:
+          type: number
+          minimum: 0
+          description: OPTIONAL. Software Carbon Intensity per GSF / ISO/IEC 21031:2024 = ((E*I)+M)/R.
+        functional-unit:
+          type: string
+          minLength: 1
+          description: OPTIONAL. SCI normalization unit (e.g. 'per-thousand-COP-requests'); documented in methodology-uri.
+        carbon-intensity-gCO2-per-kWh:
+          type: number
+          minimum: 0
+          description: OPTIONAL. Weighted grid carbon intensity in grams CO2 per kWh.
+        estimated-annual-emissions-kgCO2:
+          type: number
+          minimum: 0
+          description: OPTIONAL. Estimated annual emissions attributable to the origin (kg CO2e).
+        renewable-energy:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: OPTIONAL. Percentage of energy from sustainable renewable sources (0–100).
+        verifiable-attestation-uri:
+          type: string
+          format: uri-reference
+          description: OPTIONAL. Link to a verifiable credential / attestation (anti-greenwashing). NOT proof of the metrics.
+        disclosure-uri:
+          type: string
+          format: uri-reference
+          description: OPTIONAL (schema 1.1+). Discovery link to a machine-readable disclosure index (e.g. carbon.txt). Not proof of the metrics.

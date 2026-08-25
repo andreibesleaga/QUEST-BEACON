@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/cap-v1.2.schema.json",
+  "title": "OASIS CAP v1.2 Alert (BEACON emitted subset)",
+  "description": "JSON representation of an OASIS Common Alerting Protocol v1.2 alert (urn:oasis:names:tc:emergency:cap:1.2). BEACON produces + validates CAP (validate-before-emit); it does NOT perform live IPAWS origination (Constitution Art. XIII). status defaults to 'Draft' (CAP_EMIT_MODE=draft) and only reaches 'Actual' after human VERIFIER/EM approval (Art. XIII, ADR-010). This is a boundary serialization mapped from the canonical ALERT entity by the AlertSink/EdxlPort anti-corruption adapter (ADR-001).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["identifier", "sender", "sent", "status", "msgType", "scope"],
+  "properties": {
+    "identifier": {
+      "type": "string",
+      "description": "CAP <identifier> — unique message id assigned by the sender. MUST NOT contain spaces, commas or restricted characters (< & ').",
+      "minLength": 1,
+      "pattern": "^[^\\s,<&']+$"
+    },
+    "sender": {
+      "type": "string",
+      "description": "CAP <sender> — identifier of the sender (CAP_SENDER config, e.g. an email/URI). MUST NOT contain spaces, commas or restricted characters.",
+      "minLength": 1,
+      "pattern": "^[^\\s,<&']+$"
+    },
+    "sent": {
+      "type": "string",
+      "description": "CAP <sent> — origination date/time in ISO 8601 with mandatory timezone offset (e.g. 2026-06-27T14:30:00-07:00).",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}([.,]\\d+)?([+-]\\d{2}:\\d{2}|Z)$"
+    },
+    "status": {
+      "type": "string",
+      "description": "CAP <status> — appropriate handling of the alert. BEACON restricts to Actual|Draft (Art. XIII); Draft is the validate-before-emit default. Full CAP enum also allows Exercise|System|Test.",
+      "enum": ["Actual", "Draft"],
+      "default": "Draft"
+    },
+    "msgType": {
+      "type": "string",
+      "description": "CAP <msgType> — the nature of the alert message.",
+      "enum": ["Alert", "Update", "Cancel", "Ack", "Error"]
+    },
+    "scope": {
+      "type": "string",
+      "description": "CAP <scope> — the intended distribution of the alert.",
+      "enum": ["Public", "Restricted", "Private"]
+    },
+    "source": {
+      "type": "string",
+      "description": "CAP <source> — text identifying the source of the alert (optional)."
+    },
+    "restriction": {
+      "type": "string",
+      "description": "CAP <restriction> — rule for limiting distribution (required when scope=Restricted)."
+    },
+    "addresses": {
+      "type": "string",
+      "description": "CAP <addresses> — space-delimited recipient list (required when scope=Private)."
+    },
+    "code": {
+      "type": "array",
+      "description": "CAP <code> — special handling codes (zero or more).",
+      "items": { "type": "string" }
+    },
+    "note": {
+      "type": "string",
+      "description": "CAP <note> — additional context (e.g. rationale for status)."
+    },
+    "references": {
+      "type": "string",
+      "description": "CAP <references> — space-delimited list of sender,identifier,sent triplets referenced by Update/Cancel."
+    },
+    "incidents": {
+      "type": "string",
+      "description": "CAP <incidents> — space-delimited list of referent incident ids (GLIDE id per ADR-010)."
+    },
+    "info": {
+      "type": "array",
+      "description": "CAP <info> blocks — at least one is required for an actionable alert (CAP allows zero only for Ack/Error/Cancel).",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/info" }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "scope": { "const": "Restricted" } } },
+      "then": { "required": ["restriction"] }
+    },
+    {
+      "if": { "properties": { "scope": { "const": "Private" } } },
+      "then": { "required": ["addresses"] }
+    },
+    {
+      "if": {
+        "properties": { "msgType": { "enum": ["Update", "Cancel"] } }
+      },
+      "then": { "required": ["references"] }
+    }
+  ],
+  "$defs": {
+    "info": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "CAP <info> — describes an anticipated or actual event in terms of urgency, severity and certainty.",
+      "required": ["category", "event", "urgency", "severity", "certainty"],
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "CAP <language> — RFC 3066 language code; defaults to en-US.",
+          "default": "en-US"
+        },
+        "category": {
+          "type": "array",
+          "description": "CAP <category> — code(s) denoting the category of the event. At least one.",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "Geo", "Met", "Safety", "Security", "Rescue", "Fire",
+              "Health", "Env", "Transport", "Infra", "CBRNE", "Other"
+            ]
+          }
+        },
+        "event": {
+          "type": "string",
+          "description": "CAP <event> — text denoting the type of the subject event.",
+          "minLength": 1
+        },
+        "responseType": {
+          "type": "array",
+          "description": "CAP <responseType> — recommended type of action.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Shelter", "Evacuate", "Prepare", "Execute", "Avoid",
+              "Monitor", "Assess", "AllClear", "None"
+            ]
+          }
+        },
+        "urgency": {
+          "type": "string",
+          "description": "CAP <urgency> — time available to take responsive action.",
+          "enum": ["Immediate", "Expected", "Future", "Past", "Unknown"]
+        },
+        "severity": {
+          "type": "string",
+          "description": "CAP <severity> — intensity of impact of the subject event.",
+          "enum": ["Extreme", "Severe", "Moderate", "Minor", "Unknown"]
+        },
+        "certainty": {
+          "type": "string",
+          "description": "CAP <certainty> — confidence in the observation/prediction.",
+          "enum": ["Observed", "Likely", "Possible", "Unlikely", "Unknown"]
+        },
+        "audience": {
+          "type": "string",
+          "description": "CAP <audience> — intended audience of the info block."
+        },
+        "eventCode": {
+          "type": "array",
+          "description": "CAP <eventCode> — system-specific event codes as valueName/value pairs.",
+          "items": { "$ref": "#/$defs/namedValue" }
+        },
+        "effective": {
+          "type": "string",
+          "description": "CAP <effective> — effective time of the info; ISO 8601 with timezone.",
+          "format": "date-time"
+        },
+        "onset": {
+          "type": "string",
+          "description": "CAP <onset> — expected onset of the subject event.",
+          "format": "date-time"
+        },
+        "expires": {
+          "type": "string",
+          "description": "CAP <expires> — expiry time of the info.",
+          "format": "date-time"
+        },
+        "senderName": {
+          "type": "string",
+          "description": "CAP <senderName> — human-readable name of the sending agency."
+        },
+        "headline": {
+          "type": "string",
+          "description": "CAP <headline> — brief human-readable headline (SHOULD be <= 160 chars).",
+          "maxLength": 160
+        },
+        "description": {
+          "type": "string",
+          "description": "CAP <description> — extended human-readable description of the hazard."
+        },
+        "instruction": {
+          "type": "string",
+          "description": "CAP <instruction> — recommended action for the target audience."
+        },
+        "web": {
+          "type": "string",
+          "description": "CAP <web> — full URL associated with additional information.",
+          "format": "uri"
+        },
+        "contact": {
+          "type": "string",
+          "description": "CAP <contact> — contact for follow-up and confirmation."
+        },
+        "parameter": {
+          "type": "array",
+          "description": "CAP <parameter> — system-specific additional parameters as valueName/value pairs.",
+          "items": { "$ref": "#/$defs/namedValue" }
+        },
+        "area": {
+          "type": "array",
+          "description": "CAP <area> blocks — geographic targeting of the info.",
+          "items": { "$ref": "#/$defs/area" }
+        }
+      }
+    },
+    "area": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "CAP <area> — the affected area of the alert message.",
+      "required": ["areaDesc"],
+      "properties": {
+        "areaDesc": {
+          "type": "string",
+          "description": "CAP <areaDesc> — text description of the affected area.",
+          "minLength": 1
+        },
+        "polygon": {
+          "type": "array",
+          "description": "CAP <polygon> — one or more WGS-84 polygons. Each polygon is a space-delimited string of 'lat,lon' coordinate pairs whose first and last point are identical (closed ring), minimum 4 points.",
+          "items": {
+            "type": "string",
+            "pattern": "^(-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?\\s+){3,}-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?$"
+          }
+        },
+        "circle": {
+          "type": "array",
+          "description": "CAP <circle> — one or more circles as 'lat,lon radiusKm'.",
+          "items": {
+            "type": "string",
+            "pattern": "^-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?\\s+\\d+(\\.\\d+)?$"
+          }
+        },
+        "geocode": {
+          "type": "array",
+          "description": "CAP <geocode> — geographic code(s) as valueName/value pairs (e.g. SAME/FIPS).",
+          "items": { "$ref": "#/$defs/namedValue" }
+        },
+        "altitude": {
+          "type": "number",
+          "description": "CAP <altitude> — specific or minimum altitude of the affected area (feet WGS-84)."
+        },
+        "ceiling": {
+          "type": "number",
+          "description": "CAP <ceiling> — maximum altitude of the affected area (requires altitude)."
+        }
+      },
+      "dependentRequired": { "ceiling": ["altitude"] }
+    },
+    "namedValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "CAP valueName/value pair used by eventCode, parameter and geocode.",
+      "required": ["valueName", "value"],
+      "properties": {
+        "valueName": { "type": "string", "minLength": 1 },
+        "value": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "_meta": {
+    "purpose": "D5.1 rumor-board fixture — a region-scoped news/social batch fed through the REAL groundNews pass (src/application/sitrep-synthesis/news-grounding.ts), never a hand-written NewsGroundingResult. Feeding synthetic items through the real deterministic pass is what makes the board test a test of the composition rather than of a mock.",
+    "clock": "fixed — every publishedAt sits inside 2026-07-05, the project's fixed test day; no wall-clock dependence",
+    "shape": "src/ports/intel.ts NewsItem[]",
+    "content": "3 authoritative outlets corroborating one FLOOD cluster; 2 social items in an authoritative-free FIRE cluster (one of them CONTRADICTING the official flood picture, which lands in a different cluster and is therefore flagged by the same rule)"
+  },
+  "items": [
+    {
+      "title": "River levels exceed flood stage in the valley",
+      "url": "https://water.example.gov/bulletin/2026-07-05-a",
+      "publishedAt": "2026-07-05T09:00:00Z",
+      "summary": "Official flood bulletin: inundation expected along the lower reach.",
+      "sourceAuthority": "OFFICIAL"
+    },
+    {
+      "title": "Flooding closes two bridges downstream",
+      "url": "https://news.example.com/floods/bridges",
+      "publishedAt": "2026-07-05T10:15:00Z",
+      "summary": "Reporting on the flood closures.",
+      "sourceAuthority": "MEDIA"
+    },
+    {
+      "title": "Levee overflow reported in the eastern district",
+      "url": "https://wire.example.net/2026/levee-overflow",
+      "publishedAt": "2026-07-05T11:30:00Z",
+      "summary": "Second outlet confirms the levee overflow.",
+      "sourceAuthority": "MEDIA"
+    },
+    {
+      "title": "Fire has jumped the ridge, whole town is gone",
+      "url": "https://social.example.org/post/9911",
+      "publishedAt": "2026-07-05T12:00:00Z",
+      "summary": "Unverified social claim of a wildfire crossing the ridge.",
+      "sourceAuthority": "SOCIAL"
+    },
+    {
+      "title": "No wildfire anywhere, the blaze reports are fake",
+      "url": "https://chatter.example.org/thread/44",
+      "publishedAt": "2026-07-05T12:45:00Z",
+      "summary": "A contradictory social claim about the same fire signal.",
+      "sourceAuthority": "SOCIAL"
+    }
+  ]
+}

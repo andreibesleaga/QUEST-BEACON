@@ -1,0 +1,1257 @@
+{
+  "$schemaVersion": "1.0",
+  "adapters": [
+    {
+      "id": "firms",
+      "port": "HazardSource",
+      "entity": "HazardGeometry",
+      "source": "NASA FIRMS",
+      "module": "@/adapters/sources/firms/firms-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "LIVE",
+      "intervalSec": 300,
+      "configPrefix": "FIRMS",
+      "license": "NASA open / attribution requested",
+      "attribution": "NASA FIRMS",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "firms/hotspots.csv"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "nws",
+      "port": "Weather",
+      "entity": "WeatherObservation",
+      "source": "NWS api.weather.gov",
+      "module": "@/adapters/sources/nws/nws-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "US"
+        ]
+      },
+      "mode": "LIVE",
+      "intervalSec": 300,
+      "configPrefix": "NWS",
+      "license": "Public Domain (US Gov)",
+      "attribution": "NOAA / National Weather Service",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "nws/observations.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "nwps",
+      "port": "FloodGauge",
+      "entity": "Gauge",
+      "source": "NOAA NWPS",
+      "module": "@/adapters/sources/nwps/nwps-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "US"
+        ]
+      },
+      "mode": "LIVE",
+      "intervalSec": 600,
+      "configPrefix": "NWPS",
+      "license": "Public Domain (US Gov)",
+      "attribution": "NOAA / National Water Prediction Service",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "nwps/gauges.json"
+      },
+      "verifiedTier": "LIVE",
+      "gaugeUnit": "ft"
+    },
+    {
+      "id": "glofas",
+      "port": "FloodGauge",
+      "entity": "Gauge",
+      "source": "Copernicus GloFAS",
+      "module": "@/adapters/sources/glofas/glofas-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "CACHED",
+      "intervalSec": 3600,
+      "configPrefix": "GLOFAS",
+      "license": "Copernicus open (free, attribution)",
+      "attribution": "Copernicus Emergency Management Service / GloFAS",
+      "cache": {
+        "ttlSec": 3600
+      },
+      "circuitBreaker": {
+        "failureThreshold": 4,
+        "cooldownSec": 300,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "glofas/reporting-points.json"
+      },
+      "verifiedTier": "CACHED",
+      "gaugeUnit": "m³/s"
+    },
+    {
+      "id": "gdacs",
+      "port": "HazardSource",
+      "entity": "HazardGeometry",
+      "source": "GDACS",
+      "module": "@/adapters/sources/gdacs/gdacs-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "LIVE",
+      "intervalSec": 900,
+      "configPrefix": "GDACS",
+      "license": "GDACS open data (JRC / UN-OCHA)",
+      "attribution": "GDACS (JRC / UN-OCHA)",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "gdacs/events.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "meteoalarm-ro",
+      "port": "NewsIntel",
+      "entity": "NewsItem",
+      "source": "MeteoAlarm Romania",
+      "module": "@/adapters/sources/meteoalarm-ro/meteoalarm-ro-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "RO"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 1800,
+      "configPrefix": "METEOALARM_RO",
+      "license": "MeteoAlarm — terms equivalent to CC BY 4.0",
+      "attribution": "MeteoAlarm / national meteorological services",
+      "cache": {
+        "ttlSec": 1800
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "meteoalarm-ro/romania-atom.xml"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "meteoalarm-gr",
+      "port": "NewsIntel",
+      "entity": "NewsItem",
+      "source": "MeteoAlarm Greece",
+      "module": "@/adapters/sources/meteoalarm/meteoalarm-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "GR"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 1800,
+      "configPrefix": "METEOALARM_GR",
+      "license": "MeteoAlarm — terms equivalent to CC BY 4.0",
+      "attribution": "MeteoAlarm / national meteorological services (Data provided by EUMETNET members)",
+      "cache": {
+        "ttlSec": 1800
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "meteoalarm/greece-atom.xml"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "meteoalarm-es",
+      "port": "NewsIntel",
+      "entity": "NewsItem",
+      "source": "MeteoAlarm Spain",
+      "module": "@/adapters/sources/meteoalarm/meteoalarm-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "ES"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 1800,
+      "configPrefix": "METEOALARM_ES",
+      "license": "MeteoAlarm — terms equivalent to CC BY 4.0",
+      "attribution": "MeteoAlarm / AEMET (Data provided by EUMETNET members)",
+      "cache": {
+        "ttlSec": 1800
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "meteoalarm/spain-atom.xml"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "wmo-swic",
+      "port": "NewsIntel",
+      "entity": "NewsItem",
+      "source": "WMO SWIC CAP relay (PAGASA-DOST)",
+      "module": "@/adapters/sources/wmo-swic/wmo-swic-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "PH"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 900,
+      "configPrefix": "WMO_SWIC",
+      "license": "CC BY 4.0 (PAGASA-DOST); relay under WMO Unified Data Policy Res. 1 — attribution",
+      "attribution": "PAGASA-DOST / WMO Severe Weather Information Centre",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "wmo-swic/ph-pagasa-en-rss.xml"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "open-meteo",
+      "port": "Weather",
+      "entity": "WeatherObservation",
+      "source": "Open-Meteo",
+      "module": "@/adapters/sources/open-meteo/open-meteo-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "LIVE",
+      "intervalSec": 900,
+      "configPrefix": "OPEN_METEO",
+      "license": "CC BY 4.0",
+      "attribution": "Open-Meteo (CC BY 4.0)",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "open-meteo/current.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "usgs-water",
+      "port": "FloodGauge",
+      "entity": "Gauge",
+      "source": "USGS Water Services",
+      "module": "@/adapters/sources/usgs-water/usgs-water-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "US"
+        ]
+      },
+      "mode": "MOCK",
+      "intervalSec": 900,
+      "configPrefix": "USGS_WATER",
+      "license": "Public Domain (US Gov)",
+      "attribution": "USGS Water Data",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "usgs-water/instantaneous.json"
+      },
+      "verifiedTier": "LIVE",
+      "gaugeUnit": "ft"
+    },
+    {
+      "id": "gdelt",
+      "port": "NewsIntel",
+      "entity": "NewsItem",
+      "source": "GDELT DOC 2.0",
+      "module": "@/adapters/sources/gdelt/gdelt-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "LIVE",
+      "intervalSec": 900,
+      "configPrefix": "GDELT",
+      "license": "GDELT open",
+      "attribution": "GDELT Project (gdeltproject.org)",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "gdelt/articles.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "reliefweb",
+      "port": "NewsIntel",
+      "entity": "NewsItem",
+      "source": "UN OCHA ReliefWeb v2",
+      "module": "@/adapters/sources/reliefweb/reliefweb-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "CACHED",
+      "intervalSec": 1800,
+      "configPrefix": "RELIEFWEB",
+      "license": "UN OCHA terms (attribution)",
+      "attribution": "UN OCHA ReliefWeb",
+      "cache": {
+        "ttlSec": 1800
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "reliefweb/reports.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "agency-rss",
+      "port": "NewsIntel",
+      "entity": "NewsItem",
+      "source": "Verified agency/media RSS set",
+      "module": "@/adapters/sources/agency-rss/agency-rss-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "LIVE",
+      "intervalSec": 900,
+      "configPrefix": "AGENCYRSS",
+      "license": "per-feed (verified open feeds)",
+      "attribution": "per-feed (GDACS/ReliefWeb/InciWeb + verified media)",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "agency-rss/feed.xml"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "bluesky",
+      "port": "NewsIntel",
+      "entity": "NewsItem",
+      "source": "Bluesky public AppView (vetted-social)",
+      "module": "@/adapters/sources/bluesky/bluesky-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "MOCK",
+      "intervalSec": 900,
+      "configPrefix": "BLUESKY",
+      "license": "Bluesky public API terms",
+      "attribution": "Bluesky (bsky.app)",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "bluesky/posts.json"
+      },
+      "verifiedTier": "MOCK"
+    },
+    {
+      "id": "mastodon",
+      "port": "NewsIntel",
+      "entity": "NewsItem",
+      "source": "Mastodon public timeline (vetted-social)",
+      "module": "@/adapters/sources/mastodon/mastodon-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "LIVE",
+      "intervalSec": 900,
+      "configPrefix": "MASTODON",
+      "license": "Mastodon instance public API — public posts, corroboration-only",
+      "attribution": "Mastodon (mastodon.social and the fediverse)",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "mastodon/timeline.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "nifc",
+      "port": "HazardSource",
+      "entity": "HazardGeometry",
+      "source": "NIFC/WFIGS fire perimeters",
+      "module": "@/adapters/sources/nifc/nifc-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "US"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 1800,
+      "configPrefix": "NIFC",
+      "license": "US public domain (NIFC/WFIGS)",
+      "attribution": "National Interagency Fire Center (WFIGS)",
+      "cache": {
+        "ttlSec": 1800
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "nifc/perimeters.json"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "effis",
+      "port": "HazardSource",
+      "entity": "HazardGeometry",
+      "source": "Copernicus EFFIS/GWIS fire",
+      "module": "@/adapters/sources/effis/effis-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "CACHED",
+      "intervalSec": 3600,
+      "configPrefix": "EFFIS",
+      "license": "Copernicus/JRC open (attribution)",
+      "attribution": "Copernicus EFFIS/GWIS (JRC)",
+      "cache": {
+        "ttlSec": 3600
+      },
+      "circuitBreaker": {
+        "failureThreshold": 4,
+        "cooldownSec": 300,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "effis/burnt-areas.json"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "osm-overpass",
+      "port": "Infrastructure",
+      "entity": "InfrastructureNode",
+      "source": "OSM Overpass",
+      "module": "@/adapters/sources/osm-overpass/osm-overpass-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "CACHED",
+      "intervalSec": 3600,
+      "configPrefix": "OSM_OVERPASS",
+      "license": "ODbL (attribution + share-alike)",
+      "attribution": "© OpenStreetMap contributors",
+      "cache": {
+        "ttlSec": 3600
+      },
+      "circuitBreaker": {
+        "failureThreshold": 4,
+        "cooldownSec": 300,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "osm-overpass/elements.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "worldpop",
+      "port": "Population",
+      "entity": "PopulationEstimate",
+      "source": "WorldPop",
+      "module": "@/adapters/sources/worldpop/worldpop-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "CACHED",
+      "intervalSec": 86400,
+      "configPrefix": "WORLDPOP",
+      "license": "CC BY 4.0",
+      "attribution": "WorldPop (worldpop.org)",
+      "cache": {
+        "ttlSec": 86400
+      },
+      "circuitBreaker": {
+        "failureThreshold": 4,
+        "cooldownSec": 300,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "worldpop/population.json"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "census",
+      "port": "Population",
+      "entity": "PopulationEstimate",
+      "source": "US Census ACS 5-year",
+      "module": "@/adapters/sources/census/census-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "US"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 86400,
+      "configPrefix": "CENSUS",
+      "license": "US public domain",
+      "attribution": "US Census Bureau",
+      "cache": {
+        "ttlSec": 86400
+      },
+      "circuitBreaker": {
+        "failureThreshold": 4,
+        "cooldownSec": 300,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "census/acs.json"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "nfhl",
+      "port": "FloodZone",
+      "entity": "FloodZone",
+      "source": "FEMA NFHL",
+      "module": "@/adapters/sources/nfhl/nfhl-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "US"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 86400,
+      "configPrefix": "NFHL",
+      "license": "US public domain (FEMA)",
+      "attribution": "FEMA National Flood Hazard Layer",
+      "cache": {
+        "ttlSec": 86400
+      },
+      "circuitBreaker": {
+        "failureThreshold": 4,
+        "cooldownSec": 300,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "nfhl/zones.json"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "eagle-i",
+      "port": "Outage",
+      "entity": "OutageRecord",
+      "source": "DOE/ORNL EAGLE-I",
+      "module": "@/adapters/sources/eagle-i/eagle-i-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "US"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 900,
+      "configPrefix": "EAGLE_I",
+      "license": "US public domain (DOE/ORNL EAGLE-I)",
+      "attribution": "DOE/ORNL EAGLE-I",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "eagle-i/outages.json"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "opencellid",
+      "port": "Telecom",
+      "entity": "TelecomCoverage",
+      "source": "OpenCelliD",
+      "module": "@/adapters/sources/opencellid/opencellid-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "CACHED",
+      "intervalSec": 86400,
+      "configPrefix": "OPENCELLID",
+      "license": "CC BY-SA (OpenCelliD)",
+      "attribution": "OpenCelliD (opencellid.org)",
+      "cache": {
+        "ttlSec": 86400
+      },
+      "circuitBreaker": {
+        "failureThreshold": 4,
+        "cooldownSec": 300,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "opencellid/cells.json"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "itu",
+      "port": "Telecom",
+      "entity": "TelecomCoverage",
+      "source": "ITU connectivity (aggregate)",
+      "module": "@/adapters/sources/itu/itu-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "MOCK",
+      "intervalSec": 86400,
+      "configPrefix": "ITU",
+      "license": "ITU terms (gated)",
+      "attribution": "ITU",
+      "cache": {
+        "ttlSec": 86400
+      },
+      "circuitBreaker": {
+        "failureThreshold": 4,
+        "cooldownSec": 300,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "itu/connectivity.json"
+      },
+      "verifiedTier": "MOCK"
+    },
+    {
+      "id": "camara-gsma",
+      "port": "Telecom",
+      "entity": "TelecomCoverage",
+      "source": "CAMARA / GSMA Open Gateway",
+      "module": "@/adapters/sources/camara-gsma/camara-gsma-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "MOCK",
+      "intervalSec": 900,
+      "configPrefix": "CAMARA_GSMA",
+      "license": "operator terms (CAMARA/GSMA)",
+      "attribution": "CAMARA / GSMA Open Gateway",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "camara-gsma/coverage.json"
+      },
+      "verifiedTier": "MOCK"
+    },
+    {
+      "id": "caltrans-cctv",
+      "port": "CameraDirectory",
+      "entity": "CameraFeed",
+      "source": "Caltrans District CCTV",
+      "module": "@/adapters/sources/caltrans-cctv/caltrans-cctv-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "US"
+        ]
+      },
+      "mode": "LIVE",
+      "intervalSec": 300,
+      "configPrefix": "CALTRANS_CCTV",
+      "license": "Caltrans open data",
+      "attribution": "Caltrans",
+      "cache": {
+        "ttlSec": 300
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "caltrans-cctv/cameras.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "alertwildfire",
+      "port": "CameraDirectory",
+      "entity": "CameraFeed",
+      "source": "ALERTCalifornia",
+      "module": "@/adapters/sources/alertwildfire/alertwildfire-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "US"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 900,
+      "configPrefix": "ALERTWILDFIRE",
+      "license": "CC BY-NC-ND 4.0 (imagery; link-only use)",
+      "attribution": "ALERTCalifornia | UC San Diego",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "alertwildfire/cameras.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "windy-webcams",
+      "port": "CameraDirectory",
+      "entity": "CameraFeed",
+      "source": "Windy Webcams",
+      "module": "@/adapters/sources/windy-webcams/windy-webcams-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "CACHED",
+      "intervalSec": 900,
+      "configPrefix": "WINDY_WEBCAMS",
+      "license": "Windy Webcams API ToS (link-only; attribution required)",
+      "attribution": "Webcams provided by windy.com",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "windy-webcams/webcams.json"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "dot511",
+      "port": "CameraDirectory",
+      "entity": "CameraFeed",
+      "source": "511 DOT (state traveler info)",
+      "module": "@/adapters/sources/dot511/dot511-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "US"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 900,
+      "configPrefix": "DOT511",
+      "license": "State DOT open data (developer key)",
+      "attribution": "511 DOT (state traveler info)",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "dot511/cameras.json"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "cnadnr-ro",
+      "port": "CameraDirectory",
+      "entity": "CameraFeed",
+      "source": "CNADNR/CNAIR Trafic Live",
+      "module": "@/adapters/sources/cnadnr-ro/cnadnr-ro-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "RO"
+        ]
+      },
+      "mode": "MOCK",
+      "intervalSec": 3600,
+      "configPrefix": "CNADNR_RO",
+      "license": "Official public agency pages (link-only)",
+      "attribution": "CNAIR (cnadnr.ro)",
+      "cache": {
+        "ttlSec": 3600
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "cnadnr-ro/cameras.json"
+      },
+      "verifiedTier": "MOCK"
+    },
+    {
+      "id": "metno",
+      "port": "Weather",
+      "entity": "WeatherObservation",
+      "source": "MET Norway Locationforecast",
+      "module": "@/adapters/sources/metno/metno-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "LIVE",
+      "intervalSec": 1800,
+      "configPrefix": "METNO",
+      "license": "CC BY 4.0 / NLOD (MET Norway)",
+      "attribution": "Data from MET Norway",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "metno/locationforecast.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "anm",
+      "port": "Weather",
+      "entity": "WeatherObservation",
+      "source": "ANM Meteo România",
+      "module": "@/adapters/sources/anm/anm-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "RO"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 3600,
+      "configPrefix": "ANM",
+      "license": "ANM (Administrația Națională de Meteorologie, România) — free public feed, attribution requested",
+      "attribution": "Administrația Națională de Meteorologie (ANM), România",
+      "cache": {
+        "ttlSec": 3600
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "anm/starea-vremii.json"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "hdxpop",
+      "port": "Population",
+      "entity": "PopulationEstimate",
+      "source": "UN OCHA HDX — COD-PS (Eurostat via UNFPA)",
+      "module": "@/adapters/sources/hdxpop/hdxpop-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "RO"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 86400,
+      "configPrefix": "HDXPOP",
+      "license": "CC BY-IGO (Creative Commons Attribution for Intergovernmental Organisations)",
+      "attribution": "UN OCHA HDX — COD-PS, Eurostat via UNFPA",
+      "cache": {
+        "ttlSec": 86400
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "hdxpop/rou-admpop-adm1.csv"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "hifld",
+      "port": "Infrastructure",
+      "entity": "InfrastructureNode",
+      "source": "HIFLD lifelines (FEMA Region 9 public 2019 package)",
+      "module": "@/adapters/sources/hifld/hifld-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "US"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 86400,
+      "configPrefix": "HIFLD",
+      "license": "US public domain (HIFLD / FEMA)",
+      "attribution": "HIFLD / FEMA Region 9",
+      "cache": {
+        "ttlSec": 86400
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "hifld/lifelines-10.geojson"
+      },
+      "verifiedTier": "CACHED"
+    },
+    {
+      "id": "eonet",
+      "port": "HazardSource",
+      "entity": "HazardGeometry",
+      "source": "NASA EONET v3",
+      "module": "@/adapters/sources/eonet/eonet-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "LIVE",
+      "intervalSec": 900,
+      "configPrefix": "EONET",
+      "license": "NASA open / attribution requested",
+      "attribution": "NASA EONET (Earth Observatory Natural Event Tracker)",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "eonet/events.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "cemsrm",
+      "port": "HazardSource",
+      "entity": "HazardGeometry",
+      "source": "Copernicus EMS Rapid Mapping",
+      "module": "@/adapters/sources/cemsrm/cemsrm-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "CACHED",
+      "intervalSec": 3600,
+      "configPrefix": "CEMSRM",
+      "license": "Copernicus/JRC open (attribution)",
+      "attribution": "Copernicus EMS Rapid Mapping (European Commission / JRC)",
+      "cache": {
+        "ttlSec": 3600
+      },
+      "circuitBreaker": {
+        "failureThreshold": 4,
+        "cooldownSec": 300,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "cemsrm/activations.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "openfema",
+      "port": "NewsIntel",
+      "entity": "NewsItem",
+      "source": "OpenFEMA (FEMA Disaster Declarations)",
+      "module": "@/adapters/sources/openfema/openfema-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "US"
+        ]
+      },
+      "mode": "LIVE",
+      "intervalSec": 3600,
+      "configPrefix": "OPENFEMA",
+      "license": "US public domain",
+      "attribution": "FEMA OpenFEMA",
+      "cache": {
+        "ttlSec": 3600
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "openfema/declarations.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "caphub",
+      "port": "NewsIntel",
+      "entity": "NewsItem",
+      "source": "IFRC Alert Hub (worldwide CAP aggregator)",
+      "module": "@/adapters/sources/caphub/caphub-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "CACHED",
+      "intervalSec": 900,
+      "configPrefix": "CAPHUB",
+      "license": "IFRC Alert Hub aggregation; each alert under its issuing national authority's terms — attribution",
+      "attribution": "IFRC Alert Hub + the issuing national alerting authority",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "caphub/alerts.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "lanceflood",
+      "port": "NewsIntel",
+      "entity": "NewsItem",
+      "source": "NASA LANCE MODIS NRT flood (MCDWD_L3_NRT)",
+      "module": "@/adapters/sources/lanceflood/lanceflood-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "CACHED",
+      "intervalSec": 21600,
+      "configPrefix": "LANCEFLOOD",
+      "license": "NASA open / attribution requested",
+      "attribution": "NASA LANCE / MODIS NRT Global Flood Product",
+      "cache": {
+        "ttlSec": 21600
+      },
+      "circuitBreaker": {
+        "failureThreshold": 4,
+        "cooldownSec": 300,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "lanceflood/granules.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "nri",
+      "port": "Population",
+      "entity": "PopulationEstimate",
+      "source": "FEMA National Risk Index (county table)",
+      "module": "@/adapters/sources/nri/nri-adapter",
+      "coverage": {
+        "kind": "COUNTRIES",
+        "iso": [
+          "US"
+        ]
+      },
+      "mode": "CACHED",
+      "intervalSec": 86400,
+      "configPrefix": "NRI",
+      "license": "US public domain",
+      "attribution": "FEMA National Risk Index",
+      "cache": {
+        "ttlSec": 21600
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "nri/counties.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "openaq",
+      "port": "AirQuality",
+      "entity": "AirQualityReading",
+      "source": "OpenAQ",
+      "module": "@/adapters/sources/openaq/openaq-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "CACHED",
+      "intervalSec": 900,
+      "configPrefix": "OPENAQ",
+      "license": "OpenAQ aggregate — per-location open licences (attribution required)",
+      "attribution": "OpenAQ (openaq.org) and the contributing networks",
+      "cache": {
+        "ttlSec": 900
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "openaq/latest.json"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "airnow",
+      "port": "AirQuality",
+      "entity": "AirQualityReading",
+      "source": "US EPA AirNow",
+      "module": "@/adapters/sources/airnow/airnow-adapter",
+      "coverage": {
+        "kind": "BBOX",
+        "bbox": [-172, 14, -50, 72]
+      },
+      "mode": "LIVE",
+      "intervalSec": 3600,
+      "configPrefix": "AIRNOW",
+      "license": "US EPA AirNow — public domain (US Gov); attribution requested; preliminary data",
+      "attribution": "US EPA AirNow (preliminary, hourly observations)",
+      "cache": {
+        "ttlSec": 3600
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "airnow/hourly-aq-obs.csv"
+      },
+      "verifiedTier": "LIVE"
+    },
+    {
+      "id": "sensorcommunity",
+      "port": "AirQuality",
+      "entity": "AirQualityReading",
+      "source": "Sensor.Community",
+      "module": "@/adapters/sources/sensorcommunity/sensorcommunity-adapter",
+      "coverage": {
+        "kind": "GLOBAL"
+      },
+      "mode": "LIVE",
+      "intervalSec": 300,
+      "configPrefix": "SENSORCOMMUNITY",
+      "license": "ODbL 1.0 (database) / DbCL 1.0 (contents) — \"Data: Sensor.Community contributors\"",
+      "attribution": "Data: Sensor.Community contributors (ODbL — share-alike)",
+      "cache": {
+        "ttlSec": 300
+      },
+      "circuitBreaker": {
+        "failureThreshold": 5,
+        "cooldownSec": 120,
+        "halfOpenTrials": 1
+      },
+      "mock": {
+        "fixture": "sensorcommunity/box.json"
+      },
+      "verifiedTier": "LIVE"
+    }
+  ]
+}

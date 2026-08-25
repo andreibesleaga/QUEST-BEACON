@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/sitrep.schema.json",
+  "title": "BEACON SitRep — validate-or-fallback / anti-hallucination gate",
+  "description": "Validates a GENERATED SitRep object (SPEC §6.3 grounding/JSON-schema validation & citation enforcement; §2.4 citations[]; DOMAIN_MODEL §2 SITREP + CITATION; Constitution Art. XI/XII). The LLM emits a SitRep against THIS schema; on parse/contract/citation failure the system rejects it and falls back to deterministic-only (no narrative) — UW3/F4. Numbers in summary/priorities are narrated from the deterministic engine, never invented by the LLM (Art. XII). citations[] is REQUIRED and MUST be non-empty: a SitRep that has narrative (summary/priorities) but empty citations[] MUST FAIL validation — that is the F2 100%-citation-coverage gate. Citation shape mirrors source-ref.schema.json#/$defs/citation (field, sourceId, claim → SOURCE_RECORD).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "incidentId",
+    "generatedAt",
+    "summary",
+    "priorities",
+    "trend",
+    "aiMode",
+    "citations"
+  ],
+  "properties": {
+    "incidentId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "FK -> incident.id this SitRep summarizes (DOMAIN_MODEL §2 SITREP.incident_id)."
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this SitRep was generated. ISO 8601 with timezone (DOMAIN_MODEL SITREP.generated_at)."
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Generated narrative executive summary. A grounded narration of deterministic facts; every claim in it must be backed by >=1 entry in citations[] (Art. XII; F2). On deterministic-only fallback this may be templated/omitted at the application layer, but when present it must remain cited."
+    },
+    "priorities": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Ranked attention areas — DETERMINISTIC and reproducibly ordered (SPEC §5.2 weighted priority ranking; DOMAIN_MODEL SITREP.priorities). The LLM narrates priorities[].rationale but never reorders or invents the ranking (Art. XII/F3).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rank", "label", "rationale"],
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "1-based deterministic rank (stable ordering from the engine's priority_score, SPEC §5.2). Lower = higher priority."
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Short identifier of the attention area (e.g. exposed cluster/node name). Deterministic engine output, not LLM-invented."
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Generated narration of WHY this is ranked here. Cited: the corresponding 'priorities[<n>].rationale' field must appear in citations[] (F2)."
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Optional deterministic priority_score in [0,1] (SPEC §5.2). Computed by the engine, echoed here; never produced by the LLM."
+          }
+        }
+      }
+    },
+    "trend": {
+      "type": "string",
+      "description": "Escalation trend of the incident (DOMAIN_MODEL SITREP.trend).",
+      "enum": ["ESCALATING", "STEADY", "DEESCALATING"]
+    },
+    "aiMode": {
+      "type": "string",
+      "description": "Which LLMPort ladder rung produced this SitRep (SPEC §6.1; DOMAIN_MODEL SITREP.ai_mode). Echoes the rung used: 'cloud' (Groq/OpenRouter/Claude), 'local' (Ollama), or 'deterministic-only' (no narrative — UW3/F4 fallback).",
+      "enum": ["cloud", "local", "deterministic-only"]
+    },
+    "citations": {
+      "type": "array",
+      "description": "REQUIRED and NON-EMPTY (minItems:1). Every generated narrative field (summary, each priorities[].rationale, trend) must be grounded by >=1 citation referencing a SOURCE_RECORD (Art. XI/XII; SPEC §2.4/§6.3). The F2 gate: a SitRep carrying summary/priorities with an EMPTY citations[] MUST FAIL this schema. Citation shape mirrors source-ref.schema.json#/$defs/citation.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field", "sourceId", "claim"],
+        "properties": {
+          "field": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Which SitRep field this citation grounds (e.g. 'summary', 'priorities[0].rationale', 'trend'). Mirrors source-ref.schema.json#/$defs/citation.field."
+          },
+          "sourceId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "FK -> sourceRecord.id that substantiates the claim (DOMAIN_MODEL CITATION.source_id)."
+          },
+          "claim": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The specific cited fact/claim drawn from the source."
+          }
+        }
+      }
+    }
+  }
+}

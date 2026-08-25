@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/d5-mutual-aid-board.schema.json",
+  "title": "BEACON D5 mutual-aid request board (FR-D4-2, FEV-21)",
+  "description": "The wire shape of the mutual-aid board (src/application/coordination/mutual-aid-board.ts): a VIEW over RESOURCE_TASK rows correlated by the EDXL-RM OriginatingMessageID (`edxlRmRef`). BEACON has no ResourceRequest entity, so this document deliberately carries no requester, quantity or fulfilment percentage. A correlation chain spanning more than one incident is NOT collapsed into one row — it appears under `conflicts` with its reason (flag, never merge). Aggregate-only (Art. XIV): every identifier here names a TASK, RESOURCE, INCIDENT or SHELTER — never a person.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["requests", "local", "conflicts", "taskCountsByStatus", "caveat"],
+  "properties": {
+    "requests": {
+      "type": "array",
+      "description": "Correlated mutual-aid chains, ascending by edxlRmRef.",
+      "items": { "$ref": "#/$defs/requestRow" }
+    },
+    "local": {
+      "type": "array",
+      "description": "Taskings carrying no correlation id — surfaced as local, never dropped and never invented into a chain.",
+      "items": { "$ref": "#/$defs/localRow" }
+    },
+    "conflicts": {
+      "type": "array",
+      "description": "Chains that could not be rendered as one request row, with the reason.",
+      "items": { "$ref": "#/$defs/conflict" }
+    },
+    "taskCountsByStatus": { "$ref": "#/$defs/statusCounts" },
+    "caveat": { "type": "string", "minLength": 1 }
+  },
+  "$defs": {
+    "taskStatus": {
+      "type": "string",
+      "enum": ["PROPOSED", "TASKED", "ENROUTE", "ONSCENE", "CLEARED"],
+      "description": "RESOURCE_TASK_STATUSES verbatim (src/domain/resource-task.ts:9). Pinned to the domain union by test."
+    },
+    "requestRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["edxlRmRef", "incidentId", "taskIds", "resourceIds", "status", "taskCount"],
+      "properties": {
+        "edxlRmRef": { "type": "string", "minLength": 1, "description": "EDXL-RM OriginatingMessageID correlating the chain." },
+        "incidentId": { "type": "string", "minLength": 1 },
+        "taskIds": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "resourceIds": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "status": {
+          "$ref": "#/$defs/taskStatus",
+          "description": "Furthest-advanced lifecycle state in the chain, by the domain's forward-only order."
+        },
+        "taskCount": { "type": "integer", "minimum": 1 },
+        "shelterId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Present only when every tasking in the chain names the SAME shelter."
+        }
+      }
+    },
+    "localRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["taskId", "resourceId", "incidentId", "status"],
+      "properties": {
+        "taskId": { "type": "string", "minLength": 1 },
+        "resourceId": { "type": "string", "minLength": 1 },
+        "incidentId": { "type": "string", "minLength": 1 },
+        "status": { "$ref": "#/$defs/taskStatus" }
+      }
+    },
+    "conflict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["edxlRmRef", "reason", "incidentIds", "taskIds"],
+      "properties": {
+        "edxlRmRef": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "enum": ["CORRELATION_ID_SPANS_MULTIPLE_INCIDENTS"] },
+        "incidentIds": { "type": "array", "minItems": 2, "items": { "type": "string", "minLength": 1 } },
+        "taskIds": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "statusCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["PROPOSED", "TASKED", "ENROUTE", "ONSCENE", "CLEARED"],
+      "description": "TASK counts per lifecycle state over every supplied tasking; every key present, zeros included.",
+      "properties": {
+        "PROPOSED": { "type": "integer", "minimum": 0 },
+        "TASKED": { "type": "integer", "minimum": 0 },
+        "ENROUTE": { "type": "integer", "minimum": 0 },
+        "ONSCENE": { "type": "integer", "minimum": 0 },
+        "CLEARED": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

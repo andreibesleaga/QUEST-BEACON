@@ -1,0 +1,427 @@
+{
+  "type": "FeatureCollection",
+  "_recordedAt": "2026-07-17",
+  "_recordedFrom": "ALERTCalifornia_Camera_Feed FeatureServer/0 (ArcGIS Living Atlas item 0c1c1166688f4f2db938194799337be4), Butte/Plumas/Yuba County CA envelope, f=geojson. Real recorded sample; parser reads only `features`.",
+  "features": [
+    {
+      "type": "Feature",
+      "id": 10,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.482498,
+          39.952499
+        ]
+      },
+      "properties": {
+        "OBJECTID": 10,
+        "cameraName": "Bald Mtn. (Butte) 1",
+        "siteId": "baldmtnbutte",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "butte",
+        "colocatedCameras": "Bald Mtn. (Butte) 2",
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-BaldMtnButte1",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.95_-121.48_10",
+        "positionPan": 147.83,
+        "positionTilt": 0,
+        "viewZoomScale": 1,
+        "viewTime": "2026-07-16 13:23:42-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-BaldMtnButte1/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 11,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.482498,
+          39.952499
+        ]
+      },
+      "properties": {
+        "OBJECTID": 11,
+        "cameraName": "Bald Mtn. (Butte) 2",
+        "siteId": "baldmtnbutte",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "butte",
+        "colocatedCameras": "Bald Mtn. (Butte) 1",
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-BaldMtnButte2",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.95_-121.48_10",
+        "positionPan": 351.02,
+        "positionTilt": -0.75,
+        "viewZoomScale": 1,
+        "viewTime": "2026-07-16 19:07:25-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-BaldMtnButte2/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 38,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.463402,
+          39.651001
+        ]
+      },
+      "properties": {
+        "OBJECTID": 38,
+        "cameraName": "Bloomer Lookout 1",
+        "siteId": "bloomer",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "butte",
+        "colocatedCameras": "Bloomer Lookout 2",
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-BloomerLookout1",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.65_-121.46_10",
+        "positionPan": 79.54,
+        "positionTilt": -0.95,
+        "viewZoomScale": 1,
+        "viewTime": "2026-07-17 00:01:36-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-BloomerLookout1/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 39,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.463402,
+          39.651001
+        ]
+      },
+      "properties": {
+        "OBJECTID": 39,
+        "cameraName": "Bloomer Lookout 2",
+        "siteId": "bloomer",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "butte",
+        "colocatedCameras": "Bloomer Lookout 1",
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-BloomerLookout2",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.65_-121.46_10",
+        "positionPan": 274.28,
+        "positionTilt": 0,
+        "viewZoomScale": 2.1,
+        "viewTime": "2026-07-17 00:01:57-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-BloomerLookout2/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 77,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.414452,
+          39.446747
+        ]
+      },
+      "properties": {
+        "OBJECTID": 77,
+        "cameraName": "Chinese Wall",
+        "siteId": "chinesewall",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "butte",
+        "colocatedCameras": null,
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-ChineseWall",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.44_-121.41_10",
+        "positionPan": 263.46,
+        "positionTilt": -0.13,
+        "viewZoomScale": 1,
+        "viewTime": "2026-07-16 19:03:39-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-ChineseWall/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 84,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.7146,
+          39.958332
+        ]
+      },
+      "properties": {
+        "OBJECTID": 84,
+        "cameraName": "Cohasset Hill 1",
+        "siteId": "cohasset",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "butte",
+        "colocatedCameras": "Cohasset Hill 2",
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-Cohasset",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.95_-121.71_10",
+        "positionPan": 107.8,
+        "positionTilt": -0.3,
+        "viewZoomScale": 1,
+        "viewTime": "2026-07-16 19:09:40-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-Cohasset/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 85,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.7146,
+          39.958332
+        ]
+      },
+      "properties": {
+        "OBJECTID": 85,
+        "cameraName": "Cohasset Hill 2",
+        "siteId": "cohasset",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "butte",
+        "colocatedCameras": "Cohasset Hill 1",
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-Cohasset2",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.95_-121.71_10",
+        "positionPan": 214.26,
+        "positionTilt": -0.43,
+        "viewZoomScale": 2.3,
+        "viewTime": "2026-07-16 19:01:43-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-Cohasset2/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 88,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.538696,
+          39.771301
+        ]
+      },
+      "properties": {
+        "OBJECTID": 88,
+        "cameraName": "Concow Mtn.",
+        "siteId": "concow",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "butte",
+        "colocatedCameras": null,
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-Concow",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.77_-121.53_10",
+        "positionPan": 79.56,
+        "positionTilt": -0.81,
+        "viewZoomScale": 1,
+        "viewTime": "2026-07-17 00:01:27-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-Concow/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 114,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.668144,
+          39.815426
+        ]
+      },
+      "properties": {
+        "OBJECTID": 114,
+        "cameraName": "Doe Mill Road",
+        "siteId": "doemillrd",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "butte",
+        "colocatedCameras": null,
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-DoeMillRd",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.81_-121.66_10",
+        "positionPan": 72.09,
+        "positionTilt": -1.85,
+        "viewZoomScale": 1,
+        "viewTime": "2026-07-17 00:02:01-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-DoeMillRd/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 118,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.637161,
+          39.677761
+        ]
+      },
+      "properties": {
+        "OBJECTID": 118,
+        "cameraName": "Dulcinea",
+        "siteId": "dulcinea",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "butte",
+        "colocatedCameras": null,
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-Dulcinea",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.67_-121.63_10",
+        "positionPan": 52.2,
+        "positionTilt": 0.35,
+        "viewZoomScale": 1,
+        "viewTime": "2026-07-17 00:01:56-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-Dulcinea/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 131,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.471603,
+          39.829201
+        ]
+      },
+      "properties": {
+        "OBJECTID": 131,
+        "cameraName": "Flea Mtn. 1",
+        "siteId": "fleamtn",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "butte",
+        "colocatedCameras": "Flea Mtn. 2",
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-FleaMtn",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.82_-121.47_10",
+        "positionPan": 78.9,
+        "positionTilt": -0.49,
+        "viewZoomScale": 1,
+        "viewTime": "2026-07-16 19:00:57-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-FleaMtn/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 183,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.481796,
+          39.7677
+        ]
+      },
+      "properties": {
+        "OBJECTID": 183,
+        "cameraName": "Jarbo Gap",
+        "siteId": "jarbo",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "butte",
+        "colocatedCameras": null,
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-JarboGap",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.76_-121.48_10",
+        "positionPan": 179.47,
+        "positionTilt": 0.32,
+        "viewZoomScale": 1,
+        "viewTime": "2026-07-16 16:05:51-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-JarboGap/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 207,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.009528,
+          39.678834
+        ]
+      },
+      "properties": {
+        "OBJECTID": 207,
+        "cameraName": "Lexington Hill 1",
+        "siteId": "lexingtonhill",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "plumas",
+        "colocatedCameras": "Lexington Hill 2",
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-LexingtonHill",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.67_-121.00_10",
+        "positionPan": 232.54,
+        "positionTilt": -0.7,
+        "viewZoomScale": 1,
+        "viewTime": "2026-07-17 00:01:37-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-LexingtonHill/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 208,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.009528,
+          39.678834
+        ]
+      },
+      "properties": {
+        "OBJECTID": 208,
+        "cameraName": "Lexington Hill 2",
+        "siteId": "lexingtonhill",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "plumas",
+        "colocatedCameras": "Lexington Hill 1",
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-LexingtonHill2",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.67_-121.00_10",
+        "positionPan": 100.08,
+        "positionTilt": -0.8,
+        "viewZoomScale": 2,
+        "viewTime": "2026-07-17 00:01:57-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-LexingtonHill2/latest-frame.jpg"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 270,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.177597,
+          39.389599
+        ]
+      },
+      "properties": {
+        "OBJECTID": 270,
+        "cameraName": "Oregon Peak 1",
+        "siteId": "oregonpeak",
+        "organization": "alertcalifornia",
+        "isActive": "active",
+        "isOnline": "online",
+        "county": "yuba",
+        "colocatedCameras": "Oregon Peak 2",
+        "cameraURL": "https://cameras.alertcalifornia.org/?id=Axis-OregonPeak1",
+        "networkURL": "https://cameras.alertcalifornia.org/?pos=39.38_-121.17_10",
+        "positionPan": 340.33,
+        "positionTilt": -0.6,
+        "viewZoomScale": 1,
+        "viewTime": "2026-07-16 18:59:38-07:00",
+        "imageURL": "https://cameras.alertcalifornia.org/public-camera-data/Axis-OregonPeak1/latest-frame.jpg"
+      }
+    }
+  ]
+}

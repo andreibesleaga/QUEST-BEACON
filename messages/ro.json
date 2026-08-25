@@ -1,0 +1,507 @@
+{
+  "_meta": {
+    "locale": "ro",
+    "review": "human",
+    "machineTranslated": false,
+    "comment": "Translated from messages/en.json; REVIEWED by the entrant, a native Romanian speaker (2026-07-28). Flipped together with the config/locales.json row, per finding F-58."
+  },
+  "channels": {
+    "digest": {
+      "trend": "tendință",
+      "noClaim": "(fără afirmație)",
+      "citations": "citări",
+      "sources": "proveniență",
+      "freshness": "prospețime"
+    },
+    "alert": {
+      "headline": "ALERTĂ BEACON — {severity} {category} pentru incidentul {incidentId} (alerta {alertId})"
+    }
+  },
+  "actMenu": {
+    "trigger": "Acțiune",
+    "title": "Acțiune asupra selecției",
+    "taskResource": "Alocă resursă",
+    "drawRoute": "Trasează rută de evacuare",
+    "createAlert": "Creează alertă DRAFT"
+  },
+  "app": {
+    "title": "BEACON — imagine operațională comună",
+    "description": "COP open-source, cu prioritate locală, în timp cvasi-real, pentru incendii de vegetație și inundații.",
+    "skipToContent": "Salt la conținut"
+  },
+  "commandPalette": {
+    "openLabel": "Deschide paleta de comenzi",
+    "triggerText": "Caută",
+    "dialogLabel": "Paleta de comenzi",
+    "placeholder": "Salt la o regiune, un incident, un panou — sau acționează…",
+    "empty": "Nicio potrivire.",
+    "groupRegions": "Regiuni",
+    "groupIncidents": "Incidente",
+    "groupPanels": "Panouri",
+    "groupLayers": "Comută straturile",
+    "groupAct": "Acțiune",
+    "toggleLayer": "Comută stratul {layer}",
+    "shortcutsTitle": "Scurtături de tastatură",
+    "shortcutsDescription": "Orice acțiune din COP este accesibilă fără mouse.",
+    "shortcut": {
+      "openPalette": "Deschide paleta de comenzi",
+      "openShortcuts": "Deschide această listă de scurtături",
+      "move": "Navighează între rezultatele paletei",
+      "run": "Execută acțiunea selectată",
+      "close": "Închide paleta / fereastra"
+    }
+  },
+  "decision": {
+    "sectionLabel": "Sprijin decizional",
+    "figures": "Valori deterministe",
+    "narration": "Narațiune AI",
+    "noNarration": "Fără narațiune (doar determinist).",
+    "citations": "Citări",
+    "approved": "Aprobat de un operator uman",
+    "approve": "Aprobă decizia",
+    "humanApprovalRequired": "Aprobarea umană este obligatorie înaintea oricărei acțiuni publice.",
+    "noDraftToApprove": "Nimic de aprobat momentan — nicio alertă schiță nu așteaptă revizuire.",
+    "roleRequiredToApprove": "Autentificați-vă ca Verificator sau Manager de urgență pentru a aproba."
+  },
+  "draftAlerts": {
+    "title": "Verificarea alertelor (DRAFT)",
+    "emptyTitle": "Nu există alerte DRAFT",
+    "emptyDescription": "Regulile de prag creează aici alerte DRAFT.",
+    "provenance": "Proveniență",
+    "noProvenance": "Fără proveniență",
+    "reviewApprove": "Verifică și aprobă…"
+  },
+  "locale": {
+    "label": "Limbă",
+    "switcherLabel": "Limba interfeței",
+    "machineTranslatedNotice": "Traducere automată — neverificată de un traducător uman.",
+    "machineTranslatedShort": "traducere automată"
+  },
+  "logistics": {
+    "title": "Logistică",
+    "resource": "Resursă",
+    "shelter": "Adăpost",
+    "noShelterData": "Nu există date despre capacitatea adăposturilor.",
+    "shelterCapacity": "Capacitatea adăposturilor",
+    "shelterCapacityVsDemand": "Capacitatea adăposturilor față de necesar",
+    "overCapacity": "Peste capacitate",
+    "withinCapacity": "În limita capacității",
+    "resourceToTask": "Resursă de alocat",
+    "selectResource": "Selectează resursa…",
+    "lifecycleTransition": "Tranziție de stare",
+    "transition": {
+      "PROPOSED": "PROPOSED",
+      "ASSIGNED": "ASSIGNED",
+      "EN_ROUTE": "EN_ROUTE",
+      "ON_SCENE": "ON_SCENE",
+      "CLEARED": "CLEARED"
+    },
+    "task": "Misiune",
+    "taskingRejected": "Alocare respinsă ({code}): {message}",
+    "resourcesUnavailable": "Resurse indisponibile",
+    "noResourcesTitle": "Nicio resursă",
+    "noResourcesDescription": "Nu există resurse alocabile în zona selectată.",
+    "prePositioning": {
+      "heading": "Sugestii de prepoziționare",
+      "advisory": "Consultativ — omul decide",
+      "listLabel": "Lista sugestiilor de prepoziționare",
+      "noIncidentTitle": "Niciun incident selectat",
+      "noIncidentDescription": "Selectează un incident pentru a vedea sugestiile de prepoziționare.",
+      "unavailable": "Prepoziționare indisponibilă",
+      "noExtentTitle": "Încă nu există o extindere estimată",
+      "noExtentDescription": "Sugestiile apar după ce devine disponibilă o proiecție a pericolului pentru acest incident.",
+      "noAssetsTitle": "Niciun mijloc în apropiere",
+      "noAssetsDescription": "Nu s-au găsit resurse AVAILABLE sau adăposturi OPEN în apropierea extinderii estimate."
+    }
+  },
+  "map": {
+    "layersLegend": "Straturile hărții",
+    "errorBoundaryLabel": "Hartă",
+    "unavailableTitle": "Harta interactivă este indisponibilă",
+    "unavailableDescription": "WebGL nu este disponibil aici. Toate datele hărții sunt listate mai jos, ca alternativă accesibilă.",
+    "layer": {
+      "fire": "Incendiu (puncte termice și perimetru)",
+      "flood": "Extinderea inundației și stații hidrometrice",
+      "storm": "Traiectoria ciclonului, con și val de furtună",
+      "floodzone": "Zone inundabile (NFHL)",
+      "infra": "Infrastructură",
+      "weather": "Vreme (vânt)",
+      "cameras": "Camere live",
+      "outage": "Întreruperi de curent",
+      "cell": "Acoperire mobilă",
+      "exposure": "Expunere (noduri în zona de pericol)",
+      "reports": "Sesizări / SOS",
+      "prediction": "Con de prognoză",
+      "route": "Rută de evacuare",
+      "shelters": "Adăposturi"
+    },
+    "caveat": {
+      "fire": "Punctele termice FIRMS sunt detecții termice, nu perimetre de incendiu confirmate.",
+      "floodzone": "Zone inundabile de reglementare — nu extinderea reală",
+      "weather": "Punct de observație — nu o grilă de prognoză",
+      "camera": "Camere live — deschide site-ul sursei într-o filă nouă",
+      "outage": "Granularitate la nivel de județ (EAGLE-I): zonele sunt estimări de tip „presupus fără alimentare”, nu întreruperi confirmate pe adresă.",
+      "cell": "Estimare de acoperire derivată din OpenCelliD — orientativă, nu o hartă garantată a semnalului.",
+      "storm": "Produs ciclonic al agenției preluat textual — BEACON nu modelează traiectorii, vânturi sau valul de furtună."
+    },
+    "tooltip": {
+      "layer": "Strat: {group}",
+      "clickToOpen": "clic pentru a deschide ↗"
+    },
+    "region": {
+      "label": "Regiune",
+      "default": "Regiune implicită",
+      "overlaysLegend": "Straturi satelitare",
+      "attribution": "Imagini satelitare: NASA EOSDIS GIBS"
+    },
+    "gibs": {
+      "truecolor": "Culori reale (VIIRS)",
+      "fires": "Incendii active (VIIRS)",
+      "flood": "Inundație (MODIS)",
+      "aerosol": "Grosime optică a aerosolilor"
+    },
+    "list": {
+      "regionLabel": "Elementele hărții (listă accesibilă)",
+      "empty": "Niciun element al hărții în vizualizarea curentă.",
+      "caption": "Listă accesibilă a tuturor elementelor hărții — alternativa de la tastatură la harta interactivă.",
+      "colType": "Tip",
+      "colFeature": "Element",
+      "colDetail": "Detaliu",
+      "colLocation": "Locație",
+      "colAction": "Acțiune",
+      "focus": "Focalizează {label}"
+    },
+    "group": {
+      "fire": "Detecție de incendiu",
+      "gauge": "Stație hidrometrică",
+      "infra": "Infrastructură",
+      "exposure": "Expunere",
+      "report": "Sesizare / SOS",
+      "shelter": "Adăpost"
+    },
+    "detail": {
+      "severity": "Severitate {severity}",
+      "thermalHotspot": "Punct termic",
+      "stage": "Cotă {stage}",
+      "gauge": "Stație hidrometrică",
+      "node": "Nod",
+      "infra": "{kind} — {status}",
+      "inHazard": "În zona de pericol: {hazard}",
+      "nodeInHazard": "Nod în zona de pericol"
+    },
+    "outage": {
+      "assumedOffline": "PRESUPUS fără alimentare",
+      "reportedOffline": "Raportat fără alimentare",
+      "withCount": "{count} consumatori fără curent — {state}"
+    },
+    "zone": {
+      "label": "Zona {zone}"
+    },
+    "storm": {
+      "trackLabel": "Traiectoria centrului ciclonului — informativă, nu o zonă de impact",
+      "coneLabel": "Con de prognoză — incertitudinea centrului traiectoriei, nu o zonă de impact",
+      "surgeLabel": "Extinderea valului de furtună — zonă de impact, inclusă în expunere",
+      "coneCaveat": "Con de prognoză de la {agency}, avertizare {advisoryAt} — arată unde se poate deplasa centrul ciclonului, ȘI NU extinderea condițiilor periculoase.",
+      "coneCaveatUnattributed": "Conul de prognoză arată unde se poate deplasa centrul ciclonului — ȘI NU extinderea condițiilor periculoase."
+    },
+    "shelter": {
+      "capacity": "Cap. {capacity} · Nec. {demand}"
+    },
+    "weather": {
+      "label": "Vânt {speed} km/h din {compass} ({deg}°), obs. {observedAt}"
+    },
+    "compass": {
+      "N": "N",
+      "NE": "NE",
+      "E": "E",
+      "SE": "SE",
+      "S": "S",
+      "SW": "SV",
+      "W": "V",
+      "NW": "NV"
+    },
+    "zoomIn": "Mărește",
+    "zoomOut": "Micșorează",
+    "recenter": "Recentrează harta"
+  },
+  "anticipatory": {
+    "title": "Anticipatory action",
+    "tab": "Anticipatory",
+    "sectionLabel": "Anticipatory action — early action protocol",
+    "methodHeading": "Method, inputs and uncertainty",
+    "ladderHeading": "Trigger ladder",
+    "cycleHeading": "Evaluation {index, number} of {total, number}",
+    "inputs": "Inputs",
+    "members": "{over, number} of {total, number} forecast members over {threshold, number} {unit}",
+    "leadTimeLabel": "Lead time",
+    "leadTime": "{hours, number} h, as stated by the source. BEACON does not model hazard travel time.",
+    "vintage": "Forecast run and issue instant",
+    "methodLabel": "Method and class",
+    "fired": "Fired",
+    "notFired": "Not fired",
+    "stageGate": "Gate: at least {fraction, number} of forecast members over {threshold, number} {unit}, class {klass} or higher, within {hours, number} h lead time.",
+    "ledgerHeading": "Governance records this cycle produces:",
+    "actionsHeading": "Pre-agreed actions",
+    "suggested": "Suggested",
+    "approvalHeading": "Human approval",
+    "pending": "Awaiting human approval by: {roles}",
+    "noEmission": "Suggestions only. Nothing on this panel dispatches a resource or emits a public alert; a named human must approve every early action.",
+    "stopMechanism": "Stop mechanism: {role} may stop the activation on a pre-agreed condition, and the engine stops it automatically after {hours, number} h.",
+    "replay": "Fixture-fed replay: each recorded forecast run is re-evaluated {lag, number} h after the issue instant stated in the file. Not live data — BEACON queries no ensemble product at runtime.",
+    "noProtocolTitle": "No early action protocol for this region",
+    "noProtocolBody": "BEACON ships no early action protocol whose scope names this region, so there is nothing to evaluate. Protocols are configuration (config/eap/), not code.",
+    "noForecastTitle": "No recorded forecast for this protocol",
+    "noForecastBody": "The protocol ships, but no recorded forecast file ships with it, so no evaluation can be replayed. BEACON has no wired live ensemble source.",
+    "engineRefusedTitle": "The anticipatory engine refused this input",
+    "engineRefusedBody": "The engine refused the input rather than showing a partial evaluation."
+  },
+  "outlook": {
+    "title": "Perspectivă",
+    "sectionLabel": "Perspectivă ordonată",
+    "eta": "în ~{hours, number} h",
+    "noEta": "sursa nu indică un timp de anticipare",
+    "unclassified": "neclasificat",
+    "uncertainty": "incertitudine {value, number}"
+  },
+  "panels": {
+    "sitrepTitle": "Raport de situație",
+    "logisticsTitle": "Logistică"
+  },
+  "shell": {
+    "sitrepDock": "Raport de situație",
+    "logisticsDock": "Logistică",
+    "mapLabel": "Harta imaginii operaționale comune",
+    "panelsLabel": "Panourile COP",
+    "expand": "Extinde {label}",
+    "collapse": "Restrânge {label}",
+    "region": {
+      "us-ca": "California (SUA)",
+      "ro": "România (UE)",
+      "es": "Spania (UE)",
+      "gr": "Grecia (UE)",
+      "ph": "Filipine"
+    }
+  },
+  "sitrep": {
+    "title": "Raport de situație",
+    "uncited": "Fără citare — sursă lipsă (F2)",
+    "noPriorities": "Nu există priorități ordonate.",
+    "rankedPriorities": "Priorități ordonate",
+    "deterministicOnly": "doar determinist",
+    "aiGenerated": "Generat de IA",
+    "trendLabel": "Tendință:",
+    "priorities": "Priorități",
+    "noIncidentTitle": "Niciun incident selectat",
+    "noIncidentDescription": "Alege un incident pentru a-i vedea raportul de situație.",
+    "unavailable": "Raportul de situație este indisponibil",
+    "provenance": "Proveniență",
+    "externalViews": "Vizualizări externe"
+  },
+  "suppliesPanel": {
+    "title": "Provizii de urgență",
+    "unavailable": "Proviziile sunt indisponibile",
+    "emptyTitle": "Niciun lot de provizii",
+    "emptyDescription": "Nu este înregistrat niciun stoc de provizii de urgență.",
+    "expires": "Expiră {when}",
+    "asOf": "La {when}",
+    "provenance": "Proveniență"
+  },
+  "volunteerTeamsPanel": {
+    "title": "Echipe de voluntari",
+    "unavailable": "Echipele de voluntari sunt indisponibile",
+    "emptyTitle": "Nicio echipă de voluntari",
+    "emptyDescription": "Nu este înregistrată nicio unitate de echipă.",
+    "headcount": "Efectiv {count}",
+    "skills": "Competențe",
+    "asOf": "La {when}",
+    "provenance": "Proveniență"
+  },
+  "shelterStatusPanel": {
+    "title": "Starea adăposturilor",
+    "unavailable": "Starea adăposturilor este indisponibilă",
+    "emptyTitle": "Niciun rând de adăpost",
+    "emptyDescription": "Niciun adăpost de raportat.",
+    "shelters": "Adăposturi",
+    "capacity": "Capacitate",
+    "occupancy": "Grad de ocupare",
+    "availableOpen": "Capacitate liberă deschisă",
+    "utilization": "Utilizare",
+    "available": "Liber",
+    "provenance": "Proveniență"
+  },
+  "damageReportsPanel": {
+    "title": "Pagube și nevoi",
+    "unavailable": "Rapoartele de pagube sunt indisponibile",
+    "emptyTitle": "Nicio înregistrare de evaluare",
+    "emptyDescription": "Niciun raport de pagube sau nevoi în aria vizată.",
+    "entries": "Înregistrări",
+    "sites": "Locații (auto-raportate)",
+    "worstSeverity": "Severitate maximă",
+    "needs": "Nevoi",
+    "asOf": "La {when}",
+    "provenance": "Proveniență"
+  },
+  "emsOverlayPanel": {
+    "title": "Strat Copernicus EMS",
+    "unavailable": "Stratul EMS este indisponibil",
+    "emptyTitle": "Niciun produs publicat",
+    "emptyDescription": "Niciun produs de evaluare a pagubelor publicat pentru această vedere.",
+    "open": "Deschide pagina produsului",
+    "attribution": "Atribuire",
+    "notShown": "Neafișat",
+    "asOf": "La {when}",
+    "provenance": "Proveniență"
+  },
+  "sos": {
+    "errors": {
+      "tooShort": "Descrieți urgența în cel puțin 10 caractere.",
+      "tooLong": "Păstrați descrierea sub 2000 de caractere.",
+      "generic": "Verificați formularul."
+    }
+  },
+  "tabs": {
+    "sitrep": "SitRep",
+    "decision": "Decizie",
+    "drafts": "Alerte DRAFT",
+    "resources": "Resurse",
+    "verify": "Verificare",
+    "report": "Raportează SOS",
+    "route": "Rută evac."
+  },
+  "theme": {
+    "toLight": "Comută pe tema deschisă",
+    "toDark": "Comută pe tema întunecată"
+  },
+  "toolbar": {
+    "layers": "Straturi",
+    "legend": "Legendă",
+    "devBadge": "dev",
+    "actingRole": "Rol activ (demo)",
+    "roleSwitcherTitle": "Doar pentru demo — falsifică x-beacon-role; serverul autorizează în continuare (AUTH_DEV_TRUST_HEADER)",
+    "devLoginUserId": "id utilizator dev-login",
+    "devLoginUserPlaceholder": "user id",
+    "devLogin": "dev-login",
+    "signedIn": "autentificat",
+    "loginUserLabel": "id utilizator",
+    "loginUserPlaceholder": "utilizator",
+    "loginPasswordLabel": "parolă",
+    "loginPasswordPlaceholder": "parolă",
+    "signIn": "Autentificare",
+    "signOut": "Deconectare",
+    "signInFailed": "Autentificare eșuată",
+    "liveBadge": "live",
+    "liveBadgeTitle": "Instalare de producție — rolurile provin doar din conturile autentificate.",
+    "currentRole": "Rol curent"
+  },
+  "ui": {
+    "severity": {
+      "MINOR": "Minoră",
+      "MODERATE": "Moderată",
+      "SEVERE": "Severă",
+      "EXTREME": "Extremă"
+    },
+    "mode": {
+      "LIVE": "Live",
+      "CACHED": "Cache",
+      "MOCK": "Simulat"
+    },
+    "freshness": {
+      "fresh": "Live",
+      "stale": "Învechit",
+      "unavailable": "Indisponibil"
+    },
+    "unverified": "Neverificat",
+    "dialog": {
+      "close": "Închide dialogul"
+    },
+    "skeleton": {
+      "loading": "Se încarcă"
+    },
+    "errorState": {
+      "title": "A apărut o eroare",
+      "retry": "Reîncearcă"
+    },
+    "errorBoundary": {
+      "title": "Acest panou nu a putut fi afișat",
+      "labelledTitle": "{label} nu a putut fi afișat"
+    },
+    "provenance": {
+      "trigger": "Proveniență",
+      "triggerAria": "{label} — {count, plural, one {# sursă} few {# surse} other {# de surse}}",
+      "heading": "Surse",
+      "empty": "Nu s-a înregistrat nicio proveniență."
+    },
+    "legend": {
+      "regionLabel": "Legenda hărții",
+      "severityHeading": "Severitatea pericolului",
+      "statusHeading": "Starea datelor",
+      "modeHeading": "Mod sursă",
+      "status": {
+        "fresh": "Actual",
+        "stale": "Învechit",
+        "unavailable": "Indisponibil",
+        "unverified": "Neverificat"
+      }
+    },
+    "externalViews": {
+      "caption": "Context extern — deschide site-uri terțe.",
+      "captionFor": "Context extern — deschide site-uri terțe pentru {label}.",
+      "listLabel": "Linkuri de context extern",
+      "kind": {
+        "map": "Hartă",
+        "satellite": "Satelit",
+        "street": "Stradă",
+        "3d": "3D",
+        "weather": "Vreme",
+        "imagery": "Imagini",
+        "fire": "Incendiu",
+        "flood": "Inundație"
+      }
+    },
+    "relativeTime": {
+      "unknown": "necunoscut",
+      "seconds": "acum {value} s",
+      "minutes": "acum {value} min",
+      "hours": "acum {value} h",
+      "days": "acum {value} z"
+    }
+  },
+  "warning": {
+    "headline": "{event} — {severity}",
+    "label": {
+      "what": "CE",
+      "where": "UNDE",
+      "when": "CÂND",
+      "impacts": "EFECTE",
+      "action": "ACȚIUNE"
+    },
+    "what": "{event}, gravitate {severity}.",
+    "where": "{area}.",
+    "when": "{when}.",
+    "impacts": "{impacts}",
+    "action": {
+      "Shelter": "Adăpostiți-vă acum. Rămâneți în interior în {area}, departe de geamuri, până la anunțul de încetare a alertei.",
+      "Evacuate": "Plecați acum din {area}. Luați rucsacul de urgență, folosiți traseul marcat și nu vă întoarceți până la anunțul de încetare a alertei.",
+      "Prepare": "Pregătiți-vă să plecați din {area}. Faceți un rucsac de urgență, alimentați mașina și urmăriți acest canal.",
+      "Execute": "Aplicați acum planul primit pentru {area}.",
+      "Avoid": "Nu intrați în {area}. Nu călătoriți în zonă.",
+      "Monitor": "Urmăriți actualizările despre {area}. Fiți pregătiți să acționați dacă avertizarea se schimbă.",
+      "Assess": "Verificați situația dumneavoastră în {area} și raportați ce vedeți.",
+      "AllClear": "Pericolul din {area} a încetat. Vă puteți întoarce. Respectați indicațiile autorităților locale.",
+      "None": "Nu este nevoie de nicio acțiune în {area} acum."
+    },
+    "event": {
+      "Fire": "Incendiu de vegetație",
+      "Met": "Inundație sau vreme severă",
+      "Safety": "Pericol pentru siguranța publică"
+    },
+    "allClear": {
+      "headline": "ALERTĂ ÎNCHEIATĂ — {event}",
+      "description": "{event} din {area} a încetat."
+    }
+  },
+  "content": {
+    "originalLanguage": "EN",
+    "untranslatedHint": "Afișat în engleză — netradus"
+  }
+}

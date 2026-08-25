@@ -1,0 +1,41 @@
+{
+  "$comment": "Recorded-mock fixture for the itu adapter (TelecomPort P13). SCHEMA-CRAFTED demo data — these are illustrative country/region-level connectivity indicators shaped after ITU's published national connectivity statistics (e.g. 'individuals using the Internet, % of population' and mobile-broadband population-coverage series from the ITU DataHub / World Telecommunication Indicators), NOT a literal recorded ITU API/DCM response (ITU Disaster Connectivity Maps access is gated — DATA_SOURCE_VERIFICATION.md row 57 — so no live payload could be recorded). Values are approximate/representative, not authoritative point-in-time statistics; do not treat as real measurements. `centroid` is a schema-crafted representative [lon,lat] point for the area (population-weighted centroid approximation), used only to place the aggregate on the map — ITU indicators are national/regional statistics, not geolocated tower data.",
+  "adapter": "itu",
+  "port": "Telecom",
+  "mode": "MOCK",
+  "reportingPeriod": "2025",
+  "rows": [
+    {
+      "area": "US-CA",
+      "areaName": "California, USA",
+      "centroid": [-119.4179, 36.7783],
+      "internetPenetration": 0.91,
+      "mobileCoverage": 0.98,
+      "observedAt": "2025-12-31T00:00:00Z"
+    },
+    {
+      "area": "US",
+      "areaName": "United States",
+      "centroid": [-98.5795, 39.8283],
+      "internetPenetration": 0.9,
+      "mobileCoverage": 0.99,
+      "observedAt": "2025-12-31T00:00:00Z"
+    },
+    {
+      "area": "RO",
+      "areaName": "Romania",
+      "centroid": [24.9668, 45.9432],
+      "internetPenetration": 0.83,
+      "mobileCoverage": 0.97,
+      "observedAt": "2025-12-31T00:00:00Z"
+    },
+    {
+      "area": "FR",
+      "areaName": "France",
+      "centroid": [2.2137, 46.2276],
+      "internetPenetration": 0.85,
+      "mobileCoverage": 0.99,
+      "observedAt": "2025-12-31T00:00:00Z"
+    }
+  ]
+}

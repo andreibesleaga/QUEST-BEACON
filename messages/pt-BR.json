@@ -1,0 +1,507 @@
+{
+  "_meta": {
+    "locale": "pt-BR",
+    "review": "machine",
+    "machineTranslated": true,
+    "comment": "Machine-translated from messages/en.json; NOT reviewed by a human translator. Labeled as such in the UI (FR-I18N-5)."
+  },
+  "channels": {
+    "digest": {
+      "trend": "tendência",
+      "noClaim": "(sem afirmação)",
+      "citations": "citações",
+      "sources": "proveniência",
+      "freshness": "atualidade"
+    },
+    "alert": {
+      "headline": "ALERTA BEACON — {severity} {category} para o incidente {incidentId} (alerta {alertId})"
+    }
+  },
+  "actMenu": {
+    "trigger": "Agir",
+    "title": "Agir sobre a seleção",
+    "taskResource": "Designar recurso",
+    "drawRoute": "Traçar rota de evacuação",
+    "createAlert": "Criar alerta DRAFT"
+  },
+  "app": {
+    "title": "BEACON — Quadro Operacional Comum",
+    "description": "Quadro operacional comum (COP) de código aberto, local-first e em tempo quase real para incêndios florestais e enchentes.",
+    "skipToContent": "Pular para o conteúdo"
+  },
+  "commandPalette": {
+    "openLabel": "Abrir paleta de comandos",
+    "triggerText": "Buscar",
+    "dialogLabel": "Paleta de comandos",
+    "placeholder": "Ir para região, incidente, painel — ou agir…",
+    "empty": "Nenhum resultado.",
+    "groupRegions": "Regiões",
+    "groupIncidents": "Incidentes",
+    "groupPanels": "Painéis",
+    "groupLayers": "Alternar camadas",
+    "groupAct": "Agir",
+    "toggleLayer": "Alternar camada {layer}",
+    "shortcutsTitle": "Atalhos de teclado",
+    "shortcutsDescription": "Toda ação do COP é acessível sem ponteiro.",
+    "shortcut": {
+      "openPalette": "Abrir a paleta de comandos",
+      "openShortcuts": "Abrir esta lista de atalhos",
+      "move": "Navegar entre os resultados da paleta",
+      "run": "Executar a ação destacada",
+      "close": "Fechar a paleta / sobreposição"
+    }
+  },
+  "decision": {
+    "sectionLabel": "Apoio à decisão",
+    "figures": "Números determinísticos",
+    "narration": "Narrativa de IA",
+    "noNarration": "Sem narrativa (somente determinístico).",
+    "citations": "Citações",
+    "approved": "Aprovado por humano",
+    "approve": "Aprovar decisão",
+    "humanApprovalRequired": "É obrigatória a aprovação humana antes de qualquer ação pública.",
+    "noDraftToApprove": "Nada para aprovar no momento — nenhum alerta em rascunho aguarda revisão.",
+    "roleRequiredToApprove": "Entre como Verificador ou Gestor de emergência para aprovar."
+  },
+  "draftAlerts": {
+    "title": "Revisão de alertas (DRAFT)",
+    "emptyTitle": "Nenhum alerta DRAFT",
+    "emptyDescription": "Regras de limiar criam alertas DRAFT aqui.",
+    "provenance": "Proveniência",
+    "noProvenance": "Sem proveniência",
+    "reviewApprove": "Revisar e aprovar…"
+  },
+  "locale": {
+    "label": "Idioma",
+    "switcherLabel": "Idioma de exibição",
+    "machineTranslatedNotice": "Tradução automática — não revisada por tradutor humano.",
+    "machineTranslatedShort": "tradução automática"
+  },
+  "logistics": {
+    "title": "Logística",
+    "resource": "Recurso",
+    "shelter": "Abrigo",
+    "noShelterData": "Sem dados de capacidade de abrigos.",
+    "shelterCapacity": "Capacidade de abrigo",
+    "shelterCapacityVsDemand": "Capacidade de abrigo x demanda",
+    "overCapacity": "Acima da capacidade",
+    "withinCapacity": "Dentro da capacidade",
+    "resourceToTask": "Recurso para tarefa",
+    "selectResource": "Selecionar recurso…",
+    "lifecycleTransition": "Transição de ciclo de vida",
+    "transition": {
+      "PROPOSED": "PROPOSED",
+      "ASSIGNED": "ASSIGNED",
+      "EN_ROUTE": "EN_ROUTE",
+      "ON_SCENE": "ON_SCENE",
+      "CLEARED": "CLEARED"
+    },
+    "task": "Tarefa",
+    "taskingRejected": "Designação rejeitada ({code}): {message}",
+    "resourcesUnavailable": "Recursos indisponíveis",
+    "noResourcesTitle": "Sem recursos",
+    "noResourcesDescription": "Nenhum recurso designável no escopo.",
+    "prePositioning": {
+      "heading": "Sugestões de pré-posicionamento",
+      "advisory": "Consultivo — o humano decide",
+      "listLabel": "Lista de sugestões de pré-posicionamento",
+      "noIncidentTitle": "Nenhum incidente selecionado",
+      "noIncidentDescription": "Selecione um incidente para ver sugestões de pré-posicionamento.",
+      "unavailable": "Pré-posicionamento indisponível",
+      "noExtentTitle": "Ainda sem extensão projetada",
+      "noExtentDescription": "As sugestões aparecem quando houver uma projeção da ameaça para este incidente.",
+      "noAssetsTitle": "Nenhum ativo próximo",
+      "noAssetsDescription": "Nenhum recurso AVAILABLE ou abrigo OPEN encontrado perto da extensão projetada."
+    }
+  },
+  "map": {
+    "layersLegend": "Camadas do mapa",
+    "errorBoundaryLabel": "Mapa",
+    "unavailableTitle": "Mapa interativo indisponível",
+    "unavailableDescription": "WebGL não está disponível aqui. Todos os dados do mapa estão listados abaixo como alternativa acessível.",
+    "layer": {
+      "fire": "Incêndio (focos de calor e perímetro)",
+      "flood": "Inundação (extensão e estações)",
+      "storm": "Trajetória do ciclone, cone e maré de tempestade",
+      "floodzone": "Zonas de inundação (NFHL)",
+      "infra": "Infraestrutura",
+      "weather": "Meteorologia (vento)",
+      "cameras": "Câmeras ao vivo",
+      "outage": "Falta de energia",
+      "cell": "Cobertura celular",
+      "exposure": "Exposição (nós na área de ameaça)",
+      "reports": "Relatos / SOS",
+      "prediction": "Cone de previsão",
+      "route": "Rota de evacuação",
+      "shelters": "Abrigos"
+    },
+    "caveat": {
+      "fire": "Os focos do FIRMS são detecções térmicas, não perímetros de incêndio confirmados.",
+      "floodzone": "Zonas de inundação regulatórias — não é a extensão atual",
+      "weather": "Ponto de observação — não é grade de previsão",
+      "camera": "Câmeras ao vivo — abre o site da fonte em uma nova aba",
+      "outage": "Granularidade municipal (EAGLE-I): as áreas são estimativas PRESUMIDAS sem energia, não interrupções confirmadas por endereço.",
+      "cell": "Estimativa de cobertura derivada do OpenCelliD — indicativa, não é um mapa de sinal garantido.",
+      "storm": "Produto ciclônico da agência reproduzido literalmente — o BEACON não modela trajetórias, ventos nem maré de tempestade."
+    },
+    "tooltip": {
+      "layer": "Camada: {group}",
+      "clickToOpen": "clique para abrir ↗"
+    },
+    "region": {
+      "label": "Região",
+      "default": "Região padrão",
+      "overlaysLegend": "Sobreposições de satélite",
+      "attribution": "Imagens de satélite: NASA EOSDIS GIBS"
+    },
+    "gibs": {
+      "truecolor": "Cor real (VIIRS)",
+      "fires": "Incêndios ativos (VIIRS)",
+      "flood": "Inundação (MODIS)",
+      "aerosol": "Profundidade óptica de aerossol"
+    },
+    "list": {
+      "regionLabel": "Feições do mapa (lista acessível)",
+      "empty": "Nenhuma feição do mapa na visão atual.",
+      "caption": "Lista acessível de todas as feições do mapa — a alternativa por teclado ao mapa interativo.",
+      "colType": "Tipo",
+      "colFeature": "Feição",
+      "colDetail": "Detalhe",
+      "colLocation": "Local",
+      "colAction": "Ação",
+      "focus": "Focar {label}"
+    },
+    "group": {
+      "fire": "Detecção de incêndio",
+      "gauge": "Estação fluviométrica",
+      "infra": "Infraestrutura",
+      "exposure": "Exposição",
+      "report": "Relato / SOS",
+      "shelter": "Abrigo"
+    },
+    "detail": {
+      "severity": "Severidade {severity}",
+      "thermalHotspot": "Foco de calor",
+      "stage": "Cota {stage}",
+      "gauge": "Estação fluviométrica",
+      "node": "Nó",
+      "infra": "{kind} — {status}",
+      "inHazard": "Em ameaça: {hazard}",
+      "nodeInHazard": "Nó em área de ameaça"
+    },
+    "outage": {
+      "assumedOffline": "PRESUMIDO sem energia",
+      "reportedOffline": "Sem energia reportada",
+      "withCount": "{count} clientes sem energia — {state}"
+    },
+    "zone": {
+      "label": "Zona {zone}"
+    },
+    "storm": {
+      "trackLabel": "Trajetória do centro do ciclone — informativa, não é área de impacto",
+      "coneLabel": "Cone de previsão — incerteza do centro da trajetória, não é área de impacto",
+      "surgeLabel": "Extensão da maré de tempestade — área de impacto, incluída na exposição",
+      "coneCaveat": "Cone de previsão de {agency}, aviso {advisoryAt} — mostra por onde o centro do ciclone pode passar, NÃO a extensão das condições perigosas.",
+      "coneCaveatUnattributed": "O cone de previsão mostra por onde o centro do ciclone pode passar — NÃO a extensão das condições perigosas."
+    },
+    "shelter": {
+      "capacity": "Cap {capacity} · Dem {demand}"
+    },
+    "weather": {
+      "label": "Vento {speed} km/h de {compass} ({deg}°), obs. {observedAt}"
+    },
+    "compass": {
+      "N": "N",
+      "NE": "NE",
+      "E": "L",
+      "SE": "SE",
+      "S": "S",
+      "SW": "SO",
+      "W": "O",
+      "NW": "NO"
+    },
+    "zoomIn": "Aproximar",
+    "zoomOut": "Afastar",
+    "recenter": "Recentralizar o mapa"
+  },
+  "anticipatory": {
+    "title": "Anticipatory action",
+    "tab": "Anticipatory",
+    "sectionLabel": "Anticipatory action — early action protocol",
+    "methodHeading": "Method, inputs and uncertainty",
+    "ladderHeading": "Trigger ladder",
+    "cycleHeading": "Evaluation {index, number} of {total, number}",
+    "inputs": "Inputs",
+    "members": "{over, number} of {total, number} forecast members over {threshold, number} {unit}",
+    "leadTimeLabel": "Lead time",
+    "leadTime": "{hours, number} h, as stated by the source. BEACON does not model hazard travel time.",
+    "vintage": "Forecast run and issue instant",
+    "methodLabel": "Method and class",
+    "fired": "Fired",
+    "notFired": "Not fired",
+    "stageGate": "Gate: at least {fraction, number} of forecast members over {threshold, number} {unit}, class {klass} or higher, within {hours, number} h lead time.",
+    "ledgerHeading": "Governance records this cycle produces:",
+    "actionsHeading": "Pre-agreed actions",
+    "suggested": "Suggested",
+    "approvalHeading": "Human approval",
+    "pending": "Awaiting human approval by: {roles}",
+    "noEmission": "Suggestions only. Nothing on this panel dispatches a resource or emits a public alert; a named human must approve every early action.",
+    "stopMechanism": "Stop mechanism: {role} may stop the activation on a pre-agreed condition, and the engine stops it automatically after {hours, number} h.",
+    "replay": "Fixture-fed replay: each recorded forecast run is re-evaluated {lag, number} h after the issue instant stated in the file. Not live data — BEACON queries no ensemble product at runtime.",
+    "noProtocolTitle": "No early action protocol for this region",
+    "noProtocolBody": "BEACON ships no early action protocol whose scope names this region, so there is nothing to evaluate. Protocols are configuration (config/eap/), not code.",
+    "noForecastTitle": "No recorded forecast for this protocol",
+    "noForecastBody": "The protocol ships, but no recorded forecast file ships with it, so no evaluation can be replayed. BEACON has no wired live ensemble source.",
+    "engineRefusedTitle": "The anticipatory engine refused this input",
+    "engineRefusedBody": "The engine refused the input rather than showing a partial evaluation."
+  },
+  "outlook": {
+    "title": "Perspectiva",
+    "sectionLabel": "Perspectiva ordenada",
+    "eta": "em ~{hours, number} h",
+    "noEta": "a fonte não informa antecedência",
+    "unclassified": "não classificado",
+    "uncertainty": "incerteza {value, number}"
+  },
+  "panels": {
+    "sitrepTitle": "Relatório de situação",
+    "logisticsTitle": "Logística"
+  },
+  "shell": {
+    "sitrepDock": "Relatório de Situação",
+    "logisticsDock": "Logística",
+    "mapLabel": "Mapa do quadro operacional comum",
+    "panelsLabel": "Painéis do COP",
+    "expand": "Expandir {label}",
+    "collapse": "Recolher {label}",
+    "region": {
+      "us-ca": "Califórnia (EUA)",
+      "ro": "Romênia (UE)",
+      "es": "Espanha (UE)",
+      "gr": "Grécia (UE)",
+      "ph": "Filipinas"
+    }
+  },
+  "sitrep": {
+    "title": "Relatório de Situação",
+    "uncited": "Sem citação — fonte ausente (F2)",
+    "noPriorities": "Sem prioridades ordenadas.",
+    "rankedPriorities": "Prioridades ordenadas",
+    "deterministicOnly": "somente determinístico",
+    "aiGenerated": "Gerado por IA",
+    "trendLabel": "Tendência:",
+    "priorities": "Prioridades",
+    "noIncidentTitle": "Nenhum incidente selecionado",
+    "noIncidentDescription": "Escolha um incidente para ver o SitRep.",
+    "unavailable": "SitRep indisponível",
+    "provenance": "Proveniência",
+    "externalViews": "Visões externas"
+  },
+  "suppliesPanel": {
+    "title": "Suprimentos de socorro",
+    "unavailable": "Suprimentos indisponíveis",
+    "emptyTitle": "Nenhum lote de suprimentos",
+    "emptyDescription": "Nenhum estoque de suprimentos de socorro registrado.",
+    "expires": "Vence {when}",
+    "asOf": "Em {when}",
+    "provenance": "Proveniência"
+  },
+  "volunteerTeamsPanel": {
+    "title": "Equipes de voluntários",
+    "unavailable": "Equipes de voluntários indisponíveis",
+    "emptyTitle": "Nenhuma equipe de voluntários",
+    "emptyDescription": "Nenhuma unidade de equipe registrada.",
+    "headcount": "Efetivo {count}",
+    "skills": "Capacidades",
+    "asOf": "Em {when}",
+    "provenance": "Proveniência"
+  },
+  "shelterStatusPanel": {
+    "title": "Situação dos abrigos",
+    "unavailable": "Situação dos abrigos indisponível",
+    "emptyTitle": "Nenhuma linha de abrigo",
+    "emptyDescription": "Nenhum abrigo a reportar.",
+    "shelters": "Abrigos",
+    "capacity": "Capacidade",
+    "occupancy": "Ocupação",
+    "availableOpen": "Capacidade livre aberta",
+    "utilization": "Utilização",
+    "available": "Livre",
+    "provenance": "Proveniência"
+  },
+  "damageReportsPanel": {
+    "title": "Danos e necessidades",
+    "unavailable": "Relatórios de danos indisponíveis",
+    "emptyTitle": "Nenhum registro de avaliação",
+    "emptyDescription": "Nenhum relatório de danos ou necessidades no escopo.",
+    "entries": "Registros",
+    "sites": "Locais (autodeclarados)",
+    "worstSeverity": "Severidade máxima",
+    "needs": "Necessidades",
+    "asOf": "Em {when}",
+    "provenance": "Proveniência"
+  },
+  "emsOverlayPanel": {
+    "title": "Camada Copernicus EMS",
+    "unavailable": "Camada EMS indisponível",
+    "emptyTitle": "Nenhum produto publicado",
+    "emptyDescription": "Nenhum produto de avaliação de danos publicado para esta visão.",
+    "open": "Abrir página do produto",
+    "attribution": "Atribuição",
+    "notShown": "Não exibido",
+    "asOf": "Em {when}",
+    "provenance": "Proveniência"
+  },
+  "sos": {
+    "errors": {
+      "tooShort": "Descreva a emergência com pelo menos 10 caracteres.",
+      "tooLong": "Mantenha a descrição com menos de 2000 caracteres.",
+      "generic": "Verifique o formulário."
+    }
+  },
+  "tabs": {
+    "sitrep": "SitRep",
+    "decision": "Decisão",
+    "drafts": "Alertas DRAFT",
+    "resources": "Recursos",
+    "verify": "Verificar",
+    "report": "Relatar SOS",
+    "route": "Rota evac."
+  },
+  "theme": {
+    "toLight": "Mudar para tema claro",
+    "toDark": "Mudar para tema escuro"
+  },
+  "toolbar": {
+    "layers": "Camadas",
+    "legend": "Legenda",
+    "devBadge": "dev",
+    "actingRole": "Função ativa (demo)",
+    "roleSwitcherTitle": "Apenas demo — simula x-beacon-role; o servidor continua autorizando (AUTH_DEV_TRUST_HEADER)",
+    "devLoginUserId": "id de usuário do dev-login",
+    "devLoginUserPlaceholder": "user id",
+    "devLogin": "dev-login",
+    "signedIn": "conectado",
+    "loginUserLabel": "id de usuário",
+    "loginUserPlaceholder": "usuário",
+    "loginPasswordLabel": "senha",
+    "loginPasswordPlaceholder": "senha",
+    "signIn": "Entrar",
+    "signOut": "Sair",
+    "signInFailed": "Falha ao entrar",
+    "liveBadge": "live",
+    "liveBadgeTitle": "Implantação de produção — funções vêm apenas de contas autenticadas.",
+    "currentRole": "Função atual"
+  },
+  "ui": {
+    "severity": {
+      "MINOR": "Menor",
+      "MODERATE": "Moderada",
+      "SEVERE": "Grave",
+      "EXTREME": "Extrema"
+    },
+    "mode": {
+      "LIVE": "Ao vivo",
+      "CACHED": "Em cache",
+      "MOCK": "Simulado"
+    },
+    "freshness": {
+      "fresh": "Ao vivo",
+      "stale": "Desatualizado",
+      "unavailable": "Indisponível"
+    },
+    "unverified": "Não verificado",
+    "dialog": {
+      "close": "Fechar diálogo"
+    },
+    "skeleton": {
+      "loading": "Carregando"
+    },
+    "errorState": {
+      "title": "Algo deu errado",
+      "retry": "Tentar novamente"
+    },
+    "errorBoundary": {
+      "title": "Este painel falhou ao renderizar",
+      "labelledTitle": "{label} falhou ao renderizar"
+    },
+    "provenance": {
+      "trigger": "Proveniência",
+      "triggerAria": "{label} — {count, plural, one {# fonte} other {# fontes}}",
+      "heading": "Fontes",
+      "empty": "Nenhuma proveniência registrada."
+    },
+    "legend": {
+      "regionLabel": "Legenda do mapa",
+      "severityHeading": "Severidade da ameaça",
+      "statusHeading": "Status dos dados",
+      "modeHeading": "Modo da fonte",
+      "status": {
+        "fresh": "Atualizado",
+        "stale": "Desatualizado",
+        "unavailable": "Indisponível",
+        "unverified": "Não verificado"
+      }
+    },
+    "externalViews": {
+      "caption": "Contexto externo — abre sites de terceiros.",
+      "captionFor": "Contexto externo — abre sites de terceiros para {label}.",
+      "listLabel": "Links de contexto externo",
+      "kind": {
+        "map": "Mapa",
+        "satellite": "Satélite",
+        "street": "Rua",
+        "3d": "3D",
+        "weather": "Tempo",
+        "imagery": "Imagens",
+        "fire": "Incêndio",
+        "flood": "Inundação"
+      }
+    },
+    "relativeTime": {
+      "unknown": "desconhecido",
+      "seconds": "há {value}s",
+      "minutes": "há {value}min",
+      "hours": "há {value}h",
+      "days": "há {value}d"
+    }
+  },
+  "warning": {
+    "headline": "{event} — {severity}",
+    "label": {
+      "what": "O QUE",
+      "where": "ONDE",
+      "when": "QUANDO",
+      "impacts": "IMPACTOS",
+      "action": "AÇÃO"
+    },
+    "what": "{event}, gravidade {severity}.",
+    "where": "{area}.",
+    "when": "{when}.",
+    "impacts": "{impacts}",
+    "action": {
+      "Shelter": "Abrigue-se agora. Fique dentro de casa em {area}, longe das janelas, até o aviso de fim da alerta.",
+      "Evacuate": "Saia de {area} agora. Leve sua mochila de emergência, use a rota sinalizada e não volte até o aviso de fim da alerta.",
+      "Prepare": "Prepare-se para sair de {area}. Monte uma mochila de emergência, abasteça o carro e acompanhe este canal.",
+      "Execute": "Execute agora o plano que você recebeu para {area}.",
+      "Avoid": "Não entre em {area}. Não viaje para a área.",
+      "Monitor": "Acompanhe as atualizações sobre {area}. Esteja pronto para agir se o aviso mudar.",
+      "Assess": "Verifique sua situação em {area} e relate o que você vê.",
+      "AllClear": "O perigo em {area} terminou. Você pode voltar. Siga as orientações locais.",
+      "None": "Nenhuma ação é necessária em {area} agora."
+    },
+    "event": {
+      "Fire": "Incêndio florestal",
+      "Met": "Enchente ou tempo severo",
+      "Safety": "Risco à segurança pública"
+    },
+    "allClear": {
+      "headline": "FIM DA ALERTA — {event}",
+      "description": "{event} em {area} terminou."
+    }
+  },
+  "content": {
+    "originalLanguage": "EN",
+    "untranslatedHint": "Exibido em inglês — não traduzido"
+  }
+}

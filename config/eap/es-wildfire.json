@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "id": "es-wildfire",
+  "label": "Northwest Iberian interior — wildfire fire-weather Early Action Protocol",
+  "hazard": "WILDFIRE",
+  "status": "ILLUSTRATIVE",
+  "provenance": "Structurally faithful to the six IFRC Early Action Protocol elements. Every threshold, action, ceiling, role and duration below is invented for demonstration and is NOT approved, endorsed or reviewed by any National Society, hydromet service or civil-protection authority. A real deployment replaces this file with its own signed-off protocol.",
+  "scope": {
+    "regionId": "es",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [-7.24, 42.12],
+          [-6.78, 42.12],
+          [-6.78, 42.48],
+          [-7.24, 42.48],
+          [-7.24, 42.12]
+        ]
+      ]
+    }
+  },
+  "triggers": {
+    "readiness": {
+      "source": "cached forecast file supplied to the evaluator — BEACON queries no live ensemble product",
+      "parameter": "fire-weather index at the interior forecast point",
+      "unit": "dimensionless index value",
+      "threshold": 38,
+      "comparator": "GTE",
+      "minMembersFraction": 0.35,
+      "minLikelihoodClass": "LIKELY",
+      "leadTimeHours": 72
+    },
+    "activation": {
+      "source": "cached forecast file supplied to the evaluator — BEACON queries no live ensemble product",
+      "parameter": "fire-weather index at the interior forecast point",
+      "unit": "dimensionless index value",
+      "threshold": 50,
+      "comparator": "GTE",
+      "minMembersFraction": 0.55,
+      "minLikelihoodClass": "VERY_LIKELY",
+      "leadTimeHours": 24
+    }
+  },
+  "actions": [
+    {
+      "id": "preposition-engines",
+      "label": "Pre-position engines at the staging points nearest the exposed interface",
+      "kind": "PREPOSITION",
+      "resourceKind": "ENGINE"
+    },
+    {
+      "id": "preposition-water-supply",
+      "label": "Pre-position water and hydration supplies at the staging points",
+      "kind": "PREPOSITION",
+      "resourceKind": "SUPPLY"
+    },
+    {
+      "id": "brief-provincial-focal-point",
+      "label": "Brief the provincial civil-protection focal point and the shelter coordinator",
+      "kind": "NOTIFY_INTERNAL"
+    }
+  ],
+  "resourceCeiling": {
+    "maxResources": 9,
+    "maxByKind": { "ENGINE": 4, "SUPPLY": 4, "CREW": 1 },
+    "basis": "Illustrative pre-arranged ceiling for the demonstration registry. No monetary or donor figure exists anywhere in BEACON, so none is stated here."
+  },
+  "approval": {
+    "authorizerRole": "EM",
+    "fallbackRole": "VERIFIER",
+    "fallbackAfterMinutes": 60
+  },
+  "stop": {
+    "conditions": [
+      {
+        "id": "fire-weather-cleared",
+        "label": "The fire-weather index falls below the readiness threshold on two consecutive runs"
+      },
+      {
+        "id": "ignition-response-underway",
+        "label": "An ignition has occurred and incident response has superseded anticipatory action"
+      }
+    ],
+    "authorizerRole": "EM",
+    "maxDurationHours": 120
+  }
+}

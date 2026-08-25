@@ -1,0 +1,507 @@
+{
+  "_meta": {
+    "locale": "bn",
+    "review": "machine",
+    "machineTranslated": true,
+    "comment": "Machine-translated from messages/en.json; NOT reviewed by a human translator. Labeled as such in the UI (FR-I18N-5)."
+  },
+  "channels": {
+    "digest": {
+      "trend": "প্রবণতা",
+      "noClaim": "(কোনো দাবি নেই)",
+      "citations": "উদ্ধৃতি",
+      "sources": "উৎস-সূত্র",
+      "freshness": "সতেজতা"
+    },
+    "alert": {
+      "headline": "BEACON সতর্কতা — {severity} {category}, ঘটনা {incidentId} (সতর্কতা {alertId})"
+    }
+  },
+  "actMenu": {
+    "trigger": "পদক্ষেপ",
+    "title": "নির্বাচিত বিষয়ে পদক্ষেপ",
+    "taskResource": "সম্পদ নিয়োগ",
+    "drawRoute": "সরিয়ে নেওয়ার পথ আঁকুন",
+    "createAlert": "DRAFT সতর্কতা তৈরি করুন"
+  },
+  "app": {
+    "title": "BEACON — সমন্বিত পরিচালন চিত্র",
+    "description": "দাবানল ও বন্যার জন্য ওপেন-সোর্স, স্থানীয়-প্রথম, প্রায়-তাৎক্ষণিক সমন্বিত পরিচালন চিত্র।",
+    "skipToContent": "মূল বিষয়বস্তুতে যান"
+  },
+  "commandPalette": {
+    "openLabel": "কমান্ড প্যালেট খুলুন",
+    "triggerText": "অনুসন্ধান",
+    "dialogLabel": "কমান্ড প্যালেট",
+    "placeholder": "অঞ্চল, ঘটনা বা প্যানেলে যান — বা পদক্ষেপ নিন…",
+    "empty": "কোনো মিল নেই।",
+    "groupRegions": "অঞ্চল",
+    "groupIncidents": "ঘটনা",
+    "groupPanels": "প্যানেল",
+    "groupLayers": "স্তর চালু/বন্ধ",
+    "groupAct": "পদক্ষেপ",
+    "toggleLayer": "{layer} স্তর চালু/বন্ধ",
+    "shortcutsTitle": "কীবোর্ড শর্টকাট",
+    "shortcutsDescription": "প্রতিটি পরিচালন পদক্ষেপ পয়েন্টার ছাড়াই ব্যবহারযোগ্য।",
+    "shortcut": {
+      "openPalette": "কমান্ড প্যালেট খুলুন",
+      "openShortcuts": "এই শর্টকাট তালিকা খুলুন",
+      "move": "প্যালেটের ফলাফলের মধ্যে চলাচল",
+      "run": "চিহ্নিত পদক্ষেপ চালান",
+      "close": "প্যালেট / ওভারলে বন্ধ করুন"
+    }
+  },
+  "decision": {
+    "sectionLabel": "সিদ্ধান্ত সহায়তা",
+    "figures": "নির্ধারণমূলক সংখ্যা",
+    "narration": "AI বিবরণ",
+    "noNarration": "কোনো বিবরণ নেই (শুধু নির্ধারণমূলক)।",
+    "citations": "উদ্ধৃতি",
+    "approved": "মানুষ কর্তৃক অনুমোদিত",
+    "approve": "সিদ্ধান্ত অনুমোদন",
+    "humanApprovalRequired": "যেকোনো জনসাধারণমুখী পদক্ষেপের আগে মানুষের অনুমোদন বাধ্যতামূলক।",
+    "noDraftToApprove": "এখন অনুমোদনের কিছু নেই — কোনো খসড়া সতর্কতা পর্যালোচনার অপেক্ষায় নেই।",
+    "roleRequiredToApprove": "অনুমোদনের জন্য যাচাইকারী বা জরুরি ব্যবস্থাপক হিসেবে সাইন ইন করুন।"
+  },
+  "draftAlerts": {
+    "title": "সতর্কতা পর্যালোচনা (DRAFT)",
+    "emptyTitle": "কোনো খসড়া সতর্কতা নেই",
+    "emptyDescription": "থ্রেশহোল্ড নিয়ম এখানে DRAFT সতর্কতা তৈরি করে।",
+    "provenance": "উৎস-সূত্র",
+    "noProvenance": "কোনো উৎস-সূত্র নেই",
+    "reviewApprove": "পর্যালোচনা ও অনুমোদন…"
+  },
+  "locale": {
+    "label": "ভাষা",
+    "switcherLabel": "প্রদর্শন ভাষা",
+    "machineTranslatedNotice": "যন্ত্র-অনূদিত — কোনো মানব অনুবাদক পর্যালোচনা করেননি।",
+    "machineTranslatedShort": "যন্ত্র-অনূদিত"
+  },
+  "logistics": {
+    "title": "রসদ",
+    "resource": "সম্পদ",
+    "shelter": "আশ্রয়কেন্দ্র",
+    "noShelterData": "আশ্রয়কেন্দ্রের ধারণক্ষমতার তথ্য নেই।",
+    "shelterCapacity": "আশ্রয়কেন্দ্রের ধারণক্ষমতা",
+    "shelterCapacityVsDemand": "আশ্রয়ক্ষমতা বনাম চাহিদা",
+    "overCapacity": "ধারণক্ষমতার বেশি",
+    "withinCapacity": "ধারণক্ষমতার মধ্যে",
+    "resourceToTask": "নিয়োগযোগ্য সম্পদ",
+    "selectResource": "সম্পদ নির্বাচন করুন…",
+    "lifecycleTransition": "জীবনচক্রের পরিবর্তন",
+    "transition": {
+      "PROPOSED": "PROPOSED",
+      "ASSIGNED": "ASSIGNED",
+      "EN_ROUTE": "EN_ROUTE",
+      "ON_SCENE": "ON_SCENE",
+      "CLEARED": "CLEARED"
+    },
+    "task": "নিয়োগ",
+    "taskingRejected": "নিয়োগ প্রত্যাখ্যাত ({code}): {message}",
+    "resourcesUnavailable": "সম্পদ অনুপলব্ধ",
+    "noResourcesTitle": "কোনো সম্পদ নেই",
+    "noResourcesDescription": "পরিধির মধ্যে নিয়োগযোগ্য কোনো সম্পদ নেই।",
+    "prePositioning": {
+      "heading": "আগাম মোতায়েনের পরামর্শ",
+      "advisory": "পরামর্শমূলক — সিদ্ধান্ত মানুষের",
+      "listLabel": "আগাম মোতায়েনের পরামর্শ তালিকা",
+      "noIncidentTitle": "কোনো ঘটনা নির্বাচিত নয়",
+      "noIncidentDescription": "আগাম মোতায়েনের পরামর্শ দেখতে একটি ঘটনা নির্বাচন করুন।",
+      "unavailable": "আগাম মোতায়েন অনুপলব্ধ",
+      "noExtentTitle": "এখনো কোনো প্রক্ষেপিত বিস্তার নেই",
+      "noExtentDescription": "এই ঘটনার জন্য বিপদের প্রক্ষেপণ পাওয়া গেলে পরামর্শ দেখা যাবে।",
+      "noAssetsTitle": "কাছাকাছি কোনো সম্পদ নেই",
+      "noAssetsDescription": "প্রক্ষেপিত বিস্তারের কাছে কোনো AVAILABLE সম্পদ বা OPEN আশ্রয়কেন্দ্র পাওয়া যায়নি।"
+    }
+  },
+  "map": {
+    "layersLegend": "মানচিত্রের স্তর",
+    "errorBoundaryLabel": "মানচিত্র",
+    "unavailableTitle": "ইন্টারঅ্যাকটিভ মানচিত্র অনুপলব্ধ",
+    "unavailableDescription": "এখানে WebGL নেই। সহজলভ্য বিকল্প হিসেবে মানচিত্রের সব তথ্য নিচে তালিকাভুক্ত।",
+    "layer": {
+      "fire": "আগুন (তাপবিন্দু ও পরিসীমা)",
+      "flood": "বন্যার বিস্তার ও গেজ",
+      "storm": "ঘূর্ণিঝড়ের গতিপথ, কোন ও জলোচ্ছ্বাস",
+      "floodzone": "বন্যা অঞ্চল (NFHL)",
+      "infra": "অবকাঠামো",
+      "weather": "আবহাওয়া (বাতাস)",
+      "cameras": "সরাসরি ক্যামেরা",
+      "outage": "বিদ্যুৎ বিভ্রাট",
+      "cell": "মোবাইল কভারেজ",
+      "exposure": "ঝুঁকি (বিপদের মধ্যে নোড)",
+      "reports": "প্রতিবেদন / SOS",
+      "prediction": "পূর্বাভাস কোন",
+      "route": "সরিয়ে নেওয়ার পথ",
+      "shelters": "আশ্রয়কেন্দ্র"
+    },
+    "caveat": {
+      "fire": "FIRMS তাপবিন্দু হলো তাপীয় শনাক্তকরণ, নিশ্চিত আগুনের পরিসীমা নয়।",
+      "floodzone": "নিয়ন্ত্রক বন্যা অঞ্চল — সরাসরি বিস্তার নয়",
+      "weather": "পর্যবেক্ষণ বিন্দু — পূর্বাভাস গ্রিড নয়",
+      "camera": "সরাসরি ক্যামেরা — উৎসের সাইট নতুন ট্যাবে খোলে",
+      "outage": "কাউন্টি-পর্যায়ের (EAGLE-I): এলাকাগুলো অনুমিত-বিচ্ছিন্ন হিসাব, প্রতি-ঠিকানা নিশ্চিত বিভ্রাট নয়।",
+      "cell": "OpenCelliD থেকে প্রাপ্ত কভারেজ অনুমান — নির্দেশক, নিশ্চিত সিগন্যাল মানচিত্র নয়।",
+      "storm": "সংস্থার ঘূর্ণিঝড় পণ্য অপরিবর্তিতভাবে প্রদর্শিত — BEACON ঝড়ের গতিপথ, বাতাস বা জলোচ্ছ্বাসের কোনো মডেল তৈরি করে না।"
+    },
+    "tooltip": {
+      "layer": "স্তর: {group}",
+      "clickToOpen": "খুলতে ক্লিক করুন ↗"
+    },
+    "region": {
+      "label": "অঞ্চল",
+      "default": "ডিফল্ট অঞ্চল",
+      "overlaysLegend": "উপগ্রহ ওভারলে",
+      "attribution": "উপগ্রহ চিত্র: NASA EOSDIS GIBS"
+    },
+    "gibs": {
+      "truecolor": "প্রকৃত রঙ (VIIRS)",
+      "fires": "সক্রিয় আগুন (VIIRS)",
+      "flood": "বন্যা (MODIS)",
+      "aerosol": "অ্যারোসল অপটিক্যাল ডেপথ"
+    },
+    "list": {
+      "regionLabel": "মানচিত্রের বৈশিষ্ট্য (সহজলভ্য তালিকা)",
+      "empty": "বর্তমান দৃশ্যে কোনো মানচিত্র বৈশিষ্ট্য নেই।",
+      "caption": "মানচিত্রের সব বৈশিষ্ট্যের সহজলভ্য তালিকা — ইন্টারঅ্যাকটিভ মানচিত্রের কীবোর্ড বিকল্প।",
+      "colType": "ধরন",
+      "colFeature": "বৈশিষ্ট্য",
+      "colDetail": "বিবরণ",
+      "colLocation": "অবস্থান",
+      "colAction": "পদক্ষেপ",
+      "focus": "{label} ফোকাস করুন"
+    },
+    "group": {
+      "fire": "আগুন শনাক্তকরণ",
+      "gauge": "বন্যা গেজ",
+      "infra": "অবকাঠামো",
+      "exposure": "ঝুঁকি",
+      "report": "প্রতিবেদন / SOS",
+      "shelter": "আশ্রয়কেন্দ্র"
+    },
+    "detail": {
+      "severity": "তীব্রতা {severity}",
+      "thermalHotspot": "তাপবিন্দু",
+      "stage": "পানির স্তর {stage}",
+      "gauge": "গেজ",
+      "node": "নোড",
+      "infra": "{kind} — {status}",
+      "inHazard": "বিপদের মধ্যে: {hazard}",
+      "nodeInHazard": "বিপদের মধ্যে নোড"
+    },
+    "outage": {
+      "assumedOffline": "অনুমিতভাবে বিচ্ছিন্ন",
+      "reportedOffline": "বিচ্ছিন্ন বলে জানানো হয়েছে",
+      "withCount": "{count} গ্রাহক বিদ্যুৎবিহীন — {state}"
+    },
+    "zone": {
+      "label": "অঞ্চল {zone}"
+    },
+    "storm": {
+      "trackLabel": "ঘূর্ণিঝড়ের কেন্দ্রের গতিপথ — পরামর্শমূলক, প্রভাব এলাকা নয়",
+      "coneLabel": "পূর্বাভাস কোন — গতিপথের কেন্দ্র নিয়ে অনিশ্চয়তা, প্রভাব এলাকা নয়",
+      "surgeLabel": "জলোচ্ছ্বাসের বিস্তার — প্রভাব এলাকা, ঝুঁকি গণনায় অন্তর্ভুক্ত",
+      "coneCaveat": "{agency}-এর পূর্বাভাস কোন, বিজ্ঞপ্তি {advisoryAt} — এটি দেখায় ঝড়ের কেন্দ্র কোন দিকে যেতে পারে; বিপজ্জনক পরিস্থিতির বিস্তার কোনোভাবেই নয়।",
+      "coneCaveatUnattributed": "পূর্বাভাস কোন দেখায় ঝড়ের কেন্দ্র কোন দিকে যেতে পারে — বিপজ্জনক পরিস্থিতির বিস্তার কোনোভাবেই নয়।"
+    },
+    "shelter": {
+      "capacity": "ধারণ {capacity} · প্রয়োজন {demand}"
+    },
+    "weather": {
+      "label": "বাতাস {speed} km/h {compass} থেকে ({deg}°), পর্যবেক্ষণ {observedAt}"
+    },
+    "compass": {
+      "N": "উত্তর",
+      "NE": "উত্তর-পূর্ব",
+      "E": "পূর্ব",
+      "SE": "দক্ষিণ-পূর্ব",
+      "S": "দক্ষিণ",
+      "SW": "দক্ষিণ-পশ্চিম",
+      "W": "পশ্চিম",
+      "NW": "উত্তর-পশ্চিম"
+    },
+    "zoomIn": "বড় করুন",
+    "zoomOut": "ছোট করুন",
+    "recenter": "মানচিত্র পুনরায় কেন্দ্র করুন"
+  },
+  "anticipatory": {
+    "title": "Anticipatory action",
+    "tab": "Anticipatory",
+    "sectionLabel": "Anticipatory action — early action protocol",
+    "methodHeading": "Method, inputs and uncertainty",
+    "ladderHeading": "Trigger ladder",
+    "cycleHeading": "Evaluation {index, number} of {total, number}",
+    "inputs": "Inputs",
+    "members": "{over, number} of {total, number} forecast members over {threshold, number} {unit}",
+    "leadTimeLabel": "Lead time",
+    "leadTime": "{hours, number} h, as stated by the source. BEACON does not model hazard travel time.",
+    "vintage": "Forecast run and issue instant",
+    "methodLabel": "Method and class",
+    "fired": "Fired",
+    "notFired": "Not fired",
+    "stageGate": "Gate: at least {fraction, number} of forecast members over {threshold, number} {unit}, class {klass} or higher, within {hours, number} h lead time.",
+    "ledgerHeading": "Governance records this cycle produces:",
+    "actionsHeading": "Pre-agreed actions",
+    "suggested": "Suggested",
+    "approvalHeading": "Human approval",
+    "pending": "Awaiting human approval by: {roles}",
+    "noEmission": "Suggestions only. Nothing on this panel dispatches a resource or emits a public alert; a named human must approve every early action.",
+    "stopMechanism": "Stop mechanism: {role} may stop the activation on a pre-agreed condition, and the engine stops it automatically after {hours, number} h.",
+    "replay": "Fixture-fed replay: each recorded forecast run is re-evaluated {lag, number} h after the issue instant stated in the file. Not live data — BEACON queries no ensemble product at runtime.",
+    "noProtocolTitle": "No early action protocol for this region",
+    "noProtocolBody": "BEACON ships no early action protocol whose scope names this region, so there is nothing to evaluate. Protocols are configuration (config/eap/), not code.",
+    "noForecastTitle": "No recorded forecast for this protocol",
+    "noForecastBody": "The protocol ships, but no recorded forecast file ships with it, so no evaluation can be replayed. BEACON has no wired live ensemble source.",
+    "engineRefusedTitle": "The anticipatory engine refused this input",
+    "engineRefusedBody": "The engine refused the input rather than showing a partial evaluation."
+  },
+  "outlook": {
+    "title": "পূর্বাভাস",
+    "sectionLabel": "ক্রমবিন্যস্ত পূর্বাভাস",
+    "eta": "~{hours, number} h পরে",
+    "noEta": "উৎস থেকে কোনো অগ্রিম সময় নেই",
+    "unclassified": "অশ্রেণিবদ্ধ",
+    "uncertainty": "অনিশ্চয়তা {value, number}"
+  },
+  "panels": {
+    "sitrepTitle": "পরিস্থিতি প্রতিবেদন",
+    "logisticsTitle": "রসদ"
+  },
+  "shell": {
+    "sitrepDock": "পরিস্থিতি প্রতিবেদন",
+    "logisticsDock": "রসদ",
+    "mapLabel": "সমন্বিত পরিচালন চিত্রের মানচিত্র",
+    "panelsLabel": "পরিচালন চিত্রের প্যানেল",
+    "expand": "{label} প্রসারিত করুন",
+    "collapse": "{label} সংকুচিত করুন",
+    "region": {
+      "us-ca": "ক্যালিফোর্নিয়া (মার্কিন যুক্তরাষ্ট্র)",
+      "ro": "রোমানিয়া (ইইউ)",
+      "es": "স্পেন (ইইউ)",
+      "gr": "গ্রিস (ইইউ)",
+      "ph": "ফিলিপাইন"
+    }
+  },
+  "sitrep": {
+    "title": "পরিস্থিতি প্রতিবেদন",
+    "uncited": "উদ্ধৃতিবিহীন — উৎস অনুপস্থিত (F2)",
+    "noPriorities": "কোনো ক্রমবিন্যস্ত অগ্রাধিকার নেই।",
+    "rankedPriorities": "ক্রমবিন্যস্ত অগ্রাধিকার",
+    "deterministicOnly": "শুধু নির্ধারণমূলক",
+    "aiGenerated": "এআই-উৎপন্ন",
+    "trendLabel": "প্রবণতা:",
+    "priorities": "অগ্রাধিকার",
+    "noIncidentTitle": "কোনো ঘটনা নির্বাচিত নয়",
+    "noIncidentDescription": "পরিস্থিতি প্রতিবেদন দেখতে একটি ঘটনা বাছুন।",
+    "unavailable": "পরিস্থিতি প্রতিবেদন অনুপলব্ধ",
+    "provenance": "উৎস-সূত্র",
+    "externalViews": "বাহ্যিক দৃশ্য"
+  },
+  "suppliesPanel": {
+    "title": "ত্রাণ সামগ্রী",
+    "unavailable": "সামগ্রী অনুপলব্ধ",
+    "emptyTitle": "কোনো সামগ্রীর লট নেই",
+    "emptyDescription": "কোনো ত্রাণ সামগ্রীর মজুত নিবন্ধিত নেই।",
+    "expires": "মেয়াদ শেষ {when}",
+    "asOf": "{when} পর্যন্ত",
+    "provenance": "উৎস-সূত্র"
+  },
+  "volunteerTeamsPanel": {
+    "title": "স্বেচ্ছাসেবক দল",
+    "unavailable": "স্বেচ্ছাসেবক দল অনুপলব্ধ",
+    "emptyTitle": "কোনো স্বেচ্ছাসেবক দল নেই",
+    "emptyDescription": "কোনো দল ইউনিট নিবন্ধিত নেই।",
+    "headcount": "সদস্যসংখ্যা {count}",
+    "skills": "সক্ষমতা",
+    "asOf": "{when} পর্যন্ত",
+    "provenance": "উৎস-সূত্র"
+  },
+  "shelterStatusPanel": {
+    "title": "আশ্রয়কেন্দ্রের অবস্থা",
+    "unavailable": "আশ্রয়কেন্দ্রের অবস্থা অনুপলব্ধ",
+    "emptyTitle": "কোনো আশ্রয়কেন্দ্রের তথ্য নেই",
+    "emptyDescription": "প্রতিবেদন করার মতো কোনো আশ্রয়কেন্দ্র নেই।",
+    "shelters": "আশ্রয়কেন্দ্র",
+    "capacity": "ধারণক্ষমতা",
+    "occupancy": "অবস্থানরত",
+    "availableOpen": "খোলা অবশিষ্ট ধারণক্ষমতা",
+    "utilization": "ব্যবহার",
+    "available": "অবশিষ্ট",
+    "provenance": "উৎস-সূত্র"
+  },
+  "damageReportsPanel": {
+    "title": "ক্ষয়ক্ষতি ও প্রয়োজন",
+    "unavailable": "ক্ষয়ক্ষতির প্রতিবেদন অনুপলব্ধ",
+    "emptyTitle": "কোনো মূল্যায়ন এন্ট্রি নেই",
+    "emptyDescription": "আওতার মধ্যে ক্ষয়ক্ষতি বা প্রয়োজনের কোনো প্রতিবেদন নেই।",
+    "entries": "এন্ট্রি",
+    "sites": "স্থান (স্ব-প্রতিবেদিত)",
+    "worstSeverity": "সর্বোচ্চ তীব্রতা",
+    "needs": "প্রয়োজন",
+    "asOf": "{when} পর্যন্ত",
+    "provenance": "উৎস-সূত্র"
+  },
+  "emsOverlayPanel": {
+    "title": "কোপার্নিকাস EMS স্তর",
+    "unavailable": "EMS স্তর অনুপলব্ধ",
+    "emptyTitle": "কোনো প্রকাশিত পণ্য নেই",
+    "emptyDescription": "এই দৃশ্যের জন্য কোনো ক্ষয়ক্ষতি-মূল্যায়ন পণ্য প্রকাশিত হয়নি।",
+    "open": "পণ্যের পৃষ্ঠা খুলুন",
+    "attribution": "স্বীকৃতি",
+    "notShown": "প্রদর্শিত নয়",
+    "asOf": "{when} পর্যন্ত",
+    "provenance": "উৎস-সূত্র"
+  },
+  "sos": {
+    "errors": {
+      "tooShort": "জরুরি অবস্থাটি অন্তত ১০ অক্ষরে বর্ণনা করুন।",
+      "tooLong": "বিবরণ ২০০০ অক্ষরের কম রাখুন।",
+      "generic": "অনুগ্রহ করে ফর্মটি যাচাই করুন।"
+    }
+  },
+  "tabs": {
+    "sitrep": "পরিস্থিতি",
+    "decision": "সিদ্ধান্ত",
+    "drafts": "খসড়া",
+    "resources": "সম্পদ",
+    "verify": "যাচাই",
+    "report": "SOS জানান",
+    "route": "সরানোর পথ"
+  },
+  "theme": {
+    "toLight": "হালকা থিমে যান",
+    "toDark": "গাঢ় থিমে যান"
+  },
+  "toolbar": {
+    "layers": "স্তর",
+    "legend": "নির্দেশিকা",
+    "devBadge": "dev",
+    "actingRole": "কার্যকর ভূমিকা (ডেমো)",
+    "roleSwitcherTitle": "শুধু ডেমো — x-beacon-role নকল করে; অনুমোদন এখনো সার্ভারই দেয় (AUTH_DEV_TRUST_HEADER)",
+    "devLoginUserId": "dev-login ব্যবহারকারী আইডি",
+    "devLoginUserPlaceholder": "user id",
+    "devLogin": "dev-login",
+    "signedIn": "সাইন ইন করা হয়েছে",
+    "loginUserLabel": "ব্যবহারকারী আইডি",
+    "loginUserPlaceholder": "ব্যবহারকারী",
+    "loginPasswordLabel": "পাসওয়ার্ড",
+    "loginPasswordPlaceholder": "পাসওয়ার্ড",
+    "signIn": "সাইন ইন",
+    "signOut": "সাইন আউট",
+    "signInFailed": "সাইন ইন ব্যর্থ",
+    "liveBadge": "live",
+    "liveBadgeTitle": "প্রোডাকশন ডিপ্লয়মেন্ট — ভূমিকা শুধুমাত্র সাইন-ইন করা অ্যাকাউন্ট থেকে আসে।",
+    "currentRole": "বর্তমান ভূমিকা"
+  },
+  "ui": {
+    "severity": {
+      "MINOR": "সামান্য",
+      "MODERATE": "মাঝারি",
+      "SEVERE": "গুরুতর",
+      "EXTREME": "চরম"
+    },
+    "mode": {
+      "LIVE": "সরাসরি",
+      "CACHED": "ক্যাশড",
+      "MOCK": "নকল"
+    },
+    "freshness": {
+      "fresh": "সরাসরি",
+      "stale": "পুরোনো",
+      "unavailable": "অনুপলব্ধ"
+    },
+    "unverified": "অযাচাইকৃত",
+    "dialog": {
+      "close": "ডায়ালগ বন্ধ করুন"
+    },
+    "skeleton": {
+      "loading": "লোড হচ্ছে"
+    },
+    "errorState": {
+      "title": "কিছু একটা ভুল হয়েছে",
+      "retry": "আবার চেষ্টা করুন"
+    },
+    "errorBoundary": {
+      "title": "এই প্যানেল দেখানো যায়নি",
+      "labelledTitle": "{label} দেখানো যায়নি"
+    },
+    "provenance": {
+      "trigger": "উৎস-সূত্র",
+      "triggerAria": "{label} — {count, plural, one {# উৎস} other {# উৎস}}",
+      "heading": "উৎসসমূহ",
+      "empty": "কোনো উৎস-সূত্র নথিভুক্ত নেই।"
+    },
+    "legend": {
+      "regionLabel": "মানচিত্র নির্দেশিকা",
+      "severityHeading": "বিপদের তীব্রতা",
+      "statusHeading": "তথ্যের অবস্থা",
+      "modeHeading": "উৎসের মোড",
+      "status": {
+        "fresh": "সাম্প্রতিক",
+        "stale": "পুরোনো",
+        "unavailable": "অনুপলব্ধ",
+        "unverified": "অযাচাইকৃত"
+      }
+    },
+    "externalViews": {
+      "caption": "বাহ্যিক প্রেক্ষাপট — তৃতীয় পক্ষের সাইট খোলে।",
+      "captionFor": "বাহ্যিক প্রেক্ষাপট — {label}-এর জন্য তৃতীয় পক্ষের সাইট খোলে।",
+      "listLabel": "বাহ্যিক প্রেক্ষাপটের লিঙ্ক",
+      "kind": {
+        "map": "মানচিত্র",
+        "satellite": "উপগ্রহ",
+        "street": "রাস্তা",
+        "3d": "থ্রিডি",
+        "weather": "আবহাওয়া",
+        "imagery": "চিত্র",
+        "fire": "আগুন",
+        "flood": "বন্যা"
+      }
+    },
+    "relativeTime": {
+      "unknown": "অজানা",
+      "seconds": "{value} সে আগে",
+      "minutes": "{value} মি আগে",
+      "hours": "{value} ঘ আগে",
+      "days": "{value} দি আগে"
+    }
+  },
+  "warning": {
+    "headline": "{event} — {severity}",
+    "label": {
+      "what": "কী",
+      "where": "কোথায়",
+      "when": "কখন",
+      "impacts": "প্রভাব",
+      "action": "করণীয়"
+    },
+    "what": "{event}, তীব্রতা {severity}।",
+    "where": "{area}।",
+    "when": "{when}।",
+    "impacts": "{impacts}",
+    "action": {
+      "Shelter": "এখনই আশ্রয় নিন। {area}-এ ঘরের ভিতরে থাকুন, জানালা থেকে দূরে থাকুন, বিপদমুক্ত ঘোষণা না আসা পর্যন্ত।",
+      "Evacuate": "এখনই {area} ছেড়ে যান। আপনার জরুরি ব্যাগ নিন, চিহ্নিত পথ ব্যবহার করুন, এবং বিপদমুক্ত ঘোষণা না আসা পর্যন্ত ফিরবেন না।",
+      "Prepare": "{area} ছাড়ার জন্য প্রস্তুত হোন। জরুরি ব্যাগ গুছিয়ে নিন, গাড়িতে তেল ভরুন, এবং এই চ্যানেলে নজর রাখুন।",
+      "Execute": "{area}-এর জন্য আপনাকে দেওয়া পরিকল্পনা এখনই কার্যকর করুন।",
+      "Avoid": "{area}-এ ঢুকবেন না। এই এলাকায় যাত্রা করবেন না।",
+      "Monitor": "{area} সম্পর্কে হালনাগাদ খবর দেখুন। সতর্কতা বদলালে ব্যবস্থা নিতে প্রস্তুত থাকুন।",
+      "Assess": "{area}-এ আপনার নিজের অবস্থা দেখুন এবং যা দেখছেন তা জানান।",
+      "AllClear": "{area}-এর বিপদ শেষ হয়েছে। আপনি ফিরতে পারেন। স্থানীয় নির্দেশ মেনে চলুন।",
+      "None": "এখন {area}-এ কোনো ব্যবস্থা নেওয়ার প্রয়োজন নেই।"
+    },
+    "event": {
+      "Fire": "দাবানল",
+      "Met": "বন্যা বা ভয়াবহ আবহাওয়া",
+      "Safety": "জননিরাপত্তার ঝুঁকি"
+    },
+    "allClear": {
+      "headline": "বিপদমুক্ত — {event}",
+      "description": "{area}-এ {event} শেষ হয়েছে।"
+    }
+  },
+  "content": {
+    "originalLanguage": "EN",
+    "untranslatedHint": "ইংরেজিতে দেখানো হয়েছে — অনূদিত নয়"
+  }
+}

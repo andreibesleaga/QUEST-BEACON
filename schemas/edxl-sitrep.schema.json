@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/edxl-sitrep.schema.json",
+  "title": "OASIS EDXL-SitRep 1.0 Situation Report (BEACON core subset)",
+  "description": "JSON representation of the OASIS Emergency Data Exchange Language Situation Reporting (EDXL-SitRep) 1.0 core (urn:oasis:names:tc:emergency:EDXL:SITREP:1.0). BEACON emits situation summaries as EDXL-SitRep (ADR-010). This is a boundary serialization mapped from the canonical SITREP entity by the EdxlPort anti-corruption adapter (ADR-001). Every SITREP field is grounded by canonical CITATION records (Art. XI/XII); citations are carried in the BEACON API envelope (see source-ref.schema.json), not invented by the LLM (Art. XII).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["sitRepIdentifier", "sitRepType", "sitRepNumber", "sentDateTime", "incidentInformation"],
+  "properties": {
+    "sitRepIdentifier": {
+      "type": "string",
+      "description": "EDXL-SitRep <SitRepIdentifier> — globally unique identifier (URN) for this situation report.",
+      "minLength": 1
+    },
+    "sitRepType": {
+      "type": "string",
+      "description": "EDXL-SitRep <SitRepType> — the type/purpose of the situation report.",
+      "enum": [
+        "RequestForInformation",
+        "ResponseToRequestForInformation",
+        "FieldObservation",
+        "SituationReport",
+        "SubstantiveReport",
+        "SpecialReport",
+        "FlashReport",
+        "ManagementReport",
+        "StatusReport"
+      ]
+    },
+    "sitRepNumber": {
+      "type": "string",
+      "description": "EDXL-SitRep <SitRepNumber> — sequence number of this report for the incident.",
+      "minLength": 1
+    },
+    "sitRepVersion": {
+      "type": "string",
+      "description": "EDXL-SitRep <SitRepVersion> — version of this numbered report (for amendments)."
+    },
+    "sentDateTime": {
+      "type": "string",
+      "description": "EDXL-SitRep <SitRepSentDateTime> — origination date/time, ISO 8601 with timezone.",
+      "format": "date-time"
+    },
+    "language": {
+      "type": "string",
+      "minLength": 1,
+      "description": "RFC 3066/BCP-47 language tag for the human-readable text in THIS report instance (summary.*, situationInformation.*, managementReportingDetail.*). NOT a native EDXL-SitRep 1.0 (CS02) element — the core data dictionary defines no Language/LanguageCode/xml:lang construct (verified against the OASIS CS02 spec text, section 1.5 References onward; RFC3066 is cited only as a normative reference, never wired to an element). This field borrows the name and RFC 3066 semantics of OASIS EDXL-DE 2.0's <language>/<contentLanguage> element (0..1, xsd:language) — the EDXL family's actual, standards-defined mechanism for tagging payload/content language — applied at the message level because BEACON emits bare SitRep JSON without an EDXL-DE transport wrapper (ADR-010 scopes RM+SitRep+CAP, not DE). Machine-readable fields (sitRepIdentifier, sitRepType, sitRepNumber, incidentInformation.incidentID/incidentType, summary.trend) are NEVER a function of this field (FUW-2 doctrine, mirrored from CAP <language>, cap-v1.2.schema.json). Multilingual SitRep is therefore per-DOCUMENT (build once per resolved language via alertLocalesFor), unlike CAP's per-<info>-block multilingual mechanism, because SitRep/RM have no repeated-block structure to carry it in."
+    },
+    "reportingDateTimeRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-SitRep <ReportingTimePeriod> — the operational period the report covers.",
+      "properties": {
+        "fromDateTime": { "type": "string", "format": "date-time" },
+        "toDateTime": { "type": "string", "format": "date-time" }
+      }
+    },
+    "originatorRoleType": {
+      "type": "string",
+      "description": "EDXL-SitRep <OriginatorRoleType> — role of the reporting entity (e.g. IC, EOC)."
+    },
+    "confidentiality": {
+      "type": "string",
+      "description": "EDXL-SitRep confidentiality / handling marking.",
+      "enum": ["Unclassified", "Restricted", "Confidential", "Internal"]
+    },
+    "incidentInformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-SitRep <IncidentInformation> — identity of the incident this SitRep concerns.",
+      "required": ["incidentID"],
+      "properties": {
+        "incidentID": {
+          "type": "string",
+          "description": "Incident id (GLIDE id per ADR-010; maps to canonical INCIDENT.id).",
+          "minLength": 1
+        },
+        "incidentName": { "type": "string" },
+        "incidentDescription": { "type": "string" },
+        "incidentType": {
+          "type": "string",
+          "description": "Hazard type (maps to canonical INCIDENT.type WILDFIRE|FLOOD)."
+        },
+        "incidentLocation": { "$ref": "#/$defs/geoJsonGeometry" }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-SitRep <Summary> — high-level narrative summary of the situation. Maps from canonical SITREP.summary; the narrative is LLM-produced but every field is citation-grounded (Art. XII).",
+      "properties": {
+        "headline": { "type": "string", "description": "Short headline of the current situation." },
+        "executiveSummary": { "type": "string", "description": "Narrative executive summary." },
+        "summaryAuthorship": {
+          "type": "string",
+          "description": "Art. VI authorship marker for `executiveSummary` (finding F-410). `AI_GENERATED` = the prose was written by a model (aiMode cloud|local); `DETERMINISTIC` = no model ran and the text is engine-composed. Present whenever `executiveSummary` is. This marks WHO WROTE THE PROSE only — every figure in this document is deterministic and citation-grounded regardless (Art. XII). Previously the AI authorship of this field was stated only in this schema's human-readable description, which no receiving system parses.",
+          "enum": ["AI_GENERATED", "DETERMINISTIC"]
+        },
+        "trend": {
+          "type": "string",
+          "description": "Escalation trend (maps to canonical SITREP.trend; deterministically derived, Art. XII).",
+          "enum": ["ESCALATING", "STEADY", "DEESCALATING"]
+        }
+      }
+    },
+    "situationInformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-SitRep <SituationInformation> — structured situational facts (life/safety, infrastructure, resources, priorities).",
+      "properties": {
+        "lifeSafety": { "type": "string", "description": "Life-safety status and casualties summary." },
+        "situationStatus": { "type": "string", "description": "Current operational status." },
+        "exposureSummary": {
+          "type": "string",
+          "description": "Deterministically-computed exposure (e.g. N facilities in hazard buffer). Numbers come from the deterministic engine, never the LLM (Art. XII)."
+        },
+        "priorities": {
+          "type": "array",
+          "description": "Ranked attention areas (maps from canonical SITREP.priorities; deterministically ranked, Art. XII).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["rank", "description"],
+            "properties": {
+              "rank": { "type": "integer", "minimum": 1 },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "resourceStatusSummary": {
+          "type": "string",
+          "description": "Summary of resource posture (cross-references EDXL-RM)."
+        },
+        "actionsTaken": { "type": "string", "description": "Significant actions taken in the reporting period." },
+        "futureActions": { "type": "string", "description": "Planned/anticipated actions." }
+      }
+    },
+    "managementReportingDetail": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-SitRep <ManagementReportingDetail> — optional management-level rollups.",
+      "properties": {
+        "objectives": { "type": "string" },
+        "majorEvents": { "type": "string" },
+        "remarks": { "type": "string" }
+      }
+    },
+    "additionalContent": {
+      "type": "array",
+      "description": "EDXL-SitRep additional content objects (attachments / references).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "contentDescription": { "type": "string" },
+          "uri": { "type": "string", "format": "uri" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "geoJsonGeometry": {
+      "type": "object",
+      "description": "GeoJSON geometry object (RFC 7946) per ADR-010 — subset.",
+      "required": ["type", "coordinates"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["Point", "LineString", "Polygon", "MultiPoint", "MultiLineString", "MultiPolygon"]
+        },
+        "coordinates": { "type": "array" }
+      }
+    }
+  }
+}

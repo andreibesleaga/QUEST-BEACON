@@ -1,0 +1,11 @@
+[
+  ["B01003_001E", "NAME", "state", "county"],
+  ["208368", "Butte County, California", "06", "007"],
+  ["28184", "Glenn County, California", "06", "021"],
+  ["99981", "Sutter County, California", "06", "101"],
+  ["1584000", "Sacramento County, California", "06", "067"],
+  ["216350", "Yolo County, California", "06", "113"],
+  ["21507", "Colusa County, California", "06", "011"],
+  ["65084", "Tehama County, California", "06", "103"],
+  ["N", "Malformed County, California", "06", "999"]
+]

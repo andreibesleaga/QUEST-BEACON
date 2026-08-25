@@ -1,0 +1,359 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/edxl-rm.schema.json",
+  "title": "OASIS EDXL-RM 1.0 Resource Messaging (BEACON full mutual-aid round-trip)",
+  "description": "JSON representation of the OASIS Emergency Data Exchange Language Resource Messaging (EDXL-RM) 1.0 message set (urn:oasis:names:tc:emergency:EDXL:RM:1.0). Models the full mutual-aid lifecycle round-trip: RequestResource -> CommitResource / ResponseToRequestResource, plus RequestResourceDeploymentStatus and its ResponseToRequestResourceDeploymentStatus. Each message wraps one or more ContentObject blocks that carry ResourceInformation. All messages in one round-trip share an OriginatingMessageID / correlation chain. This is a boundary serialization mapped to/from the canonical RESOURCE / RESOURCE_TASK / SHELTER entities by the EdxlPort anti-corruption adapter (ADR-001, ADR-010). ST1/UW5: no RM message is emitted from an UNVERIFIED report.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["messageType", "messageID", "sentDateTime", "messageContentType", "originatingMessageID", "contentObject"],
+  "properties": {
+    "messageType": {
+      "type": "string",
+      "description": "The EDXL-RM message type for this envelope. Determines its role in the round-trip.",
+      "enum": [
+        "RequestResource",
+        "ResponseToRequestResource",
+        "RequisitionResource",
+        "CommitResource",
+        "RequestInformation",
+        "ResponseToRequestInformation",
+        "OfferUnsolicitedResource",
+        "ReleaseResource",
+        "RequestReturn",
+        "ResponseToRequestReturn",
+        "RequestQuote",
+        "ResponseToRequestQuote",
+        "RequestResourceDeploymentStatus",
+        "ResponseToRequestResourceDeploymentStatus"
+      ]
+    },
+    "messageID": {
+      "type": "string",
+      "description": "EDXL-RM <MessageID> — globally unique id (URN) for THIS message.",
+      "minLength": 1
+    },
+    "sentDateTime": {
+      "type": "string",
+      "description": "EDXL-RM <SentDateTime> — ISO 8601 date/time with timezone offset.",
+      "format": "date-time"
+    },
+    "messageContentType": {
+      "type": "string",
+      "description": "EDXL-RM <MessageContentType> — must equal the messageType (kept for spec fidelity).",
+      "minLength": 1
+    },
+    "messageDescription": {
+      "type": "string",
+      "description": "EDXL-RM <MessageDescription> — free-text description of the message."
+    },
+    "language": {
+      "type": "string",
+      "minLength": 1,
+      "description": "RFC 3066/BCP-47 language tag for the human-readable text in THIS message (messageDescription, incidentInformation[].incidentDescription, contentObject[].contentDescription, resource.name/description). NOT a native EDXL-RM 1.0 (OS + approved errata) element — the resource-messaging data dictionary defines no Language/LanguageCode/xml:lang construct (verified against the OASIS OS+errata spec text; RFC3066 is cited only as a normative reference, never wired to an element). This field borrows the name and RFC 3066 semantics of OASIS EDXL-DE 2.0's <language>/<contentLanguage> element (0..1, xsd:language) — the EDXL family's actual, standards-defined mechanism for tagging payload/content language — applied at the message level because BEACON emits bare RM JSON without an EDXL-DE transport wrapper (ADR-010 scopes RM+SitRep+CAP, not DE). Machine-readable fields (messageType/ID, resourceInfoElementID, resourceStatus, quantity, geometry) are NEVER a function of this field (FUW-2 doctrine, mirrored from CAP <language>)."
+    },
+    "originatingMessageID": {
+      "type": "string",
+      "description": "EDXL-RM <OriginatingMessageID> — the MessageID of the message that initiated this round-trip (the RequestResource). This is the ROUND-TRIP CORRELATION ID: a request and every commit/response/status reply that answers it share the same originatingMessageID, enabling request->commit->response lifecycle assertions (ADR-010 round-trip fidelity tests).",
+      "minLength": 1
+    },
+    "precedingMessageID": {
+      "type": "string",
+      "description": "EDXL-RM <PrecedingMessageID> — the MessageID this message is a direct reply to (e.g. a CommitResource cites the RequestResource it commits against). Forms the reply chain within a round-trip."
+    },
+    "incidentInformation": {
+      "type": "array",
+      "description": "EDXL-RM <IncidentInformation> — incident(s) the resource action relates to.",
+      "items": { "$ref": "#/$defs/incidentInformation" }
+    },
+    "originator": {
+      "$ref": "#/$defs/messageRecipientOrSender",
+      "description": "EDXL-RM <FromMessageRecipient>/originator — the sending entity."
+    },
+    "recipient": {
+      "type": "array",
+      "description": "EDXL-RM <ToMessageRecipient> — the intended recipient(s).",
+      "items": { "$ref": "#/$defs/messageRecipientOrSender" }
+    },
+    "contentObject": {
+      "type": "array",
+      "description": "EDXL-RM <ContentObject> — one or more content blocks, each carrying ResourceInformation. At least one required.",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/contentObject" }
+    }
+  },
+  "$defs": {
+    "contentObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-RM <ContentObject> — a unit of content within an RM message.",
+      "required": ["resourceInformation"],
+      "properties": {
+        "contentDescription": {
+          "type": "string",
+          "description": "EDXL-RM <ContentDescription> — description of this content object."
+        },
+        "contentKeyword": {
+          "type": "array",
+          "description": "EDXL-RM <ContentKeyword> — keyword(s) classifying the content.",
+          "items": { "$ref": "#/$defs/valueListUrn" }
+        },
+        "resourceInformation": {
+          "type": "array",
+          "description": "EDXL-RM <ResourceInformation> — one or more resources described by this content object.",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/resourceInformation" }
+        }
+      }
+    },
+    "resourceInformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-RM <ResourceInformation> — describes a requested/committed/deployed resource plus its assignment, schedule and location.",
+      "required": ["resourceInfoElementID", "resource"],
+      "properties": {
+        "resourceInfoElementID": {
+          "type": "string",
+          "description": "EDXL-RM <ResourceInfoElementID> — id correlating a resource across request/commit/response (per-resource correlation inside a round-trip).",
+          "minLength": 1
+        },
+        "responseInformation": {
+          "$ref": "#/$defs/responseInformation",
+          "description": "EDXL-RM <ResponseInformation> — present on reply messages (CommitResource / ResponseToRequestResource) indicating accept/decline/provisional for this resource."
+        },
+        "resource": {
+          "$ref": "#/$defs/resource",
+          "description": "EDXL-RM <Resource> — the resource itself (type, name, status, owning org)."
+        },
+        "typeStructure": {
+          "$ref": "#/$defs/valueListUrn",
+          "description": "EDXL-RM <TypeStructure> — typed resource category (e.g. NIMS resource typing)."
+        },
+        "typeInfo": {
+          "type": "string",
+          "description": "EDXL-RM <TypeInfo> — free-text type detail."
+        },
+        "quantity": {
+          "$ref": "#/$defs/measuredQuantity",
+          "description": "EDXL-RM <Quantity> — amount of the resource requested/committed."
+        },
+        "assignmentInformation": {
+          "$ref": "#/$defs/assignmentInformation",
+          "description": "EDXL-RM <AssignmentInformation> — cost, restrictions, ownership and price of the assignment."
+        },
+        "scheduleInformation": {
+          "type": "array",
+          "description": "EDXL-RM <ScheduleInformation> — requested/committed timing windows (report-to, arrival, etc.).",
+          "items": { "$ref": "#/$defs/scheduleInformation" }
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-RM <Resource>.",
+      "required": ["name"],
+      "properties": {
+        "resourceID": {
+          "type": "string",
+          "description": "EDXL-RM <ResourceID> — unique id of the physical/logical resource (maps to canonical RESOURCE.id)."
+        },
+        "name": {
+          "type": "string",
+          "description": "EDXL-RM <Name> — human-readable resource name.",
+          "minLength": 1
+        },
+        "typeStructure": {
+          "$ref": "#/$defs/valueListUrn",
+          "description": "EDXL-RM resource type structure (e.g. CREW|ENGINE|AIRCRAFT|MEDICAL|SUPPLY mapped to a typing scheme)."
+        },
+        "typeInfo": { "type": "string" },
+        "keyword": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/valueListUrn" }
+        },
+        "description": { "type": "string" },
+        "credentials": { "type": "string" },
+        "certifications": { "type": "string" },
+        "ownershipInformation": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "EDXL-RM <OwnershipInformation> — owning organisation of the resource.",
+          "properties": {
+            "owner": { "type": "string", "description": "Owning org (maps to RESOURCE.org)." },
+            "ownerRole": { "type": "string" },
+            "providerInfo": { "type": "string" }
+          }
+        },
+        "resourceStatus": {
+          "$ref": "#/$defs/resourceStatus",
+          "description": "EDXL-RM <ResourceStatus> — availability/deployment status."
+        }
+      }
+    },
+    "resourceStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-RM <ResourceStatus> — used heavily by RequestResourceDeploymentStatus / its response.",
+      "properties": {
+        "availability": {
+          "type": "string",
+          "description": "EDXL-RM <Availability> — current availability of the resource.",
+          "enum": ["Available", "NotAvailable", "Partial", "Unknown"]
+        },
+        "deploymentStatus": {
+          "type": "string",
+          "description": "Deployment lifecycle state (maps to canonical RESOURCE_TASK status PROPOSED|TASKED|ENROUTE|ONSCENE|CLEARED).",
+          "enum": ["Requested", "Committed", "Mobilizing", "EnRoute", "OnScene", "Demobilizing", "Returned", "Cleared", "Unknown"]
+        },
+        "statusDateTime": {
+          "type": "string",
+          "description": "Timestamp of this status report.",
+          "format": "date-time"
+        }
+      }
+    },
+    "responseInformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-RM <ResponseInformation> — disposition of a request for a given resource.",
+      "required": ["precedingResourceInfoElementID", "responseType"],
+      "properties": {
+        "precedingResourceInfoElementID": {
+          "type": "string",
+          "description": "EDXL-RM <PrecedingResourceInfoElementID> — the ResourceInfoElementID from the request being answered (per-resource round-trip link).",
+          "minLength": 1
+        },
+        "responseType": {
+          "type": "string",
+          "description": "EDXL-RM <ResponseType> — the disposition.",
+          "enum": ["Accept", "Decline", "Provisional", "Substitution", "RequestFulfilled", "RequestUnfulfilled"]
+        },
+        "reason": { "type": "string", "description": "Free-text reason for the disposition." }
+      }
+    },
+    "measuredQuantity": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-RM <Quantity> as a MeasuredQuantity (amount + unit of measure).",
+      "required": ["amount"],
+      "properties": {
+        "amount": { "type": "number", "minimum": 0, "description": "Numeric amount." },
+        "unitOfMeasure": { "type": "string", "description": "Unit (e.g. 'each', 'persons', 'gallons')." }
+      }
+    },
+    "assignmentInformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-RM <AssignmentInformation>.",
+      "properties": {
+        "quantity": { "$ref": "#/$defs/measuredQuantity" },
+        "restrictions": { "type": "string", "description": "EDXL-RM <Restrictions> — usage restrictions." },
+        "anticipatedFunction": { "type": "string", "description": "EDXL-RM <AnticipatedFunction> — intended task." },
+        "priceQuote": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "EDXL-RM <PriceQuote>.",
+          "properties": {
+            "amount": { "type": "number", "minimum": 0 },
+            "currency": { "type": "string", "description": "ISO 4217 currency code.", "pattern": "^[A-Z]{3}$" }
+          }
+        },
+        "ownershipInformation": { "type": "string" },
+        "assignmentInstructions": { "type": "string" }
+      }
+    },
+    "scheduleInformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-RM <ScheduleInformation> — a timing element with type, time(s) and location.",
+      "required": ["scheduleType"],
+      "properties": {
+        "scheduleType": {
+          "type": "string",
+          "description": "EDXL-RM <ScheduleType> — the kind of schedule entry.",
+          "enum": ["RequestedArrival", "EstimatedArrival", "ActualArrival", "RequestedDeparture", "EstimatedDeparture", "ActualDeparture", "ReportTo", "Route", "Available", "Committed"]
+        },
+        "dateTime": {
+          "type": "string",
+          "description": "EDXL-RM <DateTime> — point-in-time for this schedule entry.",
+          "format": "date-time"
+        },
+        "location": {
+          "$ref": "#/$defs/location",
+          "description": "EDXL-RM <Location> — where this schedule entry applies (report-to / arrival point)."
+        }
+      }
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-RM <Location> — geo-location of a resource/schedule element. GeoJSON used for geometry per ADR-010.",
+      "properties": {
+        "locationDescription": { "type": "string", "description": "EDXL-RM <LocationDescription> — free-text location." },
+        "address": { "type": "string" },
+        "targetArea": {
+          "description": "Geometry as GeoJSON (RFC 7946) — Point/Polygon etc. per ADR-010 GeoJSON/OGC decision.",
+          "$ref": "#/$defs/geoJsonGeometry"
+        }
+      }
+    },
+    "geoJsonGeometry": {
+      "type": "object",
+      "description": "GeoJSON geometry object (RFC 7946) — subset.",
+      "required": ["type", "coordinates"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["Point", "LineString", "Polygon", "MultiPoint", "MultiLineString", "MultiPolygon"]
+        },
+        "coordinates": {
+          "type": "array",
+          "description": "Coordinate array; structure depends on geometry type (lon,lat order per RFC 7946)."
+        }
+      }
+    },
+    "incidentInformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-RM <IncidentInformation>.",
+      "properties": {
+        "incidentID": { "type": "string", "description": "Incident id (GLIDE id per ADR-010, maps to canonical INCIDENT.id)." },
+        "incidentDescription": { "type": "string" }
+      }
+    },
+    "messageRecipientOrSender": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL-RM message party (originator or recipient).",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "description": "Party identifier (URN/email/org id).", "minLength": 1 },
+        "description": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+    "valueListUrn": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "EDXL ValueList/Value pair (a controlled-vocabulary code with its scheme URN).",
+      "required": ["value"],
+      "properties": {
+        "valueListUrn": { "type": "string", "description": "URN identifying the value list/scheme." },
+        "value": { "type": "string", "minLength": 1, "description": "The coded value." }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "description": "Reply-type messages must declare the request they answer (round-trip integrity).",
+      "if": {
+        "properties": {
+          "messageType": {
+            "enum": ["ResponseToRequestResource", "CommitResource", "ResponseToRequestInformation", "ResponseToRequestReturn", "ResponseToRequestQuote", "ResponseToRequestResourceDeploymentStatus"]
+          }
+        }
+      },
+      "then": { "required": ["precedingMessageID"] }
+    }
+  ]
+}

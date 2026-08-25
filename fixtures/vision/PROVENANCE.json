@@ -1,0 +1,48 @@
+{
+  "_comment": "BEACON — recorded imagery tiles for the offline `fixture:<id>` vision path (S2·Lane V). Real bytes, really fetched from NASA GIBS on the recorded_at date below via WMS 1.1.1 GetMap; nothing here is synthetic or drawn. Before this file the `fixture:` scheme named images that did not exist on disk. Satellite terrain only — no reporter PII is present in any tile (Art. XIV); `piiScreened` remains a structural gate re-checked at the compliance gateway, never an assertion made by this file. MockVision reads NO pixels (see mock-vision.ts) — only the cloud/local rungs open these bytes.",
+  "endpoint": "https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi",
+  "license": "NASA EOSDIS GIBS / Worldview imagery — NASA open data, free to use, attribution requested (see NOTICE)",
+  "recorded_at": "2026-08-08",
+  "bbox_order": "minLon,minLat,maxLon,maxLat (EPSG:4326, WMS 1.1.1 axis order)",
+  "tiles": [
+    {
+      "id": "gibs-modis721-burn-area-us-ca-001",
+      "file": "gibs-modis721-burn-area-us-ca-001.png",
+      "imageRef": "fixture:gibs-modis721-burn-area-us-ca-001",
+      "task": "burn-area",
+      "layer": "MODIS_Terra_CorrectedReflectance_Bands721",
+      "product": "MODIS Terra corrected reflectance, bands 7-2-1 (SWIR/NIR/Red) — the wildfire false-colour composite in which burn scars read dark red-brown against green vegetation",
+      "bbox": "-122.20,39.20,-121.00,40.20",
+      "region": "us-ca (northern Sacramento Valley / Butte County)",
+      "date": "2025-08-15",
+      "pixels": "192x192",
+      "consent": { "imageConsented": true, "piiScreened": true }
+    },
+    {
+      "id": "gibs-viirs-burn-area-us-ca-001",
+      "file": "gibs-viirs-burn-area-us-ca-001.png",
+      "imageRef": "fixture:gibs-viirs-burn-area-us-ca-001",
+      "task": "burn-area",
+      "layer": "VIIRS_NOAA20_CorrectedReflectance_BandsM11-I2-I1",
+      "product": "VIIRS NOAA-20 corrected reflectance, bands M11-I2-I1 — the second-sensor fire false colour over the SAME bbox and day, so a degraded-sensor scenario can be rehearsed rather than assumed",
+      "bbox": "-122.20,39.20,-121.00,40.20",
+      "region": "us-ca (northern Sacramento Valley / Butte County)",
+      "date": "2025-08-15",
+      "pixels": "192x192",
+      "consent": { "imageConsented": true, "piiScreened": true }
+    },
+    {
+      "id": "gibs-modis-truecolor-flood-pk-001",
+      "file": "gibs-modis-truecolor-flood-pk-001.png",
+      "imageRef": "fixture:gibs-modis-truecolor-flood-pk-001",
+      "task": "flood-extent",
+      "layer": "MODIS_Terra_CorrectedReflectance_TrueColor",
+      "product": "MODIS Terra true colour over the Indus basin during the 2022 Sindh floods — standing water is visible in true colour, which is why the flood task defaults to this product and not to the 7-2-1 fire composite",
+      "bbox": "67.60,25.20,69.20,26.60",
+      "region": "pk-sindh",
+      "date": "2022-08-30",
+      "pixels": "192x192",
+      "consent": { "imageConsented": true, "piiScreened": true }
+    }
+  ]
+}

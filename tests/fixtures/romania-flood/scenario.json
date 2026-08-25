@@ -1,0 +1,53 @@
+{
+  "$comment": "BEACON golden dataset — Romania flood (CACHED portability demo, D-25). Deterministic Galați/Vaslui flood scenario modeled on Copernicus EMSR758 (Sep 2024). Coordinates inside ro bbox. US-only layers are NOT_COVERED for this region; every source served CACHED. Synthetic — no real PII. anm has no wired adapter (roadmap; see config/planned-sources.md) — src-anm is curated fixture provenance.",
+  "regionId": "ro",
+  "regionName": "Romania (EU Flood)",
+  "scope": "COUNTRY",
+  "bbox": [20.2, 43.6, 29.7, 48.3],
+  "enabledAdapters": ["gdacs", "open-meteo", "meteoalarm-ro", "glofas", "osm-overpass", "reliefweb"],
+  "mode": "CACHED",
+  "incident": { "id": "inc-ro-galati", "type": "FLOOD", "status": "ACTIVE" },
+  "sources": [
+    { "id": "src-glofas", "source": "Copernicus GloFAS", "adapter": "glofas-adapter", "fetchedAt": "2026-06-14T09:00:00.000Z", "license": "Copernicus open (EMSR758)", "mode": "CACHED" },
+    { "id": "src-anm", "source": "ANM (Romania Met)", "adapter": "curated-fixture", "fetchedAt": "2026-06-14T08:30:00.000Z", "license": "ANM open data", "mode": "CACHED" },
+    { "id": "src-meteoalarm", "source": "MeteoAlarm RO", "adapter": "meteoalarm-ro-adapter", "fetchedAt": "2026-06-14T08:00:00.000Z", "license": "MeteoAlarm open", "mode": "CACHED" },
+    { "id": "src-overpass-ro", "source": "OpenStreetMap Overpass", "adapter": "osm-overpass-adapter", "fetchedAt": "2026-06-13T12:00:00.000Z", "license": "ODbL", "mode": "CACHED" }
+  ],
+  "hazards": [
+    {
+      "id": "haz-ro-flood-reach",
+      "kind": "FLOOD_REACH",
+      "sourceId": "src-glofas",
+      "observedAt": "2026-06-14T09:00:00.000Z",
+      "intensity": 0.7,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[27.95, 45.38], [28.15, 45.38], [28.15, 45.5], [27.95, 45.5], [27.95, 45.38]]]
+      }
+    }
+  ],
+  "gauges": [
+    { "id": "gauge-ro-siret", "lon": 28.02, "lat": 45.44, "floodCategory": "MAJOR", "stage": 6.8, "crestForecast": 7.4, "crestTime": "2026-06-14T18:00:00.000Z", "sourceId": "src-anm" },
+    { "id": "gauge-ro-prut", "lon": 28.12, "lat": 45.46, "floodCategory": "MODERATE", "stage": 5.1, "crestForecast": 5.6, "crestTime": "2026-06-14T21:00:00.000Z", "sourceId": "src-anm" }
+  ],
+  "infrastructure": [
+    { "id": "infra-ro-hospital", "type": "HOSPITAL", "lon": 28.05, "lat": 45.43, "status": "AT_RISK", "sourceId": "src-overpass-ro" },
+    { "id": "infra-ro-shelter", "type": "SHELTER", "lon": 28.08, "lat": 45.45, "status": "ONLINE", "sourceId": "src-overpass-ro" },
+    { "id": "infra-ro-power", "type": "POWER", "lon": 28.3, "lat": 45.6, "status": "ONLINE", "sourceId": "src-overpass-ro" }
+  ],
+  "report": {
+    "id": "report-ro-1",
+    "source": "SMS",
+    "status": "UNVERIFIED",
+    "confidence": 0.55,
+    "components": { "geocode": 0.8, "authority": 0.4, "classifier": 0.6, "corroboration": 0.4 },
+    "generalized": [28.05, 45.44],
+    "precise": [28.052, 45.441],
+    "purgeAfter": "2026-08-01T00:00:00.000Z"
+  },
+  "expectedExposures": [
+    { "nodeId": "infra-ro-hospital", "reason": "IN_POLYGON", "insideHazard": true, "distanceM": 0 },
+    { "nodeId": "infra-ro-shelter", "reason": "IN_POLYGON", "insideHazard": true, "distanceM": 0 },
+    { "nodeId": "infra-ro-power", "reason": "IN_BUFFER", "insideHazard": false, "distanceM": 18500 }
+  ]
+}

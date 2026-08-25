@@ -1,0 +1,52 @@
+# BEACON — Docker build context excludes (S06 integration gate).
+# Keep the image lean & reproducible: never ship secrets, local build output, VCS, or tests.
+# NOTE: src/, app/, config/, drizzle/, next.config.mjs, tsconfig.json ARE required by the
+# build + migrate stages and are intentionally NOT excluded.
+
+# Dependencies & local build output (reinstalled/rebuilt inside the image)
+node_modules
+.next
+out
+build
+dist
+
+# VCS & CI
+.git
+.gitignore
+.github
+
+# Secrets / env (NEVER copy into an image layer)
+.env
+.env.*
+!.env.example
+infra/.env
+infra/.env.*
+!infra/.env.example
+
+# Tests, coverage, e2e artifacts (not needed to run the app)
+tests
+coverage
+playwright-report
+test-results
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+vitest.config.ts
+vitest.setup.ts
+playwright.config.ts
+
+# Editor / OS / logs / scratch
+.vscode
+.idea
+.DS_Store
+*.log
+npm-debug.log*
+tsconfig.tsbuildinfo
+
+# Docs & governance (not needed at runtime; keeps context small)
+docs
+audit
+project
+agents
+.gabbe
+coverage

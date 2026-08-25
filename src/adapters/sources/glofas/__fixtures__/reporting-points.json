@@ -1,0 +1,57 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [27.9457, 45.4353] },
+      "properties": {
+        "pointId": "G0421",
+        "stationName": "Siret at Galati",
+        "river": "Siret",
+        "basin": "Danube",
+        "country": "RO",
+        "catchmentArea": 42890,
+        "issuedOn": "2026-07-05T00:00:00Z",
+        "returnPeriod": 5,
+        "probability": 0.74,
+        "tendency": "increasing",
+        "peakForecast": 2650,
+        "timeToPeak": "2026-07-07T12:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [89.6636, 25.1817] },
+      "properties": {
+        "pointId": "G3187",
+        "stationName": "Brahmaputra at Bahadurabad",
+        "river": "Brahmaputra",
+        "basin": "Ganges-Brahmaputra",
+        "country": "BD",
+        "catchmentArea": 583000,
+        "issuedOn": "2026-07-05T00:00:00Z",
+        "returnPeriod": 20,
+        "probability": 0.91,
+        "tendency": "increasing",
+        "peakForecast": 71200,
+        "timeToPeak": "2026-07-09T06:00:00Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-60.0261, -3.1319] },
+      "properties": {
+        "pointId": "G5502",
+        "stationName": "Amazon at Manaus",
+        "river": "Amazon",
+        "basin": "Amazon",
+        "country": "BR",
+        "catchmentArea": 2240000,
+        "issuedOn": "2026-07-05T00:00:00Z",
+        "returnPeriod": 0,
+        "probability": 0.12,
+        "tendency": "decreasing"
+      }
+    }
+  ]
+}

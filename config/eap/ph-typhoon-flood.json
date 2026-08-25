@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "id": "ph-typhoon-flood",
+  "label": "Central Luzon river basin — typhoon rainfall flood Early Action Protocol",
+  "hazard": "STORM",
+  "status": "ILLUSTRATIVE",
+  "provenance": "Structurally faithful to the six IFRC Early Action Protocol elements. Every threshold, action, ceiling, role and duration below is invented for demonstration and is NOT approved, endorsed or reviewed by any National Society, hydromet service or civil-protection authority. A real deployment replaces this file with its own signed-off protocol.",
+  "scope": {
+    "regionId": "ph",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [120.48, 14.92],
+          [120.98, 14.92],
+          [120.98, 15.42],
+          [120.48, 15.42],
+          [120.48, 14.92]
+        ]
+      ]
+    }
+  },
+  "triggers": {
+    "readiness": {
+      "source": "cached forecast file supplied to the evaluator — BEACON queries no live ensemble product",
+      "parameter": "accumulated basin rainfall over the forecast window",
+      "unit": "millimetres",
+      "threshold": 150,
+      "comparator": "GTE",
+      "minMembersFraction": 0.3,
+      "minLikelihoodClass": "LIKELY",
+      "leadTimeHours": 96
+    },
+    "activation": {
+      "source": "cached forecast file supplied to the evaluator — BEACON queries no live ensemble product",
+      "parameter": "accumulated basin rainfall over the forecast window",
+      "unit": "millimetres",
+      "threshold": 220,
+      "comparator": "GTE",
+      "minMembersFraction": 0.5,
+      "minLikelihoodClass": "VERY_LIKELY",
+      "leadTimeHours": 36
+    }
+  },
+  "actions": [
+    {
+      "id": "preposition-relief-supplies",
+      "label": "Pre-position family relief and hygiene supplies at barangay evacuation centres",
+      "kind": "PREPOSITION",
+      "resourceKind": "SUPPLY"
+    },
+    {
+      "id": "preposition-medical-team",
+      "label": "Pre-position a medical team near the evacuation centres with spare capacity",
+      "kind": "PREPOSITION",
+      "resourceKind": "MEDICAL"
+    },
+    {
+      "id": "brief-lgu-focal-point",
+      "label": "Brief the local government unit focal point and the evacuation-centre managers",
+      "kind": "NOTIFY_INTERNAL"
+    }
+  ],
+  "resourceCeiling": {
+    "maxResources": 10,
+    "maxByKind": { "SUPPLY": 6, "MEDICAL": 2, "CREW": 2 },
+    "basis": "Illustrative pre-arranged ceiling for the demonstration registry. No monetary or donor figure exists anywhere in BEACON, so none is stated here."
+  },
+  "approval": {
+    "authorizerRole": "EM",
+    "fallbackRole": "VERIFIER",
+    "fallbackAfterMinutes": 90
+  },
+  "stop": {
+    "conditions": [
+      {
+        "id": "track-diverged",
+        "label": "The forecast track diverges and basin rainfall falls below the readiness threshold"
+      },
+      {
+        "id": "impact-materialised",
+        "label": "Impact has occurred and ordinary response has superseded anticipatory action"
+      },
+      {
+        "id": "authority-stand-down",
+        "label": "The responsible authority stands the activation down"
+      }
+    ],
+    "authorizerRole": "EM",
+    "maxDurationHours": 144
+  }
+}

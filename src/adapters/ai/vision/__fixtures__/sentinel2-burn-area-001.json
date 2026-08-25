@@ -1,0 +1,10 @@
+{
+  "_honesty_note": "TRUTH-UP 2026-08-08 (S2·Lane V). This record previously described a Sentinel-2 L2A NBR crop at fixtures/vision/sentinel2-burn-area-crop-001.png — an image that was never on disk, so `imageRef` named nothing and only MockVision (which reads no pixels) could 'use' it. It now points at a REAL recorded tile. The recorded pixels are NASA GIBS MODIS Terra bands 7-2-1, not Sentinel-2: keyless Sentinel-2 coverage (GIBS HLS_S30) was probed for this bbox and returned empty/partial swaths, and Copernicus Sentinel-2 needs credentials the demo must not depend on (plan §0 decision 11). The FILE NAME is retained because two suites outside this lane import it by path (application/interaction/command-router.test.ts, main/build-vision.test.ts); renaming it to gibs-burn-area-001.json is queued for S3, when those files can be touched.",
+  "imageRef": "fixture:gibs-modis721-burn-area-us-ca-001",
+  "task": "burn-area",
+  "description": "Consented, PII-screened wildfire false-colour satellite crop over a demo burn perimeter (northern Sacramento Valley). Advisory imagery only — satellite terrain, no reporter PII present (Art. XIV); the piiScreened flag is a structural gate re-checked at the compliance gateway, not a finding produced by this fixture.",
+  "source": "NASA EOSDIS GIBS — MODIS_Terra_CorrectedReflectance_Bands721, 2025-08-15, bbox -122.20,39.20,-121.00,40.20 (NASA open data, attribution requested — see fixtures/vision/PROVENANCE.json and NOTICE)",
+  "region": "us-ca",
+  "capturedAt": "2025-08-15T00:00:00Z",
+  "consent": { "imageConsented": true, "piiScreened": true }
+}

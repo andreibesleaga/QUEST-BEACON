@@ -1,0 +1,507 @@
+{
+  "_meta": {
+    "locale": "hi",
+    "review": "machine",
+    "machineTranslated": true,
+    "comment": "Machine-translated from messages/en.json; NOT reviewed by a human translator. Labeled as such in the UI (FR-I18N-5)."
+  },
+  "channels": {
+    "digest": {
+      "trend": "प्रवृत्ति",
+      "noClaim": "(कोई दावा नहीं)",
+      "citations": "स्रोत उद्धरण",
+      "sources": "स्रोत-विवरण",
+      "freshness": "ताज़गी"
+    },
+    "alert": {
+      "headline": "BEACON चेतावनी — {severity} {category}, घटना {incidentId} (चेतावनी {alertId})"
+    }
+  },
+  "actMenu": {
+    "trigger": "कार्रवाई",
+    "title": "चयन पर कार्रवाई करें",
+    "taskResource": "संसाधन नियुक्त करें",
+    "drawRoute": "निकासी मार्ग बनाएँ",
+    "createAlert": "DRAFT चेतावनी बनाएँ"
+  },
+  "app": {
+    "title": "BEACON — साझा परिचालन चित्र",
+    "description": "जंगल की आग और बाढ़ के लिए ओपन-सोर्स, लोकल-फ़र्स्ट, लगभग वास्तविक समय का साझा परिचालन चित्र।",
+    "skipToContent": "मुख्य सामग्री पर जाएँ"
+  },
+  "commandPalette": {
+    "openLabel": "कमांड पैलेट खोलें",
+    "triggerText": "खोजें",
+    "dialogLabel": "कमांड पैलेट",
+    "placeholder": "क्षेत्र, घटना या पैनल पर जाएँ — या कार्रवाई करें…",
+    "empty": "कोई मिलान नहीं।",
+    "groupRegions": "क्षेत्र",
+    "groupIncidents": "घटनाएँ",
+    "groupPanels": "पैनल",
+    "groupLayers": "परतें चालू/बंद करें",
+    "groupAct": "कार्रवाई",
+    "toggleLayer": "{layer} परत चालू/बंद करें",
+    "shortcutsTitle": "कीबोर्ड शॉर्टकट",
+    "shortcutsDescription": "हर COP कार्रवाई बिना माउस के की जा सकती है।",
+    "shortcut": {
+      "openPalette": "कमांड पैलेट खोलें",
+      "openShortcuts": "यह शॉर्टकट सूची खोलें",
+      "move": "पैलेट परिणामों के बीच जाएँ",
+      "run": "चयनित कार्रवाई चलाएँ",
+      "close": "पैलेट / ओवरले बंद करें"
+    }
+  },
+  "decision": {
+    "sectionLabel": "निर्णय सहायता",
+    "figures": "नियतात्मक आँकड़े",
+    "narration": "AI विवरण",
+    "noNarration": "कोई विवरण नहीं (केवल नियतात्मक)।",
+    "citations": "स्रोत उद्धरण",
+    "approved": "मानव द्वारा अनुमोदित",
+    "approve": "निर्णय अनुमोदित करें",
+    "humanApprovalRequired": "किसी भी सार्वजनिक कार्रवाई से पहले मानव अनुमोदन अनिवार्य है।",
+    "noDraftToApprove": "अभी अनुमोदन के लिए कुछ नहीं — कोई ड्राफ़्ट अलर्ट समीक्षा की प्रतीक्षा में नहीं है।",
+    "roleRequiredToApprove": "अनुमोदन के लिए सत्यापनकर्ता या आपातकालीन प्रबंधक के रूप में साइन इन करें।"
+  },
+  "draftAlerts": {
+    "title": "चेतावनी समीक्षा (DRAFT)",
+    "emptyTitle": "कोई DRAFT चेतावनी नहीं",
+    "emptyDescription": "सीमा-नियम यहाँ DRAFT चेतावनियाँ बनाते हैं।",
+    "provenance": "स्रोत-विवरण",
+    "noProvenance": "कोई स्रोत-विवरण नहीं",
+    "reviewApprove": "समीक्षा करें और अनुमोदित करें…"
+  },
+  "locale": {
+    "label": "भाषा",
+    "switcherLabel": "प्रदर्शन भाषा",
+    "machineTranslatedNotice": "मशीनी अनुवाद — किसी मानव अनुवादक द्वारा समीक्षित नहीं।",
+    "machineTranslatedShort": "मशीनी अनुवाद"
+  },
+  "logistics": {
+    "title": "रसद",
+    "resource": "संसाधन",
+    "shelter": "आश्रय",
+    "noShelterData": "आश्रय क्षमता का कोई डेटा नहीं।",
+    "shelterCapacity": "आश्रय क्षमता",
+    "shelterCapacityVsDemand": "आश्रय क्षमता बनाम माँग",
+    "overCapacity": "क्षमता से अधिक",
+    "withinCapacity": "क्षमता के भीतर",
+    "resourceToTask": "संसाधन से कार्य",
+    "selectResource": "संसाधन चुनें…",
+    "lifecycleTransition": "जीवनचक्र परिवर्तन",
+    "transition": {
+      "PROPOSED": "PROPOSED",
+      "ASSIGNED": "ASSIGNED",
+      "EN_ROUTE": "EN_ROUTE",
+      "ON_SCENE": "ON_SCENE",
+      "CLEARED": "CLEARED"
+    },
+    "task": "कार्य",
+    "taskingRejected": "कार्य-आवंटन अस्वीकृत ({code}): {message}",
+    "resourcesUnavailable": "संसाधन अनुपलब्ध",
+    "noResourcesTitle": "कोई संसाधन नहीं",
+    "noResourcesDescription": "दायरे में कोई नियुक्त करने योग्य संसाधन नहीं।",
+    "prePositioning": {
+      "heading": "पूर्व-तैनाती सुझाव",
+      "advisory": "परामर्शी — निर्णय मानव लेता है",
+      "listLabel": "पूर्व-तैनाती सुझाव सूची",
+      "noIncidentTitle": "कोई घटना चयनित नहीं",
+      "noIncidentDescription": "पूर्व-तैनाती सुझाव देखने के लिए कोई घटना चुनें।",
+      "unavailable": "पूर्व-तैनाती अनुपलब्ध",
+      "noExtentTitle": "अभी कोई अनुमानित विस्तार नहीं",
+      "noExtentDescription": "इस घटना के लिए संकट-प्रक्षेपण उपलब्ध होते ही सुझाव दिखाई देंगे।",
+      "noAssetsTitle": "आस-पास कोई साधन नहीं",
+      "noAssetsDescription": "अनुमानित विस्तार के पास कोई AVAILABLE संसाधन या OPEN आश्रय नहीं मिला।"
+    }
+  },
+  "map": {
+    "layersLegend": "मानचित्र परतें",
+    "errorBoundaryLabel": "मानचित्र",
+    "unavailableTitle": "इंटरैक्टिव मानचित्र अनुपलब्ध",
+    "unavailableDescription": "यहाँ WebGL उपलब्ध नहीं है। सभी मानचित्र डेटा नीचे सुलभ विकल्प के रूप में सूचीबद्ध है।",
+    "layer": {
+      "fire": "आग (हॉटस्पॉट और परिधि)",
+      "flood": "बाढ़ विस्तार और जलमापी",
+      "storm": "चक्रवात पथ, शंकु और तूफानी उभार",
+      "floodzone": "बाढ़ क्षेत्र (NFHL)",
+      "infra": "अवसंरचना",
+      "weather": "मौसम (हवा)",
+      "cameras": "लाइव कैमरे",
+      "outage": "बिजली कटौती",
+      "cell": "मोबाइल कवरेज",
+      "exposure": "जोखिम (संकट में नोड)",
+      "reports": "रिपोर्ट / SOS",
+      "prediction": "पूर्वानुमान शंकु",
+      "route": "निकासी मार्ग",
+      "shelters": "आश्रय"
+    },
+    "caveat": {
+      "fire": "FIRMS हॉटस्पॉट ऊष्मीय संसूचन हैं, पुष्ट अग्नि-परिधि नहीं।",
+      "floodzone": "विनियामक बाढ़ क्षेत्र — लाइव विस्तार नहीं",
+      "weather": "प्रेक्षण बिंदु — पूर्वानुमान ग्रिड नहीं",
+      "camera": "लाइव कैमरे — स्रोत की साइट नए टैब में खोलता है",
+      "outage": "काउंटी-स्तरीय (EAGLE-I): क्षेत्र मानी-गई बिजली-कटौती के अनुमान हैं, प्रति-पता पुष्ट कटौती नहीं।",
+      "cell": "OpenCelliD से व्युत्पन्न कवरेज अनुमान — सांकेतिक, गारंटीशुदा सिग्नल मानचित्र नहीं।",
+      "storm": "एजेंसी का चक्रवात उत्पाद अक्षरशः प्रदर्शित — BEACON तूफ़ान के पथ, पवन या तूफानी उभार का प्रतिरूपण (मॉडलिंग) नहीं करता।"
+    },
+    "tooltip": {
+      "layer": "परत: {group}",
+      "clickToOpen": "खोलने के लिए क्लिक करें ↗"
+    },
+    "region": {
+      "label": "क्षेत्र",
+      "default": "डिफ़ॉल्ट क्षेत्र",
+      "overlaysLegend": "उपग्रह ओवरले",
+      "attribution": "उपग्रह चित्र: NASA EOSDIS GIBS"
+    },
+    "gibs": {
+      "truecolor": "ट्रू कलर (VIIRS)",
+      "fires": "सक्रिय आग (VIIRS)",
+      "flood": "बाढ़ (MODIS)",
+      "aerosol": "एरोसोल ऑप्टिकल डेप्थ"
+    },
+    "list": {
+      "regionLabel": "मानचित्र विशेषताएँ (सुलभ सूची)",
+      "empty": "वर्तमान दृश्य में कोई मानचित्र विशेषता नहीं।",
+      "caption": "सभी मानचित्र विशेषताओं की सुलभ सूची — इंटरैक्टिव मानचित्र का कीबोर्ड विकल्प।",
+      "colType": "प्रकार",
+      "colFeature": "विशेषता",
+      "colDetail": "विवरण",
+      "colLocation": "स्थान",
+      "colAction": "कार्रवाई",
+      "focus": "{label} पर फ़ोकस करें"
+    },
+    "group": {
+      "fire": "आग संसूचन",
+      "gauge": "बाढ़ जलमापी",
+      "infra": "अवसंरचना",
+      "exposure": "जोखिम",
+      "report": "रिपोर्ट / SOS",
+      "shelter": "आश्रय"
+    },
+    "detail": {
+      "severity": "गंभीरता {severity}",
+      "thermalHotspot": "ऊष्मीय हॉटस्पॉट",
+      "stage": "जलस्तर {stage}",
+      "gauge": "जलमापी",
+      "node": "नोड",
+      "infra": "{kind} — {status}",
+      "inHazard": "संकट में: {hazard}",
+      "nodeInHazard": "संकट में नोड"
+    },
+    "outage": {
+      "assumedOffline": "अनुमानित रूप से बंद",
+      "reportedOffline": "रिपोर्ट के अनुसार बंद",
+      "withCount": "{count} उपभोक्ता बिजली से वंचित — {state}"
+    },
+    "zone": {
+      "label": "ज़ोन {zone}"
+    },
+    "storm": {
+      "trackLabel": "चक्रवात केंद्र का पथ — सूचनार्थ, प्रभाव-क्षेत्र नहीं",
+      "coneLabel": "पूर्वानुमान शंकु — पथ-केंद्र की अनिश्चितता, प्रभाव-क्षेत्र नहीं",
+      "surgeLabel": "तूफानी उभार का विस्तार — प्रभाव-क्षेत्र, जोखिम-गणना में शामिल",
+      "coneCaveat": "{agency} का पूर्वानुमान शंकु, परामर्श {advisoryAt} — यह दिखाता है कि तूफ़ान का केंद्र कहाँ से गुज़र सकता है; यह खतरनाक परिस्थितियों का विस्तार कदापि नहीं दर्शाता।",
+      "coneCaveatUnattributed": "पूर्वानुमान शंकु यह दिखाता है कि तूफ़ान का केंद्र कहाँ से गुज़र सकता है — यह खतरनाक परिस्थितियों का विस्तार कदापि नहीं दर्शाता।"
+    },
+    "shelter": {
+      "capacity": "क्षमता {capacity} · आवश्यकता {demand}"
+    },
+    "weather": {
+      "label": "हवा {speed} km/h {compass} से ({deg}°), प्रेक्षण {observedAt}"
+    },
+    "compass": {
+      "N": "उत्तर",
+      "NE": "उत्तर-पूर्व",
+      "E": "पूर्व",
+      "SE": "दक्षिण-पूर्व",
+      "S": "दक्षिण",
+      "SW": "दक्षिण-पश्चिम",
+      "W": "पश्चिम",
+      "NW": "उत्तर-पश्चिम"
+    },
+    "zoomIn": "ज़ूम इन",
+    "zoomOut": "ज़ूम आउट",
+    "recenter": "मानचित्र पुनः केंद्रित करें"
+  },
+  "anticipatory": {
+    "title": "Anticipatory action",
+    "tab": "Anticipatory",
+    "sectionLabel": "Anticipatory action — early action protocol",
+    "methodHeading": "Method, inputs and uncertainty",
+    "ladderHeading": "Trigger ladder",
+    "cycleHeading": "Evaluation {index, number} of {total, number}",
+    "inputs": "Inputs",
+    "members": "{over, number} of {total, number} forecast members over {threshold, number} {unit}",
+    "leadTimeLabel": "Lead time",
+    "leadTime": "{hours, number} h, as stated by the source. BEACON does not model hazard travel time.",
+    "vintage": "Forecast run and issue instant",
+    "methodLabel": "Method and class",
+    "fired": "Fired",
+    "notFired": "Not fired",
+    "stageGate": "Gate: at least {fraction, number} of forecast members over {threshold, number} {unit}, class {klass} or higher, within {hours, number} h lead time.",
+    "ledgerHeading": "Governance records this cycle produces:",
+    "actionsHeading": "Pre-agreed actions",
+    "suggested": "Suggested",
+    "approvalHeading": "Human approval",
+    "pending": "Awaiting human approval by: {roles}",
+    "noEmission": "Suggestions only. Nothing on this panel dispatches a resource or emits a public alert; a named human must approve every early action.",
+    "stopMechanism": "Stop mechanism: {role} may stop the activation on a pre-agreed condition, and the engine stops it automatically after {hours, number} h.",
+    "replay": "Fixture-fed replay: each recorded forecast run is re-evaluated {lag, number} h after the issue instant stated in the file. Not live data — BEACON queries no ensemble product at runtime.",
+    "noProtocolTitle": "No early action protocol for this region",
+    "noProtocolBody": "BEACON ships no early action protocol whose scope names this region, so there is nothing to evaluate. Protocols are configuration (config/eap/), not code.",
+    "noForecastTitle": "No recorded forecast for this protocol",
+    "noForecastBody": "The protocol ships, but no recorded forecast file ships with it, so no evaluation can be replayed. BEACON has no wired live ensemble source.",
+    "engineRefusedTitle": "The anticipatory engine refused this input",
+    "engineRefusedBody": "The engine refused the input rather than showing a partial evaluation."
+  },
+  "outlook": {
+    "title": "पूर्वानुमान",
+    "sectionLabel": "क्रमित पूर्वानुमान",
+    "eta": "~{hours, number} h में",
+    "noEta": "स्रोत से कोई अग्रिम समय नहीं",
+    "unclassified": "अवर्गीकृत",
+    "uncertainty": "अनिश्चितता {value, number}"
+  },
+  "panels": {
+    "sitrepTitle": "स्थिति रिपोर्ट",
+    "logisticsTitle": "रसद"
+  },
+  "shell": {
+    "sitrepDock": "स्थिति रिपोर्ट",
+    "logisticsDock": "रसद",
+    "mapLabel": "साझा परिचालन चित्र मानचित्र",
+    "panelsLabel": "COP पैनल",
+    "expand": "{label} विस्तृत करें",
+    "collapse": "{label} संक्षिप्त करें",
+    "region": {
+      "us-ca": "कैलिफ़ोर्निया (अमेरिका)",
+      "ro": "रोमानिया (यूरोपीय संघ)",
+      "es": "स्पेन (यूरोपीय संघ)",
+      "gr": "ग्रीस (यूरोपीय संघ)",
+      "ph": "फ़िलीपींस"
+    }
+  },
+  "sitrep": {
+    "title": "स्थिति रिपोर्ट",
+    "uncited": "बिना उद्धरण — स्रोत अनुपलब्ध (F2)",
+    "noPriorities": "कोई क्रमित प्राथमिकताएँ नहीं।",
+    "rankedPriorities": "क्रमित प्राथमिकताएँ",
+    "deterministicOnly": "केवल नियतात्मक",
+    "aiGenerated": "एआई द्वारा जनित",
+    "trendLabel": "प्रवृत्ति:",
+    "priorities": "प्राथमिकताएँ",
+    "noIncidentTitle": "कोई घटना चयनित नहीं",
+    "noIncidentDescription": "स्थिति रिपोर्ट देखने के लिए कोई घटना चुनें।",
+    "unavailable": "स्थिति रिपोर्ट अनुपलब्ध",
+    "provenance": "स्रोत-विवरण",
+    "externalViews": "बाहरी दृश्य"
+  },
+  "suppliesPanel": {
+    "title": "राहत सामग्री",
+    "unavailable": "सामग्री अनुपलब्ध",
+    "emptyTitle": "कोई सामग्री लॉट नहीं",
+    "emptyDescription": "कोई राहत सामग्री भंडार पंजीकृत नहीं।",
+    "expires": "समाप्ति {when}",
+    "asOf": "{when} तक",
+    "provenance": "स्रोत-विवरण"
+  },
+  "volunteerTeamsPanel": {
+    "title": "स्वयंसेवक दल",
+    "unavailable": "स्वयंसेवक दल अनुपलब्ध",
+    "emptyTitle": "कोई स्वयंसेवक दल नहीं",
+    "emptyDescription": "कोई दल इकाई पंजीकृत नहीं।",
+    "headcount": "संख्या {count}",
+    "skills": "क्षमताएँ",
+    "asOf": "{when} तक",
+    "provenance": "स्रोत-विवरण"
+  },
+  "shelterStatusPanel": {
+    "title": "आश्रय स्थिति",
+    "unavailable": "आश्रय स्थिति अनुपलब्ध",
+    "emptyTitle": "कोई आश्रय पंक्ति नहीं",
+    "emptyDescription": "रिपोर्ट करने के लिए कोई आश्रय नहीं।",
+    "shelters": "आश्रय",
+    "capacity": "क्षमता",
+    "occupancy": "अधिभोग",
+    "availableOpen": "खुली शेष क्षमता",
+    "utilization": "उपयोग",
+    "available": "शेष",
+    "provenance": "स्रोत-विवरण"
+  },
+  "damageReportsPanel": {
+    "title": "क्षति और आवश्यकताएँ",
+    "unavailable": "क्षति रिपोर्टें अनुपलब्ध",
+    "emptyTitle": "कोई आकलन प्रविष्टि नहीं",
+    "emptyDescription": "दायरे में क्षति या आवश्यकता की कोई रिपोर्ट नहीं।",
+    "entries": "प्रविष्टियाँ",
+    "sites": "स्थल (स्व-रिपोर्टेड)",
+    "worstSeverity": "अधिकतम गंभीरता",
+    "needs": "आवश्यकताएँ",
+    "asOf": "{when} तक",
+    "provenance": "स्रोत-विवरण"
+  },
+  "emsOverlayPanel": {
+    "title": "कोपरनिकस EMS परत",
+    "unavailable": "EMS परत अनुपलब्ध",
+    "emptyTitle": "कोई प्रकाशित उत्पाद नहीं",
+    "emptyDescription": "इस दृश्य के लिए कोई क्षति-आकलन उत्पाद प्रकाशित नहीं।",
+    "open": "उत्पाद पृष्ठ खोलें",
+    "attribution": "श्रेय",
+    "notShown": "प्रदर्शित नहीं",
+    "asOf": "{when} तक",
+    "provenance": "स्रोत-विवरण"
+  },
+  "sos": {
+    "errors": {
+      "tooShort": "आपात स्थिति का वर्णन कम से कम 10 अक्षरों में करें।",
+      "tooLong": "विवरण 2000 अक्षरों से कम रखें।",
+      "generic": "कृपया फ़ॉर्म जाँचें।"
+    }
+  },
+  "tabs": {
+    "sitrep": "स्थिति रिपोर्ट",
+    "decision": "निर्णय",
+    "drafts": "DRAFT चेतावनियाँ",
+    "resources": "संसाधन",
+    "verify": "सत्यापन",
+    "report": "SOS भेजें",
+    "route": "निकासी मार्ग"
+  },
+  "theme": {
+    "toLight": "हल्की थीम पर जाएँ",
+    "toDark": "गहरी थीम पर जाएँ"
+  },
+  "toolbar": {
+    "layers": "परतें",
+    "legend": "संकेत-सूची",
+    "devBadge": "dev",
+    "actingRole": "सक्रिय भूमिका (डेमो)",
+    "roleSwitcherTitle": "केवल डेमो — x-beacon-role की नकल करता है; प्राधिकरण सर्वर ही करता है (AUTH_DEV_TRUST_HEADER)",
+    "devLoginUserId": "dev-login उपयोगकर्ता आईडी",
+    "devLoginUserPlaceholder": "user id",
+    "devLogin": "dev-login",
+    "signedIn": "साइन इन",
+    "loginUserLabel": "उपयोगकर्ता आईडी",
+    "loginUserPlaceholder": "उपयोगकर्ता",
+    "loginPasswordLabel": "पासवर्ड",
+    "loginPasswordPlaceholder": "पासवर्ड",
+    "signIn": "साइन इन",
+    "signOut": "साइन आउट",
+    "signInFailed": "साइन इन विफल",
+    "liveBadge": "live",
+    "liveBadgeTitle": "प्रोडक्शन परिनियोजन — भूमिकाएँ केवल साइन-इन खातों से आती हैं।",
+    "currentRole": "वर्तमान भूमिका"
+  },
+  "ui": {
+    "severity": {
+      "MINOR": "मामूली",
+      "MODERATE": "मध्यम",
+      "SEVERE": "गंभीर",
+      "EXTREME": "अत्यधिक"
+    },
+    "mode": {
+      "LIVE": "लाइव",
+      "CACHED": "कैश",
+      "MOCK": "मॉक"
+    },
+    "freshness": {
+      "fresh": "लाइव",
+      "stale": "पुराना",
+      "unavailable": "अनुपलब्ध"
+    },
+    "unverified": "असत्यापित",
+    "dialog": {
+      "close": "संवाद बंद करें"
+    },
+    "skeleton": {
+      "loading": "लोड हो रहा है"
+    },
+    "errorState": {
+      "title": "कुछ गड़बड़ हुई",
+      "retry": "फिर कोशिश करें"
+    },
+    "errorBoundary": {
+      "title": "यह पैनल प्रदर्शित नहीं हो सका",
+      "labelledTitle": "{label} प्रदर्शित नहीं हो सका"
+    },
+    "provenance": {
+      "trigger": "स्रोत-विवरण",
+      "triggerAria": "{label} — {count, plural, one {# स्रोत} other {# स्रोत}}",
+      "heading": "स्रोत",
+      "empty": "कोई स्रोत-विवरण दर्ज नहीं।"
+    },
+    "legend": {
+      "regionLabel": "मानचित्र संकेत-सूची",
+      "severityHeading": "संकट की गंभीरता",
+      "statusHeading": "डेटा स्थिति",
+      "modeHeading": "स्रोत मोड",
+      "status": {
+        "fresh": "ताज़ा",
+        "stale": "पुराना",
+        "unavailable": "अनुपलब्ध",
+        "unverified": "असत्यापित"
+      }
+    },
+    "externalViews": {
+      "caption": "बाहरी संदर्भ — तृतीय-पक्ष साइटें खोलता है।",
+      "captionFor": "बाहरी संदर्भ — {label} के लिए तृतीय-पक्ष साइटें खोलता है।",
+      "listLabel": "बाहरी संदर्भ लिंक",
+      "kind": {
+        "map": "मानचित्र",
+        "satellite": "उपग्रह",
+        "street": "सड़क",
+        "3d": "3D",
+        "weather": "मौसम",
+        "imagery": "चित्र",
+        "fire": "आग",
+        "flood": "बाढ़"
+      }
+    },
+    "relativeTime": {
+      "unknown": "अज्ञात",
+      "seconds": "{value} सेकंड पहले",
+      "minutes": "{value} मिनट पहले",
+      "hours": "{value} घंटे पहले",
+      "days": "{value} दिन पहले"
+    }
+  },
+  "warning": {
+    "headline": "{event} — {severity}",
+    "label": {
+      "what": "क्या",
+      "where": "कहाँ",
+      "when": "कब",
+      "impacts": "प्रभाव",
+      "action": "कार्रवाई"
+    },
+    "what": "{event}, गंभीरता {severity}।",
+    "where": "{area}।",
+    "when": "{when}।",
+    "impacts": "{impacts}",
+    "action": {
+      "Shelter": "अभी सुरक्षित जगह लें। {area} में घर के अंदर रहें, खिड़कियों से दूर रहें, जब तक खतरा टलने की सूचना न मिले।",
+      "Evacuate": "{area} को अभी छोड़ दें। अपना आपातकालीन बैग लें, चिह्नित रास्ते से जाएँ, और खतरा टलने की सूचना मिलने तक वापस न आएँ।",
+      "Prepare": "{area} छोड़ने की तैयारी करें। आपातकालीन बैग तैयार रखें, गाड़ी में ईंधन भरें, और इस चैनल पर नज़र रखें।",
+      "Execute": "{area} के लिए आपको दी गई योजना अभी लागू करें।",
+      "Avoid": "{area} में न जाएँ। इस क्षेत्र की यात्रा न करें।",
+      "Monitor": "{area} के बारे में अपडेट देखते रहें। चेतावनी बदलने पर कार्रवाई के लिए तैयार रहें।",
+      "Assess": "{area} में अपनी स्थिति देखें और जो दिखे उसकी सूचना दें।",
+      "AllClear": "{area} में खतरा समाप्त हो गया है। आप वापस जा सकते हैं। स्थानीय निर्देशों का पालन करें।",
+      "None": "{area} में अभी किसी कार्रवाई की आवश्यकता नहीं है।"
+    },
+    "event": {
+      "Fire": "जंगल की आग",
+      "Met": "बाढ़ या भीषण मौसम",
+      "Safety": "सार्वजनिक सुरक्षा का खतरा"
+    },
+    "allClear": {
+      "headline": "खतरा समाप्त — {event}",
+      "description": "{area} में {event} समाप्त हो गया है।"
+    }
+  },
+  "content": {
+    "originalLanguage": "EN",
+    "untranslatedHint": "अंग्रेज़ी में दिखाया गया — अनूदित नहीं"
+  }
+}

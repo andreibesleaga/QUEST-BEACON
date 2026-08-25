@@ -1,0 +1,45 @@
+{
+  "_provenance_note": "SCHEMA-CRAFTED fixture — NOT a live capture. The ORNL/DOE EAGLE-I public historical dataset (DOI dataset 1975203; mirrored at openenergyhub.ornl.gov/explore/dataset/eaglei_outages_2014) requires an account/download session to pull bulk files, so it cannot be fetched programmatically from this environment (DATA_SOURCE_VERIFICATION.md §4 EAGLE-I row). These rows are hand-authored to match the DOCUMENTED public schema for the dataset (FIPS code, county name, state name, customers-without-power, customers-total, 15-minute timestamp) as described in the ORNL/OSTI dataset listings. They illustrate one 15-minute snapshot across Butte County, CA and four adjacent Northern-California counties during a hypothetical wildfire-driven outage — a realistic but fictional scenario for the BEACON demo, not an observed event.",
+  "records": [
+    {
+      "county_fips": "06007",
+      "county": "Butte",
+      "state": "California",
+      "customers_out": 4820,
+      "customers_total": 96000,
+      "last_updated": "2026-07-05T21:15:00Z"
+    },
+    {
+      "county_fips": "06021",
+      "county": "Glenn",
+      "state": "California",
+      "customers_out": 310,
+      "customers_total": 12500,
+      "last_updated": "2026-07-05T21:15:00Z"
+    },
+    {
+      "county_fips": "06103",
+      "county": "Tehama",
+      "state": "California",
+      "customers_out": 890,
+      "customers_total": 27000,
+      "last_updated": "2026-07-05T21:15:00Z"
+    },
+    {
+      "county_fips": "06115",
+      "county": "Yuba",
+      "state": "California",
+      "customers_out": 155,
+      "customers_total": 33000,
+      "last_updated": "2026-07-05T21:15:00Z"
+    },
+    {
+      "county_fips": "06101",
+      "county": "Sutter",
+      "state": "California",
+      "customers_out": 0,
+      "customers_total": 40000,
+      "last_updated": "2026-07-05T21:15:00Z"
+    }
+  ]
+}

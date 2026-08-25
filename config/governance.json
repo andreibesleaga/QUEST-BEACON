@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "authority": "ADR-034 §5/§6 (governance ledger + SOP approval chain with a delegated fallback approver) and CONSTITUTION Art. XIII (no public action without a human approver) / Art. XIV (no PII retention beyond the incident lifecycle). These are BEACON's OWN operational governance parameters — no source publishes them — so each one states its own basis below. They are DATA on purpose (ADR-012): who may approve, how long the primary authorizer holds sole responsibility, and how long a consented report may be retained must all be reviewable config edits, never literals buried in a use-case.",
+  "approval": {
+    "authorizerRole": "EM",
+    "fallbackRole": "VERIFIER",
+    "fallbackAfterMinutes": 30,
+    "basis": "The primary authorizer is EM (emergency manager) because activation and public warning are command decisions (Art. XIII, PRD §11 RBAC). The fallback is VERIFIER — the next role down that already holds approval authority in this system's RBAC — so a delegation widens WHO may approve and never WHETHER approval is required: both roles are in APPROVER_ROLES, both are humans, and the ledger records which one actually acted (FST-4). 30 minutes is BEACON's own window, chosen as the shortest interval that is longer than a plausible duty-officer interruption (a call, a briefing) yet far shorter than the lead time of any anticipatory trigger this system raises (config/forecast-trigger.json's leadTime.minHours is 0 and maxHours 168), so a delegation never becomes the normal path and never blocks an action that had hours of warning. It is deliberately NOT zero: a zero window is a delegation that is always open, which is a different policy and must be written as such rather than smuggled in as a timeout of nothing. There is no auto-approve value: no setting in this file can cause an action to proceed without a named human, because the approval algebra has exactly two states and the granted one cannot be constructed without an actor id and an approver role."
+  },
+  "retention": {
+    "publicReportRetentionDays": 30,
+    "sweepGraceMinutes": 0,
+    "basis": "30 days matches the retention window the report stores already stamp onto every PublicReport.purgeAfter (src/adapters/memory/memory-core.ts, src/adapters/persistence/read-models.ts) and is the value RESPONSIBLE_DATA.md's 'no PII retention beyond the incident lifecycle' guarantee (Art. XIV) has always claimed; MW-D/D4 makes it ENFORCED rather than merely stamped by adding the sweep executor that deletes expired rows (finding F-25). The value lives here so lengthening or shortening retention is a reviewable data change. sweepGraceMinutes is 0 because purgeAfter is already a deadline computed at intake, not an estimate: adding grace on top of a stamped deadline would silently extend the retention the reporter was told about. It exists as an explicit 0 rather than as no field at all so that any future non-zero grace has to be written down and justified here."
+  },
+  "drill": {
+    "mode": "off",
+    "basis": "DRILL_MODE ships off (SPEC-FINAL-VERSION-DELTA §6). The flag selects a SEPARATE composition (src/main/build-drill.ts) rather than a branch inside the live one: exercise isolation is structural (a disjoint capStatus literal, a composition that never constructs a live channel, and a module-graph rule), so this value cannot be the thing that keeps an exercise off a real channel — it only decides whether an exercise composition is built at all. The server value is authoritative; NEXT_PUBLIC_DRILL_MODE is a UX mirror for the banner and must agree with it (fail-fast refine in src/config/index.ts)."
+  }
+}

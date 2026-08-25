@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  HAND-AUTHORED recorded-STYLE WMO-SWIC relay RSS index for ph-pagasa-en (B3.2) - NOT a byte-recorded
+  response (F-51 labelling). Faithful to the LIVE evidence probed 2026-07-27 and documented in
+  docs/features/GLOBAL_ZONE_SOURCE_RESEARCH.md "LATE ADDITION 3":
+    - endpoint https://severeweather.wmo.int/v2/cap-alerts/ph-pagasa-en/rss.xml returned LIVE 200,
+      valid RSS 2.0, channel title as below (verbatim), 71 items (trimmed to 2 here);
+    - the first item link is the VERBATIM observed per-alert CAP URL shape from that probe (gfa);
+    - the second item link is hand-derived in the same shape for the observed acp alert
+      (native uuid cc368dd6-7ebd-49d9-ba02-25c9d3b51a76, sent 2026-07-25T10:48:59+08:00).
+  License: PAGASA-DOST content CC BY 4.0 (declared verbatim in PAGASA's native feed); relay under the
+  WMO Unified Data Policy (Res. 1) - attribution "PAGASA-DOST / WMO Severe Weather Information Centre".
+-->
+<rss version="2.0">
+  <channel>
+    <title>Latest Official Public alerts in English for Philippines: Philippine Atmospheric Geophysical and Astronomical Services Administration</title>
+    <link>https://severeweather.wmo.int/</link>
+    <description>Official Public alerts relayed by the WMO Severe Weather Information Centre</description>
+    <item>
+      <title>General Flood Advisory</title>
+      <link>https://severeweather.wmo.int/v2/cap-alerts/ph-pagasa-en/2026/07/27/09/47/59-58b49f5fb6529a1eabdacffc14d9daaa.xml</link>
+      <pubDate>Mon, 27 Jul 2026 09:47:59 +0000</pubDate>
+    </item>
+    <item>
+      <title>Tropical Cyclone Alert</title>
+      <link>https://severeweather.wmo.int/v2/cap-alerts/ph-pagasa-en/2026/07/25/02/48/48-cc368dd67ebd49d9ba0225c9d3b51a76.xml</link>
+      <pubDate>Sat, 25 Jul 2026 02:48:59 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

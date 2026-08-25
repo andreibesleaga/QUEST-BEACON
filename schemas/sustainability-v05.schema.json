@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/sustainability-v05.schema.json",
+  "title": "BEACON `/.well-known/sustainability` report (draft-besleaga-green-sustainability-wellknown-05)",
+  "description": "JSON Schema for the response served at GET /.well-known/sustainability. Faithful to the v05 Internet-Draft data model (RFC draft-besleaga-green-sustainability-wellknown-05, public spec; the document and its CDDL/JTD are the normative source). A successful response is EITHER a single sustainability-metrics object (Basic level) OR an array of them (extended `granularity` trends). BEACON publishes ESTIMATED / MODELED values only (measurement-method=third-party-modeled; methodology-uri -> docs/SUSTAINABILITY.md); see ADR-020. Per the draft, clients MUST tolerate unknown fields, so the object is open (additionalProperties allowed) to preserve forward compatibility (versioning/extensibility section of the draft). Aligns with GHG Protocol scopes, GSF Software Carbon Intensity (ISO/IEC 21031:2024), and CSRD/ESRS-E1 optional fields.",
+  "oneOf": [
+    { "$ref": "#/$defs/sustainabilityMetrics" },
+    {
+      "type": "array",
+      "description": "Trend response (extended capabilities, e.g. ?period=2025&granularity=monthly). Per the draft's Array Size Limits security consideration, servers MUST cap the number of objects; 366 is RECOMMENDED.",
+      "items": { "$ref": "#/$defs/sustainabilityMetrics" },
+      "minItems": 1,
+      "maxItems": 366
+    }
+  ],
+  "$defs": {
+    "energyUnit": {
+      "type": "string",
+      "description": "Fixed literal energy unit (draft: MUST be one of Wh, kWh, MWh, GWh).",
+      "enum": ["Wh", "kWh", "MWh", "GWh"]
+    },
+    "carbonUnit": {
+      "type": "string",
+      "description": "Fixed literal carbon unit (draft: MUST be one of gCO2e, kgCO2e, mtCO2e).",
+      "enum": ["gCO2e", "kgCO2e", "mtCO2e"]
+    },
+    "sustainabilityMetrics": {
+      "type": "object",
+      "description": "One sustainability report object for an origin (and optional target-path) over a reporting-period. Mandatory fields per the draft 'Mandatory Response Fields'; optional fields align with GHG Protocol / ESRS E1 / GSF SCI. Unknown fields are permitted (forward compatibility).",
+      "additionalProperties": true,
+      "required": [
+        "version",
+        "updated",
+        "capabilities",
+        "provider",
+        "measurement-method",
+        "methodology-uri",
+        "reporting-period",
+        "energy-consumption",
+        "energy-unit",
+        "carbon-footprint",
+        "carbon-unit"
+      ],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Schema version of the document, `major.minor` (e.g. '1.0', '1.1'). MUST be present and follow the versioning pattern.",
+          "pattern": "^[0-9]+\\.[0-9]+$"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "RFC 3339 timestamp when the document was last updated (freshness anchor)."
+        },
+        "capabilities": {
+          "type": "string",
+          "description": "Service level. MUST be 'basic' or 'extended'. 'extended' indicates support for the optional query parameters, not that all optional fields appear.",
+          "enum": ["basic", "extended"]
+        },
+        "provider": {
+          "type": "string",
+          "description": "Identity of the entity operating the origin and publishing the metadata (e.g. 'BEACON (sustain@beacon.local)').",
+          "minLength": 1
+        },
+        "measurement-method": {
+          "type": "string",
+          "description": "Short description or reference to the methodology (e.g. hardware-metered, hardware-estimated, cloud-billing, third-party-modeled). BEACON publishes 'third-party-modeled' for the demo.",
+          "minLength": 1
+        },
+        "methodology-uri": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "Link to the full methodology specification (calculation methodology). For BEACON this resolves to docs/SUSTAINABILITY.md.",
+          "minLength": 1
+        },
+        "reporting-period": {
+          "type": "string",
+          "description": "Timeframe covered by this object, RFC 3339 forms: YYYY | YYYY-MM | YYYY-MM-DD (Basic defaults to the most recently completed full calendar month).",
+          "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"
+        },
+        "energy-consumption": {
+          "type": "number",
+          "description": "Total energy consumed by the host (or target resource) during the reporting period.",
+          "minimum": 0
+        },
+        "energy-unit": { "$ref": "#/$defs/energyUnit" },
+        "carbon-footprint": {
+          "type": "number",
+          "description": "Total impact expressed in the carbon-unit (draft text: grams of CO2 equivalent; the unit is given by carbon-unit).",
+          "minimum": 0
+        },
+        "carbon-unit": { "$ref": "#/$defs/carbonUnit" },
+
+        "target-path": {
+          "type": "string",
+          "description": "OPTIONAL. The resource path requested as `target` (e.g. '/api/v1/well-known/sustainability').",
+          "pattern": "^/"
+        },
+        "carbon-accounting": {
+          "type": "string",
+          "description": "OPTIONAL. GHG Protocol accounting basis.",
+          "enum": ["location-based", "market-based"]
+        },
+        "scope-1": {
+          "type": "number",
+          "description": "OPTIONAL. Estimated Scope 1 (direct) carbon emissions.",
+          "minimum": 0
+        },
+        "scope-2": {
+          "type": "number",
+          "description": "OPTIONAL. Estimated Scope 2 (indirect / purchased-energy) carbon emissions.",
+          "minimum": 0
+        },
+        "scope-3": {
+          "type": "number",
+          "description": "OPTIONAL. Estimated Scope 3 (value-chain) carbon emissions.",
+          "minimum": 0
+        },
+        "sci-score": {
+          "type": "number",
+          "description": "OPTIONAL. Software Carbon Intensity (SCI) score per GSF / ISO/IEC 21031:2024 = ((E*I)+M)/R.",
+          "minimum": 0
+        },
+        "functional-unit": {
+          "type": "string",
+          "description": "OPTIONAL. If present, MUST be defined (e.g. 'per-request', 'per-user', 'per-thousand-requests') and SHOULD be documented in the methodology-uri document.",
+          "minLength": 1
+        },
+        "carbon-intensity-gCO2-per-kWh": {
+          "type": "number",
+          "description": "OPTIONAL. Weighted grid carbon intensity in grams CO2 per kWh.",
+          "minimum": 0
+        },
+        "estimated-annual-emissions-kgCO2": {
+          "type": "number",
+          "description": "OPTIONAL. Estimated annual emissions attributable to the origin (kg CO2e).",
+          "minimum": 0
+        },
+        "renewable-energy": {
+          "type": "number",
+          "description": "OPTIONAL. Percentage of energy from sustainable renewable sources (0-100).",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "verifiable-attestation-uri": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "OPTIONAL. Link to a verifiable credential / attestation (anti-greenwashing). MUST NOT be treated by clients as proof of the metrics."
+        },
+        "disclosure-uri": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "OPTIONAL (schema 1.1+). Link to a machine-readable disclosure index for the origin (canonical example: a Green Web Foundation carbon.txt). A discovery link only; not proof of the metrics."
+        }
+      }
+    }
+  }
+}

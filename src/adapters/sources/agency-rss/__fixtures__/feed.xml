@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:gdacs="http://www.gdacs.org" xmlns:glide="http://glidenumber.net" xmlns:georss="http://www.georss.org/georss" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GDACS RSS information</title>
+    <link>https://www.gdacs.org/</link>
+    <copyright>public domain</copyright>
+    <description>Near real-time notification about natural disaster with a potential humanitarian impact</description>
+    <managingEditor>stefano.paris@ext.ec.europa.eu</managingEditor>
+    <!--Records number 170-->
+    <!--Start 7/15/2026 10:55:02 AM-->
+    <!--=Start 7/15/2026 10:55:02 AM-->
+    <webMaster>stefano.paris@ext.ec.europa.eu</webMaster>
+    <pubDate>Wed, 15 Jul 2026 08:55:02 GMT</pubDate>
+    <atom:link href="https://www.gdacs.org/xml/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Green earthquake (Magnitude 5.5M, Depth:574.304km) in Fiji 14/07/2026 22:50 UTC, Few people affected in 100km.</title>
+      <description>On 7/14/2026 10:50:12 PM, an earthquake occurred in Fiji potentially affecting Few people affected in 100km. The earthquake had Magnitude 5.5M, Depth:574.304km.</description>
+      <enclosure type="image/png" length="1" url="https://www.gdacs.org/contentdata/resources/imgtemp/gdacs/eq/eq1718222_1.png" />
+      <gdacs:temporary>false</gdacs:temporary>
+      <link>https://www.gdacs.org/report.aspx?eventtype=EQ&amp;eventid=1551894</link>
+      <pubDate>Tue, 14 Jul 2026 23:05:13 GMT</pubDate>
+      <gdacs:dateadded>Tue, 14 Jul 2026 23:05:13 GMT</gdacs:dateadded>
+      <gdacs:datemodified>Tue, 14 Jul 2026 23:30:22 GMT</gdacs:datemodified>
+      <gdacs:iscurrent>true</gdacs:iscurrent>
+      <gdacs:fromdate>Tue, 14 Jul 2026 22:50:12 GMT</gdacs:fromdate>
+      <gdacs:todate>Tue, 14 Jul 2026 22:50:12 GMT</gdacs:todate>
+      <gdacs:durationinweek>0</gdacs:durationinweek>
+      <gdacs:year>2026</gdacs:year>
+      <dc:subject>EQ1</dc:subject>
+      <guid isPermaLink="false">EQ1551894</guid>
+      <geo:Point>
+        <geo:lat>-20.748</geo:lat>
+        <geo:long>-178.5092</geo:long>
+      </geo:Point>
+      <!--gdacs:bbox format = lonmin lonmax latmin latmax-->
+      <gdacs:bbox>-182.5092 -174.5092 -24.748 -16.748</gdacs:bbox>
+      <georss:point>-20.748 -178.5092</georss:point>
+      <gdacs:cap>https://www.gdacs.org/contentdata/resources/EQ/1551894/cap_1551894.xml</gdacs:cap>
+      <gdacs:icon>https://www.gdacs.org/Images/gdacs_icons/alerts/Green/EQ.png</gdacs:icon>
+      <gdacs:version>1</gdacs:version>
+      <gdacs:eventtype>EQ</gdacs:eventtype>
+      <gdacs:alertlevel>Green</gdacs:alertlevel>
+      <gdacs:alertscore>0</gdacs:alertscore>
+      <gdacs:episodealertlevel>Green</gdacs:episodealertlevel>
+      <gdacs:episodealertscore>1</gdacs:episodealertscore>
+      <gdacs:eventname />
+      <gdacs:eventid>1551894</gdacs:eventid>
+      <gdacs:episodeid>1718222</gdacs:episodeid>
+      <gdacs:calculationtype>earthquakeonly</gdacs:calculationtype>
+      <gdacs:severity unit="M" value="5.5">Magnitude 5.5M, Depth:574.3km</gdacs:severity>
+      <gdacs:population unit="in MMI -" value="985">Few people affected in MMI -</gdacs:population>
+      <gdacs:vulnerability value="1.3145341380124" />
+      <gdacs:iso3>FJI</gdacs:iso3>
+      <gdacs:country>Fiji</gdacs:country>
+      <gdacs:glide />
+      <gdacs:mapimage />
+      <gdacs:maplink />
+      <gdacs:gtsimage />
+      <gdacs:gtslink />
+      <gdacs:resources>
+        <gdacs:resource id="event_rss" version="0" source="EC-JRC" url="https://www.gdacs.org//datareport/resources/EQ/1551894/rss_1551894.xml" type="rss">
+          <gdacs:title>Event in rss format</gdacs:title>
+          <gdacs:description>Joint Research Center of the European Commission</gdacs:description>
+          <gdacs:acknowledgements>Copyright notice: European Union (CC BY 4.0), reuse is allowed, provided appropriate credit to GDACS is given.</gdacs:acknowledgements>
+          <gdacs:accesslevel>Public</gdacs:accesslevel>
+        </gdacs:resource>
+      </gdacs:resources>
+    </item>
+<item>
+      <title>Green notification for tropical cyclone ELIDA-26. Population affected by Category 1 (120 km/h) wind speeds or higher is 0  (0 in Tropical Storm).</title>
+      <description>From 14/07/2026 to 15/07/2026, a Tropical Storm (maximum wind speed of 157 km/h) ELIDA-26 was active in EastPacific. The cyclone affects these countries: [unknown] (vulnerability [unknown]). Estimated population affected by category 1 (120 km/h) wind speeds or higher is 0  (0 in tropical storm).</description>
+      <enclosure type="image/png" length="1" url="https://www.gdacs.org/contentdata/resources/imgtemp/gdacs/tc/1001282/1001282_3_tn.png" />
+      <gdacs:temporary>false</gdacs:temporary>
+      <link>https://www.gdacs.org/report.aspx?eventtype=TC&amp;eventid=1001282</link>
+      <pubDate>Tue, 14 Jul 2026 21:06:26 GMT</pubDate>
+      <gdacs:dateadded>Tue, 14 Jul 2026 21:06:26 GMT</gdacs:dateadded>
+      <gdacs:datemodified>Wed, 15 Jul 2026 08:51:40 GMT</gdacs:datemodified>
+      <gdacs:iscurrent>true</gdacs:iscurrent>
+      <gdacs:fromdate>Tue, 14 Jul 2026 21:00:00 GMT</gdacs:fromdate>
+      <gdacs:todate>Wed, 15 Jul 2026 09:00:00 GMT</gdacs:todate>
+      <gdacs:durationinweek>0</gdacs:durationinweek>
+      <gdacs:year>2026</gdacs:year>
+      <dc:subject>TC1</dc:subject>
+      <guid isPermaLink="false">TC1001282</guid>
+      <geo:Point>
+        <geo:lat>14.9</geo:lat>
+        <geo:long>-111.8</geo:long>
+      </geo:Point>
+      <!--gdacs:bbox format = lonmin lonmax latmin latmax-->
+      <gdacs:bbox>-134.63040277467 -108.63040277467 5.3172694696862 31.3172694696862</gdacs:bbox>
+      <georss:point>14.9 -111.8</georss:point>
+      <gdacs:cap>https://www.gdacs.org/contentdata/resources/TC/1001282/cap_1001282.xml</gdacs:cap>
+      <gdacs:icon>https://www.gdacs.org/Images/gdacs_icons/alerts/Green/TC.png</gdacs:icon>
+      <gdacs:version>3</gdacs:version>
+      <gdacs:eventtype>TC</gdacs:eventtype>
+      <gdacs:alertlevel>Green</gdacs:alertlevel>
+      <gdacs:alertscore>1</gdacs:alertscore>
+      <gdacs:episodealertlevel>Green</gdacs:episodealertlevel>
+      <gdacs:episodealertscore>1</gdacs:episodealertscore>
+      <gdacs:eventname>ELIDA-26</gdacs:eventname>
+      <gdacs:eventid>1001282</gdacs:eventid>
+      <gdacs:episodeid>3</gdacs:episodeid>
+      <gdacs:calculationtype>tropicalcyclonewithstormsurge</gdacs:calculationtype>
+      <gdacs:severity unit="km/h" value="157.4064">Tropical Storm (maximum wind speed of 157 km/h)</gdacs:severity>
+      <gdacs:population unit="Pop74" value="0">Population affected by Category 1 (120 km/h) wind speeds or higher is 0 (0 in Tropical Storm)</gdacs:population>
+      <gdacs:vulnerability value="0" />
+      <gdacs:iso3 />
+      <gdacs:country />
+      <gdacs:glide />
+      <gdacs:mapimage />
+      <gdacs:maplink />
+      <gdacs:gtsimage />
+      <gdacs:gtslink />
+      <gdacs:resources>
+        <gdacs:resource id="event_rss" version="0" source="EC-JRC" url="https://www.gdacs.org//datareport/resources/TC/1001282/rss_1001282.xml" type="rss">
+          <gdacs:title>Event in rss format</gdacs:title>
+          <gdacs:description>Joint Research Center of the European Commission</gdacs:description>
+          <gdacs:acknowledgements>Copyright notice: European Union (CC BY 4.0), reuse is allowed, provided appropriate credit to GDACS is given.</gdacs:acknowledgements>
+          <gdacs:accesslevel>Public</gdacs:accesslevel>
+        </gdacs:resource>
+      </gdacs:resources>
+    </item>
+<item>
+      <title>Green earthquake (Magnitude 6.2M, Depth:67.854km) in Philippines 14/07/2026 15:49 UTC, 30 thousand in MMI VI.</title>
+      <description>On 7/14/2026 3:49:41 PM, an earthquake occurred in Philippines potentially affecting 30 thousand in MMI VI. The earthquake had Magnitude 6.2M, Depth:67.854km.</description>
+      <enclosure type="image/png" length="1" url="https://www.gdacs.org/contentdata/resources/imgtemp/gdacs/eq/eq1718171_1.png" />
+      <gdacs:temporary>false</gdacs:temporary>
+      <link>https://www.gdacs.org/report.aspx?eventtype=EQ&amp;eventid=1551846</link>
+      <pubDate>Tue, 14 Jul 2026 16:07:21 GMT</pubDate>
+      <gdacs:dateadded>Tue, 14 Jul 2026 16:07:21 GMT</gdacs:dateadded>
+      <gdacs:datemodified>Tue, 14 Jul 2026 17:57:47 GMT</gdacs:datemodified>
+      <gdacs:iscurrent>true</gdacs:iscurrent>
+      <gdacs:fromdate>Tue, 14 Jul 2026 15:49:41 GMT</gdacs:fromdate>
+      <gdacs:todate>Tue, 14 Jul 2026 15:49:41 GMT</gdacs:todate>
+      <gdacs:durationinweek>0</gdacs:durationinweek>
+      <gdacs:year>2026</gdacs:year>
+      <dc:subject>EQ1</dc:subject>
+      <guid isPermaLink="false">EQ1551846</guid>
+      <geo:Point>
+        <geo:lat>5.3269</geo:lat>
+        <geo:long>125.1655</geo:long>
+      </geo:Point>
+      <!--gdacs:bbox format = lonmin lonmax latmin latmax-->
+      <gdacs:bbox>121.1655 129.1655 1.3269 9.3269</gdacs:bbox>
+      <georss:point>5.3269 125.1655</georss:point>
+      <gdacs:cap>https://www.gdacs.org/contentdata/resources/EQ/1551846/cap_1551846.xml</gdacs:cap>
+      <gdacs:icon>https://www.gdacs.org/Images/gdacs_icons/alerts/Green/EQ.png</gdacs:icon>
+      <gdacs:version>1</gdacs:version>
+      <gdacs:eventtype>EQ</gdacs:eventtype>
+      <gdacs:alertlevel>Green</gdacs:alertlevel>
+      <gdacs:alertscore>0</gdacs:alertscore>
+      <gdacs:episodealertlevel>Green</gdacs:episodealertlevel>
+      <gdacs:episodealertscore>1</gdacs:episodealertscore>
+      <gdacs:eventname />
+      <gdacs:eventid>1551846</gdacs:eventid>
+      <gdacs:episodeid>1718171</gdacs:episodeid>
+      <gdacs:calculationtype>tsunami</gdacs:calculationtype>
+      <gdacs:severity unit="M" value="6.2">Magnitude 6.2M, Depth:67.9km</gdacs:severity>
+      <gdacs:population unit="in MMI VI" value="29911">30 thousand in MMI VI</gdacs:population>
+      <gdacs:vulnerability value="1.3145341380124" />
+      <gdacs:iso3>PHL</gdacs:iso3>
+      <gdacs:country>Philippines</gdacs:country>
+      <gdacs:glide />
+      <gdacs:mapimage />
+      <gdacs:maplink />
+      <gdacs:gtsimage />
+      <gdacs:gtslink />
+      <gdacs:resources>
+        <gdacs:resource id="event_rss" version="0" source="EC-JRC" url="https://www.gdacs.org//datareport/resources/EQ/1551846/rss_1551846.xml" type="rss">
+          <gdacs:title>Event in rss format</gdacs:title>
+          <gdacs:description>Joint Research Center of the European Commission</gdacs:description>
+          <gdacs:acknowledgements>Copyright notice: European Union (CC BY 4.0), reuse is allowed, provided appropriate credit to GDACS is given.</gdacs:acknowledgements>
+          <gdacs:accesslevel>Public</gdacs:accesslevel>
+        </gdacs:resource>
+      </gdacs:resources>
+    </item>
+<item>
+      <title>Green earthquake (Magnitude 5.6M, Depth:140.088km) in Peru 14/07/2026 08:21 UTC, 30 thousand in MMI IV.</title>
+      <description>On 7/14/2026 8:21:06 AM, an earthquake occurred in Peru potentially affecting 30 thousand in MMI IV. The earthquake had Magnitude 5.6M, Depth:140.088km.</description>
+      <enclosure type="image/png" length="1" url="https://www.gdacs.org/contentdata/resources/imgtemp/gdacs/eq/eq1718095_1.png" />
+      <gdacs:temporary>false</gdacs:temporary>
+      <link>https://www.gdacs.org/report.aspx?eventtype=EQ&amp;eventid=1551779</link>
+      <pubDate>Tue, 14 Jul 2026 08:42:03 GMT</pubDate>
+      <gdacs:dateadded>Tue, 14 Jul 2026 08:42:03 GMT</gdacs:dateadded>
+      <gdacs:datemodified>Tue, 14 Jul 2026 10:29:22 GMT</gdacs:datemodified>
+      <gdacs:iscurrent>true</gdacs:iscurrent>
+      <gdacs:fromdate>Tue, 14 Jul 2026 08:21:06 GMT</gdacs:fromdate>
+      <gdacs:todate>Tue, 14 Jul 2026 08:21:06 GMT</gdacs:todate>
+      <gdacs:durationinweek>0</gdacs:durationinweek>
+      <gdacs:year>2026</gdacs:year>
+      <dc:subject>EQ1</dc:subject>
+      <guid isPermaLink="false">EQ1551779</guid>
+      <geo:Point>
+        <geo:lat>-14.5779</geo:lat>
+        <geo:long>-71.4358</geo:long>
+      </geo:Point>
+      <!--gdacs:bbox format = lonmin lonmax latmin latmax-->
+      <gdacs:bbox>-75.4358 -67.4358 -18.5779 -10.5779</gdacs:bbox>
+      <georss:point>-14.5779 -71.4358</georss:point>
+      <gdacs:cap>https://www.gdacs.org/contentdata/resources/EQ/1551779/cap_1551779.xml</gdacs:cap>
+      <gdacs:icon>https://www.gdacs.org/Images/gdacs_icons/alerts/Green/EQ.png</gdacs:icon>
+      <gdacs:version>1</gdacs:version>
+      <gdacs:eventtype>EQ</gdacs:eventtype>
+      <gdacs:alertlevel>Green</gdacs:alertlevel>
+      <gdacs:alertscore>0</gdacs:alertscore>
+      <gdacs:episodealertlevel>Green</gdacs:episodealertlevel>
+      <gdacs:episodealertscore>1</gdacs:episodealertscore>
+      <gdacs:eventname />
+      <gdacs:eventid>1551779</gdacs:eventid>
+      <gdacs:episodeid>1718095</gdacs:episodeid>
+      <gdacs:calculationtype>earthquakeonly</gdacs:calculationtype>
+      <gdacs:severity unit="M" value="5.6">Magnitude 5.6M, Depth:140.1km</gdacs:severity>
+      <gdacs:population unit="in MMI IV" value="26347">30 thousand in MMI IV</gdacs:population>
+      <gdacs:vulnerability value="1.78228028098837" />
+      <gdacs:iso3>PER</gdacs:iso3>
+      <gdacs:country>Peru</gdacs:country>
+      <gdacs:glide />
+      <gdacs:mapimage />
+      <gdacs:maplink />
+      <gdacs:gtsimage />
+      <gdacs:gtslink />
+      <gdacs:resources>
+        <gdacs:resource id="event_rss" version="0" source="EC-JRC" url="https://www.gdacs.org//datareport/resources/EQ/1551779/rss_1551779.xml" type="rss">
+          <gdacs:title>Event in rss format</gdacs:title>
+          <gdacs:description>Joint Research Center of the European Commission</gdacs:description>
+          <gdacs:acknowledgements>Copyright notice: European Union (CC BY 4.0), reuse is allowed, provided appropriate credit to GDACS is given.</gdacs:acknowledgements>
+          <gdacs:accesslevel>Public</gdacs:accesslevel>
+        </gdacs:resource>
+      </gdacs:resources>
+    </item>
+<item>
+      <title>Green forest fire notification in Canada</title>
+      <description>On 14/07/2026, a forest fire started in Canada,  until 14/07/2026.</description>
+      <enclosure type="image/png" length="1" url="" />
+      <gdacs:temporary>false</gdacs:temporary>
+      <link>https://www.gdacs.org/report.aspx?eventtype=WF&amp;eventid=1029500</link>
+      <pubDate>Tue, 14 Jul 2026 15:00:16 GMT</pubDate>
+      <gdacs:dateadded>Tue, 14 Jul 2026 15:00:16 GMT</gdacs:dateadded>
+      <gdacs:datemodified>Tue, 14 Jul 2026 15:00:15 GMT</gdacs:datemodified>
+      <gdacs:iscurrent>true</gdacs:iscurrent>
+      <gdacs:fromdate>Tue, 14 Jul 2026 00:00:00 GMT</gdacs:fromdate>
+      <gdacs:todate>Tue, 14 Jul 2026 00:00:00 GMT</gdacs:todate>
+      <gdacs:durationinweek>0</gdacs:durationinweek>
+      <gdacs:year>2026</gdacs:year>
+      <dc:subject>WF1</dc:subject>
+      <guid isPermaLink="false">WF1029500</guid>
+      <geo:Point>
+        <geo:lat>49.644747921495309</geo:lat>
+        <geo:long>-89.986498878672691</geo:long>
+      </geo:Point>
+      <!--gdacs:bbox format = lonmin lonmax latmin latmax-->
+      <gdacs:bbox>-93.9864988786727 -85.9864988786727 45.6447479214953 53.6447479214953</gdacs:bbox>
+      <georss:point>49.644747921495309 -89.986498878672691</georss:point>
+      <gdacs:cap>https://www.gdacs.org/contentdata/resources/WF/1029500/cap_1029500.xml</gdacs:cap>
+      <gdacs:icon>https://www.gdacs.org/Images/gdacs_icons/alerts/Green/WF.png</gdacs:icon>
+      <gdacs:version>0</gdacs:version>
+      <gdacs:eventtype>WF</gdacs:eventtype>
+      <gdacs:alertlevel>Green</gdacs:alertlevel>
+      <gdacs:alertscore>1</gdacs:alertscore>
+      <gdacs:episodealertlevel>Green</gdacs:episodealertlevel>
+      <gdacs:episodealertscore>1</gdacs:episodealertscore>
+      <gdacs:eventname />
+      <gdacs:eventid>1029500</gdacs:eventid>
+      <gdacs:episodeid>1</gdacs:episodeid>
+      <gdacs:calculationtype />
+      <gdacs:severity unit="ha" value="5067">Green impact for forestfire in 5067 ha</gdacs:severity>
+      <gdacs:population unit="" value="0">0 people affected in the area</gdacs:population>
+      <gdacs:vulnerability value="0" />
+      <gdacs:iso3>CAN</gdacs:iso3>
+      <gdacs:country>Canada</gdacs:country>
+      <gdacs:glide />
+      <gdacs:mapimage />
+      <gdacs:maplink />
+      <gdacs:gtsimage />
+      <gdacs:gtslink />
+      <gdacs:resources>
+        <gdacs:resource id="event_rss" version="0" source="EC-JRC" url="https://www.gdacs.org//datareport/resources/WF/1029500/rss_1029500.xml" type="rss">
+          <gdacs:title>Event in rss format</gdacs:title>
+          <gdacs:description>Joint Research Center of the European Commission</gdacs:description>
+          <gdacs:acknowledgements>Copyright notice: European Union (CC BY 4.0), reuse is allowed, provided appropriate credit to GDACS is given.</gdacs:acknowledgements>
+          <gdacs:accesslevel>Public</gdacs:accesslevel>
+        </gdacs:resource>
+      </gdacs:resources>
+    </item>
+  </channel>
+</rss>

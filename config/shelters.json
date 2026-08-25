@@ -1,0 +1,47 @@
+{
+  "$schema": "../schemas/shelters.schema.json",
+  "$comment": "Agency-seeded shelters, edited by hand (docs/OPERATOR_GUIDE.md). Apply with `npm run db:seed` (idempotent, keyed by id). Mid-incident corrections go straight to the DB: UPDATE shelter SET occupancy = <n> WHERE id = '<id>'.",
+  "version": 1,
+  "regions": [
+    {
+      "region_id": "us-ca",
+      "shelters": [
+        {
+          "id": "00000000-0000-4000-8000-000000000b01",
+          "note": "Sacramento",
+          "org": "American Red Cross",
+          "lon": -121.49,
+          "lat": 38.58,
+          "capacity": 500,
+          "occupancy": 120,
+          "status": "OPEN"
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000b02",
+          "note": "Fresno",
+          "org": "Cal OES",
+          "lon": -119.77,
+          "lat": 36.74,
+          "capacity": 300,
+          "occupancy": 90,
+          "status": "OPEN"
+        }
+      ]
+    },
+    {
+      "region_id": "ro",
+      "shelters": [
+        {
+          "id": "00000000-0000-4000-8000-000000000b03",
+          "note": "Bucharest",
+          "org": "IGSU (Romania)",
+          "lon": 26.1,
+          "lat": 44.43,
+          "capacity": 200,
+          "occupancy": 0,
+          "status": "OPEN"
+        }
+      ]
+    }
+  ]
+}

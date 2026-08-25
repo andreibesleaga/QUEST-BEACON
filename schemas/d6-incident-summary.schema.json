@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/d6-incident-summary.schema.json",
+  "title": "BEACON D6-4 Incident summary export — already-held aggregates only",
+  "description": "FR-D6-4 (ADR-035 §4): the after-action seed produced when an incident closes. It reads ONLY figures BEACON already holds (alerts issued, tasks completed, shelter usage, affected area) and collects nothing new (FEV-28, docs/requirements/EARS_FINAL_VERSION.md:308-310). Every field below is a COUNT, an AREA, an INSTANT or a PROVENANCE row — there is no per-person row anywhere in the document, and there is no shape in which one could be added without failing the guard. This is the ONE place D6 data physically leaves the system, so `buildIncidentSummary` (src/application/aggregate/incident-summary.ts) additionally runs Layer D's fail-closed runtime walk (guardAggregateOnly, src/application/privacy/incident-summary-guard.ts) over the constructed document and returns a typed error INSTEAD of the payload — the same shape as the pre-emit re-check at src/adapters/alerting/alert-sink.ts:121. Full RECOVER-stage accounting (loss assessment, entitlement, individual-level records) is PERMANENTLY OUT (ADR-035 §4); this aggregate summary is the honest substitute.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["incidentId", "generatedAt", "alertsIssued", "tasksCompleted", "provenance", "freshness", "caveats"],
+  "properties": {
+    "incidentId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The incident this summary closes out — an ENTITY id."
+    },
+    "regionId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Region registry id (config/regions.json). A PLACE, not a person."
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC instant the summary was built, supplied by the caller from the injected clock — the module reads no wall clock (Art. XII determinism; the same input always yields the same document)."
+    },
+    "closedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC instant the incident was closed, when known."
+    },
+    "alertsIssued": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Count of alerts issued during the incident. A count of already-held records; the summary neither re-derives nor re-queries it."
+    },
+    "tasksCompleted": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Count of resource tasks that reached a completed state."
+    },
+    "tasksTotal": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Count of resource tasks created. Present so `tasksCompleted` is readable as a ratio without the reader inventing a denominator."
+    },
+    "sheltersOpen": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Count of shelters open at peak."
+    },
+    "shelterOccupancyPeak": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Peak aggregate occupancy across shelters — a headcount total, never a list of occupants."
+    },
+    "shelterCapacityTotal": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Aggregate capacity across those shelters. HONEST LIMITATION (F12, ADR-035 §4 limitation 6): shelter capacity in BEACON today is hand-seeded, not sourced from a shelter feed, so an occupancy-vs-capacity comparison drawn from this document is illustrative, not operational."
+    },
+    "affectedAreaKm2": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Hazard footprint area in km². A geometry-derived figure computed deterministically upstream (Art. XII — never LLM-produced); this document only carries it."
+    },
+    "casualtyTally": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "label", "authoritative"],
+      "description": "The FR-D6-5 aggregate tally, carried into the export so the mandatory caveat travels with the number at the EXPORT site as well as the render site (ADR-035 §4 FR-D6-5: labelled at EVERY render and export site). INLINED rather than $ref'd on purpose: the Layer B walker deliberately does NOT resolve $ref (documented limitation, src/domain/shared/aggregate-only.ts), so a $ref here would have moved these property names OUT of the walk. The duplication is drift-guarded instead of trusted — d6-modules-aggregate-only.test.ts asserts this object's property set and its `label`/`authoritative` consts are byte-identical to schemas/d6-casualty-tally.schema.json's.",
+      "properties": {
+        "reportId": { "type": "string", "minLength": 1 },
+        "count": { "type": "integer", "minimum": 0 },
+        "asOf": { "type": "string", "format": "date-time" },
+        "label": { "const": "unverified — not authoritative" },
+        "authoritative": { "const": false }
+      }
+    },
+    "provenance": {
+      "type": "array",
+      "description": "One row per SOURCE_RECORD behind the figures above (Art. XI — provenance is structural, not optional). Property names mirror src/domain/source-record.ts exactly, with the entity's `id` carried as `sourceId` at the export boundary.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sourceId", "source", "adapter", "fetchedAt", "license", "mode"],
+        "properties": {
+          "sourceId": { "type": "string", "minLength": 1 },
+          "source": { "type": "string", "minLength": 1, "description": "Logical source name, e.g. 'NASA FIRMS' — an ORGANISATION/feed, never a person." },
+          "adapter": { "type": "string", "minLength": 1 },
+          "fetchedAt": { "type": "string", "format": "date-time" },
+          "license": { "type": "string", "minLength": 1 },
+          "mode": { "type": "string", "enum": ["LIVE", "CACHED", "MOCK"], "description": "The Art. XVI rung that served the datum. Never relabelled: a CACHED or MOCK figure is exported as CACHED or MOCK." }
+        }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fetchedAt"],
+      "description": "The OLDEST fetchedAt across `provenance` — the document is only as fresh as its stalest input, so the honest single figure is the minimum, not the maximum.",
+      "properties": {
+        "fetchedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "caveats": {
+      "type": "array",
+      "description": "The limitation strings that must travel WITH this document (Art. XVI degrade-not-break; 'honest limitations' project law). Derived from the document's own content — e.g. a MOCK/CACHED provenance row, a present casualty tally, a seeded shelter capacity — rather than written by hand beside it, so a caveat cannot be forgotten when a field is added to the payload.",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

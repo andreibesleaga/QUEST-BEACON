@@ -1,0 +1,507 @@
+{
+  "_meta": {
+    "locale": "el",
+    "review": "machine",
+    "machineTranslated": true,
+    "comment": "Machine-translated from messages/en.json; NOT reviewed by a human translator. Labeled as such in the UI (FR-I18N-5)."
+  },
+  "channels": {
+    "digest": {
+      "trend": "τάση",
+      "noClaim": "(χωρίς ισχυρισμό)",
+      "citations": "παραπομπές",
+      "sources": "προέλευση",
+      "freshness": "φρεσκάδα"
+    },
+    "alert": {
+      "headline": "ΕΙΔΟΠΟΙΗΣΗ BEACON — {severity} {category} για το συμβάν {incidentId} (ειδοποίηση {alertId})"
+    }
+  },
+  "actMenu": {
+    "trigger": "Δράση",
+    "title": "Δράση στην επιλογή",
+    "taskResource": "Ανάθεση πόρου",
+    "drawRoute": "Σχεδίαση διαδρομής εκκένωσης",
+    "createAlert": "Δημιουργία ειδοποίησης DRAFT"
+  },
+  "app": {
+    "title": "BEACON — Κοινή Επιχειρησιακή Εικόνα",
+    "description": "COP ανοικτού κώδικα, με τοπική προτεραιότητα, σχεδόν σε πραγματικό χρόνο, για δασικές πυρκαγιές και πλημμύρες.",
+    "skipToContent": "Μετάβαση στο περιεχόμενο"
+  },
+  "commandPalette": {
+    "openLabel": "Άνοιγμα παλέτας εντολών",
+    "triggerText": "Αναζήτηση",
+    "dialogLabel": "Παλέτα εντολών",
+    "placeholder": "Μετάβαση σε περιοχή, συμβάν, πίνακα — ή δράση…",
+    "empty": "Καμία αντιστοίχιση.",
+    "groupRegions": "Περιοχές",
+    "groupIncidents": "Συμβάντα",
+    "groupPanels": "Πίνακες",
+    "groupLayers": "Εναλλαγή επιπέδων",
+    "groupAct": "Δράση",
+    "toggleLayer": "Εναλλαγή επιπέδου {layer}",
+    "shortcutsTitle": "Συντομεύσεις πληκτρολογίου",
+    "shortcutsDescription": "Κάθε ενέργεια του COP είναι προσβάσιμη χωρίς ποντίκι.",
+    "shortcut": {
+      "openPalette": "Άνοιγμα της παλέτας εντολών",
+      "openShortcuts": "Άνοιγμα αυτής της λίστας συντομεύσεων",
+      "move": "Μετακίνηση στα αποτελέσματα της παλέτας",
+      "run": "Εκτέλεση της επιλεγμένης ενέργειας",
+      "close": "Κλείσιμο παλέτας / επικάλυψης"
+    }
+  },
+  "decision": {
+    "sectionLabel": "Υποστήριξη λήψης αποφάσεων",
+    "figures": "Ντετερμινιστικά μεγέθη",
+    "narration": "Αφήγηση AI",
+    "noNarration": "Χωρίς αφήγηση (μόνο ντετερμινιστικά).",
+    "citations": "Παραπομπές",
+    "approved": "Εγκρίθηκε από άνθρωπο",
+    "approve": "Έγκριση απόφασης",
+    "humanApprovalRequired": "Απαιτείται ανθρώπινη έγκριση πριν από κάθε δημόσια ενέργεια.",
+    "noDraftToApprove": "Δεν υπάρχει τίποτα προς έγκριση — καμία πρόχειρη ειδοποίηση δεν εκκρεμεί για έλεγχο.",
+    "roleRequiredToApprove": "Συνδεθείτε ως Επαληθευτής ή Διαχειριστής έκτακτης ανάγκης για να εγκρίνετε."
+  },
+  "draftAlerts": {
+    "title": "Έλεγχος ειδοποιήσεων (DRAFT)",
+    "emptyTitle": "Δεν υπάρχουν ειδοποιήσεις DRAFT",
+    "emptyDescription": "Οι κανόνες κατωφλίου δημιουργούν εδώ ειδοποιήσεις DRAFT.",
+    "provenance": "Προέλευση",
+    "noProvenance": "Χωρίς προέλευση",
+    "reviewApprove": "Έλεγχος και έγκριση…"
+  },
+  "locale": {
+    "label": "Γλώσσα",
+    "switcherLabel": "Γλώσσα εμφάνισης",
+    "machineTranslatedNotice": "Αυτόματη μετάφραση — δεν έχει ελεγχθεί από ανθρώπινο μεταφραστή.",
+    "machineTranslatedShort": "αυτόματη μετάφραση"
+  },
+  "logistics": {
+    "title": "Εφοδιαστική",
+    "resource": "Πόρος",
+    "shelter": "Καταφύγιο",
+    "noShelterData": "Δεν υπάρχουν δεδομένα χωρητικότητας καταφυγίων.",
+    "shelterCapacity": "Χωρητικότητα καταφυγίων",
+    "shelterCapacityVsDemand": "Χωρητικότητα καταφυγίων έναντι ζήτησης",
+    "overCapacity": "Υπέρβαση χωρητικότητας",
+    "withinCapacity": "Εντός χωρητικότητας",
+    "resourceToTask": "Πόρος προς ανάθεση",
+    "selectResource": "Επιλέξτε πόρο…",
+    "lifecycleTransition": "Μετάβαση κατάστασης",
+    "transition": {
+      "PROPOSED": "PROPOSED",
+      "ASSIGNED": "ASSIGNED",
+      "EN_ROUTE": "EN_ROUTE",
+      "ON_SCENE": "ON_SCENE",
+      "CLEARED": "CLEARED"
+    },
+    "task": "Αποστολή",
+    "taskingRejected": "Η ανάθεση απορρίφθηκε ({code}): {message}",
+    "resourcesUnavailable": "Οι πόροι δεν είναι διαθέσιμοι",
+    "noResourcesTitle": "Χωρίς πόρους",
+    "noResourcesDescription": "Δεν υπάρχουν πόροι προς ανάθεση εντός εμβέλειας.",
+    "prePositioning": {
+      "heading": "Προτάσεις προ-τοποθέτησης",
+      "advisory": "Συμβουλευτικό — αποφασίζει ο άνθρωπος",
+      "listLabel": "Λίστα προτάσεων προ-τοποθέτησης",
+      "noIncidentTitle": "Δεν έχει επιλεγεί συμβάν",
+      "noIncidentDescription": "Επιλέξτε συμβάν για να δείτε προτάσεις προ-τοποθέτησης.",
+      "unavailable": "Η προ-τοποθέτηση δεν είναι διαθέσιμη",
+      "noExtentTitle": "Δεν υπάρχει ακόμη προβλεπόμενη έκταση",
+      "noExtentDescription": "Οι προτάσεις εμφανίζονται μόλις υπάρξει διαθέσιμη πρόβλεψη εξέλιξης του κινδύνου για αυτό το συμβάν.",
+      "noAssetsTitle": "Δεν υπάρχουν κοντινά μέσα",
+      "noAssetsDescription": "Δεν βρέθηκαν πόροι AVAILABLE ή καταφύγια OPEN κοντά στην προβλεπόμενη έκταση."
+    }
+  },
+  "map": {
+    "layersLegend": "Επίπεδα χάρτη",
+    "errorBoundaryLabel": "Χάρτης",
+    "unavailableTitle": "Ο διαδραστικός χάρτης δεν είναι διαθέσιμος",
+    "unavailableDescription": "Το WebGL δεν είναι διαθέσιμο εδώ. Όλα τα δεδομένα του χάρτη παρατίθενται παρακάτω ως προσβάσιμη εναλλακτική.",
+    "layer": {
+      "fire": "Πυρκαγιά (θερμικά σημεία και περίμετρος)",
+      "flood": "Έκταση πλημμύρας και σταθμήμετρα",
+      "storm": "Τροχιά κυκλώνα, κώνος και καταιγιδική ανύψωση στάθμης",
+      "floodzone": "Ζώνες πλημμύρας (NFHL)",
+      "infra": "Υποδομές",
+      "weather": "Καιρός (άνεμος)",
+      "cameras": "Ζωντανές κάμερες",
+      "outage": "Διακοπές ρεύματος",
+      "cell": "Κάλυψη κινητής",
+      "exposure": "Έκθεση (κόμβοι εντός κινδύνου)",
+      "reports": "Αναφορές / SOS",
+      "prediction": "Κώνος πρόβλεψης",
+      "route": "Διαδρομή εκκένωσης",
+      "shelters": "Καταφύγια"
+    },
+    "caveat": {
+      "fire": "Τα θερμικά σημεία FIRMS είναι θερμικές ανιχνεύσεις, όχι επιβεβαιωμένες περίμετροι πυρκαγιάς.",
+      "floodzone": "Θεσμοθετημένες ζώνες πλημμύρας — όχι πραγματική έκταση",
+      "weather": "Σημείο παρατήρησης — όχι πλέγμα πρόγνωσης",
+      "camera": "Ζωντανές κάμερες — ανοίγει τον ιστότοπο της πηγής σε νέα καρτέλα",
+      "outage": "Ανάλυση σε επίπεδο κομητείας (EAGLE-I): οι περιοχές είναι εκτιμήσεις εικαζόμενης διακοπής, όχι επιβεβαιωμένες διακοπές ανά διεύθυνση.",
+      "cell": "Εκτίμηση κάλυψης βάσει OpenCelliD — ενδεικτική, όχι εγγυημένος χάρτης σήματος.",
+      "storm": "Το προϊόν κυκλώνα της υπηρεσίας αποδίδεται αυτολεξεί — το BEACON δεν μοντελοποιεί τροχιές, ανέμους ή καταιγιδική ανύψωση στάθμης."
+    },
+    "tooltip": {
+      "layer": "Επίπεδο: {group}",
+      "clickToOpen": "κάντε κλικ για άνοιγμα ↗"
+    },
+    "region": {
+      "label": "Περιοχή",
+      "default": "Προεπιλεγμένη περιοχή",
+      "overlaysLegend": "Δορυφορικά επιθέματα",
+      "attribution": "Δορυφορικές εικόνες: NASA EOSDIS GIBS"
+    },
+    "gibs": {
+      "truecolor": "Φυσικό χρώμα (VIIRS)",
+      "fires": "Ενεργές πυρκαγιές (VIIRS)",
+      "flood": "Πλημμύρα (MODIS)",
+      "aerosol": "Οπτικό βάθος αερολυμάτων"
+    },
+    "list": {
+      "regionLabel": "Στοιχεία χάρτη (προσβάσιμη λίστα)",
+      "empty": "Δεν υπάρχουν στοιχεία χάρτη στην τρέχουσα προβολή.",
+      "caption": "Προσβάσιμη λίστα όλων των στοιχείων του χάρτη — η εναλλακτική πληκτρολογίου στον διαδραστικό χάρτη.",
+      "colType": "Τύπος",
+      "colFeature": "Στοιχείο",
+      "colDetail": "Λεπτομέρεια",
+      "colLocation": "Τοποθεσία",
+      "colAction": "Ενέργεια",
+      "focus": "Εστίαση σε {label}"
+    },
+    "group": {
+      "fire": "Ανίχνευση πυρκαγιάς",
+      "gauge": "Σταθμήμετρο",
+      "infra": "Υποδομές",
+      "exposure": "Έκθεση",
+      "report": "Αναφορά / SOS",
+      "shelter": "Καταφύγιο"
+    },
+    "detail": {
+      "severity": "Σοβαρότητα {severity}",
+      "thermalHotspot": "Θερμικό σημείο",
+      "stage": "Στάθμη {stage}",
+      "gauge": "Σταθμήμετρο",
+      "node": "Κόμβος",
+      "infra": "{kind} — {status}",
+      "inHazard": "Εντός κινδύνου: {hazard}",
+      "nodeInHazard": "Κόμβος εντός κινδύνου"
+    },
+    "outage": {
+      "assumedOffline": "ΕΙΚΑΖΟΜΕΝΗ διακοπή",
+      "reportedOffline": "Αναφερθείσα διακοπή",
+      "withCount": "{count} καταναλωτές χωρίς ρεύμα — {state}"
+    },
+    "zone": {
+      "label": "Ζώνη {zone}"
+    },
+    "storm": {
+      "trackLabel": "Τροχιά του κέντρου του κυκλώνα — ενημερωτική, όχι περιοχή επιπτώσεων",
+      "coneLabel": "Κώνος πρόγνωσης — αβεβαιότητα του κέντρου της τροχιάς, όχι περιοχή επιπτώσεων",
+      "surgeLabel": "Έκταση καταιγιδικής ανύψωσης στάθμης — περιοχή επιπτώσεων, προσμετράται στην έκθεση",
+      "coneCaveat": "Κώνος πρόγνωσης από {agency}, δελτίο {advisoryAt} — δείχνει πού μπορεί να κινηθεί το κέντρο του κυκλώνα, ΟΧΙ την έκταση των επικίνδυνων συνθηκών.",
+      "coneCaveatUnattributed": "Ο κώνος πρόγνωσης δείχνει πού μπορεί να κινηθεί το κέντρο του κυκλώνα — ΟΧΙ την έκταση των επικίνδυνων συνθηκών."
+    },
+    "shelter": {
+      "capacity": "Χωρ. {capacity} · Ανάγκη {demand}"
+    },
+    "weather": {
+      "label": "Άνεμος {speed} km/h από {compass} ({deg}°), παρατ. {observedAt}"
+    },
+    "compass": {
+      "N": "Β",
+      "NE": "ΒΑ",
+      "E": "Α",
+      "SE": "ΝΑ",
+      "S": "Ν",
+      "SW": "ΝΔ",
+      "W": "Δ",
+      "NW": "ΒΔ"
+    },
+    "zoomIn": "Μεγέθυνση",
+    "zoomOut": "Σμίκρυνση",
+    "recenter": "Επανακεντράρισμα χάρτη"
+  },
+  "anticipatory": {
+    "title": "Anticipatory action",
+    "tab": "Anticipatory",
+    "sectionLabel": "Anticipatory action — early action protocol",
+    "methodHeading": "Method, inputs and uncertainty",
+    "ladderHeading": "Trigger ladder",
+    "cycleHeading": "Evaluation {index, number} of {total, number}",
+    "inputs": "Inputs",
+    "members": "{over, number} of {total, number} forecast members over {threshold, number} {unit}",
+    "leadTimeLabel": "Lead time",
+    "leadTime": "{hours, number} h, as stated by the source. BEACON does not model hazard travel time.",
+    "vintage": "Forecast run and issue instant",
+    "methodLabel": "Method and class",
+    "fired": "Fired",
+    "notFired": "Not fired",
+    "stageGate": "Gate: at least {fraction, number} of forecast members over {threshold, number} {unit}, class {klass} or higher, within {hours, number} h lead time.",
+    "ledgerHeading": "Governance records this cycle produces:",
+    "actionsHeading": "Pre-agreed actions",
+    "suggested": "Suggested",
+    "approvalHeading": "Human approval",
+    "pending": "Awaiting human approval by: {roles}",
+    "noEmission": "Suggestions only. Nothing on this panel dispatches a resource or emits a public alert; a named human must approve every early action.",
+    "stopMechanism": "Stop mechanism: {role} may stop the activation on a pre-agreed condition, and the engine stops it automatically after {hours, number} h.",
+    "replay": "Fixture-fed replay: each recorded forecast run is re-evaluated {lag, number} h after the issue instant stated in the file. Not live data — BEACON queries no ensemble product at runtime.",
+    "noProtocolTitle": "No early action protocol for this region",
+    "noProtocolBody": "BEACON ships no early action protocol whose scope names this region, so there is nothing to evaluate. Protocols are configuration (config/eap/), not code.",
+    "noForecastTitle": "No recorded forecast for this protocol",
+    "noForecastBody": "The protocol ships, but no recorded forecast file ships with it, so no evaluation can be replayed. BEACON has no wired live ensemble source.",
+    "engineRefusedTitle": "The anticipatory engine refused this input",
+    "engineRefusedBody": "The engine refused the input rather than showing a partial evaluation."
+  },
+  "outlook": {
+    "title": "Πρόβλεψη",
+    "sectionLabel": "Ιεραρχημένη πρόβλεψη",
+    "eta": "σε ~{hours, number} h",
+    "noEta": "η πηγή δεν δίνει χρόνο προειδοποίησης",
+    "unclassified": "μη ταξινομημένο",
+    "uncertainty": "αβεβαιότητα {value, number}"
+  },
+  "panels": {
+    "sitrepTitle": "Αναφορά κατάστασης",
+    "logisticsTitle": "Εφοδιαστική"
+  },
+  "shell": {
+    "sitrepDock": "Αναφορά κατάστασης",
+    "logisticsDock": "Εφοδιαστική",
+    "mapLabel": "Χάρτης κοινής επιχειρησιακής εικόνας",
+    "panelsLabel": "Πίνακες COP",
+    "expand": "Ανάπτυξη {label}",
+    "collapse": "Σύμπτυξη {label}",
+    "region": {
+      "us-ca": "Καλιφόρνια (ΗΠΑ)",
+      "ro": "Ρουμανία (ΕΕ)",
+      "es": "Ισπανία (ΕΕ)",
+      "gr": "Ελλάδα (ΕΕ)",
+      "ph": "Φιλιππίνες"
+    }
+  },
+  "sitrep": {
+    "title": "Αναφορά κατάστασης",
+    "uncited": "Χωρίς παραπομπή — λείπει η πηγή (F2)",
+    "noPriorities": "Δεν υπάρχουν ιεραρχημένες προτεραιότητες.",
+    "rankedPriorities": "Ιεραρχημένες προτεραιότητες",
+    "deterministicOnly": "μόνο ντετερμινιστικά",
+    "aiGenerated": "Δημιουργήθηκε από AI",
+    "trendLabel": "Τάση:",
+    "priorities": "Προτεραιότητες",
+    "noIncidentTitle": "Δεν έχει επιλεγεί συμβάν",
+    "noIncidentDescription": "Επιλέξτε συμβάν για να δείτε την αναφορά κατάστασής του.",
+    "unavailable": "Η αναφορά κατάστασης δεν είναι διαθέσιμη",
+    "provenance": "Προέλευση",
+    "externalViews": "Εξωτερικές προβολές"
+  },
+  "suppliesPanel": {
+    "title": "Εφόδια αρωγής",
+    "unavailable": "Τα εφόδια δεν είναι διαθέσιμα",
+    "emptyTitle": "Καμία παρτίδα εφοδίων",
+    "emptyDescription": "Δεν έχει καταχωριστεί απόθεμα εφοδίων αρωγής.",
+    "expires": "Λήγει {when}",
+    "asOf": "Έως {when}",
+    "provenance": "Προέλευση"
+  },
+  "volunteerTeamsPanel": {
+    "title": "Ομάδες εθελοντών",
+    "unavailable": "Οι ομάδες εθελοντών δεν είναι διαθέσιμες",
+    "emptyTitle": "Καμία ομάδα εθελοντών",
+    "emptyDescription": "Δεν έχει καταχωριστεί καμία μονάδα ομάδας.",
+    "headcount": "Δύναμη {count}",
+    "skills": "Ικανότητες",
+    "asOf": "Έως {when}",
+    "provenance": "Προέλευση"
+  },
+  "shelterStatusPanel": {
+    "title": "Κατάσταση καταφυγίων",
+    "unavailable": "Η κατάσταση καταφυγίων δεν είναι διαθέσιμη",
+    "emptyTitle": "Καμία εγγραφή καταφυγίου",
+    "emptyDescription": "Κανένα καταφύγιο προς αναφορά.",
+    "shelters": "Καταφύγια",
+    "capacity": "Χωρητικότητα",
+    "occupancy": "Πληρότητα",
+    "availableOpen": "Ανοικτή ελεύθερη χωρητικότητα",
+    "utilization": "Χρήση",
+    "available": "Ελεύθερα",
+    "provenance": "Προέλευση"
+  },
+  "damageReportsPanel": {
+    "title": "Ζημιές και ανάγκες",
+    "unavailable": "Οι αναφορές ζημιών δεν είναι διαθέσιμες",
+    "emptyTitle": "Καμία εγγραφή αξιολόγησης",
+    "emptyDescription": "Καμία αναφορά ζημιών ή αναγκών στο πεδίο.",
+    "entries": "Εγγραφές",
+    "sites": "Τοποθεσίες (αυτοαναφορά)",
+    "worstSeverity": "Μέγιστη σοβαρότητα",
+    "needs": "Ανάγκες",
+    "asOf": "Έως {when}",
+    "provenance": "Προέλευση"
+  },
+  "emsOverlayPanel": {
+    "title": "Επίπεδο Copernicus EMS",
+    "unavailable": "Το επίπεδο EMS δεν είναι διαθέσιμο",
+    "emptyTitle": "Κανένα δημοσιευμένο προϊόν",
+    "emptyDescription": "Κανένα προϊόν αξιολόγησης ζημιών δεν έχει δημοσιευθεί για αυτή την προβολή.",
+    "open": "Άνοιγμα σελίδας προϊόντος",
+    "attribution": "Απόδοση",
+    "notShown": "Δεν εμφανίζεται",
+    "asOf": "Έως {when}",
+    "provenance": "Προέλευση"
+  },
+  "sos": {
+    "errors": {
+      "tooShort": "Περιγράψτε το περιστατικό με τουλάχιστον 10 χαρακτήρες.",
+      "tooLong": "Η περιγραφή να μην υπερβαίνει τους 2000 χαρακτήρες.",
+      "generic": "Ελέγξτε τη φόρμα."
+    }
+  },
+  "tabs": {
+    "sitrep": "Αναφορά",
+    "decision": "Απόφαση",
+    "drafts": "Προσχέδια",
+    "resources": "Πόροι",
+    "verify": "Επαλήθευση",
+    "report": "Αναφορά SOS",
+    "route": "Διαδρομή εκκέν."
+  },
+  "theme": {
+    "toLight": "Εναλλαγή σε φωτεινό θέμα",
+    "toDark": "Εναλλαγή σε σκοτεινό θέμα"
+  },
+  "toolbar": {
+    "layers": "Επίπεδα",
+    "legend": "Υπόμνημα",
+    "devBadge": "dev",
+    "actingRole": "Ενεργός ρόλος (demo)",
+    "roleSwitcherTitle": "Μόνο για επίδειξη — πλαστογραφεί το x-beacon-role· ο διακομιστής εξακολουθεί να εξουσιοδοτεί (AUTH_DEV_TRUST_HEADER)",
+    "devLoginUserId": "αναγνωριστικό χρήστη dev-login",
+    "devLoginUserPlaceholder": "user id",
+    "devLogin": "dev-login",
+    "signedIn": "συνδεδεμένος",
+    "loginUserLabel": "αναγνωριστικό χρήστη",
+    "loginUserPlaceholder": "χρήστης",
+    "loginPasswordLabel": "κωδικός",
+    "loginPasswordPlaceholder": "κωδικός",
+    "signIn": "Σύνδεση",
+    "signOut": "Αποσύνδεση",
+    "signInFailed": "Η σύνδεση απέτυχε",
+    "liveBadge": "live",
+    "liveBadgeTitle": "Παραγωγική εγκατάσταση — οι ρόλοι προέρχονται μόνο από συνδεδεμένους λογαριασμούς.",
+    "currentRole": "Τρέχων ρόλος"
+  },
+  "ui": {
+    "severity": {
+      "MINOR": "Μικρή",
+      "MODERATE": "Μέτρια",
+      "SEVERE": "Σοβαρή",
+      "EXTREME": "Ακραία"
+    },
+    "mode": {
+      "LIVE": "Ζωντανά",
+      "CACHED": "Από cache",
+      "MOCK": "Εικονικά"
+    },
+    "freshness": {
+      "fresh": "Ζωντανά",
+      "stale": "Παλαιωμένα",
+      "unavailable": "Μη διαθέσιμα"
+    },
+    "unverified": "Μη επαληθευμένο",
+    "dialog": {
+      "close": "Κλείσιμο διαλόγου"
+    },
+    "skeleton": {
+      "loading": "Φόρτωση"
+    },
+    "errorState": {
+      "title": "Παρουσιάστηκε σφάλμα",
+      "retry": "Δοκιμάστε ξανά"
+    },
+    "errorBoundary": {
+      "title": "Αυτός ο πίνακας δεν μπόρεσε να εμφανιστεί",
+      "labelledTitle": "Δεν ήταν δυνατή η εμφάνιση: {label}"
+    },
+    "provenance": {
+      "trigger": "Προέλευση",
+      "triggerAria": "{label} — {count, plural, one {# πηγή} other {# πηγές}}",
+      "heading": "Πηγές",
+      "empty": "Δεν καταγράφηκε προέλευση."
+    },
+    "legend": {
+      "regionLabel": "Υπόμνημα χάρτη",
+      "severityHeading": "Σοβαρότητα κινδύνου",
+      "statusHeading": "Κατάσταση δεδομένων",
+      "modeHeading": "Λειτουργία πηγής",
+      "status": {
+        "fresh": "Πρόσφατα",
+        "stale": "Παλαιωμένα",
+        "unavailable": "Μη διαθέσιμα",
+        "unverified": "Μη επαληθευμένα"
+      }
+    },
+    "externalViews": {
+      "caption": "Εξωτερικό πλαίσιο — ανοίγει ιστότοπους τρίτων.",
+      "captionFor": "Εξωτερικό πλαίσιο — ανοίγει ιστότοπους τρίτων για {label}.",
+      "listLabel": "Σύνδεσμοι εξωτερικού πλαισίου",
+      "kind": {
+        "map": "Χάρτης",
+        "satellite": "Δορυφόρος",
+        "street": "Δρόμος",
+        "3d": "3D",
+        "weather": "Καιρός",
+        "imagery": "Εικόνες",
+        "fire": "Πυρκαγιά",
+        "flood": "Πλημμύρα"
+      }
+    },
+    "relativeTime": {
+      "unknown": "άγνωστο",
+      "seconds": "πριν {value} δλ",
+      "minutes": "πριν {value} λ",
+      "hours": "πριν {value} ώ",
+      "days": "πριν {value} ημ"
+    }
+  },
+  "warning": {
+    "headline": "{event} — {severity}",
+    "label": {
+      "what": "ΤΙ",
+      "where": "ΠΟΥ",
+      "when": "ΠΟΤΕ",
+      "impacts": "ΕΠΙΠΤΩΣΕΙΣ",
+      "action": "ΕΝΕΡΓΕΙΑ"
+    },
+    "what": "{event}, σοβαρότητα {severity}.",
+    "where": "{area}.",
+    "when": "{when}.",
+    "impacts": "{impacts}",
+    "action": {
+      "Shelter": "Καταφύγετε αμέσως. Μείνετε σε εσωτερικό χώρο στην περιοχή {area}, μακριά από τα παράθυρα, μέχρι να δοθεί λήξη συναγερμού.",
+      "Evacuate": "Απομακρυνθείτε αμέσως από {area}. Πάρτε τον σάκο έκτακτης ανάγκης, ακολουθήστε τη σημασμένη διαδρομή και μην επιστρέψετε μέχρι να δοθεί λήξη συναγερμού.",
+      "Prepare": "Ετοιμαστείτε να φύγετε από {area}. Ετοιμάστε σάκο έκτακτης ανάγκης, γεμίστε το αυτοκίνητο και παρακολουθήστε αυτό το κανάλι.",
+      "Execute": "Εφαρμόστε τώρα το σχέδιο που σας δόθηκε για {area}.",
+      "Avoid": "Μην εισέρχεστε στην περιοχή {area}. Μην ταξιδεύετε προς την περιοχή.",
+      "Monitor": "Παρακολουθήστε τις ενημερώσεις για {area}. Να είστε έτοιμοι να δράσετε αν αλλάξει η προειδοποίηση.",
+      "Assess": "Ελέγξτε την κατάστασή σας στην περιοχή {area} και αναφέρετε τι βλέπετε.",
+      "AllClear": "Ο κίνδυνος στην περιοχή {area} έληξε. Μπορείτε να επιστρέψετε. Ακολουθήστε τις τοπικές οδηγίες.",
+      "None": "Δεν απαιτείται καμία ενέργεια στην περιοχή {area} τώρα."
+    },
+    "event": {
+      "Fire": "Δασική πυρκαγιά",
+      "Met": "Πλημμύρα ή σφοδρά καιρικά φαινόμενα",
+      "Safety": "Κίνδυνος δημόσιας ασφάλειας"
+    },
+    "allClear": {
+      "headline": "ΛΗΞΗ ΣΥΝΑΓΕΡΜΟΥ — {event}",
+      "description": "{event} στην περιοχή {area} έληξε."
+    }
+  },
+  "content": {
+    "originalLanguage": "EN",
+    "untranslatedHint": "Εμφανίζεται στα αγγλικά — αμετάφραστο"
+  }
+}

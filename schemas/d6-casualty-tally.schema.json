@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/d6-casualty-tally.schema.json",
+  "title": "BEACON D6-5 Aggregate casualty tally — a COUNT, never a record",
+  "description": "FR-D6-5 (ADR-035 §4): a site-level AGGREGATE casualty tally attached to a damage report. It is a number and a label — there is no row per person, no name, no age, no triage tag, no injury description and no medical detail of any kind, which is exactly why it is constitutional (Art. XIV; ADR-035 §4 PERMANENTLY-OUT 'individual medical / triage data'). The keys that would express any of that — 'age', 'gender', 'patientId', 'medicalRecord', 'diagnosis', 'triageTag', 'injuries', 'bloodType' — are all in PERSON_IDENTIFYING_KEYS (src/domain/shared/aggregate-only.ts), so adding one fails Layer A (tsc), Layer B (this file's walk) and Layer C (runtime) simultaneously. HONEST LIMITATION, stated rather than implied away: a count carries no provenance of its own beyond the report it sits on, it is field-reported and NEVER authoritative, and the four guard layers constrain the SHAPE of this object — they cannot make the number true. That is why `label` and `authoritative` are required and constant rather than optional decoration.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["count", "label", "authoritative"],
+  "properties": {
+    "reportId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The id of the damage report (src/domain/public-report.ts) this tally summarises — an ENTITY id, not a person id. Deliberately `reportId`, never `reporterId`: the latter is in PERSON_IDENTIFYING_KEYS and identifies the human who filed, which D6 must never carry."
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "The aggregate, site-level count. Non-negative; a count of zero is a MEANINGFUL report ('none observed here') and is preserved, never collapsed to absent."
+    },
+    "asOf": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC instant the count was observed — supplied by the caller from the injected clock, never read from a wall clock inside the tally."
+    },
+    "label": {
+      "const": "unverified — not authoritative",
+      "description": "The MANDATORY caveat string ADR-035 §4 FR-D6-5 requires at every render and export site. A JSON-Schema `const`, not a free string, so a surface cannot render a softened wording: the label travels WITH the number instead of being written beside it, which is the only way it cannot be dropped by a mapper that copies only `count`."
+    },
+    "authoritative": {
+      "const": false,
+      "description": "Structural restatement of `label` for consumers that branch rather than render. Pinned to false by `const`: there is no configuration, flag or code path that can make a BEACON casualty tally authoritative, and the schema says so rather than relying on a convention."
+    }
+  }
+}

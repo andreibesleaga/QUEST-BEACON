@@ -1,0 +1,11 @@
+# Redocly lint config for the BEACON OpenAPI spec.
+# Inherits the recommended ruleset. BEACON is a local-first / air-gapped product, so
+# `http://localhost:3000` is a legitimate, documented deployment target (DEPLOY_MODE=local),
+# not an oversight — the no-server-example.com rule is disabled for that reason.
+extends:
+  - recommended
+rules:
+  no-server-example.com: off
+apis:
+  beacon@v1:
+    root: ./openapi.yaml

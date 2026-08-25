@@ -1,0 +1,507 @@
+{
+  "_meta": {
+    "locale": "ru",
+    "review": "machine",
+    "machineTranslated": true,
+    "comment": "Machine-translated from messages/en.json; NOT reviewed by a human translator. Labeled as such in the UI (FR-I18N-5)."
+  },
+  "channels": {
+    "digest": {
+      "trend": "динамика",
+      "noClaim": "(нет утверждения)",
+      "citations": "ссылки на источники",
+      "sources": "происхождение данных",
+      "freshness": "актуальность"
+    },
+    "alert": {
+      "headline": "ОПОВЕЩЕНИЕ BEACON — {severity} {category} по инциденту {incidentId} (оповещение {alertId})"
+    }
+  },
+  "actMenu": {
+    "trigger": "Действие",
+    "title": "Действие с выбранным объектом",
+    "taskResource": "Назначить ресурс",
+    "drawRoute": "Проложить маршрут эвакуации",
+    "createAlert": "Создать оповещение DRAFT"
+  },
+  "app": {
+    "title": "BEACON — единая оперативная обстановка",
+    "description": "Открытая система COP с локальным приоритетом, работающая почти в реальном времени, — для лесных пожаров и наводнений.",
+    "skipToContent": "Перейти к содержимому"
+  },
+  "commandPalette": {
+    "openLabel": "Открыть палитру команд",
+    "triggerText": "Поиск",
+    "dialogLabel": "Палитра команд",
+    "placeholder": "Переход к региону, инциденту, панели — или действие…",
+    "empty": "Совпадений нет.",
+    "groupRegions": "Регионы",
+    "groupIncidents": "Инциденты",
+    "groupPanels": "Панели",
+    "groupLayers": "Переключить слои",
+    "groupAct": "Действие",
+    "toggleLayer": "Переключить слой {layer}",
+    "shortcutsTitle": "Горячие клавиши",
+    "shortcutsDescription": "Все действия COP доступны без мыши.",
+    "shortcut": {
+      "openPalette": "Открыть палитру команд",
+      "openShortcuts": "Открыть этот список горячих клавиш",
+      "move": "Перемещение по результатам палитры",
+      "run": "Выполнить выделенное действие",
+      "close": "Закрыть палитру / окно"
+    }
+  },
+  "decision": {
+    "sectionLabel": "Поддержка принятия решений",
+    "figures": "Детерминированные показатели",
+    "narration": "Описание ИИ",
+    "noNarration": "Без описания (только детерминированные данные).",
+    "citations": "Ссылки на источники",
+    "approved": "Утверждено человеком",
+    "approve": "Утвердить решение",
+    "humanApprovalRequired": "Перед любым публичным действием требуется утверждение человеком.",
+    "noDraftToApprove": "Сейчас нечего утверждать — нет черновиков оповещений на рассмотрении.",
+    "roleRequiredToApprove": "Войдите как Верификатор или Менеджер ЧС, чтобы утверждать."
+  },
+  "draftAlerts": {
+    "title": "Проверка оповещений (DRAFT)",
+    "emptyTitle": "Нет оповещений DRAFT",
+    "emptyDescription": "Пороговые правила создают здесь оповещения DRAFT.",
+    "provenance": "Происхождение данных",
+    "noProvenance": "Происхождение не указано",
+    "reviewApprove": "Проверить и утвердить…"
+  },
+  "locale": {
+    "label": "Язык",
+    "switcherLabel": "Язык интерфейса",
+    "machineTranslatedNotice": "Машинный перевод — не проверен переводчиком-человеком.",
+    "machineTranslatedShort": "машинный перевод"
+  },
+  "logistics": {
+    "title": "Логистика",
+    "resource": "Ресурс",
+    "shelter": "Убежище",
+    "noShelterData": "Нет данных о вместимости убежищ.",
+    "shelterCapacity": "Вместимость убежищ",
+    "shelterCapacityVsDemand": "Вместимость убежищ и потребность",
+    "overCapacity": "Переполнено",
+    "withinCapacity": "В пределах вместимости",
+    "resourceToTask": "Ресурс для задачи",
+    "selectResource": "Выберите ресурс…",
+    "lifecycleTransition": "Смена статуса",
+    "transition": {
+      "PROPOSED": "PROPOSED",
+      "ASSIGNED": "ASSIGNED",
+      "EN_ROUTE": "EN_ROUTE",
+      "ON_SCENE": "ON_SCENE",
+      "CLEARED": "CLEARED"
+    },
+    "task": "Задача",
+    "taskingRejected": "Назначение отклонено ({code}): {message}",
+    "resourcesUnavailable": "Ресурсы недоступны",
+    "noResourcesTitle": "Ресурсов нет",
+    "noResourcesDescription": "В зоне охвата нет ресурсов, доступных для назначения.",
+    "prePositioning": {
+      "heading": "Предложения по предварительному размещению",
+      "advisory": "Рекомендация — решение принимает человек",
+      "listLabel": "Список предложений по предварительному размещению",
+      "noIncidentTitle": "Инцидент не выбран",
+      "noIncidentDescription": "Выберите инцидент, чтобы увидеть предложения по предварительному размещению.",
+      "unavailable": "Предварительное размещение недоступно",
+      "noExtentTitle": "Прогноз распространения пока отсутствует",
+      "noExtentDescription": "Предложения появятся, когда для этого инцидента станет доступен прогноз развития угрозы.",
+      "noAssetsTitle": "Поблизости нет сил и средств",
+      "noAssetsDescription": "Рядом с прогнозируемой зоной не найдено ресурсов AVAILABLE или убежищ OPEN."
+    }
+  },
+  "map": {
+    "layersLegend": "Слои карты",
+    "errorBoundaryLabel": "Карта",
+    "unavailableTitle": "Интерактивная карта недоступна",
+    "unavailableDescription": "WebGL здесь недоступен. Все данные карты приведены ниже в виде доступного списка.",
+    "layer": {
+      "fire": "Пожар (термоточки и периметр)",
+      "flood": "Зона затопления и водомерные посты",
+      "storm": "Траектория циклона, конус и штормовой нагон",
+      "floodzone": "Зоны затопления (NFHL)",
+      "infra": "Инфраструктура",
+      "weather": "Погода (ветер)",
+      "cameras": "Камеры в реальном времени",
+      "outage": "Отключения электроэнергии",
+      "cell": "Покрытие сотовой сети",
+      "exposure": "Подверженность (объекты в зоне угрозы)",
+      "reports": "Сообщения / SOS",
+      "prediction": "Конус прогноза",
+      "route": "Маршрут эвакуации",
+      "shelters": "Убежища"
+    },
+    "caveat": {
+      "fire": "Термоточки FIRMS — это тепловые обнаружения, а не подтверждённые контуры пожара.",
+      "floodzone": "Нормативные зоны затопления — не фактическая обстановка",
+      "weather": "Пункт наблюдения — не сетка прогноза",
+      "camera": "Камеры в реальном времени — сайт источника открывается в новой вкладке",
+      "outage": "Данные по округам (EAGLE-I): зоны — это оценки «предположительно без электроснабжения», а не подтверждённые отключения по адресам.",
+      "cell": "Оценка покрытия по данным OpenCelliD — ориентировочная, а не гарантированная карта сигнала.",
+      "storm": "Циклонический продукт агентства воспроизведён без изменений — BEACON не моделирует траектории, ветер и штормовой нагон."
+    },
+    "tooltip": {
+      "layer": "Слой: {group}",
+      "clickToOpen": "нажмите, чтобы открыть ↗"
+    },
+    "region": {
+      "label": "Регион",
+      "default": "Регион по умолчанию",
+      "overlaysLegend": "Спутниковые слои",
+      "attribution": "Спутниковые снимки: NASA EOSDIS GIBS"
+    },
+    "gibs": {
+      "truecolor": "Естественные цвета (VIIRS)",
+      "fires": "Действующие пожары (VIIRS)",
+      "flood": "Наводнение (MODIS)",
+      "aerosol": "Оптическая толщина аэрозоля"
+    },
+    "list": {
+      "regionLabel": "Объекты карты (доступный список)",
+      "empty": "В текущей области объектов карты нет.",
+      "caption": "Доступный список всех объектов карты — альтернатива интерактивной карте для работы с клавиатуры.",
+      "colType": "Тип",
+      "colFeature": "Объект",
+      "colDetail": "Детали",
+      "colLocation": "Местоположение",
+      "colAction": "Действие",
+      "focus": "Перейти к {label}"
+    },
+    "group": {
+      "fire": "Обнаружение пожара",
+      "gauge": "Водомерный пост",
+      "infra": "Инфраструктура",
+      "exposure": "Подверженность",
+      "report": "Сообщение / SOS",
+      "shelter": "Убежище"
+    },
+    "detail": {
+      "severity": "Уровень опасности {severity}",
+      "thermalHotspot": "Термоточка",
+      "stage": "Уровень воды {stage}",
+      "gauge": "Водомерный пост",
+      "node": "Узел",
+      "infra": "{kind} — {status}",
+      "inHazard": "В зоне угрозы: {hazard}",
+      "nodeInHazard": "Узел в зоне угрозы"
+    },
+    "outage": {
+      "assumedOffline": "ПРЕДПОЛОЖИТЕЛЬНО отключено",
+      "reportedOffline": "Сообщено об отключении",
+      "withCount": "{count} абонентов без электроснабжения — {state}"
+    },
+    "zone": {
+      "label": "Зона {zone}"
+    },
+    "storm": {
+      "trackLabel": "Траектория центра циклона — справочная, а не зона воздействия",
+      "coneLabel": "Конус прогноза — неопределённость положения центра траектории, а не зона воздействия",
+      "surgeLabel": "Зона штормового нагона — зона воздействия, учитывается в подверженности",
+      "coneCaveat": "Конус прогноза от {agency}, оповещение {advisoryAt} — показывает, где может пройти центр циклона, а НЕ границы опасных условий.",
+      "coneCaveatUnattributed": "Конус прогноза показывает, где может пройти центр циклона, — а НЕ границы опасных условий."
+    },
+    "shelter": {
+      "capacity": "Вмест. {capacity} · Потр. {demand}"
+    },
+    "weather": {
+      "label": "Ветер {speed} км/ч с {compass} ({deg}°), набл. {observedAt}"
+    },
+    "compass": {
+      "N": "С",
+      "NE": "СВ",
+      "E": "В",
+      "SE": "ЮВ",
+      "S": "Ю",
+      "SW": "ЮЗ",
+      "W": "З",
+      "NW": "СЗ"
+    },
+    "zoomIn": "Приблизить",
+    "zoomOut": "Отдалить",
+    "recenter": "Перецентрировать карту"
+  },
+  "anticipatory": {
+    "title": "Anticipatory action",
+    "tab": "Anticipatory",
+    "sectionLabel": "Anticipatory action — early action protocol",
+    "methodHeading": "Method, inputs and uncertainty",
+    "ladderHeading": "Trigger ladder",
+    "cycleHeading": "Evaluation {index, number} of {total, number}",
+    "inputs": "Inputs",
+    "members": "{over, number} of {total, number} forecast members over {threshold, number} {unit}",
+    "leadTimeLabel": "Lead time",
+    "leadTime": "{hours, number} h, as stated by the source. BEACON does not model hazard travel time.",
+    "vintage": "Forecast run and issue instant",
+    "methodLabel": "Method and class",
+    "fired": "Fired",
+    "notFired": "Not fired",
+    "stageGate": "Gate: at least {fraction, number} of forecast members over {threshold, number} {unit}, class {klass} or higher, within {hours, number} h lead time.",
+    "ledgerHeading": "Governance records this cycle produces:",
+    "actionsHeading": "Pre-agreed actions",
+    "suggested": "Suggested",
+    "approvalHeading": "Human approval",
+    "pending": "Awaiting human approval by: {roles}",
+    "noEmission": "Suggestions only. Nothing on this panel dispatches a resource or emits a public alert; a named human must approve every early action.",
+    "stopMechanism": "Stop mechanism: {role} may stop the activation on a pre-agreed condition, and the engine stops it automatically after {hours, number} h.",
+    "replay": "Fixture-fed replay: each recorded forecast run is re-evaluated {lag, number} h after the issue instant stated in the file. Not live data — BEACON queries no ensemble product at runtime.",
+    "noProtocolTitle": "No early action protocol for this region",
+    "noProtocolBody": "BEACON ships no early action protocol whose scope names this region, so there is nothing to evaluate. Protocols are configuration (config/eap/), not code.",
+    "noForecastTitle": "No recorded forecast for this protocol",
+    "noForecastBody": "The protocol ships, but no recorded forecast file ships with it, so no evaluation can be replayed. BEACON has no wired live ensemble source.",
+    "engineRefusedTitle": "The anticipatory engine refused this input",
+    "engineRefusedBody": "The engine refused the input rather than showing a partial evaluation."
+  },
+  "outlook": {
+    "title": "Прогноз",
+    "sectionLabel": "Ранжированный прогноз",
+    "eta": "через ~{hours, number} h",
+    "noEta": "источник не указал время упреждения",
+    "unclassified": "не классифицировано",
+    "uncertainty": "неопределённость {value, number}"
+  },
+  "panels": {
+    "sitrepTitle": "Оперативная сводка",
+    "logisticsTitle": "Логистика"
+  },
+  "shell": {
+    "sitrepDock": "Оперативная сводка",
+    "logisticsDock": "Логистика",
+    "mapLabel": "Карта единой оперативной обстановки",
+    "panelsLabel": "Панели COP",
+    "expand": "Развернуть {label}",
+    "collapse": "Свернуть {label}",
+    "region": {
+      "us-ca": "Калифорния (США)",
+      "ro": "Румыния (ЕС)",
+      "es": "Испания (ЕС)",
+      "gr": "Греция (ЕС)",
+      "ph": "Филиппины"
+    }
+  },
+  "sitrep": {
+    "title": "Оперативная сводка",
+    "uncited": "Без ссылки — источник отсутствует (F2)",
+    "noPriorities": "Приоритеты не определены.",
+    "rankedPriorities": "Приоритеты по рангу",
+    "deterministicOnly": "только детерминированные данные",
+    "aiGenerated": "Сгенерировано ИИ",
+    "trendLabel": "Динамика:",
+    "priorities": "Приоритеты",
+    "noIncidentTitle": "Инцидент не выбран",
+    "noIncidentDescription": "Выберите инцидент, чтобы увидеть его сводку.",
+    "unavailable": "Сводка недоступна",
+    "provenance": "Происхождение данных",
+    "externalViews": "Внешние источники"
+  },
+  "suppliesPanel": {
+    "title": "Гуманитарные запасы",
+    "unavailable": "Данные о запасах недоступны",
+    "emptyTitle": "Нет партий запасов",
+    "emptyDescription": "Запасы гуманитарной помощи не зарегистрированы.",
+    "expires": "Годен до {when}",
+    "asOf": "По состоянию на {when}",
+    "provenance": "Происхождение данных"
+  },
+  "volunteerTeamsPanel": {
+    "title": "Волонтёрские команды",
+    "unavailable": "Данные о волонтёрских командах недоступны",
+    "emptyTitle": "Нет волонтёрских команд",
+    "emptyDescription": "Командные подразделения не зарегистрированы.",
+    "headcount": "Численность {count}",
+    "skills": "Компетенции",
+    "asOf": "По состоянию на {when}",
+    "provenance": "Происхождение данных"
+  },
+  "shelterStatusPanel": {
+    "title": "Состояние убежищ",
+    "unavailable": "Состояние убежищ недоступно",
+    "emptyTitle": "Нет записей об убежищах",
+    "emptyDescription": "Нет убежищ для отчёта.",
+    "shelters": "Убежища",
+    "capacity": "Вместимость",
+    "occupancy": "Заполненность",
+    "availableOpen": "Свободные открытые места",
+    "utilization": "Загруженность",
+    "available": "Свободно",
+    "provenance": "Происхождение данных"
+  },
+  "damageReportsPanel": {
+    "title": "Ущерб и потребности",
+    "unavailable": "Отчёты об ущербе недоступны",
+    "emptyTitle": "Нет записей оценки",
+    "emptyDescription": "Нет отчётов об ущербе или потребностях в зоне охвата.",
+    "entries": "Записи",
+    "sites": "Объекты (самоотчёт)",
+    "worstSeverity": "Максимальная тяжесть",
+    "needs": "Потребности",
+    "asOf": "По состоянию на {when}",
+    "provenance": "Происхождение данных"
+  },
+  "emsOverlayPanel": {
+    "title": "Слой Copernicus EMS",
+    "unavailable": "Слой EMS недоступен",
+    "emptyTitle": "Нет опубликованных продуктов",
+    "emptyDescription": "Для этого вида нет опубликованных продуктов оценки ущерба.",
+    "open": "Открыть страницу продукта",
+    "attribution": "Атрибуция",
+    "notShown": "Не показано",
+    "asOf": "По состоянию на {when}",
+    "provenance": "Происхождение данных"
+  },
+  "sos": {
+    "errors": {
+      "tooShort": "Опишите чрезвычайную ситуацию не менее чем 10 символами.",
+      "tooLong": "Описание не должно превышать 2000 символов.",
+      "generic": "Проверьте данные формы."
+    }
+  },
+  "tabs": {
+    "sitrep": "Сводка",
+    "decision": "Решение",
+    "drafts": "Черновики",
+    "resources": "Ресурсы",
+    "verify": "Проверка",
+    "report": "Сообщить SOS",
+    "route": "Маршрут эвак."
+  },
+  "theme": {
+    "toLight": "Переключить на светлую тему",
+    "toDark": "Переключить на тёмную тему"
+  },
+  "toolbar": {
+    "layers": "Слои",
+    "legend": "Легенда",
+    "devBadge": "dev",
+    "actingRole": "Текущая роль (демо)",
+    "roleSwitcherTitle": "Только для демонстрации — подменяет x-beacon-role; авторизацию по-прежнему выполняет сервер (AUTH_DEV_TRUST_HEADER)",
+    "devLoginUserId": "идентификатор пользователя dev-login",
+    "devLoginUserPlaceholder": "user id",
+    "devLogin": "dev-login",
+    "signedIn": "вход выполнен",
+    "loginUserLabel": "идентификатор",
+    "loginUserPlaceholder": "пользователь",
+    "loginPasswordLabel": "пароль",
+    "loginPasswordPlaceholder": "пароль",
+    "signIn": "Войти",
+    "signOut": "Выйти",
+    "signInFailed": "Ошибка входа",
+    "liveBadge": "live",
+    "liveBadgeTitle": "Производственное развёртывание — роли только из учётных записей.",
+    "currentRole": "Текущая роль"
+  },
+  "ui": {
+    "severity": {
+      "MINOR": "Незначительная",
+      "MODERATE": "Умеренная",
+      "SEVERE": "Серьёзная",
+      "EXTREME": "Экстремальная"
+    },
+    "mode": {
+      "LIVE": "Онлайн",
+      "CACHED": "Кэш",
+      "MOCK": "Тест"
+    },
+    "freshness": {
+      "fresh": "Онлайн",
+      "stale": "Устарело",
+      "unavailable": "Недоступно"
+    },
+    "unverified": "Не подтверждено",
+    "dialog": {
+      "close": "Закрыть диалог"
+    },
+    "skeleton": {
+      "loading": "Загрузка"
+    },
+    "errorState": {
+      "title": "Произошла ошибка",
+      "retry": "Повторить"
+    },
+    "errorBoundary": {
+      "title": "Не удалось отобразить эту панель",
+      "labelledTitle": "Не удалось отобразить: {label}"
+    },
+    "provenance": {
+      "trigger": "Происхождение данных",
+      "triggerAria": "{label} — {count, plural, one {# источник} few {# источника} many {# источников} other {# источника}}",
+      "heading": "Источники",
+      "empty": "Происхождение не зафиксировано."
+    },
+    "legend": {
+      "regionLabel": "Легенда карты",
+      "severityHeading": "Уровень опасности",
+      "statusHeading": "Состояние данных",
+      "modeHeading": "Режим источника",
+      "status": {
+        "fresh": "Актуально",
+        "stale": "Устарело",
+        "unavailable": "Недоступно",
+        "unverified": "Не подтверждено"
+      }
+    },
+    "externalViews": {
+      "caption": "Внешний контекст — открываются сторонние сайты.",
+      "captionFor": "Внешний контекст для {label} — открываются сторонние сайты.",
+      "listLabel": "Ссылки на внешний контекст",
+      "kind": {
+        "map": "Карта",
+        "satellite": "Спутник",
+        "street": "Улица",
+        "3d": "3D",
+        "weather": "Погода",
+        "imagery": "Снимки",
+        "fire": "Пожар",
+        "flood": "Наводнение"
+      }
+    },
+    "relativeTime": {
+      "unknown": "неизвестно",
+      "seconds": "{value} с назад",
+      "minutes": "{value} мин назад",
+      "hours": "{value} ч назад",
+      "days": "{value} д назад"
+    }
+  },
+  "warning": {
+    "headline": "{event} — {severity}",
+    "label": {
+      "what": "ЧТО",
+      "where": "ГДЕ",
+      "when": "КОГДА",
+      "impacts": "ПОСЛЕДСТВИЯ",
+      "action": "ДЕЙСТВИЕ"
+    },
+    "what": "{event}, уровень опасности {severity}.",
+    "where": "{area}.",
+    "when": "{when}.",
+    "impacts": "{impacts}",
+    "action": {
+      "Shelter": "Укройтесь сейчас. Оставайтесь внутри помещения в {area}, вдали от окон, до объявления об отмене опасности.",
+      "Evacuate": "Немедленно покиньте {area}. Возьмите тревожный рюкзак, двигайтесь по указанному маршруту и не возвращайтесь до объявления об отмене опасности.",
+      "Prepare": "Готовьтесь покинуть {area}. Соберите тревожный рюкзак, заправьте машину и следите за этим каналом.",
+      "Execute": "Выполните сейчас план, который вам был выдан для {area}.",
+      "Avoid": "Не входите в {area}. Не выезжайте в этот район.",
+      "Monitor": "Следите за обновлениями о {area}. Будьте готовы действовать, если предупреждение изменится.",
+      "Assess": "Оцените свою обстановку в {area} и сообщите о том, что видите.",
+      "AllClear": "Опасность в {area} закончилась. Вы можете вернуться. Следуйте указаниям местных властей.",
+      "None": "Сейчас никаких действий в {area} не требуется."
+    },
+    "event": {
+      "Fire": "Природный пожар",
+      "Met": "Наводнение или опасная погода",
+      "Safety": "Угроза общественной безопасности"
+    },
+    "allClear": {
+      "headline": "ОТМЕНА ТРЕВОГИ — {event}",
+      "description": "{event} в {area} закончилось."
+    }
+  },
+  "content": {
+    "originalLanguage": "EN",
+    "untranslatedHint": "Показано на английском — не переведено"
+  }
+}

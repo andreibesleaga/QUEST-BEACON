@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/policies.schema.json",
+  "title": "BEACON Policy-as-Code (AICompliancePort policies.yml)",
+  "description": "Validates the declarative policy bundle enforced by the AICompliancePort reverse-proxy gateway (ADR-017), the cost/budget guardrails (ADR-018), and the observability/cost-attribution layer (ADR-022). The gateway is the MANDATORY chokepoint in front of EVERY LLM and Vision call (THREAT_MODEL TB5/§10). Loaded fail-fast at boot (CONFIGURATION U5/F10) like REGIONS_CONFIG. SAFETY controls (PII egress, prompt-injection, blocked destructive/SSRF/secret-file patterns) are FAIL-CLOSED; the budget posture is soft-within-budget and HARD-BLOCK + human approval only above a configured threshold/cap (ADR-018). Maps to OWASP LLM Top-10 2025 (LLM01/02/05/06/10), OWASP ASI01-ASI10, NIST AI RMF, ISO/IEC 42001, EU AI Act Art.12-15, MITRE ATLAS.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "roles", "pii", "content_safety", "rate_limit", "budget", "eu_ai_act"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Policy bundle version (semver or date). Recorded on every AUDIT_EVENT (ADR-022) so a decision can be replayed against the exact policy that produced it (EU AI Act Art.12 record-keeping)."
+    },
+    "roles": {
+      "type": "object",
+      "description": "RBAC scope-per-role for AI access (THREAT_MODEL TB6; CLARIFICATIONS §B.Q6). The gateway's first pipeline stage validates the caller's JWT role against allowed_models/allowed_tools/max_tokens for the requested call (deny-by-default; OWASP API1/API5 BOLA/BFLA; OWASP ASI03 privilege-compromise; NIST GOVERN/MANAGE).",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["allowed_models", "allowed_tools", "max_tokens"],
+        "properties": {
+          "allowed_models": {
+            "type": "array",
+            "description": "Model/tier ids this role may invoke (LiteLLM ladder ids, ADR-007/008). '*' permits any configured tier. Empty array = role may not call any model (deny).",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          },
+          "allowed_tools": {
+            "type": "array",
+            "description": "Tool/action ids this role may reach through the gateway. BEACON's LLM has NO tools (narration only, THREAT_MODEL §10.2/LLM06) so this is typically empty; present to bound any future tool-bearing call (least privilege, Art. V; OWASP ASI02 tool-misuse).",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          },
+          "max_tokens": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Per-call output-token ceiling for this role (bounds LLM10 unbounded-consumption / denial-of-wallet; must be <= LLM_MAX_OUTPUT_TOKENS, CONFIGURATION §4)."
+          }
+        }
+      }
+    },
+    "pii": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "patterns"],
+      "description": "PII detect+redact stage (THREAT_MODEL §11; Art. IV/XIV). FAIL-CLOSED: a detector error blocks the call rather than letting raw PII egress. Maps to OWASP LLM02/LLM06, OWASP ASI06 (memory/data poisoning & leakage), EU AI Act Art.10 data-governance.",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["redact", "block", "hash"],
+          "description": "What the gateway does on a match before forwarding upstream: 'redact' = replace with a high-entropy reversible token (ai-safety-guardrails Presidio-style); 'block' = short-circuit 403; 'hash' = one-way pseudonymize. Egress to a cloud LLM uses redact/block (no raw PII in prompt context, Art. IV)."
+        },
+        "patterns": {
+          "type": "array",
+          "description": "Named detection patterns. Each is applied to ingested NL / grounding context before the upstream call.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "regex"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Human label for the PII class (e.g. 'email', 'ssn', 'phone', 'credit-card'). Logged as a class name only - never the matched value (Art. IV, no PII in logs)."
+              },
+              "regex": {
+                "type": "string",
+                "minLength": 1,
+                "format": "regex",
+                "description": "Detection regex (ECMA flavor). Backed by a classifier where regex is insufficient; the regex is the deterministic floor."
+              }
+            }
+          }
+        }
+      }
+    },
+    "content_safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prompt_injection", "blocked_command_patterns"],
+      "description": "Semantic-firewall stage (ADR-017). FAIL-CLOSED. Maps to OWASP LLM01 (prompt injection), LLM05 (improper output handling), OWASP ASI01 (agent injection)/ASI02 (tool misuse)/ASI04 (resource overload via destructive ops), MITRE ATLAS AML.T0051 (LLM prompt injection), NIST MAP/MEASURE.",
+      "properties": {
+        "prompt_injection": {
+          "type": "boolean",
+          "description": "When true, the semantic firewall runs instruction-override / jailbreak detection (regex + classifier pre-filter, ai-safety-guardrails) over ingested NL and treats all ingested text as untrusted DATA, never instructions (THREAT_MODEL §10.2). A detected injection lowers confidence + logs (content redacted) + may short-circuit; structural controls remain authoritative (prompt-injection-defense.skill)."
+        },
+        "blocked_command_patterns": {
+          "type": "array",
+          "description": "Destructive-command / SSRF / secret-file-access patterns the firewall blocks fail-closed (e.g. shell rm/drop-table, file:// or 169.254.169.254 SSRF, /etc/passwd or .env secret-file reads). Defends OWASP ASI02/ASI04 and LLM05/LLM06.",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "regex"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Label for the blocked class (e.g. 'destructive-shell', 'sql-drop', 'ssrf-metadata', 'secret-file-access')."
+              },
+              "regex": {
+                "type": "string",
+                "minLength": 1,
+                "format": "regex",
+                "description": "Match pattern (ECMA flavor). A hit short-circuits the pipeline 403 and writes an AUDIT_EVENT (content redacted)."
+              }
+            }
+          }
+        }
+      }
+    },
+    "rate_limit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["window_ms", "max_requests"],
+      "description": "Sliding-window rate limit per caller/role at the gateway (THREAT_MODEL T1.6 abuse-flood; OWASP API4 unrestricted-resource-consumption; OWASP ASI04 resource-overload; LLM10). Exceeding it short-circuits 429 with Retry-After (SPEC §2.3).",
+      "properties": {
+        "window_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Window length in milliseconds."
+        },
+        "max_requests": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Max gateway requests permitted per caller within the window."
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["per_incident_usd", "per_region_usd", "escalation_threshold_usd", "require_human_above_threshold"],
+      "description": "Cost guardrails + budget posture (ADR-018). LOCKED posture: SOFT within budget (auto-proceed, per-call audit with pre-step cost reservation, ADR-022); HARD-BLOCK + human approval ONLY when escalation_threshold_usd or a per-incident/per-region cap is exceeded. Safety controls (pii/content_safety) are always fail-closed regardless of budget. Maps to LLM10, OWASP ASI04, NIST MANAGE, Art. X cost mandate.",
+      "properties": {
+        "per_incident_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Hard ceiling on cumulative AI spend attributed to one incident (HARD-BLOCK on exceed). Reservation is debited per step via the reserve->execute->reconcile cycle (agent-analytics admission control)."
+        },
+        "per_region_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Hard ceiling on cumulative AI spend attributed to one region per budget period (HARD-BLOCK on exceed). Region/org isolation (THREAT_MODEL TB9) prevents one region starving another's budget."
+        },
+        "escalation_threshold_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Soft escalation point: at/above this per-call (or cumulative-step) cost the circuit-breaker escalates (degrade->escalate->terminate, ADR-018) and, if require_human_above_threshold, requires human approval before the call dispatches."
+        },
+        "require_human_above_threshold": {
+          "type": "boolean",
+          "description": "When true, a call whose reserved cost >= escalation_threshold_usd (or that would exceed a cap) is held for human approval (HITL, Art. X/XIII) instead of auto-proceeding. Below the threshold, calls proceed automatically with per-call audit (soft posture)."
+        }
+      }
+    },
+    "eu_ai_act": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["transparency_headers", "log_retention_days"],
+      "description": "EU AI Act transparency + record-keeping obligations (Art.12 logging, Art.13 transparency, Art.50 AI-disclosure). The gateway stamps AI-involvement headers on AI-derived responses and enforces the audit-log retention period.",
+      "properties": {
+        "transparency_headers": {
+          "type": "boolean",
+          "description": "When true, AI-derived responses carry an explicit AI-involvement marker (model tier + 'AI-generated narrative' label), reinforcing SPEC's ai_mode echo and Art. VI 'AI content clearly labeled' (EU AI Act Art.13/Art.50; IEEE 7001 transparency)."
+        },
+        "log_retention_days": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Retention period (days) for the hash-chained AI compliance audit trail (EU AI Act Art.12 record-keeping). Distinct from reporter-PII retention, which is purged at incident close (UW6/Art. XIV) - the audit trail stores UUIDs + generalized fields only (THREAT_MODEL §9.3)."
+        }
+      }
+    },
+    "circuit_breaker": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional override of the default upstream circuit-breaker thresholds (SPEC §8.1; ADR-018). When absent, the gateway uses the SPEC defaults. Availability degrades gracefully (Art. XVI): an open breaker descends the LLM/Vision ladder, never dead-ends.",
+      "properties": {
+        "failure_threshold": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Consecutive upstream failures before the breaker opens (SPEC default 5)."
+        },
+        "open_duration_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "How long the breaker stays open before a half-open probe (SPEC default 60000 ms)."
+        }
+      }
+    }
+  }
+}

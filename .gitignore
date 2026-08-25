@@ -1,0 +1,74 @@
+# BEACON Phase 3 — .gitignore
+# Strategy (current): CANONICAL GABBE LAYOUT (matches Super-Brand / kaiban-distributed).
+# The GABBE kit + agent wiring + manifest (agents/, .claude/, .gabbe/) are LOCAL-ONLY — present on
+# disk and fully USED at runtime by the agent (governance, skills, memory, checkpoints), but NOT
+# committed (keeps the repo lean; the kit is regenerable from the GABBE toolkit).
+# COMMITTED project work: audit/, docs/ (discovery, requirements, architecture incl. ADRs, api),
+# schemas/, gabbe.config.json, .mcp.json, .env.example, README. IGNORE caches/runtime/build/secrets.
+
+# ── Secrets / env ───────────────────────────────────────────────────────────
+# Belt-and-suspenders: ignore every .env variant except the committed example.
+.env*
+!.env.example
+*.pem
+*.key
+
+# ── GABBE kit / wiring / manifest: LOCAL-ONLY (used at runtime, not committed) ─
+# agents/ holds AGENTS.md, CONSTITUTION.md, skills, guides, templates, personas, and the live
+# memory subsystem (PROJECT_STATE, SDLC_TRACKER, RESUME_POINTER, CONTINUITY, AUDIT_LOG, episodic
+# snapshots, semantic knowledge). These persist on disk and any agent resumes from them losslessly;
+# they are simply not version-controlled (canonical GABBE layout). The durable record of decisions
+# also lives in committed docs/ (ADRs, SPEC) so nothing critical is lost from git history.
+agents
+.claude
+.gabbe
+project/state.db
+project/logs/
+project/runs/
+*.gabbe-bak
+*.gabbe-bak/
+
+# ── Python tooling caches (if the optional gabbe CLI is run locally) ─────────
+__pycache__/
+*.pyc
+.venv/
+venv/
+.coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+gabbe.egg-info/
+
+# ── Node / Next.js build output (appears at S05+) ────────────────────────────
+node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+.turbo/
+*.tsbuildinfo
+
+# ── Playwright ephemeral run output (keep the committed visual baselines under e2e/*-snapshots/) ──
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# ── Editor / OS noise ────────────────────────────────────────────────────────
+.DS_Store
+*.log
+*.tmp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# ── Internal contest-strategy docs (for our eyes only — never published; D-31) ──
+
+# Next.js generated
+next-env.d.ts
+.next/types/
+
+# Drizzle generated migrations dir (regenerated)
+# drizzle/   # (keep committed once real migrations exist)

@@ -1,0 +1,78 @@
+{
+  "time": 24,
+  "href": "https://api.reliefweb.int/v2/reports?appname=beacon-fixture-recording&query%5Bvalue%5D=&limit=20&profile=list",
+  "count": 5,
+  "totalCount": 5,
+  "data": [
+    {
+      "id": 4041101,
+      "href": "https://api.reliefweb.int/v2/reports/4041101",
+      "fields": {
+        "title": "Romania: Floods Flash Update No. 1 (as of 10 July 2026)",
+        "url": "https://reliefweb.int/report/romania/romania-floods-flash-update-no-1-10-july-2026",
+        "url_alias": "https://reliefweb.int/node/4041101",
+        "date": {
+          "created": "2026-07-10T08:15:00+00:00",
+          "changed": "2026-07-10T09:02:00+00:00"
+        },
+        "body": "Heavy rainfall across southeastern Romania since 8 July has caused river overflow in Vrancea and Vaslui counties, displacing an estimated 1,200 people and damaging local infrastructure. National civil protection authorities have opened emergency shelters and coordination is ongoing."
+      }
+    },
+    {
+      "id": 4041088,
+      "href": "https://api.reliefweb.int/v2/reports/4041088",
+      "fields": {
+        "title": "United States: California Wildfires Situation Report No. 3 (9 July 2026)",
+        "url": "https://reliefweb.int/report/united-states-america/california-wildfires-situation-report-no-3-9-july-2026",
+        "url_alias": "https://reliefweb.int/node/4041088",
+        "date": {
+          "created": "2026-07-09T17:40:00+00:00",
+          "changed": "2026-07-09T17:40:00+00:00"
+        },
+        "body": "Active fire perimeters remain in Napa and Sonoma counties; CAL FIRE reports containment at 42 percent. Evacuation orders affect roughly 6,500 residents; air quality advisories are in effect across the North Bay."
+      }
+    },
+    {
+      "id": 4040952,
+      "href": "https://api.reliefweb.int/v2/reports/4040952",
+      "fields": {
+        "title": "Philippines: Typhoon Flash Update No. 2 (8 July 2026)",
+        "url": "https://reliefweb.int/report/philippines/philippines-typhoon-flash-update-no-2-8-july-2026",
+        "url_alias": "https://reliefweb.int/node/4040952",
+        "date": {
+          "created": "2026-07-08T05:20:00+00:00",
+          "changed": "2026-07-08T11:10:00+00:00"
+        },
+        "body": "Typhoon-force winds and storm surge affected coastal communities in Eastern Samar. Pre-emptive evacuations moved an estimated 18,000 people to designated evacuation centers ahead of landfall."
+      }
+    },
+    {
+      "id": 4040811,
+      "href": "https://api.reliefweb.int/v2/reports/4040811",
+      "fields": {
+        "title": "Horn of Africa: Drought Response Update (as of 7 July 2026)",
+        "url": "https://reliefweb.int/report/somalia/horn-africa-drought-response-update-7-july-2026",
+        "url_alias": "https://reliefweb.int/node/4040811",
+        "date": {
+          "created": "2026-07-07T12:00:00+00:00",
+          "changed": "2026-07-07T12:00:00+00:00"
+        },
+        "body": "Below-average rainfall for a fifth consecutive season continues to drive acute food insecurity across pastoral areas of Somalia, Ethiopia, and Kenya. Humanitarian partners have scaled up cash and livelihood assistance."
+      }
+    },
+    {
+      "id": 4040670,
+      "href": "https://api.reliefweb.int/v2/reports/4040670",
+      "fields": {
+        "title": "Indonesia: Earthquake Rapid Assessment (as of 6 July 2026)",
+        "url": "https://reliefweb.int/report/indonesia/indonesia-earthquake-rapid-assessment-6-july-2026",
+        "url_alias": "https://reliefweb.int/node/4040670",
+        "date": {
+          "created": "2026-07-06T22:05:00+00:00",
+          "changed": "2026-07-06T23:30:00+00:00"
+        },
+        "body": "A magnitude 6.1 earthquake struck off the coast of Sulawesi. Initial assessments report structural damage to two health facilities and disruption of the regional power grid; no tsunami warning was issued."
+      }
+    }
+  ]
+}
