@@ -12,6 +12,8 @@
 > evidence, production readiness, what's genuinely new, and the honest limitations. Everything below and
 > throughout `docs/` is the supporting detail behind it.
 
+> **Access.** Repository: https://github.com/andreibesleaga/QUEST-BEACON · Live deployment: https://quest-beacon.up.railway.app. Both are private during judging; **access is granted on request** (the sign-in accounts come with it). No access is needed to evaluate: **the uploaded archive is the complete, self-contained product** — `docker compose -f infra/docker-compose.yml up -d --build` reproduces the full COP with zero keys and zero network.
+
 ## Why it exceeds the brief
 
 Promised a concept → shipped a **live deployment** and one-command local reproduction with zero keys.
@@ -55,7 +57,7 @@ board with tasking, shelter capacity-vs-demand and pre-positioning from predicti
 front of every model call · real Telegram broadcast of human-approved alerts · live camera layers and
 external context deep-links · a WCAG 2.2-AA crisis-first UI that works air-gapped.
 
-**Live deployment:** https://quest-beacon.up.railway.app — production posture, named-account sign-in.
+**Repository:** https://github.com/andreibesleaga/QUEST-BEACON · **Live deployment:** https://quest-beacon.up.railway.app — production posture, named-account sign-in. Both private during judging; **access on request**. Not required: the uploaded archive is the complete product and runs locally with one command (below).
 
 *Where the detail lives:* per-source verdicts in
 [`audit/DATA_SOURCE_VERIFICATION.md`](audit/DATA_SOURCE_VERIFICATION.md) · the delivery history in
@@ -118,6 +120,7 @@ project has been fighting, and it has bitten here before** (`depcruise 0/723`, `
 |---|---|
 | [docs/QUICK_GUIDE.md](docs/QUICK_GUIDE.md) | one-page map of everything |
 | [docs/OPERATOR_GUIDE.md](docs/OPERATOR_GUIDE.md) | **how to use it** — SitRep, logistics/tasking, evacuation routing, per role |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | **deploy it anywhere** — laptop, Docker host, Railway (reference), Kubernetes (`infra/k8s/`), Cloud Run/ECS/Fly; the four postures and the build-time-vs-runtime trap |
 | [docs/LIVE_PRODUCTION_GUIDE.md](docs/LIVE_PRODUCTION_GUIDE.md) | **run it for real** — every source live, real Postgres, real AI/alerts/routing, worldwide (and the honest ceiling: **35 of 44** adapters can serve live) |
 | [docs/architecture/C4_ARCHITECTURE.md](docs/architecture/C4_ARCHITECTURE.md) | **architecture diagrams** (C4 L1–L3 + runtime flows) + the 37-ADR index |
 | [docs/SPEC.md](docs/SPEC.md) | the contract of record — **§13 is the limitations ledger** |

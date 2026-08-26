@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: beacon
+resources:
+  - 00-namespace.yaml
+  - 10-config.yaml
+  - 20-secrets.yaml          # your filled copy of 20-secrets.example.yaml (never committed)
+  - 30-postgres.yaml         # delete this line when using a managed database
+  - 40-migrate-job.yaml
+  - 50-app.yaml
+  - 60-hpa.yaml
+images:
+  - name: ghcr.io/YOUR_ORG/beacon
+    newTag: v1.0.0

@@ -67,12 +67,12 @@ tier CLOUD`), with per-role rate limits and ADR-018 budget caps (`BUDGET_PER_*_U
    AUTH_USERS=<id:ROLE:password triples — the judge accounts you provision (see §1); comma-separated>
    NEXT_PUBLIC_AUTH_TOKEN_LOGIN=on   # BUILD-time flag (inlined by `next build`) — reveals the toolbar sign-in
    NEXT_PUBLIC_DEPLOY_POSTURE=live   # BUILD-time flag — green LIVE chip; hides the DEV tag + role switcher
-   # Durable store (Railway Postgres)
-   FEATURE_STORE=postgres
+   # Store: memory = demo posture (fresh seed every boot, fastest); postgres = durable (needs step 5)
+   FEATURE_STORE=memory
    DATABASE_URL=${{Postgres.DATABASE_URL}}
    # Live data + AI — same values as the local live profile in .env:
    DATA_SOURCE_COMPOSITION=adapters
-   AI_MODE=cloud
+   AI_MODE=off       # cloud narration exceeds Railway's 60 s edge timeout on the SitRep read path — see docs/DEPLOYMENT.md §6
    COMPLIANCE_PROXY_ENABLED=on
    # …then copy every SOURCE_*_MODE, key (FIRMS_MAP_KEY, GLOFAS_CDS_KEY, OPENCELLID_API_KEY,
    # WINDY_WEBCAMS_API_KEY, RELIEFWEB_APPNAME, ORS_API_KEY), LLM_TIER_*, NWS_USER_AGENT,
@@ -108,6 +108,11 @@ tier CLOUD`), with per-role rate limits and ADR-018 budget caps (`BUDGET_PER_*_U
    curl -s -H 'x-beacon-role: EM' $BASE/api/v1/reports -o /dev/null -w '%{http_code}\n'   # 403 — spoof dead
    curl -s -H "Authorization: Bearer $EM_TOKEN" $BASE/api/v1/reports -o /dev/null -w '%{http_code}\n'  # 200
    ```
+
+**As deployed for judging (2026-08-26):** `FEATURE_STORE=memory`, `AI_MODE=off`, posture `live`,
+named accounts on, 9 sources LIVE on `us-ca`. The Postgres service stays populated (migrated + seeded)
+and is browsable through the Directus admin UI — [`DEMO_INFRA_RAILWAY.md`](DEMO_INFRA_RAILWAY.md).
+Flip `FEATURE_STORE=postgres` to make the app write to it.
 
 TLS: terminated by Railway's edge (automatic HTTPS on `*.up.railway.app`) — the app needs no TLS
 config of its own.

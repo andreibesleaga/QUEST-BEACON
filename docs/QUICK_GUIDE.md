@@ -14,7 +14,7 @@ Deterministic engine owns every number · LLM narrates cited facts and cannot em
 approves every public action. IEEE Response Quest 2026, Phase 3. North-Star: **cited picture < 10 s**.
 
 ## Run
-From the project root (`Phase3/`), one command, no keys, no network:
+From the repository root, one command, no keys, no network:
 ```bash
 docker compose -f infra/docker-compose.yml up -d --build   # Postgres → migrations → app
 open http://localhost:3000
@@ -25,7 +25,7 @@ project root exits 1 with *"no configuration file provided: not found"*.
 Without Docker: `nvm use && npm install && npm run dev`. Defaults are air-gapped (`AI_MODE=off`, sources
 cached/mock) and still render a full COP from the built-in demo seed.
 
-**Gate commands** (exact — see `agents/AGENTS.md` §2, local-only, mirrored in `README.md`):
+**Gate commands** (exact — the same ones CI runs, mirrored in `README.md`):
 ```bash
 ./node_modules/.bin/eslint .            # 0
 ./node_modules/.bin/tsc --noEmit        # 0
@@ -44,6 +44,7 @@ The measured results live in **one place — `README.md` § Gates** — and are 
 | Contract of record — **§13 is the limitations ledger** | `docs/SPEC.md` + `docs/api/openapi.yaml` + `schemas/` |
 | Requirements | `docs/requirements/PRD.md` (FR-1…16 + EARS) |
 | **Quality bar / Definition of Done (every phase)** | `docs/ENGINEERING_PRINCIPLES.md` |
+| **Deploy anywhere** (local · Docker · Railway · Kubernetes · other clouds) | `docs/DEPLOYMENT.md` → `infra/docker-compose.yml`, `infra/k8s/` |
 | Config (12-factor, everything env) | `docs/architecture/CONFIGURATION.md` + `.env.example` |
 | Data sources + verdicts (LIVE/CACHED/MOCK) + consumption counts | `audit/DATA_SOURCE_VERIFICATION.md` (§0 = wired/consumed authority; §10 = deep fallback catalog) |
 | Data-source attribution + licences | `NOTICE` |
@@ -67,8 +68,7 @@ AGENTS/CONSTITUTION frozen · **an unverified thing is "unverified", never "fine
 *what executes it?*, and cite the `file:line` in CODE.
 
 ## Status
-Built, gated and documented; **at the S08 hard stop**, in the pre-submission repo/video/live-verification
-pass. The largest untested surface is that **nothing has yet run against live third-party APIs** — every
-gate to date ran offline with MOCK sources and AI off; live verification followed with real keys
-(per-source record: `audit/DATA_SOURCE_VERIFICATION.md`).
+Built, gated, live-verified and deployed: https://quest-beacon.up.railway.app (reference deployment), one-command
+local reproduction, Kubernetes manifests in `infra/k8s/`. Gates and figures live in **`README.md` § Gates** and
+`JUDGE_MATRIX.md` §1. Live third-party verification, including a real-model AI run: `docs/audit/LIVE_VERIFICATION.md`.
 Open findings and honest limitations: `docs/SPEC.md` §13 and `docs/audit/UNIMPLEMENTED_REGISTER.md`.

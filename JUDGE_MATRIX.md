@@ -6,12 +6,14 @@ situational synthesis, human-gated alerting, evacuation routing and responder lo
 
 | | |
 |---|---|
-| **Live deployment** | https://quest-beacon.up.railway.app (production posture; sign-in accounts provided with the submission, access on-request basis) |
-| **Repository** | https://github.com/andreibesleaga/QUEST-BEACON (production repo, access on-request basis) |
+| **Live deployment** | https://quest-beacon.up.railway.app — production posture; **access on request** (sign-in accounts provided with it) |
+| **Repository** | https://github.com/andreibesleaga/QUEST-BEACON — **access on request**; not required — the uploaded archive is the complete, self-contained product |
 | **Reproduce locally** | `npm run docker:up` → http://localhost:3000 — full COP with **zero keys, zero egress, ~$0** |
 | **License / data** | Apache-2.0; 100 % open-source dependencies; free/open data sources only |
 | **Phase-2 concept score** | **4.48 / 5** (Review Committee 1, 10 evaluators) — advanced to Phase 3 |
 | **Entrant** | Andrei Nicolae Besleaga (individual entry, active IEEE member) |
+
+> **Access.** Repository: https://github.com/andreibesleaga/QUEST-BEACON · Live deployment: https://quest-beacon.up.railway.app. Both are private during judging; **access is granted on request** (the sign-in accounts come with it). No access is needed to evaluate: **the uploaded archive is the complete, self-contained product** — `docker compose -f infra/docker-compose.yml up -d --build` reproduces the full COP with zero keys and zero network.
 
 > **Submission cut-off & living repository.** The product submitted to the contest is the repository
 > state at the submission tag — everything the judges evaluate is frozen there and reproducible from it.
@@ -184,9 +186,9 @@ architecture: [docs/architecture/](docs/architecture/) · CI/CD standard: [docs/
 
 | Surface | Where |
 |---|---|
-| **Live cloud deployment** | https://quest-beacon.up.railway.app — production posture (dev seams hard-off), named-account sign-in, Postgres-durable |
+| **Live cloud deployment** | https://quest-beacon.up.railway.app — production posture (dev seams hard-off), named-account sign-in; runs the demo posture (in-memory seed) beside a migrated, seeded Postgres browsable in a Directus admin UI |
 | One-command local reproduction | `npm run docker:up` (Postgres + migrations + seeds + app); air-gapped mode works with zero config |
-| Cloud deploy runbook | [docs/CLOUD_DEPLOY_RAILWAY.md](docs/CLOUD_DEPLOY_RAILWAY.md) |
+| **Deploy anywhere** | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) — local, any Docker host, Railway (reference: [docs/CLOUD_DEPLOY_RAILWAY.md](docs/CLOUD_DEPLOY_RAILWAY.md)), **Kubernetes manifests** (`infra/k8s/`, kustomize: migration Job, HPA, SSE-aware Ingress), Cloud Run / ECS / Fly |
 | CI (blocking) | `.github/workflows/ci.yml` — static, unit (+coverage floors), build, integration (real Postgres, 19-table assertion), browser (Playwright), security (gitleaks, CodeQL, OSV, npm audit) |
 | Operator guide | [docs/OPERATOR_GUIDE.md](docs/OPERATOR_GUIDE.md) — the monitor→assess→decide→act workflow |
 | **Full-live production guide** | [docs/LIVE_PRODUCTION_GUIDE.md](docs/LIVE_PRODUCTION_GUIDE.md) — how to run BEACON as a real EWS: every live-capable source live, real PostgreSQL behind logistics/reports/audit, real AI, real alert delivery, real road routing, any region worldwide. **States the honest ceiling: 35 of 44 adapters can serve live** (26 keyless, 9 on free credentials); the other nine are named individually with their upstream evidence |

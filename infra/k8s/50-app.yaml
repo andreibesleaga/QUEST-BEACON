@@ -1,0 +1,103 @@
+# BEACON — the application. Stateless (all state in Postgres when FEATURE_STORE=postgres), so replicas
+# scale horizontally. NOTE: NEXT_PUBLIC_* flags are BUILD-time (inlined by `next build`) — they are
+# passed as Docker build args, not here; see docs/DEPLOYMENT.md § "Build-time vs runtime variables".
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beacon
+  namespace: beacon
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: beacon }
+  template:
+    metadata:
+      labels: { app: beacon }
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      initContainers:
+        - name: wait-for-migration
+          image: bitnami/kubectl:latest
+          command: ["sh", "-c", "until kubectl -n beacon get job beacon-migrate -o jsonpath='{.status.succeeded}' | grep -q 1; do echo waiting for migration; sleep 5; done"]
+      containers:
+        - name: app
+          image: ghcr.io/YOUR_ORG/beacon:latest
+          ports: [{ containerPort: 3000, name: http }]
+          envFrom:
+            - configMapRef: { name: beacon-config }
+            - secretRef: { name: beacon-secrets }
+          # /api/v1/health is static ({status: ok}, no DB) — safe for liveness.
+          livenessProbe:
+            httpGet: { path: /api/v1/health, port: http }
+            initialDelaySeconds: 40
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 10
+          readinessProbe:
+            httpGet: { path: /api/v1/health, port: http }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 250m, memory: 512Mi }
+            limits: { cpu: "2", memory: 2Gi }
+      serviceAccountName: beacon
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: beacon
+  namespace: beacon
+---
+# Minimal RBAC so the initContainer may read the migration Job status.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: beacon-read-jobs
+  namespace: beacon
+rules:
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: beacon-read-jobs
+  namespace: beacon
+subjects:
+  - { kind: ServiceAccount, name: beacon, namespace: beacon }
+roleRef: { kind: Role, name: beacon-read-jobs, apiGroup: rbac.authorization.k8s.io }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beacon
+  namespace: beacon
+spec:
+  selector: { app: beacon }
+  ports: [{ port: 80, targetPort: http }]
+---
+# Ingress. SSE (FEATURE_REALTIME=sse) needs long-lived responses: raise the proxy read timeout and
+# disable buffering, or the live push silently degrades to the 15 s polling fallback.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: beacon
+  namespace: beacon
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    cert-manager.io/cluster-issuer: letsencrypt   # optional — remove if you terminate TLS elsewhere
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [beacon.your-agency.example]
+      secretName: beacon-tls
+  rules:
+    - host: beacon.your-agency.example
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: { service: { name: beacon, port: { number: 80 } } }

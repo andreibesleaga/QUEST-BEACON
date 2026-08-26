@@ -1,0 +1,33 @@
+# BEACON — non-secret runtime configuration. Every key mirrors `.env.example`; anything not listed
+# takes the application default (air-gapped: AI off, sources cached/mock). Edit, then `kubectl apply -k`.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: beacon-config
+  namespace: beacon
+data:
+  NODE_ENV: "production"
+  APP_PORT: "3000"
+  DEPLOY_MODE: "cloud"
+  # memory = demo posture (fresh seed every boot) · postgres = durable logistics/reports/audit
+  FEATURE_STORE: "postgres"
+  FEATURE_SPATIAL: "turf"
+  FEATURE_CACHE: "memory"
+  FEATURE_QUEUE: "cron"
+  FEATURE_EVENTBUS: "memory"
+  FEATURE_REALTIME: "sse"
+  # AI: off = deterministic-only (fast, honest label). See docs/DEPLOYMENT.md §"AI narration latency"
+  # before turning cloud on behind an ingress with a request timeout under ~120 s.
+  AI_MODE: "off"
+  COMPLIANCE_PROXY_ENABLED: "on"
+  DATA_SOURCE_COMPOSITION: "adapters"
+  RETENTION_SWEEP_ENABLED: "on"
+  RETENTION_SWEEP_INTERVAL_SEC: "3600"
+  # Keyless live sources (safe defaults). Add SOURCE_<PREFIX>_MODE=live + keys per docs/LIVE_PRODUCTION_GUIDE.md.
+  SOURCE_NWS_MODE: "live"
+  SOURCE_NWPS_MODE: "live"
+  SOURCE_OPEN_METEO_MODE: "live"
+  SOURCE_GDACS_MODE: "live"
+  SOURCE_GDELT_MODE: "live"
+  SOURCE_AGENCYRSS_MODE: "live"
+  NWS_USER_AGENT: "BEACON (contact: ops@your-agency.example)"

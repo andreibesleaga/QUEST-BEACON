@@ -1,0 +1,21 @@
+# BEACON — one-shot schema migration. Runs `scripts/migrate.mjs` (idempotent, fail-fast) from the SAME
+# runtime image the app uses; the app Deployment waits for it via an initContainer. Re-apply on every
+# image upgrade: `kubectl -n beacon delete job beacon-migrate; kubectl apply -k infra/k8s`.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: beacon-migrate
+  namespace: beacon
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: ghcr.io/YOUR_ORG/beacon:latest   # built from infra/Dockerfile (target: runner)
+          command: ["node", "scripts/migrate.mjs"]
+          envFrom:
+            - configMapRef: { name: beacon-config }
+            - secretRef: { name: beacon-secrets }

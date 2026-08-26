@@ -72,3 +72,7 @@ next-env.d.ts
 
 # Drizzle generated migrations dir (regenerated)
 # drizzle/   # (keep committed once real migrations exist)
+
+# Kubernetes: filled secret manifests never leave the machine
+infra/k8s/*secrets.yaml
+!infra/k8s/*secrets.example.yaml
