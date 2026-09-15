@@ -1,7 +1,7 @@
 # BEACON — Browser-based Emergency Awareness & Coordination Open Network
 
 > Open-source, **local-first**, near-real-time **common operating picture (COP)** for wildfires and floods.
-> One browser app that ingests free/authoritative data through multiple optional pluggable adapters, fuses it into a
+> One browser/mobile app (PWA capable) that ingests free/authoritative data through multiple optional pluggable adapters, fuses it into a
 > **source-cited AI situational report**, and ties it to **responder logistics** — working **offline**
 > and at ≈ $0, so a real agency could self-host it with no licensing or lock-in.
 >
