@@ -1,0 +1,52 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [22.0, 37.5] },
+      "properties": {
+        "id": 50001,
+        "firedate": "2026-07-04T13:20:00",
+        "country": "GR",
+        "place": "Peloponnese active fire detection"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [25.55, 45.6], [25.65, 45.6], [25.65, 45.7], [25.55, 45.7], [25.55, 45.6]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 50002,
+        "firedate": "2026-07-03",
+        "lastupdate": "2026-07-05T09:00:00Z",
+        "country": "RO",
+        "area_ha": 812.4,
+        "place": "Brasov county burnt area (RO demo)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-8.05, 40.0], [-7.95, 40.0], [-7.95, 40.1], [-8.05, 40.1], [-8.05, 40.0]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 50003,
+        "firedate": "2026-07-02",
+        "country": "PT",
+        "area_ha": 2350.8,
+        "place": "Coimbra district burnt area"
+      }
+    }
+  ]
+}

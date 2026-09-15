@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/d5-rumor-board.schema.json",
+  "title": "BEACON D5 rumor / misinformation board (FR-D4-1, FEV-20)",
+  "description": "The wire shape of the read-only rumor board projected from a completed deterministic news-grounding pass (src/application/coordination/rumor-board.ts). It carries ALREADY-FLAGGED signals with their flag reason and corroboration state; it never adjudicates truth and never merges a flagged item into a fact. Two invariants are encoded as CONSTS rather than described in prose: every row's `flagged` is `true` and every row's `corroboratingSourceCount` is `0`, so a corroborated fact is not a valid row of this document. Aggregate-only (Art. XIV): a row identifies an OUTLET and a claim, never a person — the schema walk in the D5 aggregate-only test enforces that.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["rows", "summary", "caveat"],
+  "properties": {
+    "rows": {
+      "type": "array",
+      "description": "Flagged signals, in the deterministic order the grounding pass minted them.",
+      "items": { "$ref": "#/$defs/rumorRow" }
+    },
+    "summary": { "$ref": "#/$defs/summary" },
+    "caveat": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The caveat every rumor surface renders: listing is routing for human review, not a verdict."
+    }
+  },
+  "$defs": {
+    "rumorRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "claim",
+        "sourceId",
+        "citationId",
+        "flagged",
+        "corroboratingSourceCount",
+        "reason",
+        "disposition"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The grounded-fact field id (e.g. `news-unverified-1`) — stable and deterministic."
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The deterministic claim sentence, which already carries the flag reason in words."
+        },
+        "sourceId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SOURCE_RECORD id of the outlet that carried the signal (`news:<host>`) — an outlet, not a person."
+        },
+        "citationId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable citation id for this grounding."
+        },
+        "flagged": {
+          "const": true,
+          "description": "Always true. A non-flagged fact is not representable as a row (FEV-20's never-merge rule)."
+        },
+        "corroboratingSourceCount": {
+          "const": 0,
+          "description": "Always 0. A flagged item contributes nothing to corroboration, by contract."
+        },
+        "reason": {
+          "type": "string",
+          "enum": ["NO_AUTHORITATIVE_CORROBORATION"],
+          "description": "Why the deterministic pass flagged it. Mirrors RUMOR_FLAG_REASONS (pinned by test)."
+        },
+        "disposition": {
+          "const": "FLAGGED_NOT_MERGED",
+          "description": "Says out loud, on every row and at every render site, what happened to this item."
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["corroboratedFactCount", "flaggedCount", "corroboration"],
+      "description": "Counts carried through BY IDENTITY from the grounding pass — never recomputed by the board.",
+      "properties": {
+        "corroboratedFactCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Authoritative corroborated facts minted by the same pass — context, never blended with the flagged rows."
+        },
+        "flaggedCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Flagged items; equals rows.length."
+        },
+        "corroboration": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "[0,1] corroboration strength of the AUTHORITATIVE stream only."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "purpose": "D5.4 damage/needs fixture. Each row is fed through the REAL makeDamageAssessmentEntry factory (src/domain/damage-assessment.ts), whose `report` slice is a Pick of the UNCHANGED PublicReport pipeline — so a triage state that the pipeline cannot produce cannot appear in this fixture either.",
+    "clock": "fixed — no timestamps are needed by the assessment (it is clock-free); the report slice carries only id/status/incidentId",
+    "coverage": "all four triage states (UNVERIFIED, TRIAGED, VERIFIED, REJECTED), all three categories, several severities and need kinds — so the buckets that must never be summed are all non-empty",
+    "privacy": "Art. XIV — the rows carry report ids and site counts. No reporter, no name, no contact, no casualty."
+  },
+  "incidentId": "inc-1",
+  "entries": [
+    { "report": { "id": "rep-001", "status": "VERIFIED", "incidentId": "inc-1" }, "category": "DAMAGE", "severity": "DESTROYED", "siteCount": 3 },
+    { "report": { "id": "rep-002", "status": "VERIFIED", "incidentId": "inc-1" }, "category": "DAMAGE", "severity": "MODERATE", "siteCount": 11 },
+    { "report": { "id": "rep-003", "status": "VERIFIED", "incidentId": "inc-1" }, "category": "NEED", "needKind": "WATER" },
+    { "report": { "id": "rep-004", "status": "TRIAGED", "incidentId": "inc-1" }, "category": "DAMAGE", "severity": "SEVERE", "siteCount": 2 },
+    { "report": { "id": "rep-005", "status": "TRIAGED", "incidentId": "inc-1" }, "category": "NEED", "needKind": "HEALTH" },
+    { "report": { "id": "rep-006", "status": "UNVERIFIED", "incidentId": "inc-1" }, "category": "DAMAGE", "severity": "MINOR", "siteCount": 40 },
+    { "report": { "id": "rep-007", "status": "UNVERIFIED", "incidentId": "inc-1" }, "category": "SOS" },
+    { "report": { "id": "rep-008", "status": "UNVERIFIED", "incidentId": "inc-1" }, "category": "NEED", "needKind": "POWER" },
+    { "report": { "id": "rep-009", "status": "REJECTED", "incidentId": "inc-1" }, "category": "DAMAGE", "severity": "DESTROYED", "siteCount": 500 }
+  ]
+}

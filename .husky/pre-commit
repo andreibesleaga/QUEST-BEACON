@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+# BEACON — pre-commit hook (fast, staged-safe subset of the 7 gates: format → lint → types).
+#
+# NOT wired yet: enabling husky is a one-time setup that edits package.json (a protected file), so it is
+# left as a deliberate follow-up (see CONTRIBUTING.md §6 and .github/PINNING_CHECKLIST.md):
+#
+#     npm i -D husky lint-staged
+#     npm pkg set scripts.prepare="husky"
+#     npm run prepare        # installs git hooks so this file runs on `git commit`
+#
+# Until then this script is inert (git does not run .husky/* without husky installed). It is intentionally
+# a FAST subset — the full suite (coverage, integration, browser, security) runs in CI, not on every commit.
+# Do not bypass with `git commit --no-verify` in normal flow.
+
+npm run format:check && npm run lint && npm run typecheck

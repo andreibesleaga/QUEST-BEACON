@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/adapter-manifest.schema.json",
+  "title": "BEACON Adapter Registry / Manifest",
+  "description": "Validates the adapter registry manifest (adapter-contract.md §5 'Registry / manifest format'; SPEC §4.2; FR-10/OP2/OP3). The composition root (src/main) builds the registry from this manifest and VALIDATES IT AGAINST THIS SCHEMA AT BOOT — fail-fast (F10/U5): every module must export a SourceAdapterPort, every port must be a known port id, every config prefix must resolve required keys/URLs for its mode. Adding a source = add one manifest entry + an adapter file; zero core change. Field set is canonical per adapter-contract §5 (tagged-object Coverage, LIVE|CACHED|MOCK mode, circuitBreaker/cache/mock blocks, license).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["adapters"],
+  "properties": {
+    "$schemaVersion": {
+      "type": "string",
+      "description": "Manifest schema version (adapter-contract §5, e.g. '1.0'). Optional; lets the registry detect manifest-format drift at boot.",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "adapters": {
+      "type": "array",
+      "minItems": 1,
+      "description": "The registered source adapters. Each entry maps 1:1 to a SourceAdapterPort implementation and to a SOURCE_RECORD.adapter id.",
+      "items": { "$ref": "#/$defs/adapterEntry" }
+    }
+  },
+  "$defs": {
+    "mode": {
+      "type": "string",
+      "description": "Redundancy-ladder mode (CONFIGURATION §6/§11; SOURCE_<NAME>_MODE). LIVE = upstream; CACHED = last-known-good; MOCK = recorded fixture.",
+      "enum": ["LIVE", "CACHED", "MOCK"]
+    },
+    "coverage": {
+      "description": "Where this adapter has data (adapter-contract §3 Coverage; drives OP4 'not available in this region'). A tagged object discriminated by 'kind'.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": {
+            "kind": { "const": "GLOBAL" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "bbox"],
+          "properties": {
+            "kind": { "const": "BBOX" },
+            "bbox": {
+              "type": "array",
+              "description": "[minLon, minLat, maxLon, maxLat] (WGS-84).",
+              "items": { "type": "number" },
+              "minItems": 4,
+              "maxItems": 4
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "iso"],
+          "properties": {
+            "kind": { "const": "COUNTRIES" },
+            "iso": {
+              "type": "array",
+              "description": "ISO-3166-1 alpha-2 country codes this adapter covers.",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}$"
+              },
+              "minItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "adapterEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "One adapter registration (adapter-contract §5).",
+      "required": ["id", "port", "coverage", "mode", "intervalSec", "license"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "description": "Stable adapter id == SourceAdapterPort.id == SourceRecord.adapter (e.g. 'osm-overpass'). kebab-case."
+        },
+        "port": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Which port interface this adapter implements (e.g. 'Infrastructure', 'HazardSource', 'FloodGauge'). The registry rejects unknown port ids at boot."
+        },
+        "entity": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Optional canonical entity this adapter produces (e.g. 'InfrastructureNode')."
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Display/canonical upstream name -> SourceRecord.source (e.g. 'OSM Overpass')."
+        },
+        "module": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Dynamic import path of the adapter implementation (e.g. '@/adapters/osm-overpass-adapter'). Must export a SourceAdapterPort (boot check)."
+        },
+        "coverage": { "$ref": "#/$defs/coverage" },
+        "mode": { "$ref": "#/$defs/mode" },
+        "intervalSec": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Poll cadence in seconds (SOURCE_<NAME>_INTERVAL_SEC override; adapter-contract §5 intervalSecOverride)."
+        },
+        "configPrefix": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Env prefix the adapter reads (e.g. 'OVERPASS' -> SOURCE_OVERPASS_MODE / _INTERVAL_SEC / endpoint). The registry checks required keys/URLs resolve for the active mode."
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Data license -> SourceRecord.license, tracked in NOTICE (Art. XI), e.g. 'ODbL', 'Public Domain (US Gov)'."
+        },
+        "attribution": {
+          "type": "string",
+          "description": "Optional required attribution string (e.g. '© OpenStreetMap contributors')."
+        },
+        "cache": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Last-known-good cache block (adapter-contract §3.1; SPEC §4.3).",
+          "required": ["ttlSec"],
+          "properties": {
+            "ttlSec": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Cache TTL in seconds (CACHE_TTL_SEC analog; default 900)."
+            }
+          }
+        },
+        "circuitBreaker": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Circuit-breaker config (adapter-contract §3.1; SPEC §8.1).",
+          "required": ["failureThreshold", "cooldownSec"],
+          "properties": {
+            "failureThreshold": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Consecutive failures before the breaker trips OPEN."
+            },
+            "cooldownSec": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Seconds the breaker stays OPEN (short-circuit to cache/mock) before HALF_OPEN."
+            },
+            "halfOpenTrials": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Trial calls allowed through in HALF_OPEN before re-closing/re-opening."
+            }
+          }
+        },
+        "mock": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Recorded-mock fallback block (adapter-contract §3.1; OP3). Enables the air-gapped acceptance test (F5).",
+          "required": ["fixture"],
+          "properties": {
+            "fixture": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Fixture path under MOCK_FIXTURES_DIR (e.g. 'osm-overpass/lifelines.json')."
+            }
+          }
+        },
+        "verifiedTier": {
+          "type": "string",
+          "description": "Verified verdict per audit/DATA_SOURCE_VERIFICATION.md.",
+          "enum": ["LIVE", "CACHED", "MOCK"]
+        },
+        "gaugeUnit": {
+          "type": "string",
+          "minLength": 1,
+          "description": "FloodGauge adapters only (ADR-012 — config, not code): the unit this source publishes its Gauge.stage / Gauge.crestForecast figures in, VERBATIM (e.g. 'ft', 'm³/s'). The canonical Gauge entity carries plain numbers and no unit, and the unit differs per source, so this row is what lets a SERVED gauge reading be surfaced as a labeled figure in the SitRep's crest fact (Art. XII). An adapter with no gaugeUnit has its numeric readings OMITTED from the fact rather than printed bare or guessed — mis-stating feet as metres on a river is worse than omitting the number. Per-ADAPTER, never per-region: adding a zone never touches this."
+        }
+      }
+    }
+  }
+}

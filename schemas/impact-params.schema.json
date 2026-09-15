@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.example/schemas/impact-params.schema.json",
+  "title": "BEACON predicted-impact parameter set",
+  "description": "Validates config/impact-params.json — every threshold and literature parameter the four predicted-impact quantifications use (ADR-035 §1(b)/(d)/§3, FR-PAP-2/FR-PAP-4). Parameters are DATA, never literals in a use-case (ADR-012 / Art. XV): a figure whose assumption is not visible and swappable is not an honest figure. Each entry MUST carry its unit, a human label, a citation for the METHOD it parameterises, and `verified` — whether the VALUE itself is a published literature value. A new parameter cannot be added without stating all four.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "parameterSetId", "authority", "verifiedConvention", "parameters"],
+  "properties": {
+    "version": { "const": 1 },
+    "parameterSetId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{2,63}$",
+      "description": "Stable id reported on every figure computed from this set, so a published number can be traced to the exact assumptions behind it."
+    },
+    "authority": { "$ref": "#/$defs/prose" },
+    "verifiedConvention": { "$ref": "#/$defs/prose" },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minReportableCount",
+        "shelterSeekingFraction",
+        "participationFraction",
+        "occupantsPerVehicle",
+        "egressCapacityVehPerHour",
+        "loadingTimeHours",
+        "maxAssignmentRadiusKm",
+        "minResidentsForSirenFlag",
+        "minSiteLossFraction"
+      ],
+      "properties": {
+        "minReportableCount": { "$ref": "#/$defs/countParameter" },
+        "shelterSeekingFraction": { "$ref": "#/$defs/fractionParameter" },
+        "participationFraction": { "$ref": "#/$defs/fractionParameter" },
+        "occupantsPerVehicle": { "$ref": "#/$defs/positiveParameter" },
+        "egressCapacityVehPerHour": { "$ref": "#/$defs/positiveParameter" },
+        "loadingTimeHours": { "$ref": "#/$defs/nonNegativeParameter" },
+        "maxAssignmentRadiusKm": { "$ref": "#/$defs/positiveParameter" },
+        "minResidentsForSirenFlag": { "$ref": "#/$defs/countParameter" },
+        "minSiteLossFraction": { "$ref": "#/$defs/fractionParameter" }
+      }
+    }
+  },
+  "$defs": {
+    "prose": { "type": "string", "minLength": 40 },
+    "parameterBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit", "label", "citation", "verified"],
+      "properties": {
+        "value": { "type": "number" },
+        "unit": { "type": "string", "minLength": 1 },
+        "label": {
+          "type": "string",
+          "minLength": 40,
+          "description": "What the parameter means AND what it is not. An unverified value must say so in words here, not only in the `verified` flag."
+        },
+        "citation": { "$ref": "#/$defs/prose" },
+        "verified": {
+          "type": "boolean",
+          "description": "true only when the VALUE is a published literature value. The method citation alone never justifies true."
+        }
+      }
+    },
+    "fractionParameter": {
+      "allOf": [
+        { "$ref": "#/$defs/parameterBase" },
+        { "properties": { "value": { "type": "number", "minimum": 0, "maximum": 1 } } }
+      ]
+    },
+    "positiveParameter": {
+      "allOf": [
+        { "$ref": "#/$defs/parameterBase" },
+        { "properties": { "value": { "type": "number", "exclusiveMinimum": 0 } } }
+      ]
+    },
+    "nonNegativeParameter": {
+      "allOf": [
+        { "$ref": "#/$defs/parameterBase" },
+        { "properties": { "value": { "type": "number", "minimum": 0 } } }
+      ]
+    },
+    "countParameter": {
+      "allOf": [
+        { "$ref": "#/$defs/parameterBase" },
+        { "properties": { "value": { "type": "integer", "minimum": 1 } } }
+      ]
+    }
+  }
+}

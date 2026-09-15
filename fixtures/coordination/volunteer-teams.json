@@ -1,0 +1,15 @@
+{
+  "_meta": {
+    "purpose": "S3·U1 volunteer-team fixture (FR-D6-1, FEATURE_D6_VOLUNTEER_TEAMS). Each row is fed through the REAL makeVolunteerTeamFields factory (src/application/aggregate/volunteer-team.ts), so the callsign pattern/maxLength (READ from schemas/d6-volunteer-team.schema.json), the non-negative headcount tally and the closed availability enum all hold on the fixture itself.",
+    "provenance": "HAND-SEEDED demo teams. There is no volunteer-registry source adapter in BEACON; GET /volunteer-teams serves this as MOCK and says so in provenance[] (Art. XVI).",
+    "privacy": "Art. XIV / ADR-035 §4 — a team is a UNIT: a callsign, a headcount tally and capability tags. No roster, no member, no name, no contact anywhere in this file.",
+    "coverage": "all three availability states, a zero-headcount stood-up unit, and a team with no skills tags — so every optional render path is non-empty somewhere",
+    "shape": "{ id } + src/application/aggregate/volunteer-team.ts MakeVolunteerTeamFieldsInput[]"
+  },
+  "teams": [
+    { "id": "team-alpha-3", "callsign": "TEAM ALPHA 3", "headcount": 12, "skills": ["chainsaw", "first aid"], "availability": "AVAILABLE" },
+    { "id": "team-bravo-1", "callsign": "TEAM BRAVO 1", "headcount": 8, "skills": ["swiftwater"], "availability": "COMMITTED" },
+    { "id": "team-charlie-7", "callsign": "TEAM CHARLIE 7", "headcount": 0, "availability": "AVAILABLE" },
+    { "id": "team-delta-2", "callsign": "TEAM DELTA 2", "headcount": 15, "skills": ["debris clearance", "logistics"], "availability": "OFF_DUTY" }
+  ]
+}

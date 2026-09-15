@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/d5-shelter-status.schema.json",
+  "title": "BEACON D5 shelter status board (FR-D4-3, FEV-22)",
+  "description": "The wire shape of the shelter SUPPLY board (src/application/coordination/shelter-status.ts) and of its RFC-4180 CSV export's columns. AGGREGATE-ONLY (Art. XIV): a row is counts plus a ratio — there is no occupant, household or roster field, and deliberately no `geom` (a shelter's precise point stays in the role-gated map projection and never enters a file that leaves the system). Provenance is REQUIRED and typed with the domain's own SOURCE_MODES, because shelters are still hand-seeded (no shelter source adapter exists — findings F-35/F-154) and a board must never read as live data (Art. XVI).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["rows", "totals", "provenance", "provenanceClaim"],
+  "properties": {
+    "rows": { "type": "array", "items": { "$ref": "#/$defs/shelterRow" } },
+    "totals": { "$ref": "#/$defs/totals" },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "provenanceClaim": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The rendered provenance sentence. It can only contain the word 'Live' when mode is LIVE."
+    }
+  },
+  "$defs": {
+    "shelterStatus": {
+      "type": "string",
+      "enum": ["OPEN", "FULL", "CLOSED"],
+      "description": "SHELTER_STATUSES verbatim (src/domain/shelter.ts:9). Pinned to the domain union by test."
+    },
+    "shelterRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shelterId", "status", "capacity", "occupancy", "available", "utilization"],
+      "properties": {
+        "shelterId": { "type": "string", "minLength": 1 },
+        "status": { "$ref": "#/$defs/shelterStatus" },
+        "capacity": { "type": "integer", "minimum": 0 },
+        "occupancy": { "type": "integer", "minimum": 0 },
+        "available": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "capacity − occupancy; never negative (domain invariant). PHYSICAL spare space, not an intake decision — a CLOSED shelter still reports its empty hall here."
+        },
+        "utilization": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "occupancy ÷ capacity, 2 dp; 0 when capacity is 0."
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shelters",
+        "capacity",
+        "occupancy",
+        "available",
+        "availableOpen",
+        "utilization",
+        "byStatus"
+      ],
+      "properties": {
+        "shelters": { "type": "integer", "minimum": 0 },
+        "capacity": { "type": "integer", "minimum": 0 },
+        "occupancy": { "type": "integer", "minimum": 0 },
+        "available": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Σ spare space over ALL shelters, CLOSED ones included — physical space, not intake capacity."
+        },
+        "availableOpen": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Σ spare space at OPEN shelters only — the operationally meaningful figure."
+        },
+        "utilization": { "type": "number", "minimum": 0, "maximum": 1 },
+        "byStatus": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["OPEN", "FULL", "CLOSED"],
+          "description": "Shelter COUNT per status; every status key present, zeros included.",
+          "properties": {
+            "OPEN": { "type": "integer", "minimum": 0 },
+            "FULL": { "type": "integer", "minimum": 0 },
+            "CLOSED": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "sourceLabel", "asOf"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["LIVE", "CACHED", "MOCK", "DB"],
+          "description": "SERVED_MODES verbatim (src/domain/source-record.ts). Pinned to the domain union by test. DB = rows an operator maintains in BEACON's own store (ADR-041 §3) — the board's claim sentence says so and can still only say 'live' when the mode IS LIVE."
+        },
+        "sourceLabel": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Where the rows came from, in checkable words."
+        },
+        "asOf": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Injected as-of instant — the module never reads a clock."
+        }
+      }
+    }
+  }
+}

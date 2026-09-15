@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/regions.schema.json",
+  "title": "BEACON Region Registry",
+  "description": "Validates config/regions.json (ADR-011, ADR-031; FR-ZONE-1…7; SPEC §4.2). Adding an operating region is ONE entry here plus, where needed, a catalog label and an offline seed — no source change (FR-10/FR-ZONE-3). `iso`, `tz` and `languages` are REQUIRED of every config-authored region: they were previously absent, which forced the composition root to keep a hardcoded ISO map and a duplicated bbox table, and an unknown region silently inherited California's geography (finding F-06). The domain entity keeps them optional so existing programmatic seeds and tests remain valid; config does not get that latitude.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["default_region_id", "regions"],
+  "properties": {
+    "$comment": {
+      "type": "string",
+      "description": "Human note; ignored by the loader."
+    },
+    "default_region_id": {
+      "$ref": "#/$defs/regionId",
+      "description": "The region the COP opens on. MUST match one of the entries below (asserted by a test)."
+    },
+    "regions": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Every operating region, in selector order.",
+      "items": {
+        "$ref": "#/$defs/regionEntry"
+      }
+    }
+  },
+  "$defs": {
+    "regionId": {
+      "type": "string",
+      "description": "Stable registry key, e.g. 'us-ca', 'ro', 'ph'. Lowercase, hyphen-separated. Restrictive on purpose: the id is used as a cache-key component (`lkg:<adapterId>:<regionId>`) and in URLs.",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "minLength": 2,
+      "maxLength": 32
+    },
+    "regionEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "scope", "iso", "bbox", "tz", "languages", "enabled_adapters"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/regionId"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Operator-facing name, used in docs, audit output, and as the fallback selector label. The UI prefers a message-catalog key so the selector translates (finding F-22)."
+        },
+        "scope": {
+          "type": "string",
+          "enum": ["COMMUNITY", "STATE", "COUNTRY"],
+          "description": "Mirrors the region.scope CHECK constraint in the DDL — keep the values byte-identical."
+        },
+        "iso": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "ISO-3166-1 alpha-2 country code. THIS is what decides whether a country-scoped adapter (e.g. a national met service) covers the region. Sub-national regions carry their country's code (us-ca ⇒ US)."
+        },
+        "bbox": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "number"
+          },
+          "description": "[minLon, minLat, maxLon, maxLat] — the SINGLE source of truth for the region's extent. Every adapter query is bounded by it. There is deliberately no fallback: a region without a bbox is a configuration error, never another region's geography."
+        },
+        "tz": {
+          "type": "string",
+          "minLength": 3,
+          "description": "IANA timezone (e.g. 'Europe/Bucharest'). Every timestamp displayed for this region, and every CAP effective/expiry time, is formatted in it (FR-I18N-4)."
+        },
+        "languages": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 2
+          },
+          "description": "BCP-47 tags, most significant first. Outbound alerts carry the region's language(s) AND English, always (FR-I18N-6). Coverage-completeness rule: a shipped zone's primary language ships as a locale in config/locales.json."
+        },
+        "enabled_adapters": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Allowlist of adapter ids (from config/adapters.json) permitted for this region, IN PRECEDENCE ORDER: within one port/slot the first adapter that serves wins the slot, so this array is where a region's source precedence is declared (B1.8/ADR-012 — it is not a literal in any use-case). Every id must be a REAL manifest id — roadmap-only names in config/planned-sources.md must not appear (asserted by the drift-guard test). minItems: 1 because since B1.3 an EMPTY list means 'consult NOTHING' (finding F-54): the region would load, render and label a picture no source was ever asked about. 'Consult nothing' must be said by deleting the region, not by an empty array that reads like an accident."
+        },
+        "source_mode_overrides": {
+          "type": "object",
+          "description": "Per-region redundancy-mode overrides (manifest id → LIVE|CACHED|MOCK). Precedence: env SOURCE_<PREFIX>_MODE → this map → the manifest's own mode.",
+          "additionalProperties": {
+            "type": "string",
+            "enum": ["LIVE", "CACHED", "MOCK"]
+          }
+        },
+        "$comment": {
+          "type": "string",
+          "description": "Human note on this region (e.g. why a source is forced CACHED); ignored by the loader."
+        },
+        "boundary": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^boundaries/[a-z0-9-]+\\.geojson$",
+          "description": "Path, relative to the directory of regions.json, of a GeoJSON Feature or Polygon/MultiPolygon geometry: the region's actual outline (ADR-042). A served record must touch it; the bbox stays the fetch window. Natural Earth 1:50m, public domain — see NOTICE."
+        }
+      }
+    }
+  }
+}

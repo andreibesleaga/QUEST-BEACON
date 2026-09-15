@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "id": "ro-danube-flood",
+  "label": "Danube lower course — riverine flood Early Action Protocol",
+  "hazard": "FLOOD",
+  "status": "ILLUSTRATIVE",
+  "provenance": "Structurally faithful to the six IFRC Early Action Protocol elements. Every threshold, action, ceiling, role and duration below is invented for demonstration and is NOT approved, endorsed or reviewed by any National Society, hydromet service or civil-protection authority. A real deployment replaces this file with its own signed-off protocol.",
+  "scope": {
+    "regionId": "ro",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [27.88, 45.28],
+          [28.24, 45.28],
+          [28.24, 45.54],
+          [27.88, 45.54],
+          [27.88, 45.28]
+        ]
+      ]
+    }
+  },
+  "triggers": {
+    "readiness": {
+      "source": "cached forecast file supplied to the evaluator — BEACON queries no live ensemble product",
+      "parameter": "river discharge at the Danube lower-course reporting point",
+      "unit": "cubic metres per second",
+      "threshold": 6500,
+      "comparator": "GTE",
+      "minMembersFraction": 0.3,
+      "minLikelihoodClass": "LIKELY",
+      "leadTimeHours": 120
+    },
+    "activation": {
+      "source": "cached forecast file supplied to the evaluator — BEACON queries no live ensemble product",
+      "parameter": "river discharge at the Danube lower-course reporting point",
+      "unit": "cubic metres per second",
+      "threshold": 7200,
+      "comparator": "GTE",
+      "minMembersFraction": 0.5,
+      "minLikelihoodClass": "VERY_LIKELY",
+      "leadTimeHours": 48
+    }
+  },
+  "actions": [
+    {
+      "id": "preposition-dewatering-supplies",
+      "label": "Pre-position dewatering pumps and sandbag stock near the exposed reach",
+      "kind": "PREPOSITION",
+      "resourceKind": "SUPPLY"
+    },
+    {
+      "id": "preposition-medical-cache",
+      "label": "Pre-position a first-aid cache at the nearest open shelter with spare capacity",
+      "kind": "PREPOSITION",
+      "resourceKind": "MEDICAL"
+    },
+    {
+      "id": "stage-standby-crew",
+      "label": "Place one evacuation-assistance crew on standby (requires human tasking)",
+      "kind": "TASK",
+      "resourceKind": "CREW"
+    },
+    {
+      "id": "brief-branch-duty-officer",
+      "label": "Brief the county branch duty officer and the shelter coordinator",
+      "kind": "NOTIFY_INTERNAL"
+    }
+  ],
+  "resourceCeiling": {
+    "maxResources": 12,
+    "maxByKind": { "CREW": 4, "SUPPLY": 6, "MEDICAL": 2 },
+    "basis": "Illustrative pre-arranged ceiling for the demonstration registry. No monetary or donor figure exists anywhere in BEACON, so none is stated here."
+  },
+  "approval": {
+    "authorizerRole": "EM",
+    "fallbackRole": "VERIFIER",
+    "fallbackAfterMinutes": 60
+  },
+  "stop": {
+    "conditions": [
+      {
+        "id": "forecast-receded",
+        "label": "The forecast falls below the readiness threshold on two consecutive runs"
+      },
+      {
+        "id": "impact-materialised",
+        "label": "Impact has occurred and ordinary response has superseded anticipatory action"
+      },
+      {
+        "id": "authority-stand-down",
+        "label": "The responsible authority stands the activation down"
+      }
+    ],
+    "authorizerRole": "EM",
+    "maxDurationHours": 168
+  }
+}

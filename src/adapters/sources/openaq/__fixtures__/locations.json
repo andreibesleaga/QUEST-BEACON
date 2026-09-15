@@ -1,0 +1,231 @@
+{
+  "meta": {
+    "name": "openaq-api",
+    "website": "/",
+    "page": 1,
+    "limit": 100,
+    "found": 3
+  },
+  "results": [
+    {
+      "id": 1592,
+      "name": "Omak-Colville Tribe",
+      "locality": "Omak",
+      "timezone": "America/Los_Angeles",
+      "country": {
+        "id": 155,
+        "code": "US",
+        "name": "United States"
+      },
+      "owner": {
+        "id": 4,
+        "name": "Unknown Governmental Organization"
+      },
+      "provider": {
+        "id": 119,
+        "name": "AirNow"
+      },
+      "isMobile": false,
+      "isMonitor": true,
+      "instruments": [
+        {
+          "id": 2,
+          "name": "Government Monitor"
+        }
+      ],
+      "sensors": [
+        {
+          "id": 3920,
+          "name": "pm25 µg/m³",
+          "parameter": {
+            "id": 2,
+            "name": "pm25",
+            "units": "µg/m³",
+            "displayName": "PM2.5"
+          }
+        },
+        {
+          "id": 3921,
+          "name": "o3 ppm",
+          "parameter": {
+            "id": 10,
+            "name": "o3",
+            "units": "ppm",
+            "displayName": "O₃"
+          }
+        }
+      ],
+      "coordinates": {
+        "latitude": 48.39999,
+        "longitude": -119.518959
+      },
+      "licenses": [
+        {
+          "id": 33,
+          "name": "CC BY 4.0 DEED",
+          "attribution": {
+            "name": "AirNow",
+            "url": "https://www.airnow.gov/"
+          },
+          "dateFrom": "2016-01-01",
+          "dateTo": null
+        }
+      ],
+      "bounds": [
+        -119.518959,
+        48.39999,
+        -119.518959,
+        48.39999
+      ],
+      "distance": null,
+      "datetimeFirst": {
+        "utc": "2016-03-06T19:00:00Z",
+        "local": "2016-03-06T11:00:00-08:00"
+      },
+      "datetimeLast": {
+        "utc": "2026-08-08T04:00:00Z",
+        "local": "2026-08-07T21:00:00-07:00"
+      }
+    },
+    {
+      "id": 1607,
+      "name": "Cove - City Hall",
+      "locality": "Cove",
+      "timezone": "America/Los_Angeles",
+      "country": {
+        "id": 155,
+        "code": "US",
+        "name": "United States"
+      },
+      "owner": {
+        "id": 4,
+        "name": "Unknown Governmental Organization"
+      },
+      "provider": {
+        "id": 119,
+        "name": "AirNow"
+      },
+      "isMobile": false,
+      "isMonitor": true,
+      "instruments": [
+        {
+          "id": 2,
+          "name": "Government Monitor"
+        }
+      ],
+      "sensors": [
+        {
+          "id": 4114,
+          "name": "pm25 µg/m³",
+          "parameter": {
+            "id": 2,
+            "name": "pm25",
+            "units": "µg/m³",
+            "displayName": "PM2.5"
+          }
+        }
+      ],
+      "coordinates": {
+        "latitude": 45.300884,
+        "longitude": -117.812896
+      },
+      "licenses": [
+        {
+          "id": 33,
+          "name": "CC BY 4.0 DEED",
+          "attribution": {
+            "name": "AirNow",
+            "url": "https://www.airnow.gov/"
+          },
+          "dateFrom": "2016-01-01",
+          "dateTo": null
+        }
+      ],
+      "bounds": [
+        -117.812896,
+        45.300884,
+        -117.812896,
+        45.300884
+      ],
+      "distance": null,
+      "datetimeFirst": {
+        "utc": "2016-03-06T19:00:00Z",
+        "local": "2016-03-06T11:00:00-08:00"
+      },
+      "datetimeLast": {
+        "utc": "2026-08-08T04:00:00Z",
+        "local": "2026-08-07T21:00:00-07:00"
+      }
+    },
+    {
+      "id": 1631,
+      "name": "Tonasket",
+      "locality": null,
+      "timezone": "America/Los_Angeles",
+      "country": {
+        "id": 155,
+        "code": "US",
+        "name": "United States"
+      },
+      "owner": {
+        "id": 4,
+        "name": "Unknown Governmental Organization"
+      },
+      "provider": {
+        "id": 119,
+        "name": "AirNow"
+      },
+      "isMobile": false,
+      "isMonitor": true,
+      "instruments": [
+        {
+          "id": 2,
+          "name": "Government Monitor"
+        }
+      ],
+      "sensors": [
+        {
+          "id": 4288,
+          "name": "pm25 µg/m³",
+          "parameter": {
+            "id": 2,
+            "name": "pm25",
+            "units": "µg/m³",
+            "displayName": "PM2.5"
+          }
+        }
+      ],
+      "coordinates": {
+        "latitude": 48.70159,
+        "longitude": -119.43466
+      },
+      "licenses": [
+        {
+          "id": 33,
+          "name": "CC BY 4.0 DEED",
+          "attribution": {
+            "name": "AirNow",
+            "url": "https://www.airnow.gov/"
+          },
+          "dateFrom": "2016-01-01",
+          "dateTo": null
+        }
+      ],
+      "bounds": [
+        -119.43466,
+        48.70159,
+        -119.43466,
+        48.70159
+      ],
+      "distance": null,
+      "datetimeFirst": {
+        "utc": "2016-03-06T19:00:00Z",
+        "local": "2016-03-06T11:00:00-08:00"
+      },
+      "datetimeLast": {
+        "utc": "2026-08-08T04:00:00Z",
+        "local": "2026-08-07T21:00:00-07:00"
+      }
+    }
+  ]
+}

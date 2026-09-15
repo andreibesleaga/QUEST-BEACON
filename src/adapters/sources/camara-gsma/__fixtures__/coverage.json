@@ -1,0 +1,53 @@
+{
+  "$comment": "Recorded-mock fixture for the camara-gsma adapter (TelecomPort P13). Adapted from ../../../../fixtures/camara-gsma/population-density.json (the repo's recorded CAMARA/GSMA fixture) and reshaped into a flat per-cell row list so the ACL can map each row 1:1 to a canonical TelecomCoverage. AGGREGATE-ONLY, synthetic demo data — no PII, no individual device/location tracking (Constitution Art. XIV; ADR-021). Every row carries aggregateOnly:true, which the ACL treats as a structural privacy invariant (a row with aggregateOnly!=true is rejected as PARSE, never silently passed through). Served when SOURCE_CAMARA_GSMA_MODE=mock (the demo default and the offline/air-gapped acceptance test).",
+  "adapter": "camara-gsma",
+  "port": "Telecom",
+  "mode": "MOCK",
+  "rows": [
+    {
+      "cellId": "sf-bay-0001",
+      "position": [-122.44, 37.765],
+      "networkTypes": ["5G", "4G"],
+      "connectivityStatus": "NORMAL",
+      "aggregateOnly": true,
+      "minAggregationGroup": 1000,
+      "observedAt": "2026-06-28T18:00:00Z"
+    },
+    {
+      "cellId": "sf-bay-0002-hill",
+      "position": [-122.41, 37.81],
+      "networkTypes": ["4G"],
+      "connectivityStatus": "DEGRADED",
+      "aggregateOnly": true,
+      "minAggregationGroup": 1000,
+      "observedAt": "2026-06-28T18:00:00Z"
+    },
+    {
+      "cellId": "sf-bay-0003-ridge",
+      "position": [-122.48, 37.72],
+      "networkTypes": [],
+      "connectivityStatus": "OFFLINE",
+      "aggregateOnly": true,
+      "minAggregationGroup": 1000,
+      "observedAt": "2026-06-28T18:00:00Z"
+    },
+    {
+      "cellId": "sf-bay-0004-valley",
+      "position": [-122.35, 37.75],
+      "networkTypes": ["LTE"],
+      "connectivityStatus": "NORMAL",
+      "aggregateOnly": true,
+      "minAggregationGroup": 1000,
+      "observedAt": "2026-06-28T18:00:00Z"
+    }
+  ],
+  "provenance": {
+    "source": "CAMARA / GSMA Open Gateway (recorded mock)",
+    "adapter": "camara-gsma",
+    "fetchedAt": "2026-06-28T18:05:00Z",
+    "license": "Synthetic demo fixture (no upstream data; CAMARA API definitions are Apache-2.0)",
+    "mode": "MOCK",
+    "attribution": "Synthetic / aggregate-only. Not derived from any real subscriber data.",
+    "privacyNote": "Aggregate-only by construction; no individual location, identity, or device is represented (Art. XIV; CAMARA min-aggregation / no-PII profile)."
+  }
+}

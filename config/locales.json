@@ -1,0 +1,132 @@
+{
+  "$comment": "BEACON shipped-locale registry (ADR-030; FR-I18N-1/5/7/8). The 12-locale CORE (world top-10 by speakers + Russian + Romanian) plus the two locales promoted by shipped zones (fil ← Philippines, el ← Greece) = 14 shipped. ANY OTHER LANGUAGE IS ADDED BY CONFIG: add one messages/<id>.json catalog + one row here (+ a font entry if the script is new) — no source change. `review` is an honesty field: source = authored, human = human-reviewed, machine = machine-translated (labeled in-UI). `font` names the bundled self-hosted family that covers the script (no CDN, Art. XVI offline-first). Drift-guarded against src/config/locales.ts LOCALE_IDS by a test.",
+  "defaultLocale": "en",
+  "locales": [
+    {
+      "id": "en",
+      "englishName": "English",
+      "nativeName": "English",
+      "dir": "ltr",
+      "script": "latn",
+      "review": "source",
+      "font": "inter"
+    },
+    {
+      "id": "zh-Hans",
+      "englishName": "Chinese (Simplified)",
+      "nativeName": "简体中文",
+      "dir": "ltr",
+      "script": "hans",
+      "review": "machine",
+      "font": "noto-sans-sc"
+    },
+    {
+      "id": "hi",
+      "englishName": "Hindi",
+      "nativeName": "हिन्दी",
+      "dir": "ltr",
+      "script": "deva",
+      "review": "machine",
+      "font": "noto-sans-devanagari"
+    },
+    {
+      "id": "es",
+      "englishName": "Spanish",
+      "nativeName": "Español",
+      "dir": "ltr",
+      "script": "latn",
+      "review": "machine",
+      "font": "inter"
+    },
+    {
+      "id": "ar",
+      "englishName": "Arabic",
+      "nativeName": "العربية",
+      "dir": "rtl",
+      "script": "arab",
+      "review": "machine",
+      "font": "noto-sans-arabic"
+    },
+    {
+      "id": "fr",
+      "englishName": "French",
+      "nativeName": "Français",
+      "dir": "ltr",
+      "script": "latn",
+      "review": "machine",
+      "font": "inter"
+    },
+    {
+      "id": "bn",
+      "englishName": "Bengali",
+      "nativeName": "বাংলা",
+      "dir": "ltr",
+      "script": "beng",
+      "review": "machine",
+      "font": "noto-sans-bengali"
+    },
+    {
+      "id": "pt-BR",
+      "englishName": "Portuguese (Brazil)",
+      "nativeName": "Português (Brasil)",
+      "dir": "ltr",
+      "script": "latn",
+      "review": "machine",
+      "font": "inter"
+    },
+    {
+      "id": "id",
+      "englishName": "Indonesian",
+      "nativeName": "Bahasa Indonesia",
+      "dir": "ltr",
+      "script": "latn",
+      "review": "machine",
+      "font": "inter"
+    },
+    {
+      "id": "ur",
+      "englishName": "Urdu",
+      "nativeName": "اردو",
+      "dir": "rtl",
+      "script": "arab",
+      "review": "machine",
+      "font": "noto-sans-arabic"
+    },
+    {
+      "id": "ru",
+      "englishName": "Russian",
+      "nativeName": "Русский",
+      "dir": "ltr",
+      "script": "cyrl",
+      "review": "machine",
+      "font": "inter"
+    },
+    {
+      "id": "ro",
+      "englishName": "Romanian",
+      "nativeName": "Română",
+      "dir": "ltr",
+      "script": "latn",
+      "review": "human",
+      "font": "inter"
+    },
+    {
+      "id": "fil",
+      "englishName": "Filipino",
+      "nativeName": "Filipino",
+      "dir": "ltr",
+      "script": "latn",
+      "review": "machine",
+      "font": "inter"
+    },
+    {
+      "id": "el",
+      "englishName": "Greek",
+      "nativeName": "Ελληνικά",
+      "dir": "ltr",
+      "script": "grek",
+      "review": "machine",
+      "font": "inter"
+    }
+  ]
+}

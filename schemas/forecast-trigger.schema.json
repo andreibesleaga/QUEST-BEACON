@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.example/schemas/forecast-trigger.schema.json",
+  "title": "BEACON forecast-crossing trigger gates",
+  "description": "Validates config/forecast-trigger.json — the gates a FORECAST_GAUGE_CATEGORY threshold rule must clear before it fires a DRAFT alert (ADR-033 §6, FEV-9). Trigger parameters are DATA, never literals in the evaluator (ADR-012). Every gate MUST declare its own `basis` prose, so a number cannot be added or changed here without stating what grounds it. This schema is deliberately NOT an extension of schemas/threshold-rule.schema.json, which is dead and drifted from its domain type (finding F-33) — it is a live schema, pinned to the shipped config by forecast-trigger-config.test.ts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "authority", "firePolicy", "leadTime", "vintage"],
+  "properties": {
+    "version": { "const": 1 },
+    "authority": { "$ref": "#/$defs/prose" },
+    "firePolicy": { "$ref": "#/$defs/prose" },
+    "minLikelihood": {
+      "description": "Optional likelihood floor. When present, a forecast reading with no classified likelihood, or one below this class, cannot fire. When absent, the likelihood gate is not applied at all.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class", "basis"],
+      "properties": {
+        "class": { "enum": ["POSSIBLE", "LIKELY", "VERY_LIKELY"] },
+        "basis": { "$ref": "#/$defs/prose" }
+      }
+    },
+    "leadTime": {
+      "description": "The window of remaining lead time, in hours, in which a forecast crossing is actionable. A reading with no lead time at all never fires: the DRAFT alert has to state one.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minHours", "maxHours", "basis"],
+      "properties": {
+        "minHours": { "type": "number", "minimum": 0 },
+        "maxHours": { "type": "number", "exclusiveMinimum": 0 },
+        "basis": { "$ref": "#/$defs/prose" }
+      }
+    },
+    "vintage": {
+      "description": "How old the source's own forecast issue instant may be before the reading counts as superseded.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maxForecastAgeHours", "basis"],
+      "properties": {
+        "maxForecastAgeHours": { "type": "number", "exclusiveMinimum": 0 },
+        "basis": { "$ref": "#/$defs/prose" }
+      }
+    }
+  },
+  "$defs": {
+    "prose": { "type": "string", "minLength": 20 }
+  }
+}

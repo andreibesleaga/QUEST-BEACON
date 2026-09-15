@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "authority": "ADR-033 §4.1/§4.2 (the two never-built prediction kinds, ESCALATION and IMPACT_OVER_TIME) — docs/architecture/decisions/ADR-033-forecast-likelihood-and-outlook.md. These are the uncertainty curves and horizon checkpoints those two kinds are LABELLED with. Every value here is BEACON's OWN presentation parameter: no source publishes any of them, and none of them is, or is ever rendered as, a probability of occurrence (finding F-34 — GloFAS exposes a derived probability, BEACON has no wired ensemble source, and an uncertainty label is not a chance of anything). They are DATA on purpose (ADR-012): the number a responder sees beside a projected count must be changeable as a reviewable config edit, never as a literal buried in a use-case. Each block states its own basis.",
+  "escalation": {
+    "referenceSamples": 6,
+    "baseUncertainty": 0.4,
+    "uncertaintyPerMissingSample": 0.1,
+    "basis": "An ESCALATION prediction states a DIRECTION (the least-squares slope cleared the dead-band), so what drives its uncertainty is how much history the slope was fitted to — not a horizon, because the kind carries no geometry and no lead time of its own. referenceSamples 6 is twice the trend classifier's own minimum (minSamples 3, DEFAULT_TREND_CONFIG in src/application/shared/config.ts, SPEC §5.7): at or above it BEACON stops discounting for sparsity, and every sample short of it adds uncertaintyPerMissingSample 0.1. baseUncertainty 0.4 is the floor a well-sampled first-order slope keeps, deliberately HIGHER than the fire cone's 0.2 at horizon zero (DEFAULT_FIRE_CONE_CONFIG): a cone describes an observed geometry grown by an observed wind, whereas a slope extrapolates a direction out of past readings. At the classifier's bare minimum of 3 samples this yields 0.7 — a label that says 'a direction, weakly evidenced', which is exactly what three readings support."
+  },
+  "impactOverTime": {
+    "checkpointHours": [6, 12, 24],
+    "baseUncertainty": 0.4,
+    "uncertaintyPerHour": 0.02,
+    "basis": "checkpointHours are the fixed horizon marks ADR-033 §4.2 names (+6h/+12h/+24h) and they are OPERATIONAL planning marks — one operational period, half a day, one day — not forecast steps any source publishes. Uncertainty compounds with horizon distance in the same baseUncertainty + horizon x uncertaintyPerHour shape the fire cone already uses (prediction-projection.ts projectFireCone), starting from the same 0.4 floor as the escalation slope it is projected along, because an impact projection inherits that slope's weakness and adds its own. uncertaintyPerHour 0.02 puts the +24 h checkpoint at 0.88: near-worthless as a number, still useful as a direction, which is the honest reading of a count projected a day out from a first-order trend. The whole-prediction uncertainty is the FURTHEST checkpoint's value (the worst case), never an average across checkpoints — averaging would understate the number a responder is most likely to act on."
+  }
+}

@@ -1,0 +1,49 @@
+# BEACON — nightly scorecard. NON-BLOCKING (reports only; never gates a merge).
+# Phase 1 subset of docs/CI_CD_PLAN.md §3: re-run the full suite + build + a fresh dependency audit
+# on a schedule, so drift/flake shows up out-of-band from the PR lane.
+#
+# TODO(pin): replace every `@vN` with a full commit SHA before enabling on a protected branch
+#   (offline: SHAs not resolvable here). Checklist: .github/PINNING_CHECKLIST.md.
+
+name: nightly
+
+on:
+  schedule:
+    # 05:00 UTC daily.
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-suite:
+    name: full test + build + audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run test:coverage
+      - run: npm run build
+      - name: Fresh dependency audit (report-only)
+        run: npm audit --audit-level=high || true
+
+  # ---------------------------------------------------------------------------
+  # TODO(phase-2): the heavy nightly jobs below are the CI_CD.md target state but are NOT runnable
+  # today — each needs an npm script and/or tool that does not exist in package.json yet
+  # (docs/CI_CD_PLAN.md §2 "Missing npm scripts / tooling", §3 Phase-2 order). Left commented so the
+  # workflow stays green; uncomment a block only after its prerequisite lands (and update package.json
+  # via the follow-ups noted in CONTRIBUTING.md — package.json is protected, not edited here).
+  #
+  #   mutation      → @stryker-mutator/* (`npx stryker run`)            # mutation score ≥80% domain+app
+  #   chaos         → npm run test:chaos    (F5 offline / F6 primary-down / F7 AI-disabled)
+  #   edge-heavy    → npm run test:edge:heavy (combinatorial/edge sweeps too costly for the PR lane)
+  #   metamorphic   → npm run test:metamorphic (AI SitRep paraphrase/noise/order invariance)
+  #   e2e-real      → npm run test:e2e:real  (golden path vs LIVE sources; needs network + keys)
+  #   load          → npm run test:load      (SSE delta latency, ingestion cadence under load)
+  #   eval-full     → npm run eval:full      (Tier-1/2/3 golden set; drift-vs-baseline scorecard)
+  # ---------------------------------------------------------------------------

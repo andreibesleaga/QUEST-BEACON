@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  HAND-AUTHORED recorded-STYLE PAGASA Tropical Cyclone Alert (acp) CAP v1.2 document (B3.2) - NOT a
+  byte-recorded response (F-51 labelling). Faithful to the LIVE acp alert probed 2026-07-27
+  (native output/acp/cc368dd6-7ebd-49d9-ba02-25c9d3b51a76.cap) as documented in
+  docs/features/GLOBAL_ZONE_SOURCE_RESEARCH.md "LATE ADDITION 3": CAP 1.2, sender PAGASA-DOST,
+  sent 2026-07-25T10:48:59+08:00, Actual/Update/Public, category Met, event "Tropical Cyclone Alert",
+  urgency Expected, severity Minor, certainty Possible, headline
+  "Tropical Cyclone Alert : Typhoon Kiyapo (NOUL)". The <area> block below is VERBATIM as observed -
+  areaDesc "Philippine Area of Responsibility" with the whole-PAR polygon (~5-21N, 113-130E; CAP
+  lat,lon order) and the layer:Google:Region:0.1 parameter.
+  >>> F-48 (binding): this polygon is PAGASA's ALERTING area, NOT the storm footprint - it must never
+  be rendered as hazard geometry nor reach exposure computation. <<<
+  License: PAGASA-DOST content CC BY 4.0 (declared verbatim in PAGASA's native feed).
+-->
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>cc368dd6-7ebd-49d9-ba02-25c9d3b51a76</identifier>
+  <sender>PAGASA-DOST</sender>
+  <sent>2026-07-25T10:48:59+08:00</sent>
+  <status>Actual</status>
+  <msgType>Update</msgType>
+  <scope>Public</scope>
+  <info>
+    <language>en-US</language>
+    <category>Met</category>
+    <event>Tropical Cyclone Alert</event>
+    <urgency>Expected</urgency>
+    <severity>Minor</severity>
+    <certainty>Possible</certainty>
+    <headline>Tropical Cyclone Alert : Typhoon Kiyapo (NOUL)</headline>
+    <senderName>Philippine Atmospheric Geophysical and Astronomical Services Administration</senderName>
+    <web>https://publicalert.pagasa.dost.gov.ph/</web>
+    <parameter>
+      <valueName>layer:Google:Region:0.1</valueName>
+      <value>Philippine Area of Responsibility</value>
+    </parameter>
+    <area>
+      <areaDesc>Philippine Area of Responsibility</areaDesc>
+      <polygon>21,120 21,130 5,130 5,121.5 9.5,113 15,113 21,120</polygon>
+    </area>
+  </info>
+</alert>

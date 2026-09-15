@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "id": "us-ca-wildfire",
+  "label": "Sierra foothills — wildfire fire-weather Early Action Protocol",
+  "hazard": "WILDFIRE",
+  "status": "ILLUSTRATIVE",
+  "provenance": "Structurally faithful to the six IFRC Early Action Protocol elements. Every threshold, action, ceiling, role and duration below is invented for demonstration and is NOT approved, endorsed or reviewed by any National Society, hydromet service or civil-protection authority. A real deployment replaces this file with its own signed-off protocol.",
+  "scope": {
+    "regionId": "us-ca",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [-121.32, 38.86],
+          [-120.78, 38.86],
+          [-120.78, 39.24],
+          [-121.32, 39.24],
+          [-121.32, 38.86]
+        ]
+      ]
+    }
+  },
+  "triggers": {
+    "readiness": {
+      "source": "cached forecast file supplied to the evaluator — BEACON queries no live ensemble product",
+      "parameter": "sustained wind speed at the fire-weather forecast point",
+      "unit": "kilometres per hour",
+      "threshold": 45,
+      "comparator": "GTE",
+      "minMembersFraction": 0.35,
+      "minLikelihoodClass": "LIKELY",
+      "leadTimeHours": 72
+    },
+    "activation": {
+      "source": "cached forecast file supplied to the evaluator — BEACON queries no live ensemble product",
+      "parameter": "sustained wind speed at the fire-weather forecast point",
+      "unit": "kilometres per hour",
+      "threshold": 60,
+      "comparator": "GTE",
+      "minMembersFraction": 0.6,
+      "minLikelihoodClass": "VERY_LIKELY",
+      "leadTimeHours": 24
+    }
+  },
+  "actions": [
+    {
+      "id": "preposition-engines",
+      "label": "Pre-position engines at the staging areas nearest the exposed interface",
+      "kind": "PREPOSITION",
+      "resourceKind": "ENGINE"
+    },
+    {
+      "id": "preposition-water-supply",
+      "label": "Pre-position water and hydration supplies at the staging areas",
+      "kind": "PREPOSITION",
+      "resourceKind": "SUPPLY"
+    },
+    {
+      "id": "stage-aviation",
+      "label": "Place rotor-wing aviation on standby (requires human tasking)",
+      "kind": "TASK",
+      "resourceKind": "AIRCRAFT"
+    },
+    {
+      "id": "brief-duty-chief",
+      "label": "Brief the duty chief and the evacuation-route coordinator",
+      "kind": "NOTIFY_INTERNAL"
+    }
+  ],
+  "resourceCeiling": {
+    "maxResources": 15,
+    "maxByKind": { "ENGINE": 6, "AIRCRAFT": 2, "SUPPLY": 5, "CREW": 2 },
+    "basis": "Illustrative pre-arranged ceiling for the demonstration registry. No monetary or donor figure exists anywhere in BEACON, so none is stated here."
+  },
+  "approval": {
+    "authorizerRole": "EM",
+    "fallbackRole": "VERIFIER",
+    "fallbackAfterMinutes": 45
+  },
+  "stop": {
+    "conditions": [
+      {
+        "id": "fire-weather-cleared",
+        "label": "The fire-weather forecast falls below the readiness threshold on two consecutive runs"
+      },
+      {
+        "id": "ignition-response-underway",
+        "label": "An ignition has occurred and incident response has superseded anticipatory action"
+      },
+      {
+        "id": "authority-stand-down",
+        "label": "The responsible authority stands the activation down"
+      }
+    ],
+    "authorizerRole": "EM",
+    "maxDurationHours": 120
+  }
+}

@@ -1,0 +1,231 @@
+# BEACON — Browser-based Emergency Awareness & Coordination Open Network
+
+> Open-source (Apache-2.0), local-first, near-real-time common operating picture (COP) for wildfires
+> and floods. IEEE Response Quest 2026 — Phase 3 product (Phase-2 concept scored 4.48/5 by jury).
+> Next.js 15 App Router + React 19 + TypeScript 5.7 strict, hexagonal ports-and-adapters, Postgres
+> (Drizzle) + in-memory default, deck.gl/MapLibre map, SSE push, deterministic decision engine with
+> optional LLM narration. 30 pluggable free/open data-source adapters. Runs fully offline/air-gapped
+> (`docker compose up`, ~$0) and identically in cloud. Built via the GABBE agentic SDLC (S00→S13).
+> This file is the entry point for AI agents: read it first, then the files in "Read-first order".
+
+STATUS (2026-07-31, corrected by E1 docs truth-up — this block was stale at "MW-B IN PROGRESS" and
+36-findings, dated 2026-07-27): the master plan **`../CURRENT-MASTER-PLAN.md`** completed
+**MW-A (localization) → MW-B (global zones/region-generic engine/storm) → MW-C (prediction/probability) →
+MW-D (predicted impact, anticipatory action, warning excellence, governance + coordination/aggregate
+tiers)**; **MW-E (docs truth-up + final audit) is now in progress.** `project/TASKS-FINAL-VERSION.md` is
+the backlog, now carrying **findings through F-281** (not F-36). Gates at MW-D's Checkpoint #4
+(2026-07-31): tsc 0 · eslint 0 · vitest **306 files / 3773 pass / 2 env-gated skips** (run with
+`--coverage` — F-43, never bare) · dependency-cruiser **`depcruise src` = 570 modules/2065 deps; `depcruise
+src app` = 729 modules/2598 deps, 0 violations either scope** · npm audit 0 high/0 critical, 4 moderate
+dev-only (unchanged, esbuild dev-server via drizzle-kit) · `next build` ✅ · Playwright **190 passed / 26 skipped / 0
+failed** at Checkpoint #4 (a sibling lane is separately closing F-72 — `es`/`gr`/`ph` browser coverage —
+in this same session; that lane's numbers are not yet folded into this figure, so re-verify before
+quoting). **The tree is still moving under MW-E — re-run the gates before quoting any of these numbers
+in a demo or submission artifact.** No release tag exists yet; the first tag is minted only after MW-E's
+combined final audit passes and the entrant signs off.
+Contest deadline: product + 2–5 min video by 9 Oct 2026, portal entry #5320.
+
+## Absolute rules (violating any of these is a critical failure)
+
+- **NO GIT WRITES BY AGENTS — EVER.** Never `git commit`, `git push`, `git tag`, anywhere. The user
+  personally runs ALL git write operations. Prepare changes in the working tree, then hand the user
+  exact commands. (User directive 2026-07-17, permanent.)
+- **`agents/AGENTS.md` and `agents/CONSTITUTION.md` are FROZEN.** Read and obey them; never edit.
+  AGENTS.md is the operational law (symlinked to `.claude/CLAUDE.md`); CONSTITUTION.md Articles XI–XVI
+  are the project-specific constitution.
+- **Deterministic → AI → human (Art. XII).** Every number, ranking, distance, exposure, crest, score
+  comes from deterministic code (Turf.js/SQL/typed TS). The LLM only narrates already-cited facts and
+  NEVER emits a figure (enforced by `output-validator.ts` F3 contract test). App must stay fully
+  functional with AI off (`AI_MODE=off` is the default).
+- **HITL before public action (Art. XIII).** No CAP/EDXL alert or broadcast from an UNVERIFIED report;
+  a human VERIFIER/EM approves; threshold fires create DRAFT alerts only. Telegram broadcast happens
+  strictly AFTER an approved emit, via the PII-redacting notifier.
+- **Link-only for third-party media.** Camera feeds / external views are hyperlinks out
+  (https-only, `noopener,noreferrer`); NEVER embed, proxy, rehost, or server-fetch third-party
+  video/imagery. Insecam-class unsecured-camera aggregators are permanently banned.
+- **Secrets only in gitignored `.env`** (`.env*` ignored, `!.env.example` committed). Never write a
+  real key into any tracked file, doc, or fixture. Placeholders only.
+- **Deterministic tests.** Fixed clock (convention `2026-07-05T22:00:00Z`), no wall-clock dependence
+  (inject `now`), NO live network in any test — `tests/redundancy/redundancy-acceptance.test.ts`
+  `ALL_IDS` must force-MOCK every adapter id in `config/adapters.json` (a drift there = network in CI).
+  Never weaken, skip, or vacuous-ify an assertion to make something pass.
+- **Free/open data only; no ToS-protected scraping** (X/Twitter excluded by policy). Every source's
+  license/attribution is tracked in `NOTICE` + `audit/DATA_SOURCE_VERIFICATION.md`.
+- **Honest limitations.** Degradations, mock/cached modes, and approximations are stated openly in UI
+  and docs — never claim LIVE for CACHED/MOCK, never delete limitation wording, never let doc counts
+  drift from code (a past audit found exactly this class of defect; keep counts current).
+- **Provenance is structural.** Every datum → SOURCE_RECORD; every SitRep field → citations[]; every
+  API response → `{ data, provenance[], freshness }` envelope.
+
+## Read-first order (session start)
+
+- [agents/memory/RESUME_POINTER.md](agents/memory/RESUME_POINTER.md): THE LIFELINE — current task,
+  latest state, next action. Read before doing anything. Keep it current after every meaningful step.
+- [agents/AGENTS.md](agents/AGENTS.md): operational law — exact commands, workflow, gates (FROZEN).
+- [agents/CONSTITUTION.md](agents/CONSTITUTION.md): constitutional articles (FROZEN).
+- [docs/ENGINEERING_PRINCIPLES.md](docs/ENGINEERING_PRINCIPLES.md): standing quality bar / Definition of Done.
+- [agents/memory/PROJECT_STATE.md](agents/memory/PROJECT_STATE.md),
+  [agents/memory/AUDIT_LOG.md](agents/memory/AUDIT_LOG.md),
+  [agents/memory/CONTINUITY.md](agents/memory/CONTINUITY.md): SDLC state, decision/audit trail, lessons.
+
+## Commands (exact — npx misresolves in this WSL env)
+
+- Node: `source ~/.nvm/nvm.sh && nvm use` (reads `.nvmrc`, Node 24.18.0).
+- Binaries: `./node_modules/.bin/{tsc,vitest,eslint,depcruise,next,playwright}`.
+- Gates (all must pass before "done"): `tsc --noEmit` · `eslint . --max-warnings 0` ·
+  `vitest run --coverage` · `npm run boundaries` (dependency-cruiser) · `rm -rf .next && next build` ·
+  `playwright test` (needs the fresh build; visual + axe + TTTP specs included) ·
+  `npm audit --audit-level=high`.
+- Coverage floors (vitest.config.ts, enforced): src/domain + src/application 99/99/99/99 ·
+  src/main 97/79/96/97 · src/adapters 90/83/93/90.
+- Other: `npm run cli -- <cmd>` (reference CLI via tsx) · `npm run live:probe` (live source probe) ·
+  `npm run dev` · `docker compose up` (infra/). `npm run docs` = the zero-dependency OpenAPI contract
+  test (tests/api/openapi-contract.test.ts, also part of `vitest run`); `npm run docs:redocly` is the
+  optional Redocly lint (needs `@redocly/cli` via npx, not a dependency).
+
+## Architecture (hexagonal; boundaries enforced by dependency-cruiser)
+
+- [src/domain/](src/domain/): pure entities/value-objects (Incident, HazardGeometry, Gauge, CameraFeed,
+  PublicReport, SitRep, Alert, SourceRecord, …). No framework imports. Factories throw on invariant
+  violation (e.g. `makeCameraFeed` enforces https-only viewUrl).
+- [src/ports/](src/ports/): port interfaces (HazardSource, FloodGauge, Infrastructure, Outage, NewsIntel,
+  CameraDirectory, Routing, LLM, Vision, Repository, MessagingPort, …).
+- [src/application/](src/application/): pure use-cases — risk intersection, priority ranking, threshold
+  eval, prediction (fire cone, NFHL∩crest), sitrep-synthesis + news-grounding (deterministic
+  GroundedFacts minted BEFORE the LLM; misinformation flag-not-merge), pre-positioning,
+  external-views (9 pure deep-link builders, clamped bbox), evac-routing.
+- [src/adapters/](src/adapters/): sources/ (27 adapter dirs — see pattern below) · _shared/
+  (RedundancyEngine ladder: LIVE→last-known-good cache→recorded-mock→typed-unavailable; circuit breaker;
+  resilient-http with `redirect:'manual'`; anti-corruption) · persistence/ (Drizzle 19-table schema,
+  drizzle/ migrations 0000–0002) · channels/ (http routes + trust pipeline, telegram webhook/poller with
+  timing-safe secret + update_id replay dedupe, cli) · ai/ (compliance gateway: firewall→policy→PII
+  redact→cost guardrails→hash-chained audit; LLM ladder; vision, consent-gated) · routing/ (ORS).
+- [src/main/](src/main/): composition root — adapter-registry.ts (27 factories; precedence
+  env `SOURCE_<PREFIX>_MODE` → region `source_mode_overrides` → manifest mode), live-composition.ts
+  (PER-REGION registries; cache keys are `lkg:<adapterId>:<regionId>` so regions never cross-serve),
+  live-seed.ts (fetchSlice + camera merge CA: caltrans>alertwildfire>dot511>windy; RO: cnadnr>windy),
+  feature-seed, build-ai, scenario-inputs (offline seeds — Art. XVI fallback).
+- [app/](app/): Next.js UI — single COP page + API routes (thin, delegate to use-cases).
+  `app/_lib/types.ts` `LAYER_IDS` = 13 layers (incl. `cameras`, default OFF; external views default ON);
+  exhaustive `Record<LayerId,…>` maps in map-data/build-layers/legend. `app/_components/`
+  map (deck.gl builders, click-out `openExternal` https double-guard), panels (sitrep, verifier-queue
+  with 2 h-TTL "Live Feed — Unofficial" chip, sos-form, logistics), ui (legend + DATA_ATTRIBUTION).
+- [config/](config/): adapters.json (27 rows: id, port, mode LIVE|CACHED|MOCK, configPrefix, keyEnv) ·
+  regions.json (us-ca LIVE flagship + ro CACHED; `iso`/`tz`/`languages[]` REQUIRED; ids validated against
+  manifest by a drift-guard test) · locales.json (14 shipped locales, drift-guarded against
+  `src/config/locales.ts` LOCALE_IDS) · planned-sources.md (roadmap-only names) · policies.yml (AI
+  policy-as-code).
+- [schemas/](schemas/): CAP v1.2, EDXL-RM/SitRep, adapter-manifest, policies, sustainability-v05,
+  locales, regions JSON-Schemas.
+- **i18n (ADR-030; wave MW-A).** `app/_lib/i18n.tsx` wraps next-intl's core `createTranslator` in a
+  context whose DEFAULT is `messages/en.json`, so components render English with NO provider (every
+  pre-existing test/baseline stayed valid), keys are compile-checked, and a raw key can never render.
+  Locale = the **`beacon-locale` cookie**, resolved SERVER-side in the async root layout ⇒ correct
+  `<html lang>`/`dir` + localized `generateMetadata` on the first byte. Fallback = server-side deep merge
+  over English + `getMessageFallback`. Adding a language = one `messages/<id>.json` + one
+  `config/locales.json` row + one `LOCALE_IDS` id — the allowlist is also the path-traversal guard.
+  RTL is logical-CSS only (`tests/architecture/rtl-logical-css.test.ts`); the map canvas never mirrors.
+  CAP goes multilingual via `capTranslationsFor()` with `capMachineValuesAgree()` proving enum tokens are
+  identical across `<info>` blocks. Deterministic fact claims stay ENGLISH and language-marked (Art. XII).
+- [tests/](tests/) + [e2e/](e2e/): cross-cutting suites (redundancy-acceptance, AI-parity
+  numeric-equality, golden-path US+RO, perf TTTP<10s, axe, visual). Fixtures in tests/fixtures/
+  (california-wildfire LIVE-labeled, romania-flood CACHED-labeled golden scenarios).
+
+## Adapter pattern (replicate exactly; zero core change to add a source)
+
+3 files in `src/adapters/sources/<id>/`: `<id>-acl.ts` (lenient anti-corruption: unknown fields
+ignored, malformed rows dropped+counted), `<id>-adapter.ts` (class implements `SourceAdapterPort<T>` +
+outward port; 3-method plug into `engine.run({mapper, fetchLive via httpGetText, loadMockRaw})`;
+factory `make<X>Adapter(engine, env)` with `resolveSourceConfig({prefix, keyEnv?, requireKeyForLive?})`),
+`__fixtures__/<file>` (recorded-real preferred; schema-crafted must say so in an inline `_provenance`
+field or ACL header). Register: one `ADAPTER_FACTORIES` entry + one `config/adapters.json` row + add the
+id to redundancy-acceptance `ALL_IDS`. Tests: clone the firms pattern (mode-switch MOCK/CACHED/LIVE,
+live-down-degrades, envelope, health, factory fail-fast) + acl test.
+
+## Verified facts (keep docs synced to these; last verified 2026-07-31 — E1 docs truth-up)
+
+- **30 adapters registered** (adapters.json ↔ ADAPTER_FACTORIES exact, both counted directly); **28
+  consumed** (23 COP data sources + 5 camera sources on the cameras layer, incl. `usgs-water` now
+  consulted+cited alongside `nwps` for `us-ca`'s gauge slot — `src/main/live-seed.ts:507`
+  `consultationPlan` reads a region's `enabled_adapters` directly); **2 not consumed**: `itu` +
+  `camara-gsma` (operator-gated MOCK plugins by design). *(Corrects a stale 27/24/3 that undercounted the
+  three MW-B B3 rows — `meteoalarm-gr`/`meteoalarm-es`/`wmo-swic` — and predated the `usgs-water` flip.)*
+- **13 map layers**; cameras default OFF; per-layer freshness via layerSources.
+- **306 test files / 3773 passing / 2 env-gated skips** (DATABASE_URL_TEST, OLLAMA_LIVE), run with
+  `--coverage` (F-43 — never bare `vitest run`) — MW-A→MW-D complete as of 2026-07-31; re-verify before
+  quoting on a still-moving tree.
+- **dependency-cruiser: `npm run boundaries` (= `depcruise src`) reports 570 modules / 2065 deps, 0
+  violations, 0 circulars; `depcruise src app` (the broader scope quoted elsewhere as "729 modules")
+  reports 729 modules / 2598 deps, 0 violations** — both counted directly 2026-08-02. The npm script only
+  cruises `src`; docs that say "729 modules" are implicitly using the wider `src app` scope, not what
+  `npm run boundaries` runs — worth aligning at some point, not a truth violation today since both counts
+  are real and 0-violation.
+- **14 shipped locales** (`en zh-Hans hi es ar fr bn pt-BR id ur ru ro fil el`; RTL `ar`,`ur`) —
+  **231 message keys** across 16 namespaces in `messages/en.json`, mirrored by every catalog.
+  All 13 non-English catalogs are machine-translated and unreviewed (**including `ro`**), declared in
+  `_meta` and labelled in-UI.
+- **5 regions** in config/regions.json (`us-ca` LIVE flagship, `ro` CACHED, and the three DEMO-GRADE zones
+  `es`/`gr`/`ph` added by B3.3 as CONFIG ONLY — no application code). `iso`/`tz`/`languages[]` are REQUIRED
+  per region (schemas/regions.schema.json), and `enabled_adapters` ARRAY ORDER is that region's source
+  PRECEDENCE order. The three new zones are **not at us-ca parity** and each states its own gaps in its
+  `$comment`: no national gauge/camera/outage source, no ES AEMET-direct or DGT adapter, no PH floodplain
+  layer, and the `es` extent covers mainland Spain + the Balearics only (not the Canaries/Ceuta/Melilla).
+- **npm audit: 0 high / 0 critical; 4 moderate, dev-only** (esbuild dev-server via drizzle-kit; the only
+  offered fix is a breaking drizzle-kit downgrade). `package.json overrides` pin brace-expansion ^5.0.8,
+  sharp ^0.35.3, postcss → the direct devDependency (^8.5.23).
+- **37 ADRs** (001–036 + 008a — 38 files on disk; one is an orphaned duplicate,
+  `ADR-036-response-coordination-tier.md`, containing only a Resolution note with no original ADR body —
+  the real content is in `ADR-036-warning-excellence-and-response-modules.md` §7; flagged as finding
+  F-281, not fixed by this docs pass). i18n architecture = **ADR-030**, region-generic composition =
+  ADR-031.
+- **next-intl ^4.13.4**, used in **core-translator mode only** (`createTranslator`) — no routing, no
+  middleware, no `[locale]` segment, no `NextIntlClientProvider`, next.config.mjs untouched.
+- package.json `version: 0.1.0`, `license: Apache-2.0`; NO release tags exist yet (first tag comes
+  after the master plan completes and the combined final audit passes).
+- Repo root is the parent monorepo `/…/IEEE/Quest` (Phase2/ = submitted concept, READ-ONLY; never edit).
+  `docs/audit/{JUDGE_SCORE_PREDICTION,RUBRIC_DEFENSIBILITY,PORTAL_ENTRY_VERIFICATION}.md` are
+  intentionally gitignored (private strategy docs).
+
+## Key docs
+
+- [docs/SPEC.md](docs/SPEC.md): technical spec of record (incl. §3.5 i18n/tz/units, §12.8 Live Views).
+- [docs/architecture/CONFIGURATION.md](docs/architecture/CONFIGURATION.md): every env var/flag/profile
+  (12-factor; config for everything; fail-fast EnvSchema in src/config/index.ts).
+- [audit/DATA_SOURCE_VERIFICATION.md](audit/DATA_SOURCE_VERIFICATION.md): §0 = the authoritative
+  per-source wired/consumed/license/mode table (27 rows).
+- [docs/FINAL_LIVE_TEST_AND_DEMO.md](docs/FINAL_LIVE_TEST_AND_DEMO.md): master live-test + demo script —
+  scenarios A–N, all keys (§1b), rubric-mapped shot list §3 (incl. shot 9a Live Views).
+- [docs/SUBMISSION_CHECKLIST.md](docs/SUBMISSION_CHECKLIST.md): portal #5320 mechanics + the
+  repo-scope decision (monorepo tracks Phase-2 strategy docs — user decides exposure before public).
+- [docs/E2E_TESTING_PLAYBOOK.md](docs/E2E_TESTING_PLAYBOOK.md): run-matrix per mode/key.
+- [docs/architecture/THREAT_MODEL.md](docs/architecture/THREAT_MODEL.md): incl. E11 rows T1.10/T5.10/T5.11.
+- [docs/features/](docs/features/): feature plans. LIVE_VIEWS_FEATURE_PLAN.md and
+  LOCALIZATION_FEATURE_PLAN.md = IMPLEMENTED (historical golden-thread records/pointers).
+  **The EXECUTION DOC OF RECORD is at the MONOREPO ROOT: `../CURRENT-MASTER-PLAN.md`** (all three
+  formerly-pending features collapsed into one waved plan; **MW-A→MW-D done as of 2026-07-31, MW-E
+  (final docs/audit pass) in progress** — corrected 2026-07-31, was stale at "MW-B in progress"). Detail
+  annexes: `../CURRENT-PLAN.md` (i18n), `../CURRENT-PLAN-2-GLOBAL-PREDICTION.md`,
+  `../CURRENT-PLAN-3-DIFFERENTIATORS.md`, `../CURRENT-PLANS-INTEGRATION.md`. Implemented plans are
+  consolidated in CHANGELOG.md and archived (the internal delivery plans
+  banners).
+- [project/TASKS-FINAL-VERSION.md](project/TASKS-FINAL-VERSION.md): the live backlog for the master plan —
+  findings through **F-281** (not F-36) with per-wave tasks and gates; see `docs/SPEC.md` §13 for the
+  consolidated Known Limitations reading of the register.
+- [docs/SPEC-FINAL-VERSION-DELTA.md](docs/SPEC-FINAL-VERSION-DELTA.md): the spec delta the master plan
+  implements (schemas, enum widenings, new vars, limitations to fold into the SPEC ledger at MW-E).
+- [CHANGELOG.md](CHANGELOG.md): Keep-a-Changelog; [0.1.0] - 2026-07-17 summarizes Phase-B/C/D/E11.
+
+## Current state & what remains (all USER actions unless a new task is given)
+
+1. **`../CURRENT-MASTER-PLAN.md` is EXECUTING** — one waved plan (the three formerly separate features
+   were collapsed into it). **Corrected 2026-07-31 (E1 docs truth-up) — this item was stale at "MW-B in
+   progress":** **MW-A localization → MW-B global zones/region-generic composition/storm → MW-C
+   prediction/probability → MW-D predicted impact/anticipatory/warning excellence/governance+coordination
+   are ALL DONE** (Checkpoint #4 green, 2026-07-31). **MW-E (final docs truth-up + 6-lens audit) is now
+   IN PROGRESS** — this pass closes NFR-F10's Known Limitations section (`docs/SPEC.md` §13) and trues up
+   counts across README/SUMMARY/CHANGELOG/llms.txt/DATA_SOURCE_VERIFICATION/CONFIGURATION/
+   RUBRIC_DEFENSIBILITY. Remaining: E2 demo/live-test scenarios (incl. F-72 zone browser coverage, being
+   closed by a sibling lane this same session) · E3 6-lens re-audit · E4 full gate battery · E5 fix +
+   re-verify + S08 HARD STOP. The FIRST release tag only after MW-E's combined final audit passes.
+2. User: live tests A–N with real keys; repo-scope decision (docs/SUBMISSION_CHECKLIST.md §1);
+   film video; submit portal #5320 by 9 Oct 2026. Agents prepare; the user commits/pushes/tags.

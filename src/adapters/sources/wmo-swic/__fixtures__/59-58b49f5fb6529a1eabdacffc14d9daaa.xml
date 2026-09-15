@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  HAND-AUTHORED recorded-STYLE PAGASA General Flood Advisory (gfa) CAP v1.2 document (B3.2) - NOT a
+  byte-recorded response (F-51 labelling). Faithful to the LIVE gfa alert probed 2026-07-27
+  (native output/gfa/945d3297-ddf1-4e96-b668-2ea68a6f3b3c.cap) as documented in
+  docs/features/GLOBAL_ZONE_SOURCE_RESEARCH.md "LATE ADDITION 3": CAP 1.2, sender PAGASA-DOST,
+  sent 2026-07-27T17:47:59+08:00, Actual/Update, category Met, event "General Flood Advisory (Severe)",
+  urgency Expected, severity Severe, certainty Likely, expires 2026-07-28T05:47:59+08:00; TWO <area>
+  blocks - Maguindanao with THREE <polygon> elements (named watercourses) and Lanao Del Sur with one
+  <polygon> PLUS a <geocode> SAME 153600000; Region carried as a CAP <parameter>. The documented probe
+  recorded the STRUCTURE, not the polygon vertices - the coordinate VALUES below are plausible
+  placeholders inside Maguindanao / Lanao del Sur (CAP lat,lon order, closed rings), honestly labelled.
+  License: PAGASA-DOST content CC BY 4.0 (declared verbatim in PAGASA's native feed).
+-->
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>945d3297-ddf1-4e96-b668-2ea68a6f3b3c</identifier>
+  <sender>PAGASA-DOST</sender>
+  <sent>2026-07-27T17:47:59+08:00</sent>
+  <status>Actual</status>
+  <msgType>Update</msgType>
+  <scope>Public</scope>
+  <info>
+    <language>en-US</language>
+    <category>Met</category>
+    <event>General Flood Advisory (Severe)</event>
+    <urgency>Expected</urgency>
+    <severity>Severe</severity>
+    <certainty>Likely</certainty>
+    <expires>2026-07-28T05:47:59+08:00</expires>
+    <senderName>Philippine Atmospheric Geophysical and Astronomical Services Administration</senderName>
+    <web>https://publicalert.pagasa.dost.gov.ph/</web>
+    <parameter>
+      <valueName>Region</valueName>
+      <value>BARMM (Bangsamoro Autonomous Region in Muslim Mindanao)</value>
+    </parameter>
+    <area>
+      <areaDesc>Maguindanao</areaDesc>
+      <polygon>7.20,124.25 7.25,124.32 7.15,124.36 7.10,124.28 7.20,124.25</polygon>
+      <polygon>6.95,124.40 7.02,124.48 6.90,124.52 6.85,124.42 6.95,124.40</polygon>
+      <polygon>6.75,124.60 6.82,124.68 6.70,124.72 6.65,124.62 6.75,124.60</polygon>
+    </area>
+    <area>
+      <areaDesc>Lanao Del Sur</areaDesc>
+      <polygon>7.95,124.10 8.05,124.35 7.85,124.45 7.75,124.20 7.95,124.10</polygon>
+      <geocode>
+        <valueName>SAME</valueName>
+        <value>153600000</value>
+      </geocode>
+    </area>
+  </info>
+</alert>

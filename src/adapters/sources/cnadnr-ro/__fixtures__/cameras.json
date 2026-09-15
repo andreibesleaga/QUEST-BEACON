@@ -1,0 +1,48 @@
+{
+  "$comment": "HAND-CURATED catalog for the cnadnr-ro adapter (CameraDirectoryPort). CNADNR/CNAIR ('Compania Nationala de Administrare a Infrastructurii Rutiere' — the Romanian national road authority) publishes a small set of live traffic-camera pages at https://www.cnadnr.ro/ro/trafic-live with NO API and NO machine-readable lat/lon — this file IS the catalog (there is nothing upstream to scrape/paginate). Verified 2026-07-17 by fetching https://www.cnadnr.ro/ro/trafic-live (HTTP 200) and curl-checking every href below individually (HTTP 200, verified 2026-07-17). The site currently lists exactly 5 camera pages — 3 at Fetesti (A2 motorway, Bucuresti<->Constanta, both directions over the Danube crossing) and 2 at Giurgiu (the DN5 Giurgiu-Ruse Danube border crossing into Bulgaria) — so this catalog has 5 entries, not padded to a larger count. Coordinates are CURATED APPROXIMATIONS at town/landmark level (~2-decimal precision), geocoded from well-known public knowledge of these Romanian locations, NOT scraped or machine-extracted (there is no coordinate field on the CNADNR pages). Cameras at the same physical crossing (the 3 Fetesti cameras; the 2 Giurgiu cameras) intentionally share one town-level pin — do not read this as sub-meter precision.",
+  "adapter": "cnadnr-ro",
+  "port": "CameraDirectory",
+  "curatedAt": "2026-07-17",
+  "cameras": [
+    {
+      "id": "fetesti-a2-camera-1",
+      "title": "Fetesti: Bucuresti-Constanta (Camera 1)",
+      "href": "https://www.cnadnr.ro/ro/trafic-live/fetesti-bucuresti-constanta-camera-1",
+      "lat": 44.38,
+      "lon": 27.83,
+      "note": "curated 2026-07-17; coords approximate (town-level) — Fetesti, A2 motorway Danube crossing"
+    },
+    {
+      "id": "fetesti-a2-camera-2",
+      "title": "Fetesti: Bucuresti-Constanta (Camera 2)",
+      "href": "https://www.cnadnr.ro/ro/trafic-live/fetesti-bucuresti-constanta-camera-2",
+      "lat": 44.38,
+      "lon": 27.83,
+      "note": "curated 2026-07-17; coords approximate (town-level) — Fetesti, A2 motorway Danube crossing"
+    },
+    {
+      "id": "fetesti-a2-camera-3",
+      "title": "Fetesti: Constanta-Bucuresti (Camera 3)",
+      "href": "https://www.cnadnr.ro/ro/trafic-live/fetesti-constanta-bucuresti-camera-3",
+      "lat": 44.38,
+      "lon": 27.83,
+      "note": "curated 2026-07-17; coords approximate (town-level) — Fetesti, A2 motorway Danube crossing, opposite carriageway"
+    },
+    {
+      "id": "giurgiu-iesire",
+      "title": "Giurgiu: Iesire",
+      "href": "https://www.cnadnr.ro/ro/trafic-live/giurgiu-iesire",
+      "lat": 43.9,
+      "lon": 25.97,
+      "note": "curated 2026-07-17; coords approximate (town-level) — Giurgiu, DN5 Danube border crossing (exit toward Bulgaria)"
+    },
+    {
+      "id": "giurgiu-intrare",
+      "title": "Giurgiu: Intrare",
+      "href": "https://www.cnadnr.ro/ro/trafic-live/giurgiu-intrare",
+      "lat": 43.9,
+      "lon": 25.97,
+      "note": "curated 2026-07-17; coords approximate (town-level) — Giurgiu, DN5 Danube border crossing (entry from Bulgaria)"
+    }
+  ]
+}

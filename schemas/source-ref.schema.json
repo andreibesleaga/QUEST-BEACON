@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/source-ref.schema.json",
+  "title": "BEACON Provenance — SourceRef / SourceRecord / Citation / API envelope",
+  "$comment": "Envelope canonicity (single source of truth): docs/api/openapi.yaml is the CANONICAL definition of the API-boundary response envelope (ResponseEnvelope / SourceRef). This file is the contract-test / adapter-internal copy of the same envelope. CI MUST assert parity between the two so they never drift.",
+  "description": "Provenance and citation schemas that make grounding STRUCTURAL, not optional (Constitution Art. XI/XII, AGENTS.md §4 'API response format'). Every ingested datum anchors to a SourceRecord (source, adapter, fetchedAt, license, mode). Every data API response carries provenance[] + freshness; every SITREP field carries citations[] -> SourceRecord. Maps to the canonical SOURCE_RECORD and CITATION entities (DOMAIN_MODEL §2).",
+  "type": "object",
+  "$defs": {
+    "sourceMode": {
+      "type": "string",
+      "description": "SERVED-provenance mode of a record — where the datum actually came from (ADR-041 §3). LIVE = fetched from upstream; CACHED = last-known-good copy of an upstream response; MOCK = recorded fixture; DB = an operator-maintained record held in BEACON's own store (fetchedAt is its LAST EDIT, and it makes no claim about upstream freshness). NOT the same axis as the adapter LADDER RUNG configured by SOURCE_<NAME>_MODE / adapter-manifest.schema.json / regions.schema.json, which keep exactly LIVE|CACHED|MOCK because no adapter can fetch DB.",
+      "enum": ["LIVE", "CACHED", "MOCK", "DB"]
+    },
+    "sourceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "A persisted provenance record for one fetch of one upstream source (canonical SOURCE_RECORD).",
+      "required": ["id", "source", "adapter", "fetchedAt", "license", "mode"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Stable id of this source record (referenced by Citation.sourceId and SourceRef.sourceId)."
+        },
+        "source": {
+          "type": "string",
+          "description": "Human/canonical name of the upstream source (e.g. 'NASA FIRMS', 'OSM Overpass').",
+          "minLength": 1
+        },
+        "adapter": {
+          "type": "string",
+          "description": "Adapter id that produced this record (registry/manifest id, e.g. 'osm-overpass').",
+          "minLength": 1
+        },
+        "fetchedAt": {
+          "type": "string",
+          "description": "When the data was fetched/recorded — the freshness anchor. ISO 8601 with timezone.",
+          "format": "date-time"
+        },
+        "license": {
+          "type": "string",
+          "description": "License/terms under which the data may be used (e.g. 'ODbL', 'Public Domain (US Gov)', 'CC-BY-4.0'). Tracked in NOTICE (Art. XI).",
+          "minLength": 1
+        },
+        "mode": { "$ref": "#/$defs/sourceMode" },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Optional canonical/upstream URL the record was fetched from."
+        },
+        "attribution": {
+          "type": "string",
+          "description": "Optional required attribution string to display (e.g. '© OpenStreetMap contributors')."
+        }
+      }
+    },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "A lightweight reference to a SourceRecord used inside an API envelope's provenance[]. Carries enough to display source+freshness+mode without re-embedding the full record.",
+      "required": ["sourceId", "source", "adapter", "fetchedAt", "mode"],
+      "properties": {
+        "sourceId": {
+          "type": "string",
+          "format": "uuid",
+          "description": "FK -> sourceRecord.id."
+        },
+        "source": { "type": "string", "minLength": 1 },
+        "adapter": { "type": "string", "minLength": 1 },
+        "fetchedAt": { "type": "string", "format": "date-time" },
+        "license": { "type": "string" },
+        "mode": { "$ref": "#/$defs/sourceMode" }
+      }
+    },
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Grounds one field of a generated SITREP to a SourceRecord (canonical CITATION; Art. XII). 100% citation coverage is a contract-test requirement (PRD §6).",
+      "required": ["field", "sourceId", "claim"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "Which SITREP field this citation grounds (e.g. 'summary.executiveSummary', 'situationInformation.exposureSummary').",
+          "minLength": 1
+        },
+        "sourceId": {
+          "type": "string",
+          "format": "uuid",
+          "description": "FK -> sourceRecord.id that substantiates the claim."
+        },
+        "claim": {
+          "type": "string",
+          "description": "The specific cited fact/claim drawn from the source.",
+          "minLength": 1
+        }
+      }
+    },
+    "apiEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The mandatory BEACON API response envelope (AGENTS.md §4). Every data response carries provenance[] + freshness; SITREP responses additionally carry citations[]. An ungrounded response fails the contract test.",
+      "required": ["data", "provenance", "freshness"],
+      "properties": {
+        "data": {
+          "description": "The response payload (any shape)."
+        },
+        "provenance": {
+          "type": "array",
+          "description": "MANDATORY — the source refs backing the data. May be empty ONLY when explicitly marking data unavailable (then meta.status='unavailable').",
+          "items": { "$ref": "#/$defs/sourceRef" }
+        },
+        "freshness": {
+          "type": "string",
+          "description": "MANDATORY — newest fetchedAt across provenance, i.e. how fresh the data is. ISO 8601 with timezone.",
+          "format": "date-time"
+        },
+        "citations": {
+          "type": "array",
+          "description": "Required on SITREP responses (U2): grounds every SITREP field.",
+          "items": { "$ref": "#/$defs/citation" }
+        },
+        "meta": {
+          "type": "object",
+          "description": "Optional metadata (status, degradation labels, pagination). A 200-degraded response (UW2) carries status='degraded' + the served mode, and may carry informational errors[] alongside data.",
+          "properties": {
+            "status": {
+              "type": "string",
+              "description": "Degradation state: 'ok' (live), 'degraded' (served from cache/mock fallback — still a 200), 'unavailable' (no data; provenance[] may be empty).",
+              "enum": ["ok", "degraded", "unavailable"]
+            },
+            "degraded": {
+              "type": "boolean",
+              "description": "True when any layer is served from cache/mock or a fallback rung (label degradation, Art. XVI)."
+            },
+            "mode": {
+              "$ref": "#/$defs/sourceMode",
+              "description": "Effective served mode when degraded (LIVE|CACHED|MOCK|DB)."
+            },
+            "page": {
+              "type": "object",
+              "description": "Cursor pagination block for collection endpoints (SPEC §2.6).",
+              "properties": {
+                "nextCursor": {
+                  "type": ["string", "null"],
+                  "description": "Opaque cursor for the next page; null when no more."
+                },
+                "hasMore": { "type": "boolean" },
+                "limit": { "type": "integer", "minimum": 1 }
+              }
+            }
+          }
+        },
+        "errors": {
+          "type": "array",
+          "description": "Non-fatal warnings accompanying a successful (incl. 200-degraded) response, e.g. a SOURCE_DEGRADED entry. Each entry validates with code+message.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["code", "message"],
+            "properties": {
+              "code": { "type": "string" },
+              "message": { "type": "string" },
+              "field": {
+                "type": "string",
+                "description": "Optional JSON pointer / field path the warning applies to."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "type": "object",
+  "description": "Root alias — a single SourceRecord. Use $defs for the other shapes.",
+  "$ref": "#/$defs/sourceRecord"
+}

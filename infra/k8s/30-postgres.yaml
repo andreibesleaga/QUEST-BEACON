@@ -1,0 +1,50 @@
+# BEACON — in-cluster PostgreSQL for evaluation. For production use a managed database and simply point
+# DATABASE_URL at it (delete this file from kustomization.yaml).
+apiVersion: v1
+kind: Service
+metadata:
+  name: beacon-postgres
+  namespace: beacon
+spec:
+  selector: { app: beacon-postgres }
+  ports: [{ port: 5432, targetPort: 5432 }]
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: beacon-postgres
+  namespace: beacon
+spec:
+  serviceName: beacon-postgres
+  replicas: 1
+  selector:
+    matchLabels: { app: beacon-postgres }
+  template:
+    metadata:
+      labels: { app: beacon-postgres }
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16.10-alpine
+          ports: [{ containerPort: 5432 }]
+          env:
+            - { name: POSTGRES_USER, value: beacon }
+            - { name: POSTGRES_DB, value: beacon }
+            - name: POSTGRES_PASSWORD
+              valueFrom: { secretKeyRef: { name: beacon-secrets, key: POSTGRES_PASSWORD } }
+            - { name: PGDATA, value: /var/lib/postgresql/data/pgdata }
+          readinessProbe:
+            exec: { command: ['pg_isready', '-U', 'beacon', '-d', 'beacon'] }
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+            - { name: data, mountPath: /var/lib/postgresql/data }
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { cpu: '1', memory: 1Gi }
+  volumeClaimTemplates:
+    - metadata: { name: data }
+      spec:
+        accessModes: ['ReadWriteOnce']
+        resources: { requests: { storage: 5Gi } }

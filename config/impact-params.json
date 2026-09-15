@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "parameterSetId": "beacon-default-2026-07",
+  "authority": "ADR-035 §1(b)/(d) + §3 — docs/architecture/decisions/ADR-035-predicted-impact-methods.md. Every value below is a PARAMETER of a documented method, exposed as data (ADR-012 / Art. XV) so a reader can see exactly what was assumed. Changing a figure here changes a published number: review these as data, not as code.",
+  "verifiedConvention": "`verified: true` would mean the VALUE ITSELF is published in the literature recorded in docs/features/DIFFERENTIATORS_RESEARCH.md. Every value in this file ships `verified: false`, and that is the honest state, not an oversight: the research record explicitly flags 'evac participation/clearance exact %' as UNVERIFIED (docs/features/DIFFERENTIATORS_RESEARCH.md:82) and 'Params UNVERIFIED -> expose' (:49). The METHODS are literature-based and cited per parameter; the NUMBERS are BEACON operator defaults to be replaced by local study. Any figure computed from them therefore renders with its parameter set and this caveat attached.",
+  "parameters": {
+    "minReportableCount": {
+      "value": 10,
+      "unit": "persons",
+      "label": "Small-count suppression floor. A population figure below this renders as a '<N' bucket, never as an exact small number. BEACON policy threshold, not a published standard.",
+      "citation": "ADR-035 §3.3 — statistical-disclosure control on every aggregate figure. The threshold is a BEACON decision recorded in that ADR; no external authority is claimed for the specific value.",
+      "verified": false
+    },
+    "shelterSeekingFraction": {
+      "value": 0.15,
+      "unit": "fraction of affected residents in [0,1]",
+      "label": "Share of affected residents assumed to seek PUBLIC shelter rather than staying with family, in a hotel, or in a vehicle. Operator default, NOT a literature value.",
+      "citation": "Method: predicted shelter demand = affected x shelter-seeking share (ADR-035 §1(d); CURRENT-PLAN-3-DIFFERENTIATORS.md:74-78). The share itself is place- and event-specific and is not a published constant; replace it with local study before operational use.",
+      "verified": false
+    },
+    "participationFraction": {
+      "value": 0.7,
+      "unit": "fraction of affected residents in [0,1]",
+      "label": "Share of affected residents assumed to actually evacuate by vehicle when told to. Operator assumption, NOT a literature value — evacuation-participation research documents systematic over-optimism in exactly this number.",
+      "citation": "Kuligowski 2020 (participation over-optimism), recorded at docs/features/DIFFERENTIATORS_RESEARCH.md:48-49; the research record flags exact evacuation-participation percentages as UNVERIFIED at :82 and CURRENT-PLAN-3-DIFFERENTIATORS.md:174-175.",
+      "verified": false
+    },
+    "occupantsPerVehicle": {
+      "value": 2.5,
+      "unit": "persons per evacuating vehicle",
+      "label": "Average occupancy of an evacuating household vehicle, used to convert evacuating residents into vehicles. Operator default, NOT a literature value.",
+      "citation": "Method: vehicles = evacuating residents / occupants-per-vehicle, the standard clearance-time formulation (Cova & Dennison 2005 trigger buffers; Li/Cova/Dennison 2019 clearance times) recorded at docs/features/DIFFERENTIATORS_RESEARCH.md:48-49.",
+      "verified": false
+    },
+    "egressCapacityVehPerHour": {
+      "value": 1200,
+      "unit": "vehicles per hour across all egress routes",
+      "label": "Total road capacity out of the affected area. A single lumped number: BEACON has no road-network capacity model, no intersection or contraflow modelling, and no route-level assignment. Operator default, NOT a literature value.",
+      "citation": "Method: clearance = loading time + vehicles / egress capacity (Cova & Dennison 2005; Li/Cova/Dennison 2019, whose measured clearance is SUPER-linear in demand — 160 to 292 minutes at 2x demand, docs/features/DIFFERENTIATORS_RESEARCH.md:48-49 — so this LINEAR formulation UNDERSTATES clearance at high demand and must be read as a floor).",
+      "verified": false
+    },
+    "loadingTimeHours": {
+      "value": 0.5,
+      "unit": "hours",
+      "label": "Time from warning receipt to the first vehicles leaving (mobilisation/loading). Operator default, NOT a literature value.",
+      "citation": "Method: the loading/mobilisation term of the evacuation trigger-buffer formulation (Cova & Dennison 2005), recorded at docs/features/DIFFERENTIATORS_RESEARCH.md:48-49.",
+      "verified": false
+    },
+    "maxAssignmentRadiusKm": {
+      "value": 15,
+      "unit": "kilometres",
+      "label": "Maximum distance at which a population cell is assigned to a cell site. Beyond it the cell is reported as ALREADY UNSERVED by the site data rather than as reach lost to the hazard. A crude stand-in for coverage range: no terrain, no antenna pattern, no frequency, no link budget.",
+      "citation": "ADR-035 §1(b) — nearest-site assignment within a maximum radius. The radius is a BEACON operator default; OpenCelliD publishes no coverage radius and BEACON has no propagation model.",
+      "verified": false
+    },
+    "minResidentsForSirenFlag": {
+      "value": 500,
+      "unit": "persons",
+      "label": "Residents losing cellular reach at or above which non-cellular dissemination (sirens / door-to-door) is flagged as required. Operator default triage threshold, NOT a published standard.",
+      "citation": "ADR-035 §1(b) — the flag exists to tell an EM where phone-based warning is the wrong plan; the threshold is a BEACON decision recorded in that ADR.",
+      "verified": false
+    },
+    "minSiteLossFraction": {
+      "value": 0.3,
+      "unit": "fraction of known sites in [0,1]",
+      "label": "Share of the region's known cell sites inside the predicted extent at or above which non-cellular dissemination is flagged, independently of the resident count. Operator default triage threshold, NOT a published standard.",
+      "citation": "ADR-035 §1(b), second limb of the flag condition. Concept validated by cell-site outage reporting practice (FCC DIRS; CRS R48776) as recorded at CURRENT-PLAN-3-DIFFERENTIATORS.md:68-71 — the THRESHOLD is a BEACON decision.",
+      "verified": false
+    }
+  }
+}

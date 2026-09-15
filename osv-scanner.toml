@@ -1,0 +1,13 @@
+# BEACON — OSV-Scanner policy (mirrors the documented dependency gate: `npm audit --audit-level=high`).
+# OSV-Scanner exits non-zero on ANY finding, so known-accepted low/medium DEV-ONLY advisories are recorded
+# here explicitly — each with its reason — rather than silently reddening the (non-blocking) security lane.
+# Review on every dependency update; remove an entry the moment the fix lands.
+
+[[IgnoredVulns]]
+id = "GHSA-67mh-4wv8-2f99"
+reason = "esbuild <=0.25.0 dev-server CORS advisory (CVSS 5.3, Medium). Dev-only transitive dependency (vite/vitest toolchain); the esbuild dev server is never exposed in this project and never ships in the production build. Below the documented high+ gate. Fix requires a toolchain major bump — tracked for the next dependency window."
+
+[[IgnoredVulns]]
+id = "GHSA-82fw-gwwq-j7x9"
+ignoreUntil = 2026-12-01
+reason = "Vitest / @vitest/mocker 3.2.7 (CVSS 5.9, Medium), fixed in 4.1.11. DEV-ONLY: vitest is a devDependency, is never installed in the runtime image (infra/Dockerfile runs `npm ci --omit=dev`) and ships in no production artifact. Below the documented high+ gate that `npm audit --audit-level=high` enforces one step above. The real fix is a vitest 3 → 4 major upgrade, which churns the whole 4900-test suite and is not something to do in the same change as a release; it belongs in its own dependency window. NOTE THE EXPIRY: unlike the entry above, this exemption stops applying on 2026-12-01 and the lane goes red again, because an accepted risk with no end date is indistinguishable from one nobody looked at."

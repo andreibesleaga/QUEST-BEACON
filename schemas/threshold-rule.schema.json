@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/threshold-rule.schema.json",
+  "title": "BEACON Threshold Rule (FR-11 early-warning)",
+  "description": "Validates a declarative FR-11 threshold rule (ADR-014; CLARIFICATIONS §B.Q5; SPEC §5.3; DOMAIN_MODEL §2 THRESHOLD_RULE). Rules are evaluated each ingestion cycle over the canonical model; an edge-triggered transition across 'value' creates a DRAFT ALERT with provenance to the triggering SOURCE_RECORD. No CAP is emitted until a VERIFIER approves (Art. XIII). Evaluation is deterministic and unit-testable. 'hysteresis' (min dwell) is anti-flap; 'cooldown' de-dups repeat fires.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "target", "operator", "value", "scope", "hysteresis", "cooldown"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable rule id (DOMAIN_MODEL THRESHOLD_RULE.id). Set on a fired ALERT.threshold_rule_id for EV6 traceability."
+    },
+    "target": {
+      "type": "string",
+      "description": "What the rule observes in the canonical model (DOMAIN_MODEL THRESHOLD_RULE.target). GAUGE_CATEGORY = a flood gauge's category; HAZARD_BUFFER = a hazard polygon entering an infrastructure buffer.",
+      "enum": ["GAUGE_CATEGORY", "HAZARD_BUFFER"]
+    },
+    "operator": {
+      "type": "string",
+      "description": "Transition operator (edge-triggered, SPEC §5.3). 'crosses' = transitions across 'value' (used with GAUGE_CATEGORY ordering); 'gte' = reaches/exceeds a numeric 'value'; 'enters' = enters a buffer/zone of type 'value' (used with HAZARD_BUFFER).",
+      "enum": ["crosses", "gte", "enters"]
+    },
+    "value": {
+      "description": "The threshold the target transitions across (SPEC §5.3). Per target: a flood-category enum (NONE|ACTION|MINOR|MODERATE|MAJOR) for GAUGE_CATEGORY/crosses; a distance/stage in meters for gte; an infrastructure type for HAZARD_BUFFER/enters. Accepts a string token or a non-negative number.",
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "number",
+          "minimum": 0
+        }
+      ]
+    },
+    "scope": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Region this rule applies to (DOMAIN_MODEL THRESHOLD_RULE.scope = region_id; per-region configurability, ADR-014). FK -> region.id."
+    },
+    "hysteresis": {
+      "type": "string",
+      "pattern": "^[0-9]+(s|m|h)$",
+      "description": "Minimum dwell the new state must hold before firing (anti-flap, SPEC §5.3). Duration token: digits + unit s|m|h (e.g. '15m', '300s', '1h')."
+    },
+    "cooldown": {
+      "type": "string",
+      "pattern": "^[0-9]+(s|m|h)$",
+      "description": "De-dup window suppressing repeat fires after one fire (SPEC §5.3). Duration token: digits + unit s|m|h (e.g. '60m', '3600s', '2h')."
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Optional active flag; when absent the rule is treated as enabled. Lets a rule be staged/disabled per region without deletion.",
+      "default": true
+    }
+  }
+}

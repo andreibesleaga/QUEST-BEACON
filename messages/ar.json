@@ -1,0 +1,599 @@
+{
+  "_meta": {
+    "locale": "ar",
+    "review": "machine",
+    "machineTranslated": true,
+    "comment": "Machine-translated from messages/en.json; NOT reviewed by a human translator. Labeled as such in the UI (FR-I18N-5).",
+    "coverage": "full"
+  },
+  "channels": {
+    "digest": {
+      "trend": "الاتجاه",
+      "noClaim": "(لا يوجد ادعاء)",
+      "citations": "الاستشهادات",
+      "sources": "المصدر",
+      "freshness": "الحداثة"
+    },
+    "alert": {
+      "headline": "تنبيه BEACON — {severity} {category} للحادث {incidentId} (تنبيه {alertId})"
+    }
+  },
+  "actMenu": {
+    "trigger": "تنفيذ",
+    "title": "تنفيذ إجراء على المحدَّد",
+    "taskResource": "تكليف مورد",
+    "drawRoute": "رسم مسار إخلاء",
+    "createAlert": "إنشاء تنبيه DRAFT"
+  },
+  "app": {
+    "title": "BEACON — صورة العمليات المشتركة",
+    "description": "صورة عمليات مشتركة مفتوحة المصدر، تعمل محليًا أولًا، وشبه آنية لحرائق الغابات والفيضانات.",
+    "skipToContent": "الانتقال إلى المحتوى",
+    "noLiveIncidentsTitle": "لا يوجد حادث مباشر في هذه المنطقة",
+    "noLiveIncidentsDescription": "لا يبلّغ أي مصدر مباشر حاليًا عن حريق غابات أو فيضان هنا. تعرض الخريطة ما تقدّمه المصادر المباشرة؛ لا شيء مختلق. المصادر وحالتها مدرجة تحت المصادر.",
+    "noLiveIncidentsDemoDescription": "لا يبلّغ أي مصدر مباشر عن حريق غابات أو فيضان هنا الآن. الحادث المعروض هو سيناريو العرض التوضيحي المحمّل مسبقًا، والمحتفظ به للجولة التعريفية؛ وتُرسم الطبقات المباشرة عندما تقدّمها المصادر."
+  },
+  "commandPalette": {
+    "openLabel": "فتح لوحة الأوامر",
+    "triggerText": "بحث",
+    "dialogLabel": "لوحة الأوامر",
+    "placeholder": "انتقل إلى منطقة أو حادث أو لوحة — أو نفّذ إجراءً…",
+    "empty": "لا نتائج.",
+    "groupRegions": "المناطق",
+    "groupIncidents": "الحوادث",
+    "groupPanels": "اللوحات",
+    "groupLayers": "تبديل الطبقات",
+    "groupAct": "تنفيذ",
+    "toggleLayer": "تبديل طبقة {layer}",
+    "shortcutsTitle": "اختصارات لوحة المفاتيح",
+    "shortcutsDescription": "كل إجراء في صورة العمليات المشتركة متاح دون مؤشر.",
+    "shortcut": {
+      "openPalette": "فتح لوحة الأوامر",
+      "openShortcuts": "فتح قائمة الاختصارات هذه",
+      "move": "التنقل بين نتائج اللوحة",
+      "run": "تنفيذ الإجراء المحدَّد",
+      "close": "إغلاق اللوحة / الطبقة العلوية"
+    }
+  },
+  "decision": {
+    "sectionLabel": "دعم القرار",
+    "figures": "أرقام حتمية",
+    "narration": "سرد بالذكاء الاصطناعي",
+    "noNarration": "لا يوجد سرد (حتمي فقط).",
+    "citations": "الاستشهادات",
+    "approved": "معتمد من مسؤول بشري",
+    "approve": "اعتماد القرار",
+    "humanApprovalRequired": "يلزم اعتماد بشري قبل أي إجراء عام.",
+    "noDraftToApprove": "لا يوجد ما يمكن اعتماده الآن — لا يوجد تنبيه مسودة بانتظار المراجعة.",
+    "roleRequiredToApprove": "سجّل الدخول كمدقّق أو مدير طوارئ للاعتماد.",
+    "approveFailed": "فشلت الموافقة —"
+  },
+  "draftAlerts": {
+    "title": "مراجعة التنبيهات (DRAFT)",
+    "emptyTitle": "لا توجد مسودات تنبيهات",
+    "emptyDescription": "قواعد العتبات تُنشئ تنبيهات DRAFT هنا.",
+    "provenance": "المصدر",
+    "noProvenance": "لا يوجد مصدر",
+    "reviewApprove": "مراجعة واعتماد…",
+    "approveFailed": "فشلت الموافقة —",
+    "forecastHeading": "أدلة التنبؤ — الطريقة والمدخلات وعدم اليقين",
+    "forecastCategory": "فئة التنبؤ",
+    "forecastLeadTimeLabel": "مهلة الإنذار",
+    "forecastLeadTime": "{hours, number} ساعة، كما ذكر المصدر. لا يقوم BEACON بنمذجة زمن انتقال الخطر.",
+    "forecastCrossing": "التجاوز المتوقع وزمن إصدار التنبؤ",
+    "forecastLikelihood": "الاحتمالية والمدخلات والطريقة"
+  },
+  "locale": {
+    "label": "اللغة",
+    "switcherLabel": "لغة العرض",
+    "machineTranslatedNotice": "ترجمة آلية — لم يراجعها مترجم بشري.",
+    "machineTranslatedShort": "ترجمة آلية"
+  },
+  "logistics": {
+    "title": "اللوجستيات",
+    "resource": "مورد",
+    "shelter": "مأوى",
+    "noShelterData": "لا توجد بيانات عن سعة المآوي.",
+    "shelterCapacity": "سعة المأوى",
+    "shelterCapacityVsDemand": "سعة المأوى مقابل الطلب",
+    "overCapacity": "تجاوز السعة",
+    "withinCapacity": "ضمن السعة",
+    "resourceToTask": "المورد المراد تكليفه",
+    "selectResource": "اختر موردًا…",
+    "lifecycleTransition": "انتقال دورة الحياة",
+    "transition": {
+      "PROPOSED": "PROPOSED",
+      "ASSIGNED": "ASSIGNED",
+      "EN_ROUTE": "EN_ROUTE",
+      "ON_SCENE": "ON_SCENE",
+      "CLEARED": "CLEARED"
+    },
+    "task": "تكليف",
+    "taskingRejected": "رُفض التكليف ({code}): {message}",
+    "resourcesUnavailable": "الموارد غير متاحة",
+    "noResourcesTitle": "لا توجد موارد",
+    "noResourcesDescription": "لا توجد موارد قابلة للتكليف ضمن النطاق.",
+    "prePositioning": {
+      "heading": "اقتراحات التمركز المسبق",
+      "advisory": "استشاري — القرار للإنسان",
+      "listLabel": "قائمة اقتراحات التمركز المسبق",
+      "noIncidentTitle": "لم يُحدَّد أي حادث",
+      "noIncidentDescription": "اختر حادثًا لعرض اقتراحات التمركز المسبق.",
+      "unavailable": "التمركز المسبق غير متاح",
+      "noExtentTitle": "لا يوجد امتداد متوقَّع بعد",
+      "noExtentDescription": "تظهر الاقتراحات بمجرد توفّر إسقاط للخطر لهذا الحادث.",
+      "noAssetsTitle": "لا توجد أصول قريبة",
+      "noAssetsDescription": "لم يُعثر على موارد AVAILABLE أو مآوٍ OPEN قرب الامتداد المتوقَّع."
+    }
+  },
+  "map": {
+    "layersLegend": "طبقات الخريطة",
+    "errorBoundaryLabel": "الخريطة",
+    "unavailableTitle": "الخريطة التفاعلية غير متاحة",
+    "unavailableDescription": "WebGL غير متاح هنا. جميع بيانات الخريطة مدرجة أدناه كبديل يسهل الوصول إليه.",
+    "layer": {
+      "fire": "حريق (بؤر حرارية ومحيط)",
+      "flood": "امتداد الفيضان والمقاييس",
+      "storm": "مسار الإعصار والمخروط والمد العاصفي",
+      "floodzone": "مناطق الفيضان (NFHL)",
+      "infra": "البنية التحتية",
+      "weather": "الطقس (الرياح)",
+      "cameras": "كاميرات مباشرة",
+      "outage": "انقطاعات الكهرباء",
+      "cell": "التغطية الخلوية",
+      "exposure": "التعرّض (عُقد داخل الخطر)",
+      "reports": "بلاغات / SOS",
+      "prediction": "مخروط التنبؤ",
+      "route": "مسار الإخلاء",
+      "shelters": "المآوي"
+    },
+    "caveat": {
+      "fire": "بؤر FIRMS الحرارية هي عمليات رصد حراري، وليست محيطات حرائق مؤكدة.",
+      "floodzone": "مناطق فيضان تنظيمية — وليست امتدادًا آنيًا",
+      "weather": "نقطة رصد — وليست شبكة تنبؤات",
+      "camera": "كاميرات مباشرة — تفتح موقع المصدر في تبويب جديد",
+      "outage": "دقة على مستوى المقاطعة (EAGLE-I): المناطق تقديرات مفترضة الانقطاع، وليست انقطاعات مؤكدة لكل عنوان.",
+      "cell": "تقدير تغطية مشتق من OpenCelliD — إرشادي، وليس خريطة إشارة مضمونة.",
+      "storm": "منتج الإعصار الصادر عن الجهة الرسمية معروض حرفيًا — لا يقوم BEACON بنمذجة مسارات العواصف أو الرياح أو المد العاصفي.",
+      "routeDirect": "مسار مباشر — لم يتم التحقق من أن هذا المسار يتجنب الخطر. تأكد منه قبل إرسال أي شخص."
+    },
+    "tooltip": {
+      "layer": "الطبقة: {group}",
+      "clickToOpen": "انقر للفتح ↗"
+    },
+    "region": {
+      "label": "المنطقة",
+      "default": "المنطقة الافتراضية",
+      "overlaysLegend": "طبقات الأقمار الصناعية",
+      "attribution": "صور الأقمار الصناعية: NASA EOSDIS GIBS"
+    },
+    "gibs": {
+      "truecolor": "ألوان حقيقية (VIIRS)",
+      "fires": "حرائق نشطة (VIIRS)",
+      "flood": "فيضان (MODIS)",
+      "aerosol": "العمق البصري للهباء الجوي"
+    },
+    "list": {
+      "regionLabel": "معالم الخريطة (قائمة ميسَّرة)",
+      "empty": "لا توجد معالم خريطة في العرض الحالي.",
+      "caption": "قائمة ميسَّرة بجميع معالم الخريطة — البديل عبر لوحة المفاتيح للخريطة التفاعلية.",
+      "colType": "النوع",
+      "colFeature": "المَعلَم",
+      "colDetail": "التفاصيل",
+      "colLocation": "الموقع",
+      "colAction": "الإجراء",
+      "focus": "تركيز {label}"
+    },
+    "group": {
+      "fire": "رصد حريق",
+      "gauge": "مقياس فيضان",
+      "infra": "البنية التحتية",
+      "exposure": "التعرّض",
+      "report": "بلاغ / SOS",
+      "shelter": "مأوى"
+    },
+    "detail": {
+      "severity": "الشدة {severity}",
+      "thermalHotspot": "بؤرة حرارية",
+      "stage": "المنسوب {stage}",
+      "gauge": "مقياس",
+      "node": "عقدة",
+      "infra": "{kind} — {status}",
+      "inHazard": "داخل الخطر: {hazard}",
+      "nodeInHazard": "عقدة داخل الخطر"
+    },
+    "outage": {
+      "assumedOffline": "مفترض الانقطاع",
+      "reportedOffline": "انقطاع مُبلَّغ عنه",
+      "withCount": "{count} مشترك بلا خدمة — {state}"
+    },
+    "zone": {
+      "label": "النطاق {zone}"
+    },
+    "storm": {
+      "trackLabel": "مسار مركز الإعصار — إرشادي، وليس منطقة تأثير",
+      "coneLabel": "مخروط التنبؤ — عدم يقين في موضع مركز المسار، وليس منطقة تأثير",
+      "surgeLabel": "امتداد المد العاصفي — منطقة تأثير، محسوبة في التعرّض",
+      "coneCaveat": "مخروط التنبؤ من {agency}، تحديث {advisoryAt} — يوضح المسار المحتمل لمركز العاصفة، وليس امتداد الظروف الخطرة على الإطلاق.",
+      "coneCaveatUnattributed": "يوضح مخروط التنبؤ المسار المحتمل لمركز العاصفة — وليس امتداد الظروف الخطرة على الإطلاق."
+    },
+    "shelter": {
+      "capacity": "السعة {capacity} · الحاجة {demand}"
+    },
+    "weather": {
+      "label": "ريح {speed} km/h من {compass} ({deg}°)، رصد {observedAt}"
+    },
+    "compass": {
+      "N": "شمال",
+      "NE": "شمال شرق",
+      "E": "شرق",
+      "SE": "جنوب شرق",
+      "S": "جنوب",
+      "SW": "جنوب غرب",
+      "W": "غرب",
+      "NW": "شمال غرب"
+    },
+    "zoomIn": "تكبير",
+    "zoomOut": "تصغير",
+    "recenter": "إعادة توسيط الخريطة",
+    "offlineBasemap": "لا توجد خريطة أساس في هذا النشر المعزول عن الشبكة. جميع الطبقات التشغيلية فوقها تعمل دون تأثر.",
+    "unavailableBasemap": "لا توجد خريطة أساس: لا يمكن الوصول إلى أي خدمة بلاطات خرائط. جميع الطبقات التشغيلية أدناه غير متأثرة."
+  },
+  "anticipatory": {
+    "title": "الإجراء الاستباقي",
+    "tab": "استباقي",
+    "sectionLabel": "الإجراء الاستباقي — بروتوكول الإجراء المبكر",
+    "methodHeading": "المنهجية والمدخلات وعدم اليقين",
+    "ladderHeading": "سلّم التفعيل",
+    "cycleHeading": "التقييم {index, number} من {total, number}",
+    "inputs": "المدخلات",
+    "members": "{over, number} من {total, number} من أعضاء التنبؤ تتجاوز {threshold, number} {unit}",
+    "leadTimeLabel": "مهلة الإنذار المسبق",
+    "leadTime": "{hours, number} ساعة، وفق ما يذكره المصدر. لا يُنمذج BEACON زمن انتقال الخطر.",
+    "vintage": "تشغيل التنبؤ ولحظة إصداره",
+    "methodLabel": "المنهجية والفئة",
+    "fired": "تم التفعيل",
+    "notFired": "لم يُفعَّل",
+    "stageGate": "العتبة: ما لا يقل عن {fraction, number} من أعضاء التنبؤ فوق {threshold, number} {unit}، بالفئة {klass} أو أعلى، خلال مهلة إنذار مسبق قدرها {hours, number} ساعة.",
+    "ledgerHeading": "سجلات الحوكمة التي تنتجها هذه الدورة:",
+    "actionsHeading": "إجراءات متفق عليها مسبقًا",
+    "suggested": "مقترح",
+    "approvalHeading": "الموافقة البشرية",
+    "pending": "بانتظار موافقة بشرية من: {roles}",
+    "noEmission": "اقتراحات فقط. لا شيء في هذه اللوحة يُرسل موردًا أو يُصدر تنبيهًا عامًا؛ يجب أن يوافق شخص محدد بالاسم على كل إجراء مبكر.",
+    "stopMechanism": "آلية الإيقاف: يمكن للدور {role} إيقاف التفعيل عند شرط متفق عليه مسبقًا، ويوقفه المحرك تلقائيًا بعد {hours, number} ساعة.",
+    "replay": "إعادة تشغيل من ملفات مسجَّلة: يُعاد تقييم كل تشغيل تنبؤ مسجَّل بعد {lag, number} ساعة من لحظة الإصدار المذكورة في الملف. ليست بيانات حيّة — لا يستعلم BEACON عن أي منتج تنبؤ جماعي أثناء التشغيل.",
+    "noProtocolTitle": "لا يوجد بروتوكول إجراء مبكر لهذه المنطقة",
+    "noProtocolBody": "لا يتضمن BEACON أي بروتوكول إجراء مبكر يشمل نطاقه هذه المنطقة، فلا شيء لتقييمه. البروتوكولات إعدادات (config/eap/) وليست شيفرة برمجية.",
+    "noForecastTitle": "لا يوجد تنبؤ مسجَّل لهذا البروتوكول",
+    "noForecastBody": "البروتوكول متوفر، لكنه لا يأتي مع أي ملف تنبؤ مسجَّل، فلا يمكن إعادة تشغيل أي تقييم. ولا يوجد لدى BEACON مصدر تنبؤ جماعي حيّ موصول.",
+    "engineRefusedTitle": "رفض المحرك الاستباقي هذه المدخلات",
+    "engineRefusedBody": "رفض المحرك المدخلات بدلًا من عرض تقييم جزئي."
+  },
+  "outlook": {
+    "title": "التوقعات",
+    "sectionLabel": "التوقعات المرتّبة",
+    "eta": "خلال ~{hours, number} h",
+    "noEta": "المصدر لا يوفّر مهلة زمنية",
+    "unclassified": "غير مصنّف",
+    "uncertainty": "عدم اليقين {value, number}"
+  },
+  "panels": {
+    "sitrepTitle": "تقرير الموقف",
+    "logisticsTitle": "اللوجستيات"
+  },
+  "shell": {
+    "sitrepDock": "تقرير الموقف",
+    "logisticsDock": "اللوجستيات",
+    "mapLabel": "خريطة صورة العمليات المشتركة",
+    "panelsLabel": "لوحات صورة العمليات المشتركة",
+    "expand": "توسيع {label}",
+    "collapse": "طي {label}",
+    "region": {
+      "us-ca": "كاليفورنيا (الولايات المتحدة)",
+      "ro": "رومانيا (الاتحاد الأوروبي)",
+      "es": "إسبانيا (الاتحاد الأوروبي)",
+      "gr": "اليونان (الاتحاد الأوروبي)",
+      "ph": "الفلبين"
+    }
+  },
+  "sitrep": {
+    "title": "تقرير الموقف",
+    "uncited": "بلا استشهاد — مصدر مفقود (F2)",
+    "noPriorities": "لا توجد أولويات مرتّبة.",
+    "rankedPriorities": "الأولويات المرتّبة",
+    "deterministicOnly": "حتمي فقط",
+    "aiGenerated": "مُولَّد بالذكاء الاصطناعي",
+    "trendLabel": "الاتجاه:",
+    "priorities": "الأولويات",
+    "noIncidentTitle": "لم يُحدَّد أي حادث",
+    "noIncidentDescription": "اختر حادثًا لعرض تقرير موقفه.",
+    "unavailable": "تقرير الموقف غير متاح",
+    "provenance": "المصدر",
+    "externalViews": "عروض خارجية"
+  },
+  "statusStrip": {
+    "regionLabel": "ملخص حالة المنطقة",
+    "active": "نشطة",
+    "pending": "قيد الانتظار",
+    "unverified": "غير مؤكدة",
+    "sources": "المصادر",
+    "dataAsOf": "عمر البيانات",
+    "clock": "UTC",
+    "liveOfTotal": "{live}/{total} مباشر",
+    "minutesAgo": "{minutes} د",
+    "unavailable": "البيانات الحيّة غير متاحة"
+  },
+  "suppliesPanel": {
+    "title": "إمدادات الإغاثة",
+    "unavailable": "الإمدادات غير متاحة",
+    "emptyTitle": "لا توجد دفعات إمدادات",
+    "emptyDescription": "لا يوجد مخزون إمدادات إغاثة مسجل.",
+    "expires": "تنتهي الصلاحية {when}",
+    "asOf": "حتى {when}",
+    "provenance": "المصدر"
+  },
+  "volunteerTeamsPanel": {
+    "title": "فرق المتطوعين",
+    "unavailable": "فرق المتطوعين غير متاحة",
+    "emptyTitle": "لا توجد فرق متطوعين",
+    "emptyDescription": "لا توجد وحدات فرق مسجلة.",
+    "headcount": "العدد {count}",
+    "skills": "القدرات",
+    "asOf": "حتى {when}",
+    "provenance": "المصدر"
+  },
+  "shelterStatusPanel": {
+    "title": "حالة الملاجئ",
+    "unavailable": "حالة الملاجئ غير متاحة",
+    "emptyTitle": "لا توجد سجلات ملاجئ",
+    "emptyDescription": "لا توجد ملاجئ للإبلاغ عنها.",
+    "shelters": "الملاجئ",
+    "capacity": "السعة",
+    "occupancy": "الإشغال",
+    "availableOpen": "السعة المتاحة المفتوحة",
+    "utilization": "الاستخدام",
+    "available": "متاح",
+    "provenance": "المصدر"
+  },
+  "damageReportsPanel": {
+    "title": "الأضرار والاحتياجات",
+    "unavailable": "تقارير الأضرار غير متاحة",
+    "emptyTitle": "لا توجد سجلات تقييم",
+    "emptyDescription": "لا توجد تقارير أضرار أو احتياجات ضمن النطاق.",
+    "entries": "السجلات",
+    "sites": "المواقع (إبلاغ ذاتي)",
+    "worstSeverity": "أقصى شدة",
+    "needs": "الاحتياجات",
+    "asOf": "حتى {when}",
+    "provenance": "المصدر"
+  },
+  "emsOverlayPanel": {
+    "title": "طبقة كوبرنيكوس EMS",
+    "unavailable": "طبقة EMS غير متاحة",
+    "emptyTitle": "لا توجد منتجات منشورة",
+    "emptyDescription": "لا توجد منتجات تقييم أضرار منشورة لهذا العرض.",
+    "open": "فتح صفحة المنتج",
+    "attribution": "الإسناد",
+    "notShown": "غير معروض",
+    "asOf": "حتى {when}",
+    "provenance": "المصدر"
+  },
+  "routingPanel": {
+    "title": "مسارات الإخلاء",
+    "formLabel": "طلب مسار إخلاء",
+    "clickHint": "انقر على الخريطة لتحديد نقطة الانطلاق، أو اكتب الإحداثيات.",
+    "originLat": "خط عرض نقطة الانطلاق",
+    "originLon": "خط طول نقطة الانطلاق",
+    "submit": "طلب المسار",
+    "submitting": "جارٍ حساب المسار…",
+    "needIncident": "اختر حادثة أولاً — يُحسب المسار لتفادي منطقة الخطر الخاصة بتلك الحادثة.",
+    "requestFailed": "فشل طلب المسار: {message}",
+    "resultLabel": "نتيجة المسار",
+    "nearestShelters": "أقرب الملاجئ",
+    "noSheltersTitle": "لا توجد ملاجئ مطابقة",
+    "noSheltersDescription": "لا توجد ملاجئ ضمن النطاق من نقطة الانطلاق هذه.",
+    "avoidsHazard": "يتفادى المسار منطقة خطر الحادثة.",
+    "heuristicFallback": "مسار مباشر فقط — تعذّر تفادي منطقة الخطر (بديل تقريبي). تعامل معه بحذر.",
+    "engineOrs": "توجيه عبر الطرق (OpenRouteService)",
+    "engineHeuristic": "أسلوب تقريبي لتفادي الخطر (محرك دون اتصال — لا يتبع الطرق)",
+    "suggestedStart": "الوقت المقترح لبدء الإخلاء:",
+    "suggestedStartCaveat": "(الوصول المتوقع للخطر − زمن قطع المسار − هامش الأمان؛ تقدير من الدرجة الأولى)",
+    "distance": "المسافة",
+    "duration": "زمن الرحلة المقدّر",
+    "steps": "خطوة بخطوة",
+    "straightLineCaveat": "تقدير بخط مستقيم — ليست مسافة طريق",
+    "originDefaultHint": "اترك الحقلين فارغين للانطلاق من موقع الحادث نفسه."
+  },
+  "verifierQueue": {
+    "title": "قائمة انتظار التحقق",
+    "decisionFailed": "فشل اتخاذ القرار — لم يُحدَّث البلاغ. حاول مرة أخرى.",
+    "emptyTitle": "القائمة فارغة",
+    "emptyDescription": "لا توجد بلاغات غير متحقق منها في انتظار الفرز.",
+    "noClaim": "لم يُسجَّل أي ادعاء (البلاغ يسبق بدء الاحتفاظ بالنص)",
+    "confidence": "درجة الثقة",
+    "componentsLabel": "مكوّنات درجة الثقة",
+    "component": {
+      "geocode": "الترميز الجغرافي",
+      "authority": "موثوقية المصدر",
+      "classifier": "المصنِّف",
+      "corroboration": "التعزيز بأدلة أخرى"
+    },
+    "liveFeed": "بث مباشر — غير رسمي",
+    "liveFeedCaption": "بث من مواطن غير متحقق منه، وليس كاميرا تابعة لجهة رسمية — يمكن للمحقِّق رفض هذا البلاغ لإزالته من القائمة.",
+    "liveFeedExpired": "بث مباشر — غير رسمي (انتهت صلاحية الرابط)",
+    "liveFeedExpiredCaption": "تجاوز رابط البث غير الرسمي هذا نافذته البالغة نحو ساعتين. ارفض البلاغ لإزالته من القائمة (المادة XIII، قرار بشري).",
+    "visionFinding": "الرؤية الحاسوبية (استرشادي): {label}",
+    "visionCaption": "استرشادي فقط — يُثري السجل البشري ولا يتخذ القرار تلقائيًا أبدًا (المادة XIII، قرار بشري).",
+    "visionToggle": "فحص بالرؤية الحاسوبية (استرشادي — صورة أقمار صناعية مسجَّلة؛ لا يغيّر القرار أبدًا)",
+    "visionLiveToggle": "استخدام صور حيّة لموقع هذا البلاغ (NASA GIBS، اليوم) بدلًا من الصورة المسجَّلة",
+    "approve": "اعتماد",
+    "reject": "رفض",
+    "rejectTitle": "الرفض باعتباره بلاغًا كاذبًا أو تضليلًا — لا يُصدَر أي تنبيه (المادة XIII/XIV)",
+    "approveWithCap": "اعتماد + CAP",
+    "rejectCaption": "الرفض يضع علامة على بلاغ كاذب أو مضلِّل — ينتقل إلى حالة مرفوض دون أي تنبيه صادر (المادة XIII/XIV).",
+    "emittedAlertStatusFallback": "تنبيه",
+    "emittedAlert": "تنبيه {status} {id} — بانتظار الإرسال من قِبل شخص.",
+    "emittedAlertWithHeadline": "تنبيه {status} {id}: {headline} — بانتظار الإرسال من قِبل شخص."
+  },
+  "sos": {
+    "errors": {
+      "tooShort": "صِف الحالة الطارئة بما لا يقل عن 10 أحرف.",
+      "tooLong": "أبقِ الوصف أقل من 2000 حرف.",
+      "generic": "يرجى مراجعة النموذج."
+    }
+  },
+  "tabs": {
+    "sitrep": "الموقف",
+    "decision": "القرار",
+    "drafts": "المسودات",
+    "resources": "الموارد",
+    "verify": "التحقق",
+    "report": "بلاغ SOS",
+    "route": "مسار الإخلاء"
+  },
+  "theme": {
+    "toLight": "التبديل إلى المظهر الفاتح",
+    "toDark": "التبديل إلى المظهر الداكن"
+  },
+  "toolbar": {
+    "layers": "الطبقات",
+    "legend": "المفتاح",
+    "devBadge": "dev",
+    "actingRole": "الدور المُستخدَم (عرض توضيحي)",
+    "roleSwitcherTitle": "عرض توضيحي فقط — ينتحل x-beacon-role؛ الخادم يظل هو من يمنح الصلاحية (AUTH_DEV_TRUST_HEADER)",
+    "devLoginUserId": "معرّف مستخدم dev-login",
+    "devLoginUserPlaceholder": "معرّف المستخدم",
+    "devLogin": "dev-login",
+    "signedIn": "تم تسجيل الدخول",
+    "loginUserLabel": "معرّف المستخدم",
+    "loginUserPlaceholder": "المستخدم",
+    "loginPasswordLabel": "كلمة المرور",
+    "loginPasswordPlaceholder": "كلمة المرور",
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "signInFailed": "فشل تسجيل الدخول",
+    "liveBadge": "live",
+    "liveBadgeTitle": "نشر إنتاجي — الأدوار تأتي فقط من الحسابات المسجّلة.",
+    "currentRole": "الدور الحالي"
+  },
+  "ui": {
+    "severity": {
+      "MINOR": "طفيف",
+      "MODERATE": "متوسط",
+      "SEVERE": "شديد",
+      "EXTREME": "أقصى"
+    },
+    "mode": {
+      "LIVE": "مباشر",
+      "CACHED": "مخزَّن",
+      "MOCK": "محاكاة",
+      "DB": "المشغّل"
+    },
+    "freshness": {
+      "fresh": "مباشر",
+      "stale": "قديم",
+      "unavailable": "غير متاح"
+    },
+    "unverified": "غير مُتحقَّق منه",
+    "dialog": {
+      "close": "إغلاق النافذة"
+    },
+    "skeleton": {
+      "loading": "جارٍ التحميل"
+    },
+    "errorState": {
+      "title": "حدث خطأ ما",
+      "retry": "أعد المحاولة"
+    },
+    "errorBoundary": {
+      "title": "تعذّر عرض هذه اللوحة",
+      "labelledTitle": "تعذّر عرض {label}"
+    },
+    "provenance": {
+      "trigger": "المصدر",
+      "triggerAria": "{label} — {count, plural, zero {# مصدر} one {# مصدر} two {# مصدران} few {# مصادر} many {# مصدرًا} other {# مصدر}}",
+      "heading": "المصادر",
+      "empty": "لا توجد مصادر مسجّلة."
+    },
+    "legend": {
+      "regionLabel": "مفتاح الخريطة",
+      "severityHeading": "شدة الخطر",
+      "statusHeading": "حالة البيانات",
+      "modeHeading": "وضع المصدر",
+      "status": {
+        "fresh": "حديث",
+        "stale": "قديم",
+        "unavailable": "غير متاح",
+        "unverified": "غير مُتحقَّق منه"
+      }
+    },
+    "externalViews": {
+      "caption": "سياق خارجي — يفتح مواقع طرف ثالث.",
+      "captionFor": "سياق خارجي — يفتح مواقع طرف ثالث لـ {label}.",
+      "listLabel": "روابط السياق الخارجي",
+      "kind": {
+        "map": "خريطة",
+        "satellite": "قمر صناعي",
+        "street": "شارع",
+        "3d": "ثلاثي الأبعاد",
+        "weather": "طقس",
+        "imagery": "صور",
+        "fire": "حريق",
+        "flood": "فيضان"
+      }
+    },
+    "relativeTime": {
+      "unknown": "غير معروف",
+      "seconds": "منذ {value} ث",
+      "minutes": "منذ {value} د",
+      "hours": "منذ {value} س",
+      "days": "منذ {value} ي"
+    }
+  },
+  "warning": {
+    "headline": "{event} — {severity}",
+    "label": {
+      "what": "ماذا",
+      "where": "أين",
+      "when": "متى",
+      "impacts": "الآثار",
+      "action": "الإجراء"
+    },
+    "what": "{event}، شدة {severity}.",
+    "where": "{area}.",
+    "when": "{when}.",
+    "impacts": "{impacts}",
+    "action": {
+      "Shelter": "احتموا الآن. ابقوا داخل المبنى في {area}، بعيدًا عن النوافذ، حتى إعلان انتهاء الخطر.",
+      "Evacuate": "اتركوا {area} الآن. خذوا حقيبة الطوارئ، واتبعوا المسار المحدد، ولا تعودوا حتى إعلان انتهاء الخطر.",
+      "Prepare": "استعدوا لمغادرة {area}. جهزوا حقيبة طوارئ، واملأوا خزان الوقود، وتابعوا هذه القناة.",
+      "Execute": "نفذوا الآن الخطة التي أُعطيت لكم بشأن {area}.",
+      "Avoid": "لا تدخلوا {area}. لا تسافروا إلى المنطقة.",
+      "Monitor": "تابعوا التحديثات عن {area}. كونوا مستعدين للتصرف إذا تغير التحذير.",
+      "Assess": "افحصوا وضعكم في {area} وأبلغوا عما ترونه.",
+      "AllClear": "انتهى الخطر في {area}. يمكنكم العودة. اتبعوا توجيهات السلطات المحلية.",
+      "None": "لا حاجة إلى أي إجراء في {area} الآن."
+    },
+    "event": {
+      "Fire": "حريق غابات",
+      "Met": "فيضان أو طقس شديد",
+      "Safety": "خطر على السلامة العامة"
+    },
+    "allClear": {
+      "headline": "انتهاء الخطر — {event}",
+      "description": "انتهى {event} في {area}."
+    }
+  },
+  "content": {
+    "originalLanguage": "EN",
+    "untranslatedHint": "معروض بالإنجليزية — غير مترجم"
+  },
+  "pwa": {
+    "offline": "غير متصل — يُعرض الوضع المحفوظ في {time}",
+    "offlineUnknown": "غير متصل — يُعرض آخر وضع محفوظ على هذا الجهاز",
+    "offlineNoCopy": "غير متصل — لا يوجد وضع محفوظ بعد على هذا الجهاز",
+    "stale": "تعذّر الوصول إلى الخادم — يُعرض الوضع المحفوظ في {time}",
+    "staleUnknown": "تعذّر الوصول إلى الخادم — يُعرض آخر وضع محفوظ على هذا الجهاز"
+  }
+}

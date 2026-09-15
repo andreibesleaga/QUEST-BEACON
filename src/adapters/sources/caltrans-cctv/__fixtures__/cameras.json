@@ -1,0 +1,330 @@
+{
+  "_recordedAt": "2026-07-17",
+  "_recordedFrom": "Caltrans CWWP2 cctvStatusD03.json (cwwp2.dot.ca.gov) — RECORDED-REAL District 3 CCTV status JSON, 2026-07-17 wave CW1. Real recorded sample; the ACL parser reads only `data[].cctv` (this sibling key is ignored, counts unchanged).",
+  "data": [
+    {
+      "cctv": {
+        "index": "117",
+        "recordTimestamp": {
+          "recordDate": "2025-09-23",
+          "recordTime": "10:27:56",
+          "recordEpoch": "1758648476"
+        },
+        "location": {
+          "district": "3",
+          "locationName": "Hwy 32 at Main St Chico",
+          "nearbyPlace": "Chico",
+          "longitude": "-121.834856",
+          "latitude": "39.725615",
+          "county": "Butte",
+          "route": "SR-32",
+          "direction": "West"
+        },
+        "inService": "true",
+        "imageData": {
+          "streamingVideoURL": "https://wzmedia.dot.ca.gov/D3/32_Main_St_Chico_BUT32_EB.stream/playlist.m3u8",
+          "static": {
+            "currentImageURL": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy32atmainstchico/hwy32atmainstchico.jpg"
+          }
+        }
+      }
+    },
+    {
+      "cctv": {
+        "index": "154",
+        "recordTimestamp": {
+          "recordDate": "2026-06-11",
+          "recordTime": "11:55:07",
+          "recordEpoch": "1781204107"
+        },
+        "location": {
+          "district": "3",
+          "locationName": "Hwy 99 at Neal",
+          "nearbyPlace": "Durham",
+          "longitude": "-121.74011",
+          "latitude": "39.6622",
+          "county": "Butte",
+          "route": "SR-99",
+          "direction": ""
+        },
+        "inService": "true",
+        "imageData": {
+          "streamingVideoURL": "https://wzmedia.dot.ca.gov/D3/99_Neal_Rd_JSO_BUT99_SB.stream/playlist.m3u8",
+          "static": {
+            "currentImageURL": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy99atneal/hwy99atneal.jpg"
+          }
+        }
+      }
+    },
+    {
+      "cctv": {
+        "index": "194",
+        "recordTimestamp": {
+          "recordDate": "2023-04-20",
+          "recordTime": "14:13:16",
+          "recordEpoch": "1682025196"
+        },
+        "location": {
+          "district": "3",
+          "locationName": "Hwy 99 at Southgate 1",
+          "nearbyPlace": "Chico",
+          "longitude": "-121.785848",
+          "latitude": "39.701535",
+          "county": "Butte",
+          "route": "SR-99",
+          "direction": ""
+        },
+        "inService": "true",
+        "imageData": {
+          "streamingVideoURL": "https://wzmedia.dot.ca.gov/D3/99_Southgate_Ln_BUT99_NB_1.stream/playlist.m3u8",
+          "static": {
+            "currentImageURL": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy99atsouthgate1/hwy99atsouthgate1.jpg"
+          }
+        }
+      }
+    },
+    {
+      "cctv": {
+        "index": "195",
+        "recordTimestamp": {
+          "recordDate": "2023-04-20",
+          "recordTime": "14:13:45",
+          "recordEpoch": "1682025225"
+        },
+        "location": {
+          "district": "3",
+          "locationName": "Hwy 99 at Southgate 2",
+          "nearbyPlace": "Chico",
+          "longitude": "-121.785848",
+          "latitude": "39.701535",
+          "county": "Butte",
+          "route": "SR-99",
+          "direction": ""
+        },
+        "inService": "true",
+        "imageData": {
+          "streamingVideoURL": "https://wzmedia.dot.ca.gov/D3/99_Southgate_Ln_BUT99_NB_2.stream/playlist.m3u8",
+          "static": {
+            "currentImageURL": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy99atsouthgate2/hwy99atsouthgate2.jpg"
+          }
+        }
+      }
+    },
+    {
+      "cctv": {
+        "index": "196",
+        "recordTimestamp": {
+          "recordDate": "2024-11-07",
+          "recordTime": "17:53:26",
+          "recordEpoch": "1731030806"
+        },
+        "location": {
+          "district": "3",
+          "locationName": "Hwy 99 at Skyway 1",
+          "nearbyPlace": "Chico",
+          "longitude": "-121.800321",
+          "latitude": "39.715094",
+          "county": "Butte",
+          "route": "SR-99",
+          "direction": ""
+        },
+        "inService": "true",
+        "imageData": {
+          "streamingVideoURL": "https://wzmedia.dot.ca.gov/D3/99_Skyway_BUT99_NB_1.stream/playlist.m3u8",
+          "static": {
+            "currentImageURL": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy99atskyway1/hwy99atskyway1.jpg"
+          }
+        }
+      }
+    },
+    {
+      "cctv": {
+        "index": "197",
+        "recordTimestamp": {
+          "recordDate": "2023-04-24",
+          "recordTime": "15:43:52",
+          "recordEpoch": "1682376232"
+        },
+        "location": {
+          "district": "3",
+          "locationName": "Hwy 99 at Skyway 2",
+          "nearbyPlace": "Chico",
+          "longitude": "-121.800321",
+          "latitude": "39.715094",
+          "county": "Butte",
+          "route": "SR-99",
+          "direction": ""
+        },
+        "inService": "true",
+        "imageData": {
+          "streamingVideoURL": "https://wzmedia.dot.ca.gov/D3/99_Skyway_BUT99_NB_2.stream/playlist.m3u8",
+          "static": {
+            "currentImageURL": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy99atskyway2/hwy99atskyway2.jpg"
+          }
+        }
+      }
+    },
+    {
+      "cctv": {
+        "index": "198",
+        "recordTimestamp": {
+          "recordDate": "2023-04-24",
+          "recordTime": "15:40:16",
+          "recordEpoch": "1682376016"
+        },
+        "location": {
+          "district": "3",
+          "locationName": "Skyway_BUT99_NB_2",
+          "nearbyPlace": "Chico",
+          "longitude": "-121.792755",
+          "latitude": "39.707638",
+          "county": "Butte",
+          "route": "SR-99",
+          "direction": ""
+        },
+        "inService": "true",
+        "imageData": {
+          "streamingVideoURL": "https://wzmedia.dot.ca.gov/D3/99_Skyway_JSO_BUT99_NB_2.stream/playlist.m3u8",
+          "static": {
+            "currentImageURL": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/skywaybut99nb2/skywaybut99nb2.jpg"
+          }
+        }
+      }
+    },
+    {
+      "cctv": {
+        "index": "199",
+        "recordTimestamp": {
+          "recordDate": "2026-03-04",
+          "recordTime": "16:41:43",
+          "recordEpoch": "1772671303"
+        },
+        "location": {
+          "district": "3",
+          "locationName": "East_20th_BUT99_NB_1",
+          "nearbyPlace": "Chico",
+          "longitude": "-121.809163",
+          "latitude": "39.726408",
+          "county": "Butte",
+          "route": "SR-99",
+          "direction": ""
+        },
+        "inService": "true",
+        "imageData": {
+          "streamingVideoURL": "https://wzmedia.dot.ca.gov/D3/99_East_20th_BUT99_NB_1.stream/playlist.m3u8",
+          "static": {
+            "currentImageURL": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/east20thbut99nb1/east20thbut99nb1.jpg"
+          }
+        }
+      }
+    },
+    {
+      "cctv": {
+        "index": "200",
+        "recordTimestamp": {
+          "recordDate": "2026-03-04",
+          "recordTime": "16:41:46",
+          "recordEpoch": "1772671306"
+        },
+        "location": {
+          "district": "3",
+          "locationName": "East_20th_BUT99_NB_2",
+          "nearbyPlace": "Chico",
+          "longitude": "-121.809163",
+          "latitude": "39.726408",
+          "county": "Butte",
+          "route": "SR-99",
+          "direction": ""
+        },
+        "inService": "true",
+        "imageData": {
+          "streamingVideoURL": "https://wzmedia.dot.ca.gov/D3/99_East_20th_BUT99_NB_2.stream/playlist.m3u8",
+          "static": {
+            "currentImageURL": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/east20thbut99nb2/east20thbut99nb2.jpg"
+          }
+        }
+      }
+    },
+    {
+      "cctv": {
+        "index": "201",
+        "recordTimestamp": {
+          "recordDate": "2024-11-07",
+          "recordTime": "17:53:30",
+          "recordEpoch": "1731030810"
+        },
+        "location": {
+          "district": "3",
+          "locationName": "Skyway_BUT99_NB_1",
+          "nearbyPlace": "Chico",
+          "longitude": "-121.792755",
+          "latitude": "39.707638",
+          "county": "Butte",
+          "route": "SR-99",
+          "direction": ""
+        },
+        "inService": "true",
+        "imageData": {
+          "streamingVideoURL": "https://wzmedia.dot.ca.gov/D3/99_Skyway_JSO_BUT99_NB_1.stream/playlist.m3u8",
+          "static": {
+            "currentImageURL": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/skywaybut99nb1/skywaybut99nb1.jpg"
+          }
+        }
+      }
+    },
+    {
+      "cctv": {
+        "index": "130",
+        "recordTimestamp": {
+          "recordDate": "2026-06-24",
+          "recordTime": "10:36:23",
+          "recordEpoch": "1782322583"
+        },
+        "location": {
+          "district": "3",
+          "locationName": "Hwy 5 at Twin Cities",
+          "nearbyPlace": "Elk Grove",
+          "longitude": "-121.45575",
+          "latitude": "38.27609",
+          "county": "Sacramento",
+          "route": "I-5",
+          "direction": "North"
+        },
+        "inService": "true",
+        "imageData": {
+          "streamingVideoURL": "",
+          "static": {
+            "currentImageURL": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy5attwincities/hwy5attwincities.jpg"
+          }
+        }
+      }
+    },
+    {
+      "cctv": {
+        "index": "147",
+        "recordTimestamp": {
+          "recordDate": "2026-02-24",
+          "recordTime": "14:26:21",
+          "recordEpoch": "1771971981"
+        },
+        "location": {
+          "district": "3",
+          "locationName": "Hwy 70 at Feather River",
+          "nearbyPlace": "Marysville",
+          "longitude": "-121.57217",
+          "latitude": "39.12163",
+          "county": "Yuba",
+          "route": "SR-70",
+          "direction": ""
+        },
+        "inService": "false",
+        "imageData": {
+          "streamingVideoURL": "https://wzmedia.dot.ca.gov/D3/70_Feather_River_Blvd_JSO_YUB70_NB.stream/playlist.m3u8",
+          "static": {
+            "currentImageURL": "https://cwwp2.dot.ca.gov/data/d3/cctv/image/hwy70atfeatherriver/hwy70atfeatherriver.jpg"
+          }
+        }
+      }
+    }
+  ]
+}

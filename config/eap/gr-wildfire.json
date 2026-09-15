@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "id": "gr-wildfire",
+  "label": "Attica periphery — wildfire fire-weather Early Action Protocol",
+  "hazard": "WILDFIRE",
+  "status": "ILLUSTRATIVE",
+  "provenance": "Structurally faithful to the six IFRC Early Action Protocol elements. Every threshold, action, ceiling, role and duration below is invented for demonstration and is NOT approved, endorsed or reviewed by any National Society, hydromet service or civil-protection authority. A real deployment replaces this file with its own signed-off protocol.",
+  "scope": {
+    "regionId": "gr",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [23.62, 37.94],
+          [24.06, 37.94],
+          [24.06, 38.28],
+          [23.62, 38.28],
+          [23.62, 37.94]
+        ]
+      ]
+    }
+  },
+  "triggers": {
+    "readiness": {
+      "source": "cached forecast file supplied to the evaluator — BEACON queries no live ensemble product",
+      "parameter": "fire-weather index at the periphery forecast point",
+      "unit": "dimensionless index value",
+      "threshold": 40,
+      "comparator": "GTE",
+      "minMembersFraction": 0.35,
+      "minLikelihoodClass": "LIKELY",
+      "leadTimeHours": 60
+    },
+    "activation": {
+      "source": "cached forecast file supplied to the evaluator — BEACON queries no live ensemble product",
+      "parameter": "fire-weather index at the periphery forecast point",
+      "unit": "dimensionless index value",
+      "threshold": 52,
+      "comparator": "GTE",
+      "minMembersFraction": 0.6,
+      "minLikelihoodClass": "VERY_LIKELY",
+      "leadTimeHours": 18
+    }
+  },
+  "actions": [
+    {
+      "id": "preposition-engines",
+      "label": "Pre-position engines at the staging points nearest the exposed interface",
+      "kind": "PREPOSITION",
+      "resourceKind": "ENGINE"
+    },
+    {
+      "id": "preposition-medical-cache",
+      "label": "Pre-position a first-aid cache at the nearest open shelter with spare capacity",
+      "kind": "PREPOSITION",
+      "resourceKind": "MEDICAL"
+    },
+    {
+      "id": "brief-periphery-focal-point",
+      "label": "Brief the periphery civil-protection focal point and the evacuation-route coordinator",
+      "kind": "NOTIFY_INTERNAL"
+    }
+  ],
+  "resourceCeiling": {
+    "maxResources": 8,
+    "maxByKind": { "ENGINE": 4, "MEDICAL": 2, "SUPPLY": 2 },
+    "basis": "Illustrative pre-arranged ceiling for the demonstration registry. No monetary or donor figure exists anywhere in BEACON, so none is stated here."
+  },
+  "approval": {
+    "authorizerRole": "EM",
+    "fallbackRole": "VERIFIER",
+    "fallbackAfterMinutes": 30
+  },
+  "stop": {
+    "conditions": [
+      {
+        "id": "fire-weather-cleared",
+        "label": "The fire-weather index falls below the readiness threshold on two consecutive runs"
+      },
+      {
+        "id": "authority-stand-down",
+        "label": "The responsible authority stands the activation down"
+      }
+    ],
+    "authorizerRole": "EM",
+    "maxDurationHours": 96
+  }
+}

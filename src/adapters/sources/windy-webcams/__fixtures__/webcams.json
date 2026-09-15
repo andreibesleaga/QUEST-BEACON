@@ -1,0 +1,182 @@
+{
+  "_provenance": "SCHEMA-CRAFTED — NOT a captured live response. Windy Webcams API v3 is a keyed API (x-windy-api-key); no key was used to record this fixture. Shape hand-built from the documented v3 schema (verified 2026-07-17 via api.windy.com/webcams/api/v3/docs, api.windy.com/webcams/version-transfer, and community.windy.com — webcamId/title/status/location{latitude,longitude,city,region,country,continent}/urls{detail,edit}; GET /webcams/api/v3/webcams; include=location,urls; bbox=north_lat,east_lon,south_lat,west_lon). All titles are fictitious/synthetic, zero PII. 8 webcams: 5 US-CA + 3 Romania, one status:'inactive' (Lake Tahoe) to exercise the isLive=false honest-degrade path.",
+  "total": 8,
+  "webcams": [
+    {
+      "webcamId": 1358084658,
+      "title": "Golden Gate Bridge View",
+      "status": "active",
+      "viewCount": 128340,
+      "lastUpdatedOn": "2026-07-05T21:40:00.000Z",
+      "location": {
+        "latitude": 37.8199,
+        "longitude": -122.4783,
+        "city": "San Francisco",
+        "region": "California",
+        "region_code": "US-CA",
+        "country": "United States",
+        "country_code": "US",
+        "continent": "North America",
+        "continent_code": "NA"
+      },
+      "urls": {
+        "detail": "https://www.windy.com/webcams/1358084658",
+        "edit": "https://www.windy.com/webcams/1358084658/edit"
+      }
+    },
+    {
+      "webcamId": 1400000001,
+      "title": "Big Bear Lake Overlook",
+      "status": "active",
+      "viewCount": 41220,
+      "lastUpdatedOn": "2026-07-05T21:35:00.000Z",
+      "location": {
+        "latitude": 34.2439,
+        "longitude": -116.9114,
+        "city": "Big Bear Lake",
+        "region": "California",
+        "region_code": "US-CA",
+        "country": "United States",
+        "country_code": "US",
+        "continent": "North America",
+        "continent_code": "NA"
+      },
+      "urls": {
+        "detail": "https://www.windy.com/webcams/1400000001",
+        "edit": "https://www.windy.com/webcams/1400000001/edit"
+      }
+    },
+    {
+      "webcamId": 1400000002,
+      "title": "Malibu Pier Surf Cam",
+      "status": "active",
+      "viewCount": 76510,
+      "lastUpdatedOn": "2026-07-05T21:50:00.000Z",
+      "location": {
+        "latitude": 34.0369,
+        "longitude": -118.6786,
+        "city": "Malibu",
+        "region": "California",
+        "region_code": "US-CA",
+        "country": "United States",
+        "country_code": "US",
+        "continent": "North America",
+        "continent_code": "NA"
+      },
+      "urls": {
+        "detail": "https://www.windy.com/webcams/1400000002",
+        "edit": "https://www.windy.com/webcams/1400000002/edit"
+      }
+    },
+    {
+      "webcamId": 1400000003,
+      "title": "Lake Tahoe North Shore",
+      "status": "inactive",
+      "viewCount": 9840,
+      "lastUpdatedOn": "2026-07-01T10:00:00.000Z",
+      "location": {
+        "latitude": 39.1969,
+        "longitude": -120.0357,
+        "city": "Lake Tahoe",
+        "region": "California",
+        "region_code": "US-CA",
+        "country": "United States",
+        "country_code": "US",
+        "continent": "North America",
+        "continent_code": "NA"
+      },
+      "urls": {
+        "detail": "https://www.windy.com/webcams/1400000003",
+        "edit": "https://www.windy.com/webcams/1400000003/edit"
+      }
+    },
+    {
+      "webcamId": 1400000004,
+      "title": "Sacramento Delta Cam",
+      "status": "active",
+      "viewCount": 15330,
+      "lastUpdatedOn": "2026-07-05T21:20:00.000Z",
+      "location": {
+        "latitude": 38.5449,
+        "longitude": -121.7405,
+        "city": "Sacramento",
+        "region": "California",
+        "region_code": "US-CA",
+        "country": "United States",
+        "country_code": "US",
+        "continent": "North America",
+        "continent_code": "NA"
+      },
+      "urls": {
+        "detail": "https://www.windy.com/webcams/1400000004",
+        "edit": "https://www.windy.com/webcams/1400000004/edit"
+      }
+    },
+    {
+      "webcamId": 1400000005,
+      "title": "Bucharest Old Town Square",
+      "status": "active",
+      "viewCount": 62100,
+      "lastUpdatedOn": "2026-07-05T21:55:00.000Z",
+      "location": {
+        "latitude": 44.4325,
+        "longitude": 26.1039,
+        "city": "Bucharest",
+        "region": "Bucuresti",
+        "region_code": "RO-B",
+        "country": "Romania",
+        "country_code": "RO",
+        "continent": "Europe",
+        "continent_code": "EU"
+      },
+      "urls": {
+        "detail": "https://www.windy.com/webcams/1400000005",
+        "edit": "https://www.windy.com/webcams/1400000005/edit"
+      }
+    },
+    {
+      "webcamId": 1400000006,
+      "title": "Brasov Mountain View",
+      "status": "active",
+      "viewCount": 28870,
+      "lastUpdatedOn": "2026-07-05T21:45:00.000Z",
+      "location": {
+        "latitude": 45.6427,
+        "longitude": 25.5887,
+        "city": "Brasov",
+        "region": "Brasov",
+        "region_code": "RO-BV",
+        "country": "Romania",
+        "country_code": "RO",
+        "continent": "Europe",
+        "continent_code": "EU"
+      },
+      "urls": {
+        "detail": "https://www.windy.com/webcams/1400000006",
+        "edit": "https://www.windy.com/webcams/1400000006/edit"
+      }
+    },
+    {
+      "webcamId": 1400000007,
+      "title": "Constanta Black Sea Coast",
+      "status": "active",
+      "viewCount": 33590,
+      "lastUpdatedOn": "2026-07-05T21:30:00.000Z",
+      "location": {
+        "latitude": 44.1733,
+        "longitude": 28.6383,
+        "city": "Constanta",
+        "region": "Constanta",
+        "region_code": "RO-CT",
+        "country": "Romania",
+        "country_code": "RO",
+        "continent": "Europe",
+        "continent_code": "EU"
+      },
+      "urls": {
+        "detail": "https://www.windy.com/webcams/1400000007",
+        "edit": "https://www.windy.com/webcams/1400000007/edit"
+      }
+    }
+  ]
+}

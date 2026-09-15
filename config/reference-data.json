@@ -1,0 +1,802 @@
+{
+  "$comment": "BEACON operator-maintained reference data (ADR-041). These four tables back the dock panels (/supplies, /volunteer-teams, /damage-reports, /ems-overlay). Until a row exists the panel serves its built-in fixture and labels itself degraded, which is why every region saw the same board. Seeding these gives the panels a DB rung an emergency manager can then edit in Directus — the seed uses ON CONFLICT DO NOTHING, so an operator edit is never reverted by a later seed run.",
+  "version": 1,
+  "_provenance": {
+    "ems_overlay_products": "DEFERRED. Activation summaries expose only n_products and do not carry publisher product identifiers. This dataset remains empty until product-detail rows with stable product ids are available.",
+    "supply_lots": "OPERATOR STARTING SET, NOT AN OUTSIDE FACT. No public feed publishes how many pallets of water a county holds; that number exists only inside an agency's own logistics system. These are plausible opening balances for the two seeded regions, and they are here so an EM has rows to correct rather than an empty board. Every figure is expected to be overwritten in Directus on first use.",
+    "volunteer_teams": "OPERATOR STARTING SET — same standing as supply_lots. Callsigns and headcounts are unit-level tallies only: no roster, no member, no contact (Art. XIV / ADR-035 §4).",
+    "damage_assessment_entries": "OPERATOR STARTING SET keyed to the seeded incidents (us-ca-wildfire-demo, ro-flood-demo). Triage states are real pipeline states and the buckets stay separate: a verified figure and an unverified one are never summed.",
+    "incidents": "THE DEMO INCIDENTS, AS ROWS. Not a panel dataset and not a claim about the world: these are the five scenario incidents the offline seed already describes, written to the `incident` table so the surrogate uuid every foreign key uses actually exists. Until 2026-09-12 nothing wrote that table, so `resolveIncidentRowId` returned null and every incident-keyed store (evacuation routes, SitReps, tasks) silently discarded what it was asked to persist.",
+    "resources": "OPERATOR STARTING SET, NOT AN OUTSIDE FACT — the same standing as supply_lots. No public feed publishes which engine an agency has where; that lives in the agency's own CAD. Organisations named are the real responding agencies for each seeded region, positions are inside the incident area, and every row is expected to be corrected in Directus on first use. No personnel: a resource is a unit, never a person (Art. XIV).",
+    "resource_tasks": "OPERATOR STARTING SET. Tasking states are real pipeline states (PROPOSED -> TASKED -> ENROUTE -> ONSCENE -> CLEARED) so the Logistics board demonstrates the whole lifecycle rather than one frozen state.",
+    "public_reports": "AUTHORED DEMONSTRATION REPORTS, and stated as such. These are NOT real citizen reports: a real one carries a real person's words and location, and seeding those would be the exact thing RESPONSIBLE_DATA.md forbids. They exist so the verification queue — this product's human-in-the-loop claim — has something to demonstrate end to end: file -> triage -> verify -> alert-eligible. Consent is given by this project as their author. Locations are generalized to the incident area; none is precise.",
+    "threshold_rules": "OPERATOR STARTING SET matching each seeded region's hazard. The thresholds themselves are conventional public-warning levels (NWS flood categories; a 2 km hazard buffer), not agency policy — an EM sets their own in Directus. A rule fires a DRAFT alert only; no rule can emit a public alert without a human approving it (Art. XIII)."
+  },
+  "_not_seeded": "gauge, infrastructure_node and prediction are deliberately absent. All three are schema-only: nothing in the product reads them and nothing writes them, so rows there would be invisible. They fill when the live ingest that populates them is built, not from a config file.",
+  "ems_overlay_products": [],
+  "supply_lots": [
+    {
+      "domain_id": "us-ca-water-1l-pallet",
+      "region_id": "us-ca",
+      "quantity": 18000,
+      "unit": "LITRE",
+      "expires_at": "2027-03-01T00:00:00Z"
+    },
+    {
+      "domain_id": "us-ca-cots-folding",
+      "region_id": "us-ca",
+      "quantity": 1200,
+      "unit": "EACH"
+    },
+    {
+      "domain_id": "us-ca-blankets-wool",
+      "region_id": "us-ca",
+      "quantity": 2400,
+      "unit": "EACH"
+    },
+    {
+      "domain_id": "us-ca-respirators-n95",
+      "region_id": "us-ca",
+      "quantity": 96,
+      "unit": "CASE",
+      "expires_at": "2029-06-30T00:00:00Z"
+    },
+    {
+      "domain_id": "us-ca-meals-shelf-stable",
+      "region_id": "us-ca",
+      "quantity": 40,
+      "unit": "PALLET",
+      "expires_at": "2027-11-30T00:00:00Z"
+    },
+    {
+      "domain_id": "us-ca-infant-formula",
+      "region_id": "us-ca",
+      "quantity": 310,
+      "unit": "KILOGRAM",
+      "expires_at": "2027-02-28T00:00:00Z"
+    },
+    {
+      "domain_id": "ro-water-1l-pallet",
+      "region_id": "ro",
+      "quantity": 24000,
+      "unit": "LITRE",
+      "expires_at": "2027-05-31T00:00:00Z"
+    },
+    {
+      "domain_id": "ro-sandbags-empty",
+      "region_id": "ro",
+      "quantity": 65000,
+      "unit": "EACH"
+    },
+    {
+      "domain_id": "ro-blankets-thermal",
+      "region_id": "ro",
+      "quantity": 3100,
+      "unit": "EACH"
+    },
+    {
+      "domain_id": "ro-water-purification-tabs",
+      "region_id": "ro",
+      "quantity": 52,
+      "unit": "CASE",
+      "expires_at": "2028-09-30T00:00:00Z"
+    },
+    {
+      "domain_id": "ro-pumps-portable",
+      "region_id": "ro",
+      "quantity": 44,
+      "unit": "EACH"
+    }
+  ],
+  "volunteer_teams": [
+    {
+      "domain_id": "us-ca-cert-butte-1",
+      "region_id": "us-ca",
+      "callsign": "CERT BUTTE 1",
+      "headcount": 14,
+      "skills": ["chainsaw", "first aid", "damage assessment"],
+      "availability": "COMMITTED"
+    },
+    {
+      "domain_id": "us-ca-cert-butte-2",
+      "region_id": "us-ca",
+      "callsign": "CERT BUTTE 2",
+      "headcount": 11,
+      "skills": ["shelter operations", "first aid"],
+      "availability": "AVAILABLE"
+    },
+    {
+      "domain_id": "us-ca-cert-chico-1",
+      "region_id": "us-ca",
+      "callsign": "CERT CHICO 1",
+      "headcount": 9,
+      "skills": ["logistics", "radio"],
+      "availability": "AVAILABLE"
+    },
+    {
+      "domain_id": "us-ca-cert-oroville-1",
+      "region_id": "us-ca",
+      "callsign": "CERT OROVILLE 1",
+      "headcount": 12,
+      "skills": ["evacuation support", "traffic control"],
+      "availability": "OFF_DUTY"
+    },
+    {
+      "domain_id": "ro-isu-dolj-1",
+      "region_id": "ro",
+      "callsign": "ISU DOLJ 1",
+      "headcount": 16,
+      "skills": ["swiftwater", "first aid"],
+      "availability": "COMMITTED"
+    },
+    {
+      "domain_id": "ro-isu-galati-1",
+      "region_id": "ro",
+      "callsign": "ISU GALATI 1",
+      "headcount": 13,
+      "skills": ["swiftwater", "boat handling"],
+      "availability": "AVAILABLE"
+    },
+    {
+      "domain_id": "ro-salvamont-1",
+      "region_id": "ro",
+      "callsign": "SALVAMONT 1",
+      "headcount": 8,
+      "skills": ["rope rescue", "first aid"],
+      "availability": "AVAILABLE"
+    },
+    {
+      "domain_id": "ro-crucea-rosie-1",
+      "region_id": "ro",
+      "callsign": "CRUCEA ROSIE 1",
+      "headcount": 21,
+      "skills": ["shelter operations", "logistics"],
+      "availability": "OFF_DUTY"
+    }
+  ],
+  "damage_assessment_entries": [
+    {
+      "domain_id": "us-ca-dmg-001",
+      "incident_domain_id": "us-ca-wildfire-demo",
+      "report_status": "VERIFIED",
+      "category": "DAMAGE",
+      "severity": "DESTROYED",
+      "site_count": 23
+    },
+    {
+      "domain_id": "us-ca-dmg-002",
+      "incident_domain_id": "us-ca-wildfire-demo",
+      "report_status": "VERIFIED",
+      "category": "DAMAGE",
+      "severity": "SEVERE",
+      "site_count": 41
+    },
+    {
+      "domain_id": "us-ca-dmg-003",
+      "incident_domain_id": "us-ca-wildfire-demo",
+      "report_status": "TRIAGED",
+      "category": "DAMAGE",
+      "severity": "MODERATE",
+      "site_count": 64
+    },
+    {
+      "domain_id": "us-ca-dmg-004",
+      "incident_domain_id": "us-ca-wildfire-demo",
+      "report_status": "UNVERIFIED",
+      "category": "DAMAGE",
+      "severity": "MINOR",
+      "site_count": 12
+    },
+    {
+      "domain_id": "us-ca-need-001",
+      "incident_domain_id": "us-ca-wildfire-demo",
+      "report_status": "VERIFIED",
+      "category": "NEED",
+      "need_kind": "SHELTER",
+      "site_count": 3
+    },
+    {
+      "domain_id": "us-ca-need-002",
+      "incident_domain_id": "us-ca-wildfire-demo",
+      "report_status": "TRIAGED",
+      "category": "NEED",
+      "need_kind": "POWER",
+      "site_count": 7
+    },
+    {
+      "domain_id": "us-ca-need-003",
+      "incident_domain_id": "us-ca-wildfire-demo",
+      "report_status": "UNVERIFIED",
+      "category": "NEED",
+      "need_kind": "ACCESS",
+      "site_count": 2
+    },
+    {
+      "domain_id": "ro-dmg-001",
+      "incident_domain_id": "ro-flood-demo",
+      "report_status": "VERIFIED",
+      "category": "DAMAGE",
+      "severity": "SEVERE",
+      "site_count": 31
+    },
+    {
+      "domain_id": "ro-dmg-002",
+      "incident_domain_id": "ro-flood-demo",
+      "report_status": "TRIAGED",
+      "category": "DAMAGE",
+      "severity": "MODERATE",
+      "site_count": 58
+    },
+    {
+      "domain_id": "ro-need-001",
+      "incident_domain_id": "ro-flood-demo",
+      "report_status": "VERIFIED",
+      "category": "NEED",
+      "need_kind": "WATER",
+      "site_count": 9
+    },
+    {
+      "domain_id": "ro-need-002",
+      "incident_domain_id": "ro-flood-demo",
+      "report_status": "VERIFIED",
+      "category": "NEED",
+      "need_kind": "HEALTH",
+      "site_count": 4
+    },
+    {
+      "domain_id": "ro-need-003",
+      "incident_domain_id": "ro-flood-demo",
+      "report_status": "UNVERIFIED",
+      "category": "NEED",
+      "need_kind": "FOOD",
+      "site_count": 6
+    }
+  ],
+  "incidents": [
+    {
+      "domain_id": "us-ca-wildfire-demo",
+      "region_id": "us-ca",
+      "type": "WILDFIRE",
+      "status": "ACTIVE"
+    },
+    {
+      "domain_id": "ro-flood-demo",
+      "region_id": "ro",
+      "type": "FLOOD",
+      "status": "ACTIVE"
+    },
+    {
+      "domain_id": "es-wildfire-demo",
+      "region_id": "es",
+      "type": "WILDFIRE",
+      "status": "ACTIVE"
+    },
+    {
+      "domain_id": "gr-wildfire-demo",
+      "region_id": "gr",
+      "type": "WILDFIRE",
+      "status": "ACTIVE"
+    },
+    {
+      "domain_id": "ph-flood-demo",
+      "region_id": "ph",
+      "type": "FLOOD",
+      "status": "ACTIVE"
+    }
+  ],
+  "resources": [
+    {
+      "domain_id": "ca-engine-3121",
+      "region_id": "us-ca",
+      "kind": "ENGINE",
+      "status": "ASSIGNED",
+      "org": "CAL FIRE Butte Unit",
+      "lon": -121.606,
+      "lat": 39.742
+    },
+    {
+      "domain_id": "ca-engine-3122",
+      "region_id": "us-ca",
+      "kind": "ENGINE",
+      "status": "AVAILABLE",
+      "org": "CAL FIRE Butte Unit",
+      "lon": -121.556,
+      "lat": 39.712
+    },
+    {
+      "domain_id": "ca-crew-hand-7",
+      "region_id": "us-ca",
+      "kind": "CREW",
+      "status": "ASSIGNED",
+      "org": "CAL FIRE Butte Unit",
+      "lon": -121.634,
+      "lat": 39.766
+    },
+    {
+      "domain_id": "ca-air-attack-230",
+      "region_id": "us-ca",
+      "kind": "AIRCRAFT",
+      "status": "AVAILABLE",
+      "org": "CAL FIRE Air Attack",
+      "lon": -121.618,
+      "lat": 39.494
+    },
+    {
+      "domain_id": "ca-medic-14",
+      "region_id": "us-ca",
+      "kind": "MEDICAL",
+      "status": "AVAILABLE",
+      "org": "Butte County EMS",
+      "lon": -121.598,
+      "lat": 39.728
+    },
+    {
+      "domain_id": "ca-supply-cache-1",
+      "region_id": "us-ca",
+      "kind": "SUPPLY",
+      "status": "AVAILABLE",
+      "org": "American Red Cross Gold Country",
+      "lon": -121.494,
+      "lat": 38.582
+    },
+    {
+      "domain_id": "ro-autospeciala-1",
+      "region_id": "ro",
+      "kind": "ENGINE",
+      "status": "ASSIGNED",
+      "org": "ISU Galati",
+      "lon": 28.036,
+      "lat": 45.436
+    },
+    {
+      "domain_id": "ro-echipa-cautare-1",
+      "region_id": "ro",
+      "kind": "TEAM",
+      "status": "ASSIGNED",
+      "org": "ISU Galati",
+      "lon": 27.982,
+      "lat": 45.472
+    },
+    {
+      "domain_id": "ro-smurd-1",
+      "region_id": "ro",
+      "kind": "MEDICAL",
+      "status": "AVAILABLE",
+      "org": "SMURD Galati",
+      "lon": 28.048,
+      "lat": 45.452
+    },
+    {
+      "domain_id": "ro-depozit-1",
+      "region_id": "ro",
+      "kind": "SUPPLY",
+      "status": "AVAILABLE",
+      "org": "Crucea Rosie Romana",
+      "lon": 28.006,
+      "lat": 45.418
+    },
+    {
+      "domain_id": "ca-crew-hs-1",
+      "region_id": "us-ca",
+      "kind": "CREW",
+      "status": "AVAILABLE",
+      "org": "CAL FIRE Butte Unit — hand crew",
+      "lon": -121.836,
+      "lat": 39.728
+    },
+    {
+      "domain_id": "ca-crew-hs-2",
+      "region_id": "us-ca",
+      "kind": "CREW",
+      "status": "AVAILABLE",
+      "org": "CAL FIRE Butte Unit — hand crew",
+      "lon": -121.556,
+      "lat": 39.514
+    },
+    {
+      "domain_id": "ca-engine-2141",
+      "region_id": "us-ca",
+      "kind": "ENGINE",
+      "status": "AVAILABLE",
+      "org": "CAL FIRE Butte Unit — Type 3 engine",
+      "lon": -121.594,
+      "lat": 39.76
+    },
+    {
+      "domain_id": "ca-engine-chico-1",
+      "region_id": "us-ca",
+      "kind": "ENGINE",
+      "status": "AVAILABLE",
+      "org": "Chico Fire Department — Type 1 engine",
+      "lon": -121.837,
+      "lat": 39.729
+    },
+    {
+      "domain_id": "ca-air-tanker-1",
+      "region_id": "us-ca",
+      "kind": "AIRCRAFT",
+      "status": "AVAILABLE",
+      "org": "CAL FIRE Chico Air Attack Base — air tanker",
+      "lon": -121.858,
+      "lat": 39.795
+    },
+    {
+      "domain_id": "ca-helitack-1",
+      "region_id": "us-ca",
+      "kind": "AIRCRAFT",
+      "status": "AVAILABLE",
+      "org": "CAL FIRE Vina Helitack",
+      "lon": -122.033,
+      "lat": 39.925
+    },
+    {
+      "domain_id": "ca-medic-ems-2",
+      "region_id": "us-ca",
+      "kind": "MEDICAL",
+      "status": "AVAILABLE",
+      "org": "Butte County EMS — ALS ambulance",
+      "lon": -121.548,
+      "lat": 39.514
+    },
+    {
+      "domain_id": "ca-medic-enloe",
+      "region_id": "us-ca",
+      "kind": "MEDICAL",
+      "status": "AVAILABLE",
+      "org": "Enloe Medical Center — mobile medical team",
+      "lon": -121.841,
+      "lat": 39.737
+    },
+    {
+      "domain_id": "ca-supply-oes-1",
+      "region_id": "us-ca",
+      "kind": "SUPPLY",
+      "status": "AVAILABLE",
+      "org": "Cal OES — regional supply cache",
+      "lon": -121.494,
+      "lat": 38.582
+    },
+    {
+      "domain_id": "ca-team-sar-1",
+      "region_id": "us-ca",
+      "kind": "TEAM",
+      "status": "AVAILABLE",
+      "org": "Butte County Sheriff — search and rescue",
+      "lon": -121.556,
+      "lat": 39.514
+    },
+    {
+      "domain_id": "ca-team-redcross",
+      "region_id": "us-ca",
+      "kind": "TEAM",
+      "status": "AVAILABLE",
+      "org": "American Red Cross — shelter team",
+      "lon": -121.494,
+      "lat": 38.582
+    },
+    {
+      "domain_id": "ro-crew-isu-1",
+      "region_id": "ro",
+      "kind": "CREW",
+      "status": "AVAILABLE",
+      "org": "ISU Galați — intervention crew",
+      "lon": 28.034,
+      "lat": 45.435
+    },
+    {
+      "domain_id": "ro-crew-isu-2",
+      "region_id": "ro",
+      "kind": "CREW",
+      "status": "AVAILABLE",
+      "org": "ISU Vaslui — intervention crew",
+      "lon": 27.728,
+      "lat": 46.64
+    },
+    {
+      "domain_id": "ro-engine-isu-1",
+      "region_id": "ro",
+      "kind": "ENGINE",
+      "status": "AVAILABLE",
+      "org": "ISU Galați — autospecială pompieri",
+      "lon": 28.04,
+      "lat": 45.44
+    },
+    {
+      "domain_id": "ro-engine-isu-braila",
+      "region_id": "ro",
+      "kind": "ENGINE",
+      "status": "AVAILABLE",
+      "org": "ISU Brăila — autospecială pompieri",
+      "lon": 27.958,
+      "lat": 45.268
+    },
+    {
+      "domain_id": "ro-air-igsu-1",
+      "region_id": "ro",
+      "kind": "AIRCRAFT",
+      "status": "AVAILABLE",
+      "org": "IGSU — elicopter SMURD (Iași)",
+      "lon": 27.62,
+      "lat": 47.178
+    },
+    {
+      "domain_id": "ro-medic-smurd-1",
+      "region_id": "ro",
+      "kind": "MEDICAL",
+      "status": "AVAILABLE",
+      "org": "SMURD Galați — ambulanță tip C",
+      "lon": 28.031,
+      "lat": 45.437
+    },
+    {
+      "domain_id": "ro-medic-smurd-2",
+      "region_id": "ro",
+      "kind": "MEDICAL",
+      "status": "AVAILABLE",
+      "org": "SMURD Brăila — ambulanță tip B",
+      "lon": 27.974,
+      "lat": 45.271
+    },
+    {
+      "domain_id": "ro-supply-igsu-1",
+      "region_id": "ro",
+      "kind": "SUPPLY",
+      "status": "AVAILABLE",
+      "org": "IGSU — depozit regional (Bucharest)",
+      "lon": 26.103,
+      "lat": 44.427
+    },
+    {
+      "domain_id": "ro-team-crucea-rosie",
+      "region_id": "ro",
+      "kind": "TEAM",
+      "status": "AVAILABLE",
+      "org": "Crucea Roșie Galați — echipă de adăpost",
+      "lon": 28.037,
+      "lat": 45.43
+    },
+    {
+      "domain_id": "ro-team-salvamont",
+      "region_id": "ro",
+      "kind": "TEAM",
+      "status": "AVAILABLE",
+      "org": "Salvamont Brașov — echipă de salvare",
+      "lon": 25.601,
+      "lat": 45.657
+    },
+    {
+      "domain_id": "es-crew-ume-1",
+      "region_id": "es",
+      "kind": "CREW",
+      "status": "AVAILABLE",
+      "org": "UME — batallón de intervención (Madrid)",
+      "lon": -3.704,
+      "lat": 40.417
+    },
+    {
+      "domain_id": "es-engine-bomberos-1",
+      "region_id": "es",
+      "kind": "ENGINE",
+      "status": "AVAILABLE",
+      "org": "Bomberos Castilla y León — autobomba (Zamora)",
+      "lon": -5.745,
+      "lat": 41.503
+    },
+    {
+      "domain_id": "es-air-43grupo",
+      "region_id": "es",
+      "kind": "AIRCRAFT",
+      "status": "AVAILABLE",
+      "org": "43 Grupo — avión anfibio (Torrejón)",
+      "lon": -3.446,
+      "lat": 40.487
+    },
+    {
+      "domain_id": "es-medic-summa-1",
+      "region_id": "es",
+      "kind": "MEDICAL",
+      "status": "AVAILABLE",
+      "org": "SUMMA 112 — ambulancia SVA",
+      "lon": -3.704,
+      "lat": 40.417
+    },
+    {
+      "domain_id": "gr-crew-fire-1",
+      "region_id": "gr",
+      "kind": "CREW",
+      "status": "AVAILABLE",
+      "org": "Hellenic Fire Service — forest fire crew (Athens)",
+      "lon": 23.728,
+      "lat": 37.984
+    },
+    {
+      "domain_id": "gr-engine-fire-1",
+      "region_id": "gr",
+      "kind": "ENGINE",
+      "status": "AVAILABLE",
+      "org": "Hellenic Fire Service — fire engine (Chalkida)",
+      "lon": 23.601,
+      "lat": 38.462
+    },
+    {
+      "domain_id": "gr-air-cl415",
+      "region_id": "gr",
+      "kind": "AIRCRAFT",
+      "status": "AVAILABLE",
+      "org": "Hellenic Air Force — CL-415 (Elefsina)",
+      "lon": 23.556,
+      "lat": 38.064
+    },
+    {
+      "domain_id": "gr-medic-ekab-1",
+      "region_id": "gr",
+      "kind": "MEDICAL",
+      "status": "AVAILABLE",
+      "org": "EKAB — ambulance (Athens)",
+      "lon": 23.728,
+      "lat": 37.984
+    },
+    {
+      "domain_id": "ph-crew-bfp-1",
+      "region_id": "ph",
+      "kind": "CREW",
+      "status": "AVAILABLE",
+      "org": "Bureau of Fire Protection — rescue team (Cotabato)",
+      "lon": 124.245,
+      "lat": 7.204
+    },
+    {
+      "domain_id": "ph-engine-bfp-1",
+      "region_id": "ph",
+      "kind": "ENGINE",
+      "status": "AVAILABLE",
+      "org": "Bureau of Fire Protection — fire truck (Davao)",
+      "lon": 125.612,
+      "lat": 7.073
+    },
+    {
+      "domain_id": "ph-medic-drrmo-1",
+      "region_id": "ph",
+      "kind": "MEDICAL",
+      "status": "AVAILABLE",
+      "org": "Provincial DRRMO — ambulance (Maguindanao)",
+      "lon": 124.264,
+      "lat": 7.13
+    },
+    {
+      "domain_id": "ph-team-pcg-1",
+      "region_id": "ph",
+      "kind": "TEAM",
+      "status": "AVAILABLE",
+      "org": "Philippine Coast Guard — flood rescue team (Cotabato)",
+      "lon": 124.245,
+      "lat": 7.204
+    }
+  ],
+  "resource_tasks": [
+    {
+      "domain_id": "ca-task-1",
+      "resource_domain_id": "ca-engine-3121",
+      "incident_domain_id": "us-ca-wildfire-demo",
+      "status": "ONSCENE"
+    },
+    {
+      "domain_id": "ca-task-2",
+      "resource_domain_id": "ca-crew-hand-7",
+      "incident_domain_id": "us-ca-wildfire-demo",
+      "status": "ENROUTE"
+    },
+    {
+      "domain_id": "ca-task-3",
+      "resource_domain_id": "ca-air-attack-230",
+      "incident_domain_id": "us-ca-wildfire-demo",
+      "status": "PROPOSED"
+    },
+    {
+      "domain_id": "ro-task-1",
+      "resource_domain_id": "ro-autospeciala-1",
+      "incident_domain_id": "ro-flood-demo",
+      "status": "ONSCENE"
+    },
+    {
+      "domain_id": "ro-task-2",
+      "resource_domain_id": "ro-echipa-cautare-1",
+      "incident_domain_id": "ro-flood-demo",
+      "status": "TASKED"
+    }
+  ],
+  "public_reports": [
+    {
+      "domain_id": "ca-report-1",
+      "incident_domain_id": "us-ca-wildfire-demo",
+      "source": "WEB",
+      "category": "SOS",
+      "status": "UNVERIFIED",
+      "text": "Smoke and embers reaching the ridge road; two households still at home and one has no vehicle.",
+      "confidence": 0.42,
+      "lon": -121.62,
+      "lat": 39.75,
+      "received_at": "2026-07-05T21:40:00Z",
+      "purge_after": "2027-01-05T00:00:00Z"
+    },
+    {
+      "domain_id": "ca-report-2",
+      "incident_domain_id": "us-ca-wildfire-demo",
+      "source": "SMS",
+      "category": "NEED",
+      "status": "TRIAGED",
+      "text": "Shelter at the fairgrounds is asking for bottled water and infant formula.",
+      "confidence": 0.68,
+      "lon": -121.6,
+      "lat": 39.73,
+      "received_at": "2026-07-05T21:55:00Z",
+      "purge_after": "2027-01-05T00:00:00Z"
+    },
+    {
+      "domain_id": "ca-report-3",
+      "incident_domain_id": "us-ca-wildfire-demo",
+      "source": "SOCIAL",
+      "category": "DAMAGE",
+      "status": "UNVERIFIED",
+      "text": "Post claims the highway bridge is out. Single source, no photograph, not corroborated.",
+      "confidence": 0.18,
+      "lon": -121.58,
+      "lat": 39.71,
+      "received_at": "2026-07-05T22:05:00Z",
+      "purge_after": "2027-01-05T00:00:00Z"
+    },
+    {
+      "domain_id": "ro-report-1",
+      "incident_domain_id": "ro-flood-demo",
+      "source": "WEB",
+      "category": "SOS",
+      "status": "UNVERIFIED",
+      "text": "Apa a intrat in curte si creste; doi varstnici la parter nu se pot deplasa singuri.",
+      "confidence": 0.55,
+      "lon": 28.02,
+      "lat": 45.44,
+      "received_at": "2026-07-05T21:30:00Z",
+      "purge_after": "2027-01-05T00:00:00Z"
+    },
+    {
+      "domain_id": "ro-report-2",
+      "incident_domain_id": "ro-flood-demo",
+      "source": "SMS",
+      "category": "DAMAGE",
+      "status": "TRIAGED",
+      "text": "Drumul spre sat este acoperit de apa pe aproximativ o suta de metri.",
+      "confidence": 0.6,
+      "lon": 27.99,
+      "lat": 45.47,
+      "received_at": "2026-07-05T21:48:00Z",
+      "purge_after": "2027-01-05T00:00:00Z"
+    }
+  ],
+  "threshold_rules": [
+    {
+      "domain_id": "ca-hazard-buffer",
+      "region_id": "us-ca",
+      "target": "HAZARD_BUFFER",
+      "operator": "enters",
+      "value": "2000",
+      "cooldown": 3600
+    },
+    {
+      "domain_id": "ro-gauge-moderate",
+      "region_id": "ro",
+      "target": "GAUGE_CATEGORY",
+      "operator": "gte",
+      "value": "MODERATE",
+      "hysteresis": 0.1,
+      "cooldown": 3600
+    },
+    {
+      "domain_id": "ro-forecast-major",
+      "region_id": "ro",
+      "target": "FORECAST_GAUGE_CATEGORY",
+      "operator": "crosses",
+      "value": "MAJOR",
+      "cooldown": 7200
+    }
+  ]
+}

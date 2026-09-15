@@ -1,0 +1,13 @@
+{
+    "status": "started",
+    "status_code": 200,
+    "error": false,
+    "error_message": null,
+    "data": {
+        "total_population": 215182.79
+    },
+    "taskid": "f89821f1-7487-56a7-9e71-aa8ccfd40750",
+    "startTime": "2026-07-15 09:02:33.139727",
+    "endTime": "2026-07-15 09:02:34.677658",
+    "executionTime": 1
+}

@@ -1,0 +1,599 @@
+{
+  "_meta": {
+    "locale": "id",
+    "review": "machine",
+    "machineTranslated": true,
+    "comment": "Machine-translated from messages/en.json; NOT reviewed by a human translator. Labeled as such in the UI (FR-I18N-5).",
+    "coverage": "full"
+  },
+  "channels": {
+    "digest": {
+      "trend": "tren",
+      "noClaim": "(tidak ada klaim)",
+      "citations": "kutipan sumber",
+      "sources": "asal data",
+      "freshness": "kesegaran"
+    },
+    "alert": {
+      "headline": "PERINGATAN BEACON — {severity} {category} untuk insiden {incidentId} (peringatan {alertId})"
+    }
+  },
+  "actMenu": {
+    "trigger": "Tindakan",
+    "title": "Tindakan atas pilihan",
+    "taskResource": "Tugaskan sumber daya",
+    "drawRoute": "Gambar rute evakuasi",
+    "createAlert": "Buat peringatan DRAFT"
+  },
+  "app": {
+    "title": "BEACON — Gambaran Operasi Bersama",
+    "description": "Gambaran operasi bersama (COP) sumber terbuka, local-first, dan hampir real-time untuk kebakaran hutan dan lahan serta banjir.",
+    "skipToContent": "Lewati ke konten",
+    "noLiveIncidentsTitle": "Tidak ada insiden langsung di wilayah ini",
+    "noLiveIncidentsDescription": "Tidak ada sumber langsung yang melaporkan kebakaran hutan atau banjir di sini saat ini. Peta menampilkan apa yang disajikan sumber langsung; tidak ada yang dikarang. Sumber dan statusnya tercantum di Sumber.",
+    "noLiveIncidentsDemoDescription": "Tidak ada sumber langsung yang melaporkan kebakaran hutan atau banjir di sini saat ini. Insiden yang ditampilkan adalah skenario demo yang dimuat sebelumnya, dipertahankan untuk panduan; lapisan langsung digambar saat sumber menyediakannya."
+  },
+  "commandPalette": {
+    "openLabel": "Buka palet perintah",
+    "triggerText": "Cari",
+    "dialogLabel": "Palet perintah",
+    "placeholder": "Lompat ke wilayah, insiden, panel — atau bertindak…",
+    "empty": "Tidak ada hasil.",
+    "groupRegions": "Wilayah",
+    "groupIncidents": "Insiden",
+    "groupPanels": "Panel",
+    "groupLayers": "Alihkan lapisan",
+    "groupAct": "Tindakan",
+    "toggleLayer": "Alihkan lapisan {layer}",
+    "shortcutsTitle": "Pintasan papan ketik",
+    "shortcutsDescription": "Semua aksi COP dapat dijangkau tanpa penunjuk.",
+    "shortcut": {
+      "openPalette": "Buka palet perintah",
+      "openShortcuts": "Buka hamparan pintasan ini",
+      "move": "Berpindah antar hasil palet",
+      "run": "Jalankan aksi yang disorot",
+      "close": "Tutup palet / hamparan"
+    }
+  },
+  "decision": {
+    "sectionLabel": "Dukungan keputusan",
+    "figures": "Angka deterministik",
+    "narration": "Narasi AI",
+    "noNarration": "Tanpa narasi (hanya deterministik).",
+    "citations": "Kutipan sumber",
+    "approved": "Disetujui oleh manusia",
+    "approve": "Setujui keputusan",
+    "humanApprovalRequired": "Persetujuan manusia wajib sebelum tindakan publik apa pun.",
+    "noDraftToApprove": "Tidak ada yang perlu disetujui saat ini — tidak ada draf peringatan yang menunggu tinjauan.",
+    "roleRequiredToApprove": "Masuk sebagai Verifikator atau Manajer Darurat untuk menyetujui.",
+    "approveFailed": "Persetujuan gagal —"
+  },
+  "draftAlerts": {
+    "title": "Tinjauan peringatan (DRAFT)",
+    "emptyTitle": "Tidak ada peringatan DRAFT",
+    "emptyDescription": "Aturan ambang batas membuat peringatan DRAFT di sini.",
+    "provenance": "Asal data",
+    "noProvenance": "Tanpa asal data",
+    "reviewApprove": "Tinjau & setujui…",
+    "approveFailed": "Persetujuan gagal —",
+    "forecastHeading": "Bukti prakiraan — metode, masukan, dan ketidakpastian",
+    "forecastCategory": "Kategori prakiraan",
+    "forecastLeadTimeLabel": "Waktu tenggang",
+    "forecastLeadTime": "{hours, number} jam, sebagaimana dinyatakan sumber. BEACON tidak memodelkan waktu tempuh bahaya.",
+    "forecastCrossing": "Pelampauan yang diperkirakan dan waktu terbit prakiraan",
+    "forecastLikelihood": "Kemungkinan, masukan, dan metode"
+  },
+  "locale": {
+    "label": "Bahasa",
+    "switcherLabel": "Bahasa tampilan",
+    "machineTranslatedNotice": "Diterjemahkan mesin — tidak ditinjau oleh penerjemah manusia.",
+    "machineTranslatedShort": "terjemahan mesin"
+  },
+  "logistics": {
+    "title": "Logistik",
+    "resource": "Sumber daya",
+    "shelter": "Pengungsian",
+    "noShelterData": "Tidak ada data kapasitas pengungsian.",
+    "shelterCapacity": "Kapasitas pengungsian",
+    "shelterCapacityVsDemand": "Kapasitas pengungsian vs kebutuhan",
+    "overCapacity": "Melebihi kapasitas",
+    "withinCapacity": "Dalam kapasitas",
+    "resourceToTask": "Sumber daya untuk tugas",
+    "selectResource": "Pilih sumber daya…",
+    "lifecycleTransition": "Transisi siklus hidup",
+    "transition": {
+      "PROPOSED": "PROPOSED",
+      "ASSIGNED": "ASSIGNED",
+      "EN_ROUTE": "EN_ROUTE",
+      "ON_SCENE": "ON_SCENE",
+      "CLEARED": "CLEARED"
+    },
+    "task": "Tugas",
+    "taskingRejected": "Penugasan ditolak ({code}): {message}",
+    "resourcesUnavailable": "Sumber daya tidak tersedia",
+    "noResourcesTitle": "Tidak ada sumber daya",
+    "noResourcesDescription": "Tidak ada sumber daya yang dapat ditugaskan dalam cakupan.",
+    "prePositioning": {
+      "heading": "Saran pra-penempatan",
+      "advisory": "Saran — manusia yang memutuskan",
+      "listLabel": "Daftar saran pra-penempatan",
+      "noIncidentTitle": "Tidak ada insiden dipilih",
+      "noIncidentDescription": "Pilih insiden untuk melihat saran pra-penempatan.",
+      "unavailable": "Pra-penempatan tidak tersedia",
+      "noExtentTitle": "Belum ada proyeksi sebaran",
+      "noExtentDescription": "Saran muncul setelah proyeksi bahaya tersedia untuk insiden ini.",
+      "noAssetsTitle": "Tidak ada aset terdekat",
+      "noAssetsDescription": "Tidak ditemukan sumber daya AVAILABLE atau pengungsian OPEN di dekat proyeksi sebaran."
+    }
+  },
+  "map": {
+    "layersLegend": "Lapisan peta",
+    "errorBoundaryLabel": "Peta",
+    "unavailableTitle": "Peta interaktif tidak tersedia",
+    "unavailableDescription": "WebGL tidak tersedia di sini. Semua data peta tercantum di bawah sebagai alternatif yang mudah diakses.",
+    "layer": {
+      "fire": "Kebakaran (titik panas & perimeter)",
+      "flood": "Banjir (sebaran & pos duga air)",
+      "storm": "Lintasan siklon, kerucut, dan gelombang badai",
+      "floodzone": "Zona banjir (NFHL)",
+      "infra": "Infrastruktur",
+      "weather": "Cuaca (angin)",
+      "cameras": "Kamera langsung",
+      "outage": "Pemadaman listrik",
+      "cell": "Cakupan seluler",
+      "exposure": "Keterpaparan (simpul dalam bahaya)",
+      "reports": "Laporan / SOS",
+      "prediction": "Kerucut prediksi",
+      "route": "Rute evakuasi",
+      "shelters": "Tempat pengungsian"
+    },
+    "caveat": {
+      "fire": "Titik panas FIRMS adalah deteksi termal, bukan perimeter kebakaran yang terkonfirmasi.",
+      "floodzone": "Zona banjir regulasi — bukan sebaran aktual",
+      "weather": "Titik observasi — bukan grid prakiraan",
+      "camera": "Kamera langsung — membuka situs sumber di tab baru",
+      "outage": "Granularitas tingkat kabupaten (EAGLE-I): area merupakan estimasi yang DIASUMSIKAN padam, bukan pemadaman per alamat yang terkonfirmasi.",
+      "cell": "Estimasi cakupan turunan OpenCelliD — bersifat indikatif, bukan peta sinyal yang dijamin.",
+      "storm": "Produk siklon dari lembaga resmi ditampilkan apa adanya — BEACON tidak memodelkan lintasan badai, angin, maupun gelombang badai.",
+      "routeDirect": "Rute langsung — belum diverifikasi bahwa rute ini menghindari bahaya. Pastikan sebelum mengirim siapa pun."
+    },
+    "tooltip": {
+      "layer": "Lapisan: {group}",
+      "clickToOpen": "klik untuk membuka ↗"
+    },
+    "region": {
+      "label": "Wilayah",
+      "default": "Wilayah bawaan",
+      "overlaysLegend": "Hamparan satelit",
+      "attribution": "Citra satelit: NASA EOSDIS GIBS"
+    },
+    "gibs": {
+      "truecolor": "Warna asli (VIIRS)",
+      "fires": "Kebakaran aktif (VIIRS)",
+      "flood": "Banjir (MODIS)",
+      "aerosol": "Kedalaman optis aerosol"
+    },
+    "list": {
+      "regionLabel": "Fitur peta (daftar aksesibel)",
+      "empty": "Tidak ada fitur peta pada tampilan ini.",
+      "caption": "Daftar aksesibel semua fitur peta — alternatif papan ketik untuk peta interaktif.",
+      "colType": "Jenis",
+      "colFeature": "Fitur",
+      "colDetail": "Rincian",
+      "colLocation": "Lokasi",
+      "colAction": "Aksi",
+      "focus": "Fokus ke {label}"
+    },
+    "group": {
+      "fire": "Deteksi kebakaran",
+      "gauge": "Pos duga air",
+      "infra": "Infrastruktur",
+      "exposure": "Keterpaparan",
+      "report": "Laporan / SOS",
+      "shelter": "Tempat pengungsian"
+    },
+    "detail": {
+      "severity": "Keparahan {severity}",
+      "thermalHotspot": "Titik panas termal",
+      "stage": "Tinggi muka air {stage}",
+      "gauge": "Pos duga air",
+      "node": "Simpul",
+      "infra": "{kind} — {status}",
+      "inHazard": "Dalam bahaya: {hazard}",
+      "nodeInHazard": "Simpul dalam bahaya"
+    },
+    "outage": {
+      "assumedOffline": "DIASUMSIKAN padam",
+      "reportedOffline": "Dilaporkan padam",
+      "withCount": "{count} pelanggan padam — {state}"
+    },
+    "zone": {
+      "label": "Zona {zone}"
+    },
+    "storm": {
+      "trackLabel": "Lintasan pusat siklon — bersifat informasi, bukan area dampak",
+      "coneLabel": "Kerucut prakiraan — ketidakpastian posisi pusat lintasan, bukan area dampak",
+      "surgeLabel": "Sebaran gelombang badai — area dampak, dihitung dalam keterpaparan",
+      "coneCaveat": "Kerucut prakiraan dari {agency}, peringatan {advisoryAt} — menunjukkan ke mana pusat siklon dapat bergerak, BUKAN luasan kondisi berbahaya.",
+      "coneCaveatUnattributed": "Kerucut prakiraan menunjukkan ke mana pusat siklon dapat bergerak — BUKAN luasan kondisi berbahaya."
+    },
+    "shelter": {
+      "capacity": "Kap {capacity} · Butuh {demand}"
+    },
+    "weather": {
+      "label": "Angin {speed} km/h dari {compass} ({deg}°), obs {observedAt}"
+    },
+    "compass": {
+      "N": "U",
+      "NE": "TL",
+      "E": "T",
+      "SE": "TG",
+      "S": "S",
+      "SW": "BD",
+      "W": "B",
+      "NW": "BL"
+    },
+    "zoomIn": "Perbesar",
+    "zoomOut": "Perkecil",
+    "recenter": "Pusatkan ulang peta",
+    "offlineBasemap": "Tidak ada peta dasar pada penerapan terisolasi ini. Semua lapisan operasional di atasnya tidak terpengaruh.",
+    "unavailableBasemap": "Tidak ada peta dasar: tidak ada layanan ubin yang dapat dijangkau. Semua lapisan operasional di bawah ini tidak terpengaruh."
+  },
+  "anticipatory": {
+    "title": "Aksi antisipatif",
+    "tab": "Antisipatif",
+    "sectionLabel": "Aksi antisipatif — protokol aksi dini",
+    "methodHeading": "Metode, masukan, dan ketidakpastian",
+    "ladderHeading": "Tangga pemicu",
+    "cycleHeading": "Evaluasi ke-{index, number} dari {total, number}",
+    "inputs": "Masukan",
+    "members": "{over, number} dari {total, number} anggota prakiraan melampaui {threshold, number} {unit}",
+    "leadTimeLabel": "Waktu tenggang",
+    "leadTime": "{hours, number} jam, sebagaimana dinyatakan sumbernya. BEACON tidak memodelkan waktu tempuh bahaya.",
+    "vintage": "Waktu jalannya prakiraan dan saat penerbitan",
+    "methodLabel": "Metode dan kelas",
+    "fired": "Terpicu",
+    "notFired": "Tidak terpicu",
+    "stageGate": "Ambang: sekurang-kurangnya {fraction, number} anggota prakiraan melampaui {threshold, number} {unit}, kelas {klass} atau lebih tinggi, dalam waktu tenggang {hours, number} jam.",
+    "ledgerHeading": "Catatan tata kelola yang dihasilkan siklus ini:",
+    "actionsHeading": "Tindakan yang disepakati sebelumnya",
+    "suggested": "Disarankan",
+    "approvalHeading": "Persetujuan manusia",
+    "pending": "Menunggu persetujuan manusia oleh: {roles}",
+    "noEmission": "Hanya saran. Tidak ada di panel ini yang mengerahkan sumber daya atau menerbitkan peringatan publik; setiap aksi dini harus disetujui oleh orang yang disebut namanya.",
+    "stopMechanism": "Mekanisme penghentian: {role} dapat menghentikan aktivasi berdasarkan kondisi yang disepakati sebelumnya, dan mesin menghentikannya secara otomatis setelah {hours, number} jam.",
+    "replay": "Pemutaran ulang dari berkas rekaman: setiap jalannya prakiraan yang terekam dievaluasi ulang {lag, number} jam setelah saat penerbitan yang tercantum dalam berkas. Bukan data langsung — BEACON tidak menanyakan produk ensembel apa pun saat berjalan.",
+    "noProtocolTitle": "Tidak ada protokol aksi dini untuk wilayah ini",
+    "noProtocolBody": "BEACON tidak menyertakan protokol aksi dini yang cakupannya menyebut wilayah ini, jadi tidak ada yang bisa dievaluasi. Protokol adalah konfigurasi (config/eap/), bukan kode.",
+    "noForecastTitle": "Tidak ada prakiraan terekam untuk protokol ini",
+    "noForecastBody": "Protokolnya tersedia, tetapi tidak disertai berkas prakiraan terekam, sehingga tidak ada evaluasi yang dapat diputar ulang. BEACON tidak memiliki sumber ensembel langsung yang terhubung.",
+    "engineRefusedTitle": "Mesin antisipatif menolak masukan ini",
+    "engineRefusedBody": "Mesin menolak masukan tersebut alih-alih menampilkan evaluasi sebagian."
+  },
+  "outlook": {
+    "title": "Prospek",
+    "sectionLabel": "Prospek berperingkat",
+    "eta": "dalam ~{hours, number} h",
+    "noEta": "sumber tidak memberi waktu tenggang",
+    "unclassified": "tidak terklasifikasi",
+    "uncertainty": "ketidakpastian {value, number}"
+  },
+  "panels": {
+    "sitrepTitle": "Laporan situasi",
+    "logisticsTitle": "Logistik"
+  },
+  "shell": {
+    "sitrepDock": "Laporan Situasi",
+    "logisticsDock": "Logistik",
+    "mapLabel": "Peta gambaran operasi bersama",
+    "panelsLabel": "Panel COP",
+    "expand": "Perluas {label}",
+    "collapse": "Ciutkan {label}",
+    "region": {
+      "us-ca": "California (AS)",
+      "ro": "Rumania (UE)",
+      "es": "Spanyol (UE)",
+      "gr": "Yunani (UE)",
+      "ph": "Filipina"
+    }
+  },
+  "sitrep": {
+    "title": "Laporan Situasi",
+    "uncited": "Tanpa kutipan — sumber tidak ada (F2)",
+    "noPriorities": "Tidak ada prioritas berperingkat.",
+    "rankedPriorities": "Prioritas berperingkat",
+    "deterministicOnly": "hanya deterministik",
+    "aiGenerated": "Dibuat oleh AI",
+    "trendLabel": "Tren:",
+    "priorities": "Prioritas",
+    "noIncidentTitle": "Tidak ada insiden dipilih",
+    "noIncidentDescription": "Pilih insiden untuk melihat SitRep-nya.",
+    "unavailable": "SitRep tidak tersedia",
+    "provenance": "Asal data",
+    "externalViews": "Tampilan eksternal"
+  },
+  "statusStrip": {
+    "regionLabel": "Ringkasan status wilayah",
+    "active": "Aktif",
+    "pending": "Menunggu",
+    "unverified": "Belum terverifikasi",
+    "sources": "Sumber",
+    "dataAsOf": "Usia data",
+    "clock": "UTC",
+    "liveOfTotal": "{live}/{total} langsung",
+    "minutesAgo": "{minutes} mnt",
+    "unavailable": "Data langsung tidak tersedia"
+  },
+  "suppliesPanel": {
+    "title": "Pasokan bantuan",
+    "unavailable": "Pasokan tidak tersedia",
+    "emptyTitle": "Tidak ada lot pasokan",
+    "emptyDescription": "Tidak ada stok pasokan bantuan yang terdaftar.",
+    "expires": "Kedaluwarsa {when}",
+    "asOf": "Per {when}",
+    "provenance": "Asal data"
+  },
+  "volunteerTeamsPanel": {
+    "title": "Tim relawan",
+    "unavailable": "Tim relawan tidak tersedia",
+    "emptyTitle": "Tidak ada tim relawan",
+    "emptyDescription": "Tidak ada unit tim yang terdaftar.",
+    "headcount": "Jumlah personel {count}",
+    "skills": "Kapabilitas",
+    "asOf": "Per {when}",
+    "provenance": "Asal data"
+  },
+  "shelterStatusPanel": {
+    "title": "Status pengungsian",
+    "unavailable": "Status pengungsian tidak tersedia",
+    "emptyTitle": "Tidak ada data pengungsian",
+    "emptyDescription": "Tidak ada tempat pengungsian untuk dilaporkan.",
+    "shelters": "Tempat pengungsian",
+    "capacity": "Kapasitas",
+    "occupancy": "Keterisian",
+    "availableOpen": "Kapasitas kosong terbuka",
+    "utilization": "Pemanfaatan",
+    "available": "Kosong",
+    "provenance": "Asal data"
+  },
+  "damageReportsPanel": {
+    "title": "Kerusakan dan kebutuhan",
+    "unavailable": "Laporan kerusakan tidak tersedia",
+    "emptyTitle": "Tidak ada entri penilaian",
+    "emptyDescription": "Tidak ada laporan kerusakan atau kebutuhan dalam cakupan.",
+    "entries": "Entri",
+    "sites": "Lokasi (dilaporkan sendiri)",
+    "worstSeverity": "Tingkat keparahan tertinggi",
+    "needs": "Kebutuhan",
+    "asOf": "Per {when}",
+    "provenance": "Asal data"
+  },
+  "emsOverlayPanel": {
+    "title": "Lapisan Copernicus EMS",
+    "unavailable": "Lapisan EMS tidak tersedia",
+    "emptyTitle": "Tidak ada produk terbit",
+    "emptyDescription": "Tidak ada produk penilaian kerusakan yang diterbitkan untuk tampilan ini.",
+    "open": "Buka halaman produk",
+    "attribution": "Atribusi",
+    "notShown": "Tidak ditampilkan",
+    "asOf": "Per {when}",
+    "provenance": "Asal data"
+  },
+  "routingPanel": {
+    "title": "Rute evakuasi",
+    "formLabel": "Minta rute evakuasi",
+    "clickHint": "Klik peta untuk menetapkan titik awal, atau ketik koordinatnya.",
+    "originLat": "Lintang titik awal",
+    "originLon": "Bujur titik awal",
+    "submit": "Minta rute",
+    "submitting": "Menghitung rute…",
+    "needIncident": "Pilih insiden terlebih dahulu — rute dihitung untuk menghindari zona bahaya insiden tersebut.",
+    "requestFailed": "Permintaan rute gagal: {message}",
+    "resultLabel": "Hasil rute",
+    "nearestShelters": "Tempat pengungsian terdekat",
+    "noSheltersTitle": "Tidak ada tempat pengungsian yang cocok",
+    "noSheltersDescription": "Tidak ada tempat pengungsian dalam jangkauan dari titik awal ini.",
+    "avoidsHazard": "Rute menghindari zona bahaya insiden.",
+    "heuristicFallback": "Hanya jalur langsung — zona bahaya tidak dapat dihindari (cadangan heuristik). Gunakan dengan hati-hati.",
+    "engineOrs": "Perutean jalan raya (OpenRouteService)",
+    "engineHeuristic": "Heuristik penghindar bahaya (mesin luring — tidak mengikuti jalan)",
+    "suggestedStart": "Saran waktu mulai evakuasi:",
+    "suggestedStartCaveat": "(perkiraan kedatangan bahaya − waktu tempuh rute − margin keselamatan; perkiraan orde pertama)",
+    "distance": "Jarak",
+    "duration": "Perkiraan waktu tempuh",
+    "steps": "Langkah demi langkah",
+    "straightLineCaveat": "perkiraan garis lurus — bukan jarak jalan",
+    "originDefaultHint": "Kosongkan kedua kolom untuk memulai dari lokasi insiden."
+  },
+  "verifierQueue": {
+    "title": "Antrean verifikasi",
+    "decisionFailed": "Keputusan gagal — laporan tidak diperbarui. Coba lagi.",
+    "emptyTitle": "Antrean kosong",
+    "emptyDescription": "Tidak ada laporan belum terverifikasi yang menunggu triase.",
+    "noClaim": "Tidak ada pernyataan tercatat (laporan dibuat sebelum teks disimpan)",
+    "confidence": "Keyakinan",
+    "componentsLabel": "Komponen keyakinan",
+    "component": {
+      "geocode": "Geokode",
+      "authority": "Otoritas sumber",
+      "classifier": "Pengklasifikasi",
+      "corroboration": "Penguatan bukti"
+    },
+    "liveFeed": "Siaran langsung — tidak resmi",
+    "liveFeedCaption": "Siaran warga yang belum diverifikasi, bukan kamera lembaga resmi — verifikator dapat menolak laporan ini untuk menghapusnya dari daftar.",
+    "liveFeedExpired": "Siaran langsung — tidak resmi (tautan langsung kedaluwarsa)",
+    "liveFeedExpiredCaption": "Tautan langsung tidak resmi ini telah melewati jendela ~2 jam. Tolak laporan untuk menghapusnya dari daftar (Pasal XIII, keputusan manusia).",
+    "visionFinding": "Visi komputer (saran): {label}",
+    "visionCaption": "Hanya saran — melengkapi catatan manusia, tidak pernah memutuskan secara otomatis (Pasal XIII, keputusan manusia).",
+    "visionToggle": "Pemeriksaan visi komputer (saran — citra satelit rekaman; tidak pernah mengubah keputusan)",
+    "visionLiveToggle": "Gunakan citra langsung untuk lokasi laporan ini (NASA GIBS, hari ini) alih-alih citra rekaman",
+    "approve": "Setujui",
+    "reject": "Tolak",
+    "rejectTitle": "Tolak sebagai palsu / disinformasi — tidak ada peringatan yang dikirim (Pasal XIII/XIV)",
+    "approveWithCap": "Setujui + CAP",
+    "rejectCaption": "Menolak menandai laporan palsu atau disinformasi — statusnya menjadi DITOLAK tanpa peringatan keluar (Pasal XIII/XIV).",
+    "emittedAlertStatusFallback": "Peringatan",
+    "emittedAlert": "Peringatan {status} {id} — menunggu pengiriman oleh manusia.",
+    "emittedAlertWithHeadline": "Peringatan {status} {id}: {headline} — menunggu pengiriman oleh manusia."
+  },
+  "sos": {
+    "errors": {
+      "tooShort": "Jelaskan keadaan darurat dalam minimal 10 karakter.",
+      "tooLong": "Batasi deskripsi kurang dari 2000 karakter.",
+      "generic": "Periksa kembali formulir."
+    }
+  },
+  "tabs": {
+    "sitrep": "SitRep",
+    "decision": "Keputusan",
+    "drafts": "Peringatan DRAFT",
+    "resources": "Sumber daya",
+    "verify": "Verifikasi",
+    "report": "Lapor SOS",
+    "route": "Rute evak."
+  },
+  "theme": {
+    "toLight": "Ganti ke tema terang",
+    "toDark": "Ganti ke tema gelap"
+  },
+  "toolbar": {
+    "layers": "Lapisan",
+    "legend": "Legenda",
+    "devBadge": "dev",
+    "actingRole": "Peran aktif (demo)",
+    "roleSwitcherTitle": "Hanya demo — memalsukan x-beacon-role; server tetap melakukan otorisasi (AUTH_DEV_TRUST_HEADER)",
+    "devLoginUserId": "id pengguna dev-login",
+    "devLoginUserPlaceholder": "id pengguna",
+    "devLogin": "dev-login",
+    "signedIn": "masuk",
+    "loginUserLabel": "id pengguna",
+    "loginUserPlaceholder": "pengguna",
+    "loginPasswordLabel": "kata sandi",
+    "loginPasswordPlaceholder": "kata sandi",
+    "signIn": "Masuk",
+    "signOut": "Keluar",
+    "signInFailed": "Gagal masuk",
+    "liveBadge": "live",
+    "liveBadgeTitle": "Deployment produksi — peran hanya berasal dari akun yang masuk.",
+    "currentRole": "Peran saat ini"
+  },
+  "ui": {
+    "severity": {
+      "MINOR": "Ringan",
+      "MODERATE": "Sedang",
+      "SEVERE": "Berat",
+      "EXTREME": "Ekstrem"
+    },
+    "mode": {
+      "LIVE": "Langsung",
+      "CACHED": "Tersimpan",
+      "MOCK": "Tiruan",
+      "DB": "Operator"
+    },
+    "freshness": {
+      "fresh": "Langsung",
+      "stale": "Usang",
+      "unavailable": "Tidak tersedia"
+    },
+    "unverified": "Belum terverifikasi",
+    "dialog": {
+      "close": "Tutup dialog"
+    },
+    "skeleton": {
+      "loading": "Memuat"
+    },
+    "errorState": {
+      "title": "Terjadi kesalahan",
+      "retry": "Coba lagi"
+    },
+    "errorBoundary": {
+      "title": "Panel ini gagal ditampilkan",
+      "labelledTitle": "{label} gagal ditampilkan"
+    },
+    "provenance": {
+      "trigger": "Asal data",
+      "triggerAria": "{label} — {count, plural, other {# sumber}}",
+      "heading": "Sumber",
+      "empty": "Tidak ada asal data yang tercatat."
+    },
+    "legend": {
+      "regionLabel": "Legenda peta",
+      "severityHeading": "Keparahan bahaya",
+      "statusHeading": "Status data",
+      "modeHeading": "Mode sumber",
+      "status": {
+        "fresh": "Baru",
+        "stale": "Usang",
+        "unavailable": "Tidak tersedia",
+        "unverified": "Belum terverifikasi"
+      }
+    },
+    "externalViews": {
+      "caption": "Konteks eksternal — membuka situs pihak ketiga.",
+      "captionFor": "Konteks eksternal — membuka situs pihak ketiga untuk {label}.",
+      "listLabel": "Tautan konteks eksternal",
+      "kind": {
+        "map": "Peta",
+        "satellite": "Satelit",
+        "street": "Jalan",
+        "3d": "3D",
+        "weather": "Cuaca",
+        "imagery": "Citra",
+        "fire": "Kebakaran",
+        "flood": "Banjir"
+      }
+    },
+    "relativeTime": {
+      "unknown": "tidak diketahui",
+      "seconds": "{value} dtk lalu",
+      "minutes": "{value} mnt lalu",
+      "hours": "{value} jam lalu",
+      "days": "{value} hr lalu"
+    }
+  },
+  "warning": {
+    "headline": "{event} — {severity}",
+    "label": {
+      "what": "APA",
+      "where": "DI MANA",
+      "when": "KAPAN",
+      "impacts": "DAMPAK",
+      "action": "TINDAKAN"
+    },
+    "what": "{event}, tingkat keparahan {severity}.",
+    "where": "{area}.",
+    "when": "{when}.",
+    "impacts": "{impacts}",
+    "action": {
+      "Shelter": "Berlindung sekarang. Tetap di dalam ruangan di {area}, jauh dari jendela, sampai ada pengumuman aman.",
+      "Evacuate": "Tinggalkan {area} sekarang. Bawa tas siaga, ikuti jalur yang ditandai, dan jangan kembali sampai ada pengumuman aman.",
+      "Prepare": "Bersiap meninggalkan {area}. Siapkan tas siaga, isi bahan bakar, dan pantau saluran ini.",
+      "Execute": "Jalankan sekarang rencana yang diberikan kepada Anda untuk {area}.",
+      "Avoid": "Jangan masuk ke {area}. Jangan bepergian ke wilayah itu.",
+      "Monitor": "Pantau pembaruan tentang {area}. Bersiaplah bertindak jika peringatan berubah.",
+      "Assess": "Periksa keadaan Anda di {area} dan laporkan apa yang Anda lihat.",
+      "AllClear": "Bahaya di {area} telah berakhir. Anda dapat kembali. Ikuti arahan setempat.",
+      "None": "Tidak ada tindakan yang diperlukan di {area} saat ini."
+    },
+    "event": {
+      "Fire": "Kebakaran lahan",
+      "Met": "Banjir atau cuaca ekstrem",
+      "Safety": "Bahaya keselamatan publik"
+    },
+    "allClear": {
+      "headline": "AMAN — {event}",
+      "description": "{event} di {area} telah berakhir."
+    }
+  },
+  "content": {
+    "originalLanguage": "EN",
+    "untranslatedHint": "Ditampilkan dalam bahasa Inggris — belum diterjemahkan"
+  },
+  "pwa": {
+    "offline": "Luring — menampilkan gambaran yang disimpan pada {time}",
+    "offlineUnknown": "Luring — menampilkan gambaran terakhir yang disimpan di perangkat ini",
+    "offlineNoCopy": "Luring — belum ada gambaran yang disimpan di perangkat ini",
+    "stale": "Server tidak dapat dijangkau — menampilkan gambaran yang disimpan pada {time}",
+    "staleUnknown": "Server tidak dapat dijangkau — menampilkan gambaran terakhir yang disimpan di perangkat ini"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/locales.schema.json",
+  "title": "BEACON Shipped-Locale Registry",
+  "description": "Validates config/locales.json (ADR-030; FR-I18N-1/5/7/8; SPEC §3.5). The registry is the DATA half of the locale definition; src/config/locales.ts holds the TYPE half (LOCALE_IDS literal union) and a drift-guard test asserts the two agree exactly. Adding a language is: one messages/<id>.json catalog + one entry here + one id in LOCALE_IDS — no other source change (FR-I18N-7). The `id` pattern is also the SECURITY allowlist (NFR-F7): a locale id reaches a catalog file path, so it must never be a free-form string.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["defaultLocale", "locales"],
+  "properties": {
+    "$comment": {
+      "type": "string",
+      "description": "Human note; ignored by the loader."
+    },
+    "defaultLocale": {
+      "$ref": "#/$defs/localeId",
+      "description": "The fallback locale at every level. MUST be 'en': English is both the authored source catalog and the last rung of the fallback ladder (FR-I18N-2), so any other value would make a missing key unresolvable.",
+      "const": "en"
+    },
+    "locales": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "Every shipped locale, in switcher display order. Order is meaningful: it is what a reader scans.",
+      "items": { "$ref": "#/$defs/localeEntry" }
+    }
+  },
+  "$defs": {
+    "localeId": {
+      "type": "string",
+      "description": "BCP-47 language tag, optionally with a script or region subtag (e.g. 'en', 'zh-Hans', 'pt-BR'). The restrictive pattern is deliberate — this value is interpolated into a catalog path, so no separators, dots, or traversal sequences are permitted (NFR-F7).",
+      "pattern": "^[a-z]{2,3}(-[A-Z][a-z]{3}|-[A-Z]{2})?$",
+      "minLength": 2,
+      "maxLength": 12
+    },
+    "localeEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "englishName", "nativeName", "dir", "script", "review", "font"],
+      "properties": {
+        "id": { "$ref": "#/$defs/localeId" },
+        "englishName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Name of the language in English — used in docs, a11y copy, and audit output."
+        },
+        "nativeName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Endonym — what a speaker of the language calls it. This is what the switcher renders, because a reader who cannot read the current UI language searches for their OWN name for their language."
+        },
+        "dir": {
+          "type": "string",
+          "enum": ["ltr", "rtl"],
+          "description": "Writing direction. Drives <html dir> and the logical-CSS layout. The map canvas, geographic axes, and basemap imagery NEVER mirror (ADR-030)."
+        },
+        "script": {
+          "type": "string",
+          "pattern": "^[a-z]{4}$",
+          "description": "Lowercase ISO 15924-style script tag (latn, arab, deva, beng, cyrl, grek, hans). Selects the bundled font family and the unicode-range subset that must be shipped."
+        },
+        "review": {
+          "type": "string",
+          "enum": ["source", "human", "machine"],
+          "description": "Translation provenance — an HONESTY field (Art. XV), not a workflow state. 'source' = authored in this language (exactly one locale may claim it: English). 'human' = human-reviewed translation. 'machine' = machine-translated and NOT yet reviewed, which MUST be disclosed in the catalog's _meta block and labeled in the UI while that locale is active (FR-I18N-5)."
+        },
+        "font": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Bundled, self-hosted font family that covers this script. Never a CDN reference — the application must render correctly fully air-gapped (Art. XVI). Where a script's font cannot be shipped within the size budget, the value names the documented system-font stack instead, and the limitation is stated in SPEC 'Known limitations'."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/shelters.schema.json",
+  "title": "BEACON Shelter Registry",
+  "description": "Validates config/shelters.json (ADR-012 'config for everything'; FR-8, SPEC §5.5). The agency-seeded shelter list an operator edits BY HAND — adding, opening, closing or re-capacitating a shelter is one entry here plus `npm run db:seed`, with no UI and no code change. It is not the only editable surface: once seeded, a live correction (`UPDATE shelter SET occupancy = ... WHERE id = ...`) is equally supported and is what an operator uses mid-incident; this file is the reproducible starting state. Every entry is re-validated through the DOMAIN factory `makeShelter` on load, so a file that violates a shelter invariant (occupancy above capacity, a FULL shelter with room left) fails at boot rather than seeding a shelter that lies about its own headroom.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "regions"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Editor hint; ignored by the loader."
+    },
+    "$comment": {
+      "type": "string",
+      "description": "Human note; ignored by the loader."
+    },
+    "version": {
+      "const": 1,
+      "description": "Registry format version. Bumped only for a breaking shape change."
+    },
+    "regions": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Shelters grouped by the operating region that runs them, in registry order.",
+      "items": { "$ref": "#/$defs/regionGroup" }
+    }
+  },
+  "$defs": {
+    "regionGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["region_id", "shelters"],
+      "properties": {
+        "region_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+          "description": "A region id from config/regions.json. GROUPING ONLY, and deliberately so: the `shelter` table has no region column (schema/logistics-tables.ts), exactly as `source_record` has none, so this cannot be a persisted scope and is not presented as one. It is how an operator finds the shelters they are responsible for."
+        },
+        "shelters": {
+          "type": "array",
+          "minItems": 1,
+          "description": "The region's shelters. An empty list would be indistinguishable from a config typo — remove the region group instead.",
+          "items": { "$ref": "#/$defs/shelter" }
+        }
+      }
+    },
+    "shelter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "lon", "lat", "capacity"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "description": "The shelter's uuid PRIMARY KEY — lowercase hex, because `shelter.id` is a uuid column and a friendlier id would be rejected by the DB. It is stable on purpose: re-seeding is idempotent (ON CONFLICT DO NOTHING) and a direct UPDATE targets this id."
+        },
+        "note": {
+          "type": "string",
+          "description": "Operator-facing name/landmark for THIS FILE only, e.g. 'Sacramento — Cal Expo'. Ignored by the loader and never persisted: the Shelter entity has no name field, and inventing one here would put a label on screen that no column can keep true (finding F-406)."
+        },
+        "org": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The agency operating the shelter (persisted to `shelter.org`)."
+        },
+        "lon": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180,
+          "description": "Longitude, decimal degrees WGS84. Named rather than positional: a hand-edited [lat,lon] swap puts a shelter in the wrong hemisphere and still validates."
+        },
+        "lat": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90,
+          "description": "Latitude, decimal degrees WGS84."
+        },
+        "capacity": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total headcount the site can hold."
+        },
+        "occupancy": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0,
+          "description": "Current headcount. MUST NOT exceed capacity (chk_shelter_occupancy_le_capacity; re-checked by makeShelter at load)."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["OPEN", "FULL", "CLOSED"],
+          "default": "OPEN",
+          "description": "Only OPEN shelters with spare capacity are offered as evacuation destinations. FULL requires occupancy == capacity, or the status lies about the site."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,599 @@
+{
+  "_meta": {
+    "locale": "zh-Hans",
+    "review": "machine",
+    "machineTranslated": true,
+    "comment": "Machine-translated from messages/en.json; NOT reviewed by a human translator. Labeled as such in the UI (FR-I18N-5).",
+    "coverage": "full"
+  },
+  "channels": {
+    "digest": {
+      "trend": "趋势",
+      "noClaim": "(无声明)",
+      "citations": "引用来源",
+      "sources": "数据来源",
+      "freshness": "新鲜度"
+    },
+    "alert": {
+      "headline": "BEACON 警报 — {severity} {category}，事件 {incidentId}（警报 {alertId}）"
+    }
+  },
+  "actMenu": {
+    "trigger": "行动",
+    "title": "对所选对象采取行动",
+    "taskResource": "派遣资源",
+    "drawRoute": "绘制疏散路线",
+    "createAlert": "创建 DRAFT 预警"
+  },
+  "app": {
+    "title": "BEACON——统一态势图",
+    "description": "面向野火与洪水的开源、本地优先、近实时统一态势图。",
+    "skipToContent": "跳至正文",
+    "noLiveIncidentsTitle": "此区域暂无实时事件",
+    "noLiveIncidentsDescription": "目前没有任何实时数据源报告此处发生野火或洪水。地图仅显示实时数据源提供的内容，不作任何虚构。数据源及其状态列于“数据源”下。",
+    "noLiveIncidentsDemoDescription": "目前没有任何实时数据源报告此地区发生野火或洪水。显示的事件是预置的演示场景，保留用于演示流程；实时图层会在数据源提供数据时绘制。"
+  },
+  "commandPalette": {
+    "openLabel": "打开命令面板",
+    "triggerText": "搜索",
+    "dialogLabel": "命令面板",
+    "placeholder": "跳转至区域、事件、面板——或直接行动…",
+    "empty": "无匹配项。",
+    "groupRegions": "区域",
+    "groupIncidents": "事件",
+    "groupPanels": "面板",
+    "groupLayers": "切换图层",
+    "groupAct": "行动",
+    "toggleLayer": "切换{layer}图层",
+    "shortcutsTitle": "键盘快捷键",
+    "shortcutsDescription": "所有态势图操作均可不用鼠标完成。",
+    "shortcut": {
+      "openPalette": "打开命令面板",
+      "openShortcuts": "打开此快捷键浮层",
+      "move": "在命令面板结果间移动",
+      "run": "执行选中的操作",
+      "close": "关闭命令面板或浮层"
+    }
+  },
+  "decision": {
+    "sectionLabel": "决策支持",
+    "figures": "确定性数据",
+    "narration": "AI 叙述",
+    "noNarration": "无叙述（仅确定性计算）。",
+    "citations": "引用来源",
+    "approved": "已由人工批准",
+    "approve": "批准决策",
+    "humanApprovalRequired": "任何对外行动之前必须获得人工批准。",
+    "noDraftToApprove": "当前没有待批准的内容——没有等待审核的草稿警报。",
+    "roleRequiredToApprove": "请以核验员或应急管理员身份登录后再批准。",
+    "approveFailed": "批准失败 —"
+  },
+  "draftAlerts": {
+    "title": "预警审核（DRAFT）",
+    "emptyTitle": "无 DRAFT 预警",
+    "emptyDescription": "阈值规则会在此处生成 DRAFT 预警。",
+    "provenance": "数据来源",
+    "noProvenance": "无来源记录",
+    "reviewApprove": "审核并批准…",
+    "approveFailed": "批准失败 —",
+    "forecastHeading": "预报证据 — 方法、输入与不确定性",
+    "forecastCategory": "预报等级",
+    "forecastLeadTimeLabel": "提前时间",
+    "forecastLeadTime": "{hours, number} 小时，由数据源给出。BEACON 不对灾害传播时间建模。",
+    "forecastCrossing": "预计越限时刻与预报发布时间",
+    "forecastLikelihood": "可能性、输入与方法"
+  },
+  "locale": {
+    "label": "语言",
+    "switcherLabel": "界面语言",
+    "machineTranslatedNotice": "机器翻译——未经人工译者审校。",
+    "machineTranslatedShort": "机器翻译"
+  },
+  "logistics": {
+    "title": "后勤",
+    "resource": "资源",
+    "shelter": "避难场所",
+    "noShelterData": "无避难场所容量数据。",
+    "shelterCapacity": "避难场所容量",
+    "shelterCapacityVsDemand": "避难场所容量与需求对比",
+    "overCapacity": "超出容量",
+    "withinCapacity": "容量之内",
+    "resourceToTask": "资源分派任务",
+    "selectResource": "选择资源…",
+    "lifecycleTransition": "生命周期状态转换",
+    "transition": {
+      "PROPOSED": "PROPOSED",
+      "ASSIGNED": "ASSIGNED",
+      "EN_ROUTE": "EN_ROUTE",
+      "ON_SCENE": "ON_SCENE",
+      "CLEARED": "CLEARED"
+    },
+    "task": "任务",
+    "taskingRejected": "任务派遣被拒绝（{code}）：{message}",
+    "resourcesUnavailable": "资源不可用",
+    "noResourcesTitle": "无资源",
+    "noResourcesDescription": "范围内没有可派遣的资源。",
+    "prePositioning": {
+      "heading": "预置部署建议",
+      "advisory": "建议性——由人工决定",
+      "listLabel": "预置部署建议列表",
+      "noIncidentTitle": "未选择事件",
+      "noIncidentDescription": "选择一个事件以查看预置部署建议。",
+      "unavailable": "预置部署不可用",
+      "noExtentTitle": "尚无预测范围",
+      "noExtentDescription": "该事件出现灾害预测后才会显示建议。",
+      "noAssetsTitle": "附近无可用力量",
+      "noAssetsDescription": "在预测范围附近未找到 AVAILABLE 资源或 OPEN 避难场所。"
+    }
+  },
+  "map": {
+    "layersLegend": "地图图层",
+    "errorBoundaryLabel": "地图",
+    "unavailableTitle": "交互地图不可用",
+    "unavailableDescription": "此处无法使用 WebGL。所有地图数据已在下方以无障碍列表形式列出。",
+    "layer": {
+      "fire": "火情（热点与火场边界）",
+      "flood": "洪水范围与水位站",
+      "storm": "气旋路径、预报锥与风暴潮",
+      "floodzone": "洪泛区（NFHL）",
+      "infra": "基础设施",
+      "weather": "气象（风）",
+      "cameras": "实时摄像头",
+      "outage": "停电",
+      "cell": "移动信号覆盖",
+      "exposure": "暴露（灾害范围内节点）",
+      "reports": "报告 / SOS",
+      "prediction": "预测锥形区",
+      "route": "疏散路线",
+      "shelters": "避难场所"
+    },
+    "caveat": {
+      "fire": "FIRMS 热点为热异常探测结果，并非已确认的火场边界。",
+      "floodzone": "法定洪泛区——不是实时淹没范围",
+      "weather": "观测点——不是预报网格",
+      "camera": "实时摄像头——在新标签页中打开数据来源网站",
+      "outage": "县级粒度（EAGLE-I）：区域为假定断电的估计值，并非逐户确认的停电。",
+      "cell": "基于 OpenCelliD 推算的覆盖估计——仅具指示性，并非有保证的信号覆盖图。",
+      "storm": "官方机构的气旋产品按原样呈现——BEACON 不对风暴路径、风力或风暴潮进行建模。",
+      "routeDirect": "直接路径——未经验证是否避开危险区域。派人前请先确认。"
+    },
+    "tooltip": {
+      "layer": "图层：{group}",
+      "clickToOpen": "点击打开 ↗"
+    },
+    "region": {
+      "label": "区域",
+      "default": "默认区域",
+      "overlaysLegend": "卫星叠加图层",
+      "attribution": "卫星影像：NASA EOSDIS GIBS"
+    },
+    "gibs": {
+      "truecolor": "真彩色（VIIRS）",
+      "fires": "活跃火点（VIIRS）",
+      "flood": "洪水（MODIS）",
+      "aerosol": "气溶胶光学厚度"
+    },
+    "list": {
+      "regionLabel": "地图要素（无障碍列表）",
+      "empty": "当前视图内无地图要素。",
+      "caption": "所有地图要素的无障碍列表——交互地图的键盘替代方案。",
+      "colType": "类型",
+      "colFeature": "要素",
+      "colDetail": "详情",
+      "colLocation": "位置",
+      "colAction": "操作",
+      "focus": "聚焦{label}"
+    },
+    "group": {
+      "fire": "火情探测",
+      "gauge": "洪水水位站",
+      "infra": "基础设施",
+      "exposure": "暴露",
+      "report": "报告 / SOS",
+      "shelter": "避难场所"
+    },
+    "detail": {
+      "severity": "严重程度 {severity}",
+      "thermalHotspot": "热异常点",
+      "stage": "水位 {stage}",
+      "gauge": "水位站",
+      "node": "节点",
+      "infra": "{kind}——{status}",
+      "inHazard": "位于灾害范围：{hazard}",
+      "nodeInHazard": "灾害范围内的节点"
+    },
+    "outage": {
+      "assumedOffline": "假定断电",
+      "reportedOffline": "已报告断电",
+      "withCount": "{count} 户断电——{state}"
+    },
+    "zone": {
+      "label": "分区 {zone}"
+    },
+    "storm": {
+      "trackLabel": "气旋中心路径——仅供参考，并非影响范围",
+      "coneLabel": "预报锥——路径中心位置的不确定性，并非影响范围",
+      "surgeLabel": "风暴潮淹没范围——属于影响范围，已计入暴露分析",
+      "coneCaveat": "{agency} 发布的预报锥，预警时间 {advisoryAt}——仅显示气旋中心可能经过的位置，而绝不是危险天气的影响范围。",
+      "coneCaveatUnattributed": "预报锥仅显示气旋中心可能经过的位置——而绝不是危险天气的影响范围。"
+    },
+    "shelter": {
+      "capacity": "容量 {capacity} · 需求 {demand}"
+    },
+    "weather": {
+      "label": "风 {speed} km/h 来自{compass}（{deg}°），观测 {observedAt}"
+    },
+    "compass": {
+      "N": "北",
+      "NE": "东北",
+      "E": "东",
+      "SE": "东南",
+      "S": "南",
+      "SW": "西南",
+      "W": "西",
+      "NW": "西北"
+    },
+    "zoomIn": "放大",
+    "zoomOut": "缩小",
+    "recenter": "重新居中地图",
+    "offlineBasemap": "此离网部署没有底图。其上的所有作业图层均不受影响。",
+    "unavailableBasemap": "无底图：没有可用的瓦片服务。下方所有作业图层不受影响。"
+  },
+  "anticipatory": {
+    "title": "预先行动",
+    "tab": "预先行动",
+    "sectionLabel": "预先行动——早期行动预案",
+    "methodHeading": "方法、输入与不确定性",
+    "ladderHeading": "触发阶梯",
+    "cycleHeading": "第 {index, number} 次评估，共 {total, number} 次",
+    "inputs": "输入数据",
+    "members": "{total, number} 个集合预报成员中有 {over, number} 个超过 {threshold, number} {unit}",
+    "leadTimeLabel": "提前量",
+    "leadTime": "{hours, number} 小时，依据来源所述。BEACON 不对灾害的传播时间建模。",
+    "vintage": "预报运行与发布时刻",
+    "methodLabel": "方法与等级",
+    "fired": "已触发",
+    "notFired": "未触发",
+    "stageGate": "阈值：至少 {fraction, number} 的集合预报成员超过 {threshold, number} {unit}，等级为 {klass} 或更高，且提前量在 {hours, number} 小时以内。",
+    "ledgerHeading": "本轮产生的治理记录：",
+    "actionsHeading": "事先约定的行动",
+    "suggested": "建议",
+    "approvalHeading": "人工批准",
+    "pending": "等待以下角色的人工批准：{roles}",
+    "noEmission": "仅为建议。此面板不会调派任何资源，也不会发布任何公众警报；每一项早期行动都必须由具名人员批准。",
+    "stopMechanism": "终止机制：{role} 可在事先约定的条件下终止此次启动，引擎也会在 {hours, number} 小时后自动终止。",
+    "replay": "基于记录文件的回放：每一次记录下来的预报运行，都会在文件所载发布时刻之后 {lag, number} 小时重新评估。这不是实时数据——BEACON 在运行时不查询任何集合预报产品。",
+    "noProtocolTitle": "该区域没有早期行动预案",
+    "noProtocolBody": "BEACON 未附带任何适用范围涵盖该区域的早期行动预案，因此无可评估。预案属于配置（config/eap/），而非代码。",
+    "noForecastTitle": "该预案没有记录的预报",
+    "noForecastBody": "预案本身已附带，但没有随附任何已记录的预报文件，因此无法回放评估。BEACON 未接入任何实时集合预报源。",
+    "engineRefusedTitle": "预先行动引擎拒绝了此输入",
+    "engineRefusedBody": "引擎拒绝了该输入，而非显示不完整的评估结果。"
+  },
+  "outlook": {
+    "title": "展望",
+    "sectionLabel": "排序展望",
+    "eta": "约 {hours, number} h 后",
+    "noEta": "来源未提供提前时间",
+    "unclassified": "未分类",
+    "uncertainty": "不确定度 {value, number}"
+  },
+  "panels": {
+    "sitrepTitle": "情况报告",
+    "logisticsTitle": "后勤"
+  },
+  "shell": {
+    "sitrepDock": "情况报告",
+    "logisticsDock": "后勤",
+    "mapLabel": "统一态势图地图",
+    "panelsLabel": "态势图面板",
+    "expand": "展开{label}",
+    "collapse": "折叠{label}",
+    "region": {
+      "us-ca": "加利福尼亚（美国）",
+      "ro": "罗马尼亚（欧盟）",
+      "es": "西班牙（欧盟）",
+      "gr": "希腊（欧盟）",
+      "ph": "菲律宾"
+    }
+  },
+  "sitrep": {
+    "title": "情况报告",
+    "uncited": "无引用——缺少来源（F2）",
+    "noPriorities": "无优先级排序。",
+    "rankedPriorities": "优先级排序",
+    "deterministicOnly": "仅确定性计算",
+    "aiGenerated": "AI 生成",
+    "trendLabel": "趋势：",
+    "priorities": "优先事项",
+    "noIncidentTitle": "未选择事件",
+    "noIncidentDescription": "选择一个事件以查看其情况报告。",
+    "unavailable": "情况报告不可用",
+    "provenance": "数据来源",
+    "externalViews": "外部视图"
+  },
+  "statusStrip": {
+    "regionLabel": "区域态势摘要",
+    "active": "活跃",
+    "pending": "待处理",
+    "unverified": "未核实",
+    "sources": "数据源",
+    "dataAsOf": "数据时效",
+    "clock": "UTC",
+    "liveOfTotal": "{live}/{total} 实时",
+    "minutesAgo": "{minutes} 分钟",
+    "unavailable": "实时数据不可用"
+  },
+  "suppliesPanel": {
+    "title": "救援物资",
+    "unavailable": "物资信息不可用",
+    "emptyTitle": "无物资批次",
+    "emptyDescription": "未登记任何救援物资库存。",
+    "expires": "有效期至 {when}",
+    "asOf": "截至 {when}",
+    "provenance": "数据来源"
+  },
+  "volunteerTeamsPanel": {
+    "title": "志愿者队伍",
+    "unavailable": "志愿者队伍信息不可用",
+    "emptyTitle": "无志愿者队伍",
+    "emptyDescription": "未登记任何队伍单位。",
+    "headcount": "人数 {count}",
+    "skills": "能力",
+    "asOf": "截至 {when}",
+    "provenance": "数据来源"
+  },
+  "shelterStatusPanel": {
+    "title": "避难场所状态",
+    "unavailable": "避难场所状态不可用",
+    "emptyTitle": "无避难场所记录",
+    "emptyDescription": "没有可报告的避难场所。",
+    "shelters": "避难场所",
+    "capacity": "容量",
+    "occupancy": "入住人数",
+    "availableOpen": "开放剩余容量",
+    "utilization": "使用率",
+    "available": "剩余",
+    "provenance": "数据来源"
+  },
+  "damageReportsPanel": {
+    "title": "损失与需求",
+    "unavailable": "损失报告不可用",
+    "emptyTitle": "无评估记录",
+    "emptyDescription": "范围内没有损失或需求报告。",
+    "entries": "记录",
+    "sites": "地点（自行上报）",
+    "worstSeverity": "最高严重程度",
+    "needs": "需求",
+    "asOf": "截至 {when}",
+    "provenance": "数据来源"
+  },
+  "emsOverlayPanel": {
+    "title": "哥白尼 EMS 图层",
+    "unavailable": "EMS 图层不可用",
+    "emptyTitle": "无已发布产品",
+    "emptyDescription": "此视图没有已发布的损失评估产品。",
+    "open": "打开产品页面",
+    "attribution": "署名",
+    "notShown": "未显示",
+    "asOf": "截至 {when}",
+    "provenance": "数据来源"
+  },
+  "routingPanel": {
+    "title": "疏散路线",
+    "formLabel": "请求疏散路线",
+    "clickHint": "点击地图设定起点，或直接输入坐标。",
+    "originLat": "起点纬度",
+    "originLon": "起点经度",
+    "submit": "请求路线",
+    "submitting": "正在规划路线…",
+    "needIncident": "请先选择一个事件——路线会按该事件的危险区域进行规避。",
+    "requestFailed": "路线请求失败：{message}",
+    "resultLabel": "路线结果",
+    "nearestShelters": "最近的避难所",
+    "noSheltersTitle": "未找到避难所",
+    "noSheltersDescription": "该起点范围内没有可用的避难所。",
+    "avoidsHazard": "路线已避开事件的危险区域。",
+    "heuristicFallback": "仅为直线路径——无法避开危险区域（启发式备用方案）。请谨慎使用。",
+    "engineOrs": "道路路线规划（OpenRouteService）",
+    "engineHeuristic": "避险启发式算法（离线引擎，不沿道路行进）",
+    "suggestedStart": "建议的疏散开始时间：",
+    "suggestedStartCaveat": "（预计危险抵达时间 − 路线通行时间 − 安全余量；一阶估算）",
+    "distance": "距离",
+    "duration": "预计行程时间",
+    "steps": "逐步指引",
+    "straightLineCaveat": "直线估算，非道路距离",
+    "originDefaultHint": "两个字段都留空，即从事件所在位置出发。"
+  },
+  "verifierQueue": {
+    "title": "核验队列",
+    "decisionFailed": "处理失败——报告未更新。请重试。",
+    "emptyTitle": "队列已清空",
+    "emptyDescription": "没有待分流的未核验报告。",
+    "noClaim": "未记录陈述内容（该报告早于文本留存机制）",
+    "confidence": "置信度",
+    "componentsLabel": "置信度构成",
+    "component": {
+      "geocode": "地理编码",
+      "authority": "来源权威性",
+      "classifier": "分类器",
+      "corroboration": "交叉佐证"
+    },
+    "liveFeed": "实时画面——非官方",
+    "liveFeedCaption": "未经核验的市民直播，并非机构摄像头——核验员可驳回此报告以将其下架。",
+    "liveFeedExpired": "实时画面——非官方（直播链接已过期）",
+    "liveFeedExpiredCaption": "此非官方直播链接已超过约 2 小时的有效窗口。驳回该报告即可将其下架（第十三条，人工决定）。",
+    "visionFinding": "计算机视觉（仅供参考）：{label}",
+    "visionCaption": "仅供参考——为人工判断提供依据，绝不自动作出决定（第十三条，人工决定）。",
+    "visionToggle": "计算机视觉检查（仅供参考——使用已记录的卫星影像；绝不改变决定）",
+    "visionLiveToggle": "对该报告所在位置使用实时影像（NASA GIBS，今日），而非已记录的影像",
+    "approve": "批准",
+    "reject": "驳回",
+    "rejectTitle": "作为虚假信息／误导信息驳回——不会发出任何警报（第十三/十四条）",
+    "approveWithCap": "批准并生成 CAP",
+    "rejectCaption": "驳回会将报告标记为虚假或误导信息——它将转为“已驳回”，且不发出任何对外警报（第十三/十四条）。",
+    "emittedAlertStatusFallback": "警报",
+    "emittedAlert": "{status} 警报 {id}——等待人工发送。",
+    "emittedAlertWithHeadline": "{status} 警报 {id}：{headline}——等待人工发送。"
+  },
+  "sos": {
+    "errors": {
+      "tooShort": "请用至少 10 个字符描述紧急情况。",
+      "tooLong": "描述请控制在 2000 个字符以内。",
+      "generic": "请检查表单。"
+    }
+  },
+  "tabs": {
+    "sitrep": "情况报告",
+    "decision": "决策",
+    "drafts": "DRAFT 预警",
+    "resources": "资源",
+    "verify": "核实",
+    "report": "上报 SOS",
+    "route": "疏散路线"
+  },
+  "theme": {
+    "toLight": "切换到浅色主题",
+    "toDark": "切换到深色主题"
+  },
+  "toolbar": {
+    "layers": "图层",
+    "legend": "图例",
+    "devBadge": "dev",
+    "actingRole": "当前角色（演示）",
+    "roleSwitcherTitle": "仅演示用——伪造 x-beacon-role；服务器仍会执行授权（AUTH_DEV_TRUST_HEADER）",
+    "devLoginUserId": "dev-login 用户 ID",
+    "devLoginUserPlaceholder": "用户标识",
+    "devLogin": "dev-login",
+    "signedIn": "已登录",
+    "loginUserLabel": "用户 ID",
+    "loginUserPlaceholder": "用户",
+    "loginPasswordLabel": "密码",
+    "loginPasswordPlaceholder": "密码",
+    "signIn": "登录",
+    "signOut": "退出",
+    "signInFailed": "登录失败",
+    "liveBadge": "live",
+    "liveBadgeTitle": "生产部署——角色仅来自已登录账户。",
+    "currentRole": "当前角色"
+  },
+  "ui": {
+    "severity": {
+      "MINOR": "轻微",
+      "MODERATE": "中等",
+      "SEVERE": "严重",
+      "EXTREME": "极端"
+    },
+    "mode": {
+      "LIVE": "实时",
+      "CACHED": "缓存",
+      "MOCK": "模拟",
+      "DB": "运营方"
+    },
+    "freshness": {
+      "fresh": "实时",
+      "stale": "过期",
+      "unavailable": "不可用"
+    },
+    "unverified": "未核实",
+    "dialog": {
+      "close": "关闭对话框"
+    },
+    "skeleton": {
+      "loading": "加载中"
+    },
+    "errorState": {
+      "title": "出现错误",
+      "retry": "重试"
+    },
+    "errorBoundary": {
+      "title": "此面板渲染失败",
+      "labelledTitle": "{label}渲染失败"
+    },
+    "provenance": {
+      "trigger": "数据来源",
+      "triggerAria": "{label}——{count, plural, other {# 个来源}}",
+      "heading": "来源",
+      "empty": "未记录数据来源。"
+    },
+    "legend": {
+      "regionLabel": "地图图例",
+      "severityHeading": "灾害严重程度",
+      "statusHeading": "数据状态",
+      "modeHeading": "来源模式",
+      "status": {
+        "fresh": "最新",
+        "stale": "过期",
+        "unavailable": "不可用",
+        "unverified": "未核实"
+      }
+    },
+    "externalViews": {
+      "caption": "外部背景信息——将打开第三方网站。",
+      "captionFor": "外部背景信息——将为{label}打开第三方网站。",
+      "listLabel": "外部背景信息链接",
+      "kind": {
+        "map": "地图",
+        "satellite": "卫星",
+        "street": "街景",
+        "3d": "3D",
+        "weather": "气象",
+        "imagery": "影像",
+        "fire": "火情",
+        "flood": "洪水"
+      }
+    },
+    "relativeTime": {
+      "unknown": "未知",
+      "seconds": "{value} 秒前",
+      "minutes": "{value} 分钟前",
+      "hours": "{value} 小时前",
+      "days": "{value} 天前"
+    }
+  },
+  "warning": {
+    "headline": "{event} — {severity}",
+    "label": {
+      "what": "什么",
+      "where": "地点",
+      "when": "时间",
+      "impacts": "影响",
+      "action": "行动"
+    },
+    "what": "{event}，严重程度 {severity}。",
+    "where": "{area}。",
+    "when": "{when}。",
+    "impacts": "{impacts}",
+    "action": {
+      "Shelter": "请立即就地避险。留在 {area} 的室内，远离窗户，直到发布解除警报。",
+      "Evacuate": "请立即离开 {area}。带上应急包，沿标示的路线撤离，在发布解除警报前不要返回。",
+      "Prepare": "请做好离开 {area} 的准备。备好应急包，给车加满油，并留意本频道。",
+      "Execute": "请立即执行为 {area} 下发的行动方案。",
+      "Avoid": "请勿进入 {area}。不要前往该区域。",
+      "Monitor": "请持续关注 {area} 的最新通报。警报变化时做好行动准备。",
+      "Assess": "请查看您在 {area} 的处境，并报告您看到的情况。",
+      "AllClear": "{area} 的危险已结束。您可以返回。请遵守当地指引。",
+      "None": "目前 {area} 无需采取任何行动。"
+    },
+    "event": {
+      "Fire": "野火",
+      "Met": "洪水或恶劣天气",
+      "Safety": "公共安全危害"
+    },
+    "allClear": {
+      "headline": "解除警报 — {event}",
+      "description": "{area} 的{event}已结束。"
+    }
+  },
+  "content": {
+    "originalLanguage": "EN",
+    "untranslatedHint": "以英文显示 — 未翻译"
+  },
+  "pwa": {
+    "offline": "离线 — 正在显示 {time} 保存的态势",
+    "offlineUnknown": "离线 — 正在显示此设备上次保存的态势",
+    "offlineNoCopy": "离线 — 此设备尚无已保存的态势",
+    "stale": "无法连接服务器 — 正在显示 {time} 保存的态势",
+    "staleUnknown": "无法连接服务器 — 正在显示此设备上次保存的态势"
+  }
+}
