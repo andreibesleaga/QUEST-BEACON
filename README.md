@@ -1,8 +1,8 @@
 # BEACON — Browser-based Emergency Awareness & Coordination Open Network
 
 > Open-source, **local-first**, near-real-time **common operating picture (COP)** for wildfires and floods.
-> One browser app that ingests free/authoritative data through pluggable adapters, fuses it into a
-> **source-cited AI situational report**, and ties it to **responder logistics** — working **fully offline**
+> One browser app that ingests free/authoritative data through multiple optional pluggable adapters, fuses it into a
+> **source-cited AI situational report**, and ties it to **responder logistics** — working **offline**
 > and at ≈ $0, so a real agency could self-host it with no licensing or lock-in.
 >
 > **IEEE Response Quest™ 2026 · Phase 3 (product)** · entry #5320 · Apache-2.0 · by Andrei Besleaga
