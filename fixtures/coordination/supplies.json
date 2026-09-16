@@ -1,0 +1,16 @@
+{
+  "_meta": {
+    "purpose": "S3·U1 relief-supply fixture (FR-D6-2, FEATURE_D6_SUPPLIES). Each row is fed through the REAL makeSupplyFields factory (src/application/aggregate/supplies.ts), so every invariant (integer quantity, quantity-requires-unit, closed unit enum, parseable expiry) holds on the fixture itself — a lot that could not exist in production is not a fixture.",
+    "provenance": "HAND-SEEDED demo stock. There is no supply source adapter in BEACON; GET /supplies serves this as MOCK and says so in provenance[] (Art. XVI: never claim LIVE for seeded data).",
+    "privacy": "Art. XIV / ADR-035 §4 — a lot is STOCK. No donor, no payment, no recipient, no person anywhere in this file (the quantity field is deliberately `quantity`, never `amount`).",
+    "clock": "fixed — expiry instants sit after the project's fixed test instant 2026-07-05T22:00:00Z, except the water lot, which is deliberately already expired to exercise the labelled-expiry render path",
+    "shape": "{ id } + src/application/aggregate/supplies.ts MakeSupplyFieldsInput[]"
+  },
+  "supplies": [
+    { "id": "supply-water-1l", "quantity": 4800, "unit": "LITRE", "expiresAt": "2026-07-01T00:00:00Z" },
+    { "id": "supply-mre-case", "quantity": 320, "unit": "CASE", "expiresAt": "2027-01-15T00:00:00Z" },
+    { "id": "supply-blankets", "quantity": 1500, "unit": "EACH" },
+    { "id": "supply-med-kits", "quantity": 75, "unit": "EACH", "expiresAt": "2026-11-30T00:00:00Z" },
+    { "id": "supply-tarps-pallet", "quantity": 6, "unit": "PALLET" }
+  ]
+}

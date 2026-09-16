@@ -1,0 +1,172 @@
+# BEACON — Browser-based Emergency Awareness & Coordination Open Network
+
+> Open-source (Apache-2.0), local-first, near-real-time common operating picture (COP) for wildfires
+> and floods. IEEE Response Quest 2026 — Phase 3 product. Next.js 15 App Router + React 19 +
+> TypeScript 5 strict, hexagonal ports-and-adapters, Postgres (Drizzle) with an in-memory default,
+> deck.gl/MapLibre map, SSE push, a deterministic decision engine with optional LLM narration,
+> 45 pluggable free/open data-source adapters, 5 regions, 14 locales, an installable offline-capable
+> browser app behind a flag. Runs fully offline/air-gapped (`docker compose -f infra/docker-compose.yml
+> up -d --build`, ≈ $0) and identically in the cloud. This file is the entry point for AI agents and
+> tools: read it first, then the documents under "Read-first order".
+
+STATUS (2026-09-16, final product state): engineering is complete. The contest entry is frozen at the
+`v1.0.0-submission` tag; `main` carries the final verified product (this file describes `main`). Every
+figure below was machine-produced on the final commit and must be re-produced, not quoted, at the next
+release (`docs/RELEASE_GUIDE.md` §2). The final audit of code and documentation is
+`docs/audit/FINAL-AUDIT-2026-09-16.md`.
+
+## Absolute rules (project law — violating any of these is a critical failure)
+
+- **Deterministic → AI → human (Art. XII).** Every number, ranking, distance, exposure, crest, score
+  comes from deterministic code (Turf.js/SQL/typed TS). The LLM only narrates already-cited facts and
+  NEVER emits a figure (enforced by `src/adapters/ai/llm/output-validator.ts`, the F3 contract test).
+  The app stays fully functional with AI off (`AI_MODE=off` is the default).
+- **HITL before public action (Art. XIII).** No CAP/EDXL alert or broadcast from an UNVERIFIED report;
+  a human VERIFIER/EM approves; threshold fires create DRAFT alerts only. Telegram broadcast happens
+  strictly AFTER an approved emit, via the PII-redacting notifier.
+- **Link-only for third-party media.** Camera feeds / external views are hyperlinks out (https-only,
+  `noopener,noreferrer`); never embed, proxy, rehost, or server-fetch third-party video/imagery.
+- **Secrets only in the gitignored `.env`** (`.env*` ignored, `!.env.example` committed) or the
+  platform's variable store. Never write a real key into any tracked file, doc, or fixture.
+- **Deterministic tests.** Fixed clock (convention `2026-07-05T22:00:00Z`), no wall-clock dependence
+  (inject `now`), NO live network in any test — `tests/redundancy/redundancy-acceptance.test.ts`
+  `ALL_IDS` must force-MOCK every adapter id in `config/adapters.json`. Never weaken, skip, or
+  vacuous-ify an assertion to make something pass; coverage floors are never lowered.
+- **Free/open data only; no ToS-protected scraping.** Every source's licence/attribution is tracked
+  in `NOTICE` + `audit/DATA_SOURCE_VERIFICATION.md`.
+- **Honest limitations.** Degradations, mock/cached modes and approximations are stated openly in the
+  UI and the docs — never claim LIVE for CACHED/MOCK, never delete limitation wording, never let doc
+  counts drift from code (`docs/audit/UNIMPLEMENTED_REGISTER.md` is the ledger).
+- **Provenance is structural.** Every datum → SOURCE_RECORD; every SitRep field → `citations[]`; every
+  API response → `{ data, provenance[], freshness }` envelope.
+- **Naming and interfaces are frozen for the release**: `data-testid`s and i18n keys are additive-only;
+  zero new npm dependencies without a recorded decision.
+
+## Read-first order
+
+- [README.md](README.md): what it is, the gates on the final commit, honest limitations.
+- [JUDGE_MATRIX.md](JUDGE_MATRIX.md): promise → delivery map, the five criteria with evidence.
+- [docs/DEVELOPER_HANDBOOK.md](docs/DEVELOPER_HANDBOOK.md): the whole system end to end — code map,
+  request and composition flows, plugin points, debugging playbook, failure table, reviewer Q&A.
+- [docs/RELEASE_GUIDE.md](docs/RELEASE_GUIDE.md): release steps, what a live deployment must set,
+  every supported variable, verification, the `LIVE_PICTURE` demo switch.
+- [docs/architecture/CONFIGURATION.md](docs/architecture/CONFIGURATION.md) + `.env.example`: every
+  variable (the example file is test-asserted complete against the schema).
+- [docs/ENGINEERING_PRINCIPLES.md](docs/ENGINEERING_PRINCIPLES.md): the standing quality bar.
+- [docs/audit/UNIMPLEMENTED_REGISTER.md](docs/audit/UNIMPLEMENTED_REGISTER.md) + `docs/SPEC.md` §13:
+  everything declared-but-not-real.
+
+The governed, AI-assisted SDLC that built the product kept its working files (agent governance,
+memory ledgers) outside the repository; their durable output is committed under `docs/`, `audit/` and
+`project/`.
+
+## Commands (exact)
+
+- Node: `nvm use` (reads `.nvmrc`). Binaries: `./node_modules/.bin/{tsc,vitest,eslint,depcruise,next,playwright}`.
+- Gates (all must pass before "done"): `tsc --noEmit` · `eslint . --max-warnings 0` ·
+  `vitest run --coverage` · `npm run boundaries` (dependency-cruiser + madge) · `npm run format:check` ·
+  `rm -rf .next && next build` · `playwright test` (needs the fresh build; visual + axe + TTTP + offline
+  specs included) · `npm audit --audit-level=high` · `npm run docs` (OpenAPI contract test).
+- Coverage floors (vitest.config.ts, enforced): src/domain + src/application 99/99/99/99 ·
+  src/main 97/79/96/97 · src/adapters 90/83/93/90 · app 89/86/89/89.
+- Other: `npm run cli -- <cmd>` (reference CLI) · `npm run live:probe` (live source probe) ·
+  `npm run check:live -- --region <id>` (deployment check) · `npm run dev` · `npm run docker:up`
+  (renders `.env` for compose) · `npm run db:seed` · `npm run export:public` (cleanroom export) ·
+  `npm run docs:redocly` (optional Redocly lint, not a dependency).
+
+## Architecture (hexagonal; boundaries enforced by dependency-cruiser, 0 violations across 911 modules)
+
+- [src/domain/](src/domain/): pure entities/value-objects (Incident, HazardGeometry, Gauge, CameraFeed,
+  PublicReport, SitRep, Alert, SourceRecord, Shelter, Resource, …). No framework imports. Factories
+  throw on invariant violation.
+- [src/ports/](src/ports/): port interfaces (HazardSource, FloodGauge, Infrastructure, Outage, NewsIntel,
+  CameraDirectory, AirQuality, Population, Routing, LLM, Vision, Repository, MessagingPort, …).
+- [src/application/](src/application/): pure use-cases — risk intersection, priority ranking, threshold
+  evaluation, prediction (fire cone, NFHL∩crest, forecast likelihood), sitrep-synthesis + news-grounding
+  (deterministic GroundedFacts minted BEFORE the LLM; misinformation flag-not-merge), pre-positioning,
+  external views, evacuation routing, anticipatory action, coordination and aggregate tiers.
+- [src/adapters/](src/adapters/): sources/ (45 adapter directories — pattern below) · _shared/
+  (RedundancyEngine ladder LIVE → last-known-good cache → recorded mock → typed unavailable; circuit
+  breaker; resilient HTTP; anti-corruption; manifest loader) · persistence/ (Drizzle schema, 23 migrated
+  tables, natural-key resolvers, provenance sink, panel data, SitRep history) · channels/ (HTTP routing +
+  dispatcher + RBAC, Telegram webhook/poller, CLI) · compliance/ (AI gateway: role scope → rate limit →
+  breaker → firewall → policy → PII redaction → cost guardrails → hash-chained audit) · ai/ (LLM ladder,
+  vision) · routing/ (ORS + heuristic) · logistics/ · interop/ (CAP v1.2, EDXL-RM, EDXL-SitRep).
+- [src/main/](src/main/): composition root — `adapter-registry.ts` (45 factories; mode precedence env
+  `SOURCE_<PREFIX>_MODE` → region `source_mode_overrides` → manifest mode), `live-composition.ts`
+  (per-region registries, re-ingest scheduler, provenance mirror), `live-seed.ts` (slots, precedence,
+  camera merge), `feature-seed.ts`, `build-core.ts`, `build-drill.ts`, `scheduler.ts`.
+- [app/](app/): Next.js UI — one COP page, `layout.tsx` (fonts, i18n, PWA bridge), `api/v1/**/route.ts`
+  delegators, `_components/` (map, panels, ui, pwa), `_lib/` (api client, hooks, store, i18n, map data,
+  query client, pwa). `LAYER_IDS` = 14 data layers + 2 basemap themes.
+- [public/sw.js](public/sw.js): the hand-written module service worker (ADR-047): anonymous-only,
+  locale-keyed cache of PUBLIC reads; contract-tested against `docs/api/openapi.yaml`.
+- [config/](config/): `adapters.json` (45 rows: id, port, mode, configPrefix, keyEnv, licence) ·
+  `regions.json` (5 zones; `enabled_adapters` order is precedence) · `locales.json` (14) · `eap/` (five
+  illustrative Early Action Protocols) · `policies.yml` (AI policy-as-code) · `reference-data.json`
+  (operator seed for the dock panels) · `governance.json`.
+- [schemas/](schemas/): CAP v1.2, EDXL-RM/SitRep, adapter manifest, policies, regions, locales,
+  sustainability and source-ref JSON-Schemas.
+- [tests/](tests/) + [e2e/](e2e/): cross-cutting suites (redundancy acceptance, AI-parity, architecture
+  rules, zones, i18n catalog parity, OpenAPI contract) and Playwright (golden path, logistics, zones,
+  layers, SSE, session, a11y, perf, visual, i18n/RTL, WebGL, PWA offline).
+
+## Adapter pattern (replicate exactly; zero core change to add a source)
+
+Three files in `src/adapters/sources/<id>/`: `<id>-acl.ts` (lenient anti-corruption: unknown fields
+ignored, malformed rows dropped and counted), `<id>-adapter.ts` (class implementing `SourceAdapterPort`
+plus its outward port; plugs into `engine.run({ mapper, fetchLive, loadMockRaw })`; factory
+`make<X>Adapter(engine, env)` with `resolveSourceConfig({ prefix, keyEnv?, requireKeyForLive? })`),
+`__fixtures__/<file>` (recorded-real preferred; schema-crafted must say so). Register: one
+`ADAPTER_FACTORIES` entry, one `config/adapters.json` row, one `NOTICE` attribution, the id in the
+redundancy-acceptance `ALL_IDS`, and a `SOURCE_<PREFIX>_MODE` line in `.env.example` (test-asserted).
+Tests: clone the `firms` pattern (mode switch, live-down-degrades, envelope, health, factory fail-fast)
+plus an ACL test.
+
+## Verified facts (machine-produced 2026-09-16 on the final commit)
+
+- **45 adapters registered** (`config/adapters.json` ↔ `ADAPTER_FACTORIES`, test-asserted) · **41
+  consumed** by the five zones · 4 not: `itu`, `camara-gsma` (MOCK-only by design), `hifld` (held),
+  `dot511` (covers Georgia only). **38 can serve live** (29 keyless, 9 with a free credential); the
+  other seven are named with their evidence in `docs/LIVE_PRODUCTION_GUIDE.md` §1.
+- **14 map layers** (+ dark/light basemap themes), each with its own LIVE/CACHED/MOCK/DB badge;
+  the accessible fallback list covers all 14.
+- **5 zones** (`us-ca`, `ro`, `es`, `gr`, `ph`) · **14 locales** (RTL: `ar`, `ur`); a zone or a locale
+  is configuration, not code (`tests/zones/add-a-zone.test.ts`).
+- **vitest: 5,378 passed / 6 skipped, every floor met** · tsc 0 · eslint 0 · dependency-cruiser 0
+  violations / 911 modules (`depcruise src app`) · madge 0 cycles · Prettier clean.
+- **OpenAPI: 36 paths / 39 operations / 66 schemas**, zero `x-status: planned`; every operation but the
+  unauthenticated `/health` liveness probe declares its minimum role (`npm run docs`).
+- **Playwright: 214 passed / 26 skipped / 0 failed** across 4 device projects × 5 zones, including a real
+  offline reload through the service worker.
+- **49 ADR files** (001–047 + 008a; two files share the 036 number — a recorded finding).
+- **23 migrated Postgres tables** (`drizzle/`), asserted by the CI integration job.
+- **npm audit: 0 high / 0 critical** (dev-only moderates recorded in `osv-scanner.toml`).
+- CI (`.github/workflows/ci.yml`): static, unit + coverage floors, build, integration (real Postgres),
+  browser (Playwright), security (npm audit, gitleaks, OSV — non-blocking lane). No SAST or DAST job is
+  wired (planned; `SECURITY.md`).
+
+## Key docs
+
+- [docs/SPEC.md](docs/SPEC.md): the contract of record; **§13 is the limitations ledger**.
+- [docs/api/openapi.yaml](docs/api/openapi.yaml): the served API, contract-tested.
+- [docs/architecture/C4_ARCHITECTURE.md](docs/architecture/C4_ARCHITECTURE.md): C4 L1–L3, runtime
+  flows, the ADR index.
+- [docs/USER_GUIDE.md](docs/USER_GUIDE.md) · [docs/OPERATOR_GUIDE.md](docs/OPERATOR_GUIDE.md):
+  what a reader sees and trusts; how an operator works, per role, including offline.
+- [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) · [docs/CLOUD_DEPLOY_RAILWAY.md](docs/CLOUD_DEPLOY_RAILWAY.md)
+  · [docs/LIVE_PRODUCTION_GUIDE.md](docs/LIVE_PRODUCTION_GUIDE.md): every target; the reference cloud;
+  every source live and the honest ceiling.
+- [docs/LIVE_STATUS_SOURCE_OF_TRUTH.md](docs/LIVE_STATUS_SOURCE_OF_TRUTH.md): per-source truth on the
+  reference deployment, produced by `npm run check:live`.
+- [audit/DATA_SOURCE_VERIFICATION.md](audit/DATA_SOURCE_VERIFICATION.md): per-source verdicts;
+  [NOTICE](NOTICE): attribution and licences.
+- [docs/audit/FINAL-AUDIT-2026-09-16.md](docs/audit/FINAL-AUDIT-2026-09-16.md): the final audit —
+  what is implemented and supported, what was found wrong and corrected, what remains.
+- [CHANGELOG.md](CHANGELOG.md): Keep-a-Changelog history.
+
+## State
+
+Final product delivered 2026-09-16; nothing further is scheduled before the contest's judging period.
+After judging: `docs/features/ROADMAP-POST-V1.md` (queued offline writes, Valhalla/OSRM routing rungs,
+a production IdP, hifld merge-not-replace, the multilingual likelihood guard).

@@ -1,0 +1,11 @@
+node_modules
+.next
+dist
+coverage
+drizzle
+fixtures
+*.md
+pnpm-lock.yaml
+package-lock.json
+# Recorded upstream responses are byte-exact artefacts, never formatted (two GloFAS HTML pages are not even parseable HTML).
+**/__fixtures__/**

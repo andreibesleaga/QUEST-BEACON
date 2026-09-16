@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.example/schemas/eap.schema.json",
+  "title": "BEACON Early Action Protocol (EAP)",
+  "description": "Validates config/eap/*.json — one IFRC-structured Early Action Protocol per file (ADR-034 §1, FR-AA-1, ADR-012 config-not-code). All SIX IFRC EAP elements are required: the two-stage trigger (triggers.readiness + triggers.activation), the pre-agreed action list (actions), the pre-arranged resource ceiling (resourceCeiling), the roles/activation mechanism (approval), the geographic scope (scope) and the STOP mechanism (stop). `stop` is REQUIRED, not optional: an EAP that cannot be stopped is the dangerous case. DATA-NOT-CODE is enforced here, not asserted: every string is either a closed enum, a slug pattern, or `safeProse` — a character allow-list that admits no `/`, `$`, `{`, `}`, backtick, `<`, `>`, `\\`, `|`, `#`, `=`, `*`, `?`, `!`, and no `..`. There is therefore no expression, template, path or URL anywhere in an EAP for an eval/Function/dynamic-import to consume, and an EAP id can never become a path segment.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "id",
+    "label",
+    "hazard",
+    "status",
+    "provenance",
+    "scope",
+    "triggers",
+    "actions",
+    "resourceCeiling",
+    "approval",
+    "stop"
+  ],
+  "properties": {
+    "version": { "const": 1 },
+    "id": { "$ref": "#/$defs/slug" },
+    "label": { "$ref": "#/$defs/safeProse" },
+    "hazard": { "enum": ["FLOOD", "WILDFIRE", "STORM"] },
+    "status": {
+      "const": "ILLUSTRATIVE",
+      "description": "The only admissible value today. Every shipped EAP is a demonstration artifact; approving a real protocol is a National-Society/authority act that BEACON does not perform, so no `ENDORSED` value exists to claim (ADR-034 honest limitation 2)."
+    },
+    "provenance": {
+      "allOf": [
+        { "$ref": "#/$defs/safeProse" },
+        { "minLength": 80 },
+        {
+          "pattern": "NOT approved",
+          "description": "Every shipped EAP must state, in its own file, that it is not approved or endorsed by any National Society, hydromet service or civil-protection authority."
+        }
+      ]
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["regionId", "geometry"],
+      "properties": {
+        "regionId": { "$ref": "#/$defs/slug" },
+        "geometry": { "$ref": "#/$defs/polygon" }
+      }
+    },
+    "triggers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["readiness", "activation"],
+      "properties": {
+        "readiness": { "$ref": "#/$defs/trigger" },
+        "activation": { "$ref": "#/$defs/trigger" }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "kind"],
+        "properties": {
+          "id": { "$ref": "#/$defs/slug" },
+          "label": { "$ref": "#/$defs/safeProse" },
+          "kind": { "enum": ["PREPOSITION", "TASK", "NOTIFY_INTERNAL"] },
+          "resourceKind": { "$ref": "#/$defs/resourceKind" }
+        }
+      }
+    },
+    "resourceCeiling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maxResources", "basis"],
+      "description": "The PRE-ARRANGED ceiling. There is deliberately no monetary/donor/budget field: BEACON holds no financial data and inventing one would be an unsourced figure (ADR-035 §4 PERMANENTLY-OUT).",
+      "properties": {
+        "maxResources": { "$ref": "#/$defs/count" },
+        "maxByKind": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "CREW": { "$ref": "#/$defs/count" },
+            "ENGINE": { "$ref": "#/$defs/count" },
+            "AIRCRAFT": { "$ref": "#/$defs/count" },
+            "MEDICAL": { "$ref": "#/$defs/count" },
+            "SUPPLY": { "$ref": "#/$defs/count" },
+            "TEAM": { "$ref": "#/$defs/count" }
+          }
+        },
+        "basis": { "$ref": "#/$defs/safeProse" }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorizerRole", "fallbackRole", "fallbackAfterMinutes"],
+      "description": "Roles / activation mechanism. The fallback WIDENS who may approve after a delay; it never removes the requirement for approval (ADR-034 §6, FST-4).",
+      "properties": {
+        "authorizerRole": { "$ref": "#/$defs/authorizerRole" },
+        "fallbackRole": { "$ref": "#/$defs/authorizerRole" },
+        "fallbackAfterMinutes": { "type": "integer", "minimum": 1, "maximum": 1440 }
+      }
+    },
+    "stop": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conditions", "authorizerRole", "maxDurationHours"],
+      "description": "The STOP mechanism — REQUIRED. `maxDurationHours` is the machine-enforceable half (pure clock arithmetic, so an activation cannot outlive it); `conditions[]` are the human-observed halves, and only a declared condition id may be cited when stopping.",
+      "properties": {
+        "conditions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "label"],
+            "properties": {
+              "id": { "$ref": "#/$defs/slug" },
+              "label": { "$ref": "#/$defs/safeProse" }
+            }
+          }
+        },
+        "authorizerRole": { "$ref": "#/$defs/authorizerRole" },
+        "maxDurationHours": { "type": "integer", "minimum": 1, "maximum": 720 }
+      }
+    }
+  },
+  "$defs": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,62}$" },
+    "safeProse": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 400,
+      "allOf": [
+        { "pattern": "^[\\p{L}\\p{N} .,;:()%'’&+\\u2013\\u2014-]+$" },
+        { "not": { "pattern": "\\.\\." } }
+      ]
+    },
+    "authorizerRole": {
+      "enum": ["VERIFIER", "EM"],
+      "description": "APPROVER_ROLES (src/domain/governance.ts) — the one vocabulary for who may approve. PUBLIC and RESPONDER are excluded: an unauthenticated or non-approving principal can never authorize or stop a protocol (Art. XIII)."
+    },
+    "count": { "type": "integer", "minimum": 0, "maximum": 10000 },
+    "unitInterval": { "type": "number", "minimum": 0, "maximum": 1 },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "parameter",
+        "unit",
+        "threshold",
+        "comparator",
+        "minMembersFraction",
+        "minLikelihoodClass",
+        "leadTimeHours"
+      ],
+      "description": "One stage of the two-stage trigger. BOTH magnitude gates are required so no stage can ship ungated: `minMembersFraction` gates ENSEMBLE_MEMBER_COUNT evidence (share of members over `threshold`), `minLikelihoodClass` gates SOURCE_DERIVED_PROBABILITY evidence via the ADR-033 classifier. The two evidence kinds are never converted into one another.",
+      "properties": {
+        "source": { "$ref": "#/$defs/safeProse" },
+        "parameter": { "$ref": "#/$defs/safeProse" },
+        "unit": { "$ref": "#/$defs/safeProse" },
+        "threshold": { "type": "number" },
+        "comparator": { "enum": ["GTE", "LTE"] },
+        "minMembersFraction": { "$ref": "#/$defs/unitInterval" },
+        "minLikelihoodClass": { "enum": ["POSSIBLE", "LIKELY", "VERY_LIKELY"] },
+        "leadTimeHours": { "type": "number", "exclusiveMinimum": 0, "maximum": 720 }
+      }
+    },
+    "resourceKind": {
+      "enum": ["CREW", "ENGINE", "AIRCRAFT", "MEDICAL", "SUPPLY", "TEAM"],
+      "description": "Mirrors RESOURCE_KINDS (src/domain/resource.ts). JSON Schema cannot import a TypeScript constant, so this is the one copy that can drift — it is PINNED to RESOURCE_KINDS by tests/architecture/domain-db-enum-pin.test.ts (arm 4). 'TEAM' is FR-D6-1 (ADR-035 §4): an EAP may pre-position a volunteer team exactly as it pre-positions any other resource kind."
+    },
+    "position": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "number" }
+    },
+    "polygon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "coordinates"],
+      "description": "A GeoJSON Polygon (RFC 7946). Only Polygon is admitted: a scope must be a closed area, and admitting a Point/LineString would let a scope be un-intersectable. There is no `geometryRef` indirection — a reference would be a path, and paths are exactly what this schema refuses.",
+      "properties": {
+        "type": { "const": "Polygon" },
+        "coordinates": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "array", "minItems": 4, "items": { "$ref": "#/$defs/position" } }
+        }
+      }
+    }
+  }
+}

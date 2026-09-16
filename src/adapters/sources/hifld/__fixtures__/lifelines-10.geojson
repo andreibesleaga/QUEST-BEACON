@@ -1,0 +1,202 @@
+{
+ "type": "FeatureCollection",
+ "crs": {
+  "type": "name",
+  "properties": {
+   "name": "EPSG:4326"
+  }
+ },
+ "properties": {
+  "exceededTransferLimit": true
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "id": 248,
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -121.847648767,
+     39.7545639690001
+    ]
+   },
+   "properties": {
+    "OBJECTID": 248,
+    "ID": "0004595926",
+    "NAME": "Butte County Phf",
+    "ADDRESS": "592 Rio Lindo Avenue",
+    "ADDRESS2": "Not Available",
+    "CITY": "Chico",
+    "STATE": "CA",
+    "ZIP": "95926",
+    "ZIP4": "Not Available",
+    "TELEPHONE": "Not Available",
+    "TYPE": "Psychiatric Hospital",
+    "STATUS": "Open",
+    "POPULATION": 16,
+    "COUNTY": "Butte",
+    "COUNTYFIPS": "06007",
+    "COUNTRY": "US",
+    "LATITUDE": 39.75456,
+    "LONGITUDE": -121.8476,
+    "NAICS_CODE": "622210",
+    "NAICS_DESC": "Hospitals, Psychiatric (Except Convalescent)",
+    "SOURCE": "http://www.oshpd.ca.gov/HID/Products/Listings.html",
+    "SOURCE_DATE": 1344816000000,
+    "VAL_METHOD": "Imagery with Other",
+    "VAL_DATE": 1392042837000,
+    "WEBSITE": "http://www.buttecounty.net/Behavioral%20Health/Psychiatric%20Health%20Facility.aspx",
+    "STATE_ID": "Not Available",
+    "ALT_NAME": "Not Available",
+    "ST_FIPS": "06",
+    "OWNER": "Government - Local",
+    "TTL_STAFF": null,
+    "BEDS": 16,
+    "TRAUMA": "Not Available",
+    "HELIPAD": "Not Available",
+    "DATE_CREAT": 1352678400000
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 249,
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -121.847996375,
+     39.752496894
+    ]
+   },
+   "properties": {
+    "OBJECTID": 249,
+    "ID": "0012495926",
+    "NAME": "Enloe Medical Center - Cohasset Campus",
+    "ADDRESS": "560 Cohasset Road",
+    "ADDRESS2": "Not Available",
+    "CITY": "Chico",
+    "STATE": "CA",
+    "ZIP": "95926",
+    "ZIP4": "Not Available",
+    "TELEPHONE": "Not Available",
+    "TYPE": "General Acute Care Hospital",
+    "STATUS": "Open",
+    "POPULATION": 398,
+    "COUNTY": "Butte",
+    "COUNTYFIPS": "06007",
+    "COUNTRY": "US",
+    "LATITUDE": 39.7525,
+    "LONGITUDE": -121.848,
+    "NAICS_CODE": "622210",
+    "NAICS_DESC": "General Medical And Surgical Hospitals",
+    "SOURCE": "http://www.oshpd.ca.gov/HID/Products/Listings.html",
+    "SOURCE_DATE": 1344816000000,
+    "VAL_METHOD": "Imagery with Other",
+    "VAL_DATE": 1392043817000,
+    "WEBSITE": "http://www.enloe.org/",
+    "STATE_ID": "Not Available",
+    "ALT_NAME": "Not Available",
+    "ST_FIPS": "06",
+    "OWNER": "Non-profit",
+    "TTL_STAFF": null,
+    "BEDS": 398,
+    "TRAUMA": "Not Available",
+    "HELIPAD": "Not Available",
+    "DATE_CREAT": 1352678400000
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 250,
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -121.850394338,
+     39.741827593
+    ]
+   },
+   "properties": {
+    "OBJECTID": 250,
+    "ID": "0012595926",
+    "NAME": "Enloe Medical Center- Esplanade Campus",
+    "ADDRESS": "1531 Esplanade",
+    "ADDRESS2": "Not Available",
+    "CITY": "Chico",
+    "STATE": "CA",
+    "ZIP": "95926",
+    "ZIP4": "Not Available",
+    "TELEPHONE": "Not Available",
+    "TYPE": "General Acute Care Hospital",
+    "STATUS": "Open",
+    "POPULATION": 265,
+    "COUNTY": "Butte",
+    "COUNTYFIPS": "06007",
+    "COUNTRY": "US",
+    "LATITUDE": 39.74183,
+    "LONGITUDE": -121.8504,
+    "NAICS_CODE": "622210",
+    "NAICS_DESC": "General Medical And Surgical Hospitals",
+    "SOURCE": "http://www.oshpd.ca.gov/HID/Products/Listings.html",
+    "SOURCE_DATE": 1344816000000,
+    "VAL_METHOD": "Imagery with Other",
+    "VAL_DATE": 1392043817000,
+    "WEBSITE": "http://www.enloe.org",
+    "STATE_ID": "Not Available",
+    "ALT_NAME": "Not Available",
+    "ST_FIPS": "06",
+    "OWNER": "Non-profit",
+    "TTL_STAFF": null,
+    "BEDS": 265,
+    "TRAUMA": "II",
+    "HELIPAD": "Y",
+    "DATE_CREAT": 1352678400000
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 251,
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -121.867531859,
+     39.7541865600001
+    ]
+   },
+   "properties": {
+    "OBJECTID": 251,
+    "ID": "0012695926",
+    "NAME": "Enloe Rehabilitation Center",
+    "ADDRESS": "340 West East Avenue",
+    "ADDRESS2": "Not Available",
+    "CITY": "Chico",
+    "STATE": "CA",
+    "ZIP": "95926",
+    "ZIP4": "Not Available",
+    "TELEPHONE": "Not Available",
+    "TYPE": "General Acute Care Hospital",
+    "STATUS": "Open",
+    "POPULATION": 60,
+    "COUNTY": "Butte",
+    "COUNTYFIPS": "06007",
+    "COUNTRY": "US",
+    "LATITUDE": 39.75418,
+    "LONGITUDE": -121.8675,
+    "NAICS_CODE": "622210",
+    "NAICS_DESC": "General Medical And Surgical Hospitals",
+    "SOURCE": "http://www.oshpd.ca.gov/HID/Products/Listings.html",
+    "SOURCE_DATE": 1344816000000,
+    "VAL_METHOD": "Imagery with Other",
+    "VAL_DATE": 1392043817000,
+    "WEBSITE": "http://www.enloe.org/medical_services/rehabilitation_center.asp",
+    "STATE_ID": "Not Available",
+    "ALT_NAME": "Not Available",
+    "ST_FIPS": "06",
+    "OWNER": "Non-profit",
+    "TTL_STAFF": null,
+    "BEDS": 60,
+    "TRAUMA": "Not Available",
+    "HELIPAD": "Not Available",
+    "DATE_CREAT": 1352678400000
+   }
+  }
+ ]
+}

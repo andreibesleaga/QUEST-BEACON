@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "authority": "ADR-033 §2.2 — docs/architecture/decisions/ADR-033-forecast-likelihood-and-outlook.md. The bands below are BEACON's documented PRESENTATION bands over a probability signal a source already published. They are not calibrated-uncertainty language (they are deliberately NOT the IPCC likely>=0.66 / very-likely>=0.90 scale) and they are not an action trigger — anticipatory-action activation thresholds live in the EAP configuration, separately and per protocol.",
+  "boundaryConvention": "Each band's lowerBound is INCLUSIVE and bands are evaluated highest-first, so exactly one class can match. Bands ascend in both lowerBound and class rank, which makes the mapping monotonic: a larger source value can never yield a less likely class. A value below `unclassifiedBelow` gets NO class at all (the record is still carried, with its raw value, geometry and provenance).",
+  "signalTypes": {
+    "DERIVED_EXCEEDANCE_PROBABILITY": {
+      "kind": "CONTINUOUS",
+      "sourceField": "Gauge.exceedanceProbability",
+      "unit": "dimensionless probability fraction in [0,1] — never a percentage, never rescaled",
+      "source": "Copernicus GloFAS reporting points publish a derived probability of exceeding the point's 2-/5-/20-year return-period threshold (https://confluence.ecmwf.int/display/CEMS/GloFAS+Reporting+Points; verified in audit/DATA_SOURCE_VERIFICATION.md row 36, tier CACHED, account-gated). BEACON reads that published number and nothing else.",
+      "method": "deterministic threshold lookup on the source-published derived exceedance probability — no model, no interpolation, no smoothing, no cross-source fusion. The class is shown with the raw source value beside it.",
+      "unclassifiedBelow": 0.3,
+      "bands": [
+        { "lowerBound": 0.3, "class": "LIKELY" },
+        { "lowerBound": 0.6, "class": "VERY_LIKELY" }
+      ]
+    },
+    "ENSEMBLE_MEMBER_FRACTION": {
+      "kind": "CONTINUOUS",
+      "sourceField": "member fraction supplied by a cached forecast file (k of N members over the threshold)",
+      "unit": "dimensionless share of forecast members over the threshold in [0,1] — model spread, NOT a calibrated probability of occurrence and never displayed as a percentage chance",
+      "source": "Counting forecast members over a threshold is the published anticipatory-action pattern (IFRC GO trigger monitoring; anticipation-hub.org). BEACON has NO wired live ensemble source: a member fraction only enters from a cached/recorded file handed to the evaluator, labeled as such (finding F-34). Nothing in BEACON queries ensemble members at runtime.",
+      "method": "deterministic threshold lookup on the member share supplied with a cached forecast file. The share is reported verbatim as evidence beside the class, described as the share of forecast members over the threshold — never as a chance of occurrence.",
+      "bands": [
+        { "lowerBound": 0, "class": "POSSIBLE" },
+        { "lowerBound": 0.3, "class": "LIKELY" },
+        { "lowerBound": 0.6, "class": "VERY_LIKELY" }
+      ]
+    },
+    "CATEGORICAL_ADVISORY_TIER": {
+      "kind": "ORDINAL",
+      "sourceField": "the source's own advisory tier, carried verbatim",
+      "source": "Aggregators that publish an ordinal advisory tier rather than a number (MeteoAlarm-class low/medium/high awareness levels). Only tiers a source actually publishes may be listed here.",
+      "method": "one-to-one mapping of the source's own published advisory tier onto the ordered class. No numeric probability is implied, computed, or displayed — an ordinal tier has none.",
+      "levels": {
+        "low": "POSSIBLE",
+        "medium": "LIKELY",
+        "high": "VERY_LIKELY"
+      }
+    }
+  }
+}

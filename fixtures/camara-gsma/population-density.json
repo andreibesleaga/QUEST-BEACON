@@ -1,0 +1,77 @@
+{
+  "$comment": "Recorded-mock fixture for the camara-gsma adapter (TelecomPort P13). AGGREGATE-ONLY, synthetic, no PII and no individual device tracking (Constitution Art. XIV; ADR-021). Shape is BEACON's canonical TelecomSignal[] (the anti-corruption output), NOT a raw CAMARA payload — the ACL maps CAMARA Population Density Data / Region Device Count / Connectivity Insights into this. Served when SOURCE_CAMARA_MODE=mock (the demo default, and the offline/air-gapped acceptance test). Region: a sample California cell (San Francisco Bay vicinity). All counts are coarse-bucketed and synthetic; do not treat as real measurements.",
+  "adapter": "camara-gsma",
+  "port": "Telecom",
+  "mode": "MOCK",
+  "region": {
+    "id": "us-ca-flagship",
+    "name": "California (flagship)",
+    "iso": "US"
+  },
+  "reportingPeriod": "2026-06",
+  "signals": [
+    {
+      "kind": "POPULATION_DENSITY",
+      "cellId": "sf-bay-0001",
+      "geom": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-122.52, 37.70],
+            [-122.36, 37.70],
+            [-122.36, 37.83],
+            [-122.52, 37.83],
+            [-122.52, 37.70]
+          ]
+        ]
+      },
+      "areaKm2": 195.0,
+      "densityPerKm2": 4200,
+      "densityBucket": "HIGH",
+      "estimatedPopulation": 819000,
+      "aggregateOnly": true,
+      "precisionMeters": 1000,
+      "observedAt": "2026-06-28T18:00:00Z"
+    },
+    {
+      "kind": "REGION_DEVICE_COUNT",
+      "cellId": "sf-bay-0001",
+      "deviceCountBucket": "10000+",
+      "deviceCountApprox": 612000,
+      "aggregateOnly": true,
+      "minAggregationGroup": 1000,
+      "observedAt": "2026-06-28T18:00:00Z"
+    },
+    {
+      "kind": "CONNECTIVITY",
+      "cellId": "sf-bay-0001",
+      "networkTypes": ["5G", "4G"],
+      "reachableFraction": 0.93,
+      "degraded": false,
+      "connectivityStatus": "NORMAL",
+      "aggregateOnly": true,
+      "observedAt": "2026-06-28T18:00:00Z"
+    },
+    {
+      "kind": "CONNECTIVITY",
+      "cellId": "sf-bay-0002-hill",
+      "geomHint": "wildfire-evacuation-zone (synthetic)",
+      "networkTypes": ["4G"],
+      "reachableFraction": 0.41,
+      "degraded": true,
+      "connectivityStatus": "DEGRADED",
+      "note": "Modeled connectivity drop consistent with infrastructure stress; advisory only, never auto-alerts (Art. XII/XIII).",
+      "aggregateOnly": true,
+      "observedAt": "2026-06-28T18:00:00Z"
+    }
+  ],
+  "provenance": {
+    "source": "CAMARA / GSMA Open Gateway (recorded mock)",
+    "adapter": "camara-gsma",
+    "fetchedAt": "2026-06-28T18:05:00Z",
+    "license": "Synthetic demo fixture (no upstream data; CAMARA API definitions are Apache-2.0)",
+    "mode": "MOCK",
+    "attribution": "Synthetic / aggregate-only. Not derived from any real subscriber data.",
+    "privacyNote": "Aggregate-only by construction; no individual location, identity, or device is represented (Art. XIV; CAMARA min-aggregation / no-PII profile)."
+  }
+}

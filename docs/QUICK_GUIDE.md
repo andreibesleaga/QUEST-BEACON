@@ -1,0 +1,77 @@
+# BEACON — Quick Guide (one page)
+
+> The 60-second orientation. Everything here links to the authoritative doc — this page never duplicates
+> content (single-source rule), so a count that lives elsewhere is *pointed at*, not restated.
+
+> ### 🔎 Judges & first-time readers — start here: **[JUDGE_MATRIX.md](../JUDGE_MATRIX.md)**
+> One page, built for a fast scan: what was promised vs what shipped, the five judging criteria with
+> evidence, production readiness, what's genuinely new, and the honest limitations. Everything below and
+> throughout `docs/` is the supporting detail behind it.
+
+## What
+Open-source (Apache-2.0), local-first, near-real-time **common operating picture** for wildfires & floods.
+Deterministic engine owns every number · LLM narrates cited facts and cannot emit a figure · a named human
+approves every public action. IEEE Response Quest 2026, Phase 3. North-Star: **cited picture < 10 s**.
+
+## Run
+From the repository root, one command, no keys, no network:
+```bash
+docker compose -f infra/docker-compose.yml up -d --build   # Postgres → migrations → app
+open http://localhost:3000
+docker compose -f infra/docker-compose.yml down -v          # tear down
+```
+⚠️ The `-f` is **required** — the compose file lives in `infra/`, so a bare `docker compose up` from the
+project root exits 1 with *"no configuration file provided: not found"*.
+Without Docker: `nvm use && npm install && npm run dev`. Defaults are air-gapped (`AI_MODE=off`, sources
+cached/mock) and still render a full COP from the built-in demo seed.
+
+**Gate commands** (exact — the same ones CI runs, mirrored in `README.md`):
+```bash
+./node_modules/.bin/eslint .            # 0
+./node_modules/.bin/tsc --noEmit        # 0
+./node_modules/.bin/vitest run --coverage
+./node_modules/.bin/depcruise src app   # 0 violations
+./node_modules/.bin/playwright test
+npm audit --audit-level=high
+```
+The measured results live in **one place — `README.md` § Gates** — and are deliberately not restated here.
+
+## Where things live
+| Need | Read |
+|---|---|
+| First contact / gates / honest limitations | `README.md` |
+| **Architecture diagrams (C4 L1–L3 + runtime flows) + ADR index** | `docs/architecture/C4_ARCHITECTURE.md` → `docs/architecture/decisions/ADR-001…047` (+`ADR-008a`) |
+| **The whole system for a developer (code map, flows, plugin points, debugging, failure table)** | `docs/DEVELOPER_HANDBOOK.md` |
+| **Use it (any reader) / operate it (roles, workflow, offline)** | `docs/USER_GUIDE.md` · `docs/OPERATOR_GUIDE.md` |
+| **Release it / run it live (every variable, what live must set, verify, demo switch)** | `docs/RELEASE_GUIDE.md` |
+| Contract of record — **§13 is the limitations ledger** | `docs/SPEC.md` + `docs/api/openapi.yaml` + `schemas/` |
+| Requirements | `docs/requirements/PRD.md` (FR-1…16 + EARS) |
+| **Quality bar / Definition of Done (every phase)** | `docs/ENGINEERING_PRINCIPLES.md` |
+| **Deploy anywhere** (local · Docker · Railway · Kubernetes · other clouds) | `docs/DEPLOYMENT.md` → `infra/docker-compose.yml`, `infra/k8s/` |
+| Config (12-factor, everything env) | `docs/architecture/CONFIGURATION.md` + `.env.example` |
+| Data sources + verdicts (LIVE/CACHED/MOCK) + consumption counts | `audit/DATA_SOURCE_VERIFICATION.md` (§0 = wired/consumed authority; §10 = deep fallback catalog) |
+| Data-source attribution + licences | `NOTICE` |
+| Build backlog (~496 atomic tasks) | `project/TASKS.md` → the 10 epic files in `project/tasks/` (E0, E1, E3–E10 — there is no E2 file); findings register: `project/TASKS-FINAL-VERSION.md` |
+| Pinned free/OSS libraries | `docs/LIBRARIES.md` |
+| Demo walkthrough + TTTP budget | `docs/DEMO_SCRIPT.md` · shot list of record: `docs/FINAL_LIVE_TEST_AND_DEMO.md` §3 |
+| Tests / CI / evals | `docs/TEST_PLAN.md` · `docs/CI_CD.md` · `docs/EVAL_PLAN.md` |
+| **UI/UX design charter** | `docs/UI_UX_DESIGN.md` — modern dark-first system, WCAG 2.2 AA, motion, ⌘K |
+| Responsible-data rules | `docs/RESPONSIBLE_DATA.md` |
+| Security posture + what CI does and does **not** scan | `SECURITY.md` |
+
+> **Not in a clone:** the governed AI-assisted SDLC's working files (agent governance, skills, memory)
+> are not part of the repository. Their durable output is committed under `docs/`, `audit/` and `project/`.
+
+## Iron rules (never break)
+LLM never computes numbers (F3) · every SitRep field cited (F2) · provenance+freshness on every response
+(F1) · HITL before any public action (F8) · every AI call through the fail-closed compliance proxy (F16) ·
+every layer has a fallback ladder, offline works (F5–F7) · free/open data only · coverage floors are never
+lowered · **an unverified thing is "unverified", never "fine"** — ask of every claim
+*what executes it?*, and cite the `file:line` in CODE.
+
+## Status
+Built, gated, live-verified and deployed: https://quest-beacon.up.railway.app (reference deployment, brought
+online on request), one-command local reproduction, Kubernetes manifests in `infra/k8s/`, an installable
+offline-capable browser app behind a flag (ADR-047). Gates and figures live in **`README.md` § Gates** and
+`JUDGE_MATRIX.md` §1. Live third-party verification, including a real-model AI run: `docs/audit/LIVE_VERIFICATION.md`.
+Open findings and honest limitations: `docs/SPEC.md` §13 and `docs/audit/UNIMPLEMENTED_REGISTER.md`.

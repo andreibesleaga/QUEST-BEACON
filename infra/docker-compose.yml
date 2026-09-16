@@ -1,0 +1,127 @@
+# BEACON — local full stack (E0·T-018 / S06 integration gate). ~$0 cloud-parity.
+# Topology:  db (postgres, healthchecked)  →  migrate (one-shot drizzle, runs to completion)
+#            →  app (Next.js, healthchecked).  Offline-first: AI off, sources cached/mock,
+#            no egress required — `docker compose up` runs air-gapped (Constitution Art. XVI).
+#
+# Usage:
+#   docker compose -f infra/docker-compose.yml up -d --build
+#   curl -s http://localhost:3000/api/v1/health              # {"status":"ok"}
+#   curl -s http://localhost:3000/.well-known/sustainability # schema-valid cited report
+#   docker compose -f infra/docker-compose.yml down -v
+#
+# `.env` (repo root, gitignored) is OPTIONAL — every value has a safe default below.
+# See infra/.env.example for the documented keys and how to run a live/cloud demo.
+
+services:
+  db:
+    image: postgres:16.10-alpine@sha256:ab8380566c3ea09690a9ecaa85a59d82bfc6eb86744151a2a54335866c83a3e9
+    environment:
+      POSTGRES_USER: beacon
+      POSTGRES_PASSWORD: beacon
+      POSTGRES_DB: beacon
+    ports: ['5432:5432']
+    volumes: ['beacon-pgdata:/var/lib/postgresql/data']
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U beacon -d beacon']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  # One-shot Drizzle migration (ADR-013). Uses the `build` stage image because it carries
+  # drizzle-kit + drizzle/ migrations + the src schema (the lean runtime image does not).
+  # Runs to completion BEFORE the app starts, then exits 0.
+  migrate:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+      target: build
+    env_file:
+      - path: ../.env
+        required: false
+    environment:
+      DATABASE_URL: postgres://beacon:beacon@db:5432/beacon
+      NODE_ENV: production
+    command: ['npm', 'run', 'migrate']
+    depends_on:
+      db: { condition: service_healthy }
+    restart: 'no'
+
+  app:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+      target: runner
+      # NEXT_PUBLIC_* is BUILD-time inlined by `next build` inside the image — a runtime env_file can
+      # never turn these on. They flow: infra/.env.docker (rendered from ../.env by env-for-docker.sh)
+      # → compose interpolation here → Dockerfile ARG → next build. Unset ⇒ empty ⇒ flag off (default).
+      args:
+        NEXT_PUBLIC_AUTH_TOKEN_LOGIN: ${NEXT_PUBLIC_AUTH_TOKEN_LOGIN:-}
+        NEXT_PUBLIC_DEPLOY_POSTURE: ${NEXT_PUBLIC_DEPLOY_POSTURE:-}
+        NEXT_PUBLIC_FEATURE_OUTLOOK_PANEL: ${NEXT_PUBLIC_FEATURE_OUTLOOK_PANEL:-}
+        NEXT_PUBLIC_FEATURE_CITIZEN_STREAM: ${NEXT_PUBLIC_FEATURE_CITIZEN_STREAM:-}
+        NEXT_PUBLIC_FEATURE_VISION: ${NEXT_PUBLIC_FEATURE_VISION:-}
+        NEXT_PUBLIC_FEATURE_EXTERNAL_VIEWS: ${NEXT_PUBLIC_FEATURE_EXTERNAL_VIEWS:-}
+        NEXT_PUBLIC_PWA: ${NEXT_PUBLIC_PWA:-}
+    # ⚠️ TWO REAL BUGS WERE FIXED HERE (2026-08-04) — both were why "docker never goes live":
+    #
+    # 1. `env_file` pointed at ../.env directly. Docker's env-file parser does NOT strip inline comments —
+    #    inside the container DEPLOY_MODE literally equaled "local            # local (air-gapped …" and
+    #    the fail-fast config validation rejected it at boot. (Next.js's own dotenv DOES strip them, which
+    #    is why the same .env worked locally — two parsers, one file, silent divergence.) The compose path
+    #    now consumes `infra/.env.docker`, a GENERATED comment-free render of ../.env: run
+    #    `npm run docker:up` (which regenerates it every time) instead of raw `docker compose up`.
+    #
+    # 2. The comment below said "flip these in ../.env for a live/cloud demo" — but compose `environment:`
+    #    takes precedence over `env_file`, so a hardcoded `AI_MODE: 'off'` here made that flip IMPOSSIBLE.
+    #    The overridable ones now use ${VAR:-default} interpolation (which reads the file passed via
+    #    `--env-file`, i.e. the same clean render), so the documented behaviour is finally the real one.
+    #    DATABASE_URL stays hardcoded ON PURPOSE: inside the compose network the db host is `db`, and a
+    #    host-oriented value leaking in from .env would break the container.
+    env_file:
+      - path: .env.docker
+        required: false
+    environment:
+      DATABASE_URL: postgres://beacon:beacon@db:5432/beacon
+      FEATURE_STORE: ${FEATURE_STORE:-postgres}
+      NODE_ENV: production
+      APP_PORT: '3000'
+      # DEPLOY_MODE is PINNED, not `${DEPLOY_MODE:-local}` (security audit, 2026-09-11).
+      #
+      # `local` is what unlocks the spoofable `x-beacon-role` header in rbac.ts — and this service publishes
+      # 3000 on ALL interfaces. With the old interpolation, `npm run docker:up` rendered DEPLOY_MODE=local
+      # from the developer's own .env, so anyone who could reach the port could send `x-beacon-role: EM` and
+      # read precise SOS coordinates (Art. XIV) or promote a DRAFT alert to an ACTUAL CAP (Art. XIII). Setting
+      # AUTH_SECRET did NOT close it: the JWT branch is only taken when a bearer is actually present, and the
+      # header path is the fallthrough.
+      #
+      # `cloud` makes resolveRole return PUBLIC unconditionally. A developer who genuinely wants the demo
+      # role switcher runs the app outside compose, or overrides this line deliberately and knowingly.
+      DEPLOY_MODE: cloud
+      # Pinned for the same reason: these three decide whether a container reaches the outside world or
+      # spends money. They must not inherit from whatever .env happens to sit beside the compose file —
+      # the README tells judges this command is the air-gapped path.
+      AI_MODE: 'off'
+      AUTH_DEV_TRUST_HEADER: 'off'
+      AUTH_DEV_LOGIN: 'off'
+      FEATURE_VISION: ${FEATURE_VISION:-off}
+      COMPLIANCE_PROXY_ENABLED: ${COMPLIANCE_PROXY_ENABLED:-off}
+      FEATURE_SPATIAL: ${FEATURE_SPATIAL:-turf}
+      FEATURE_CACHE: ${FEATURE_CACHE:-memory}
+      FEATURE_QUEUE: ${FEATURE_QUEUE:-cron}
+      FEATURE_EVENTBUS: ${FEATURE_EVENTBUS:-memory}
+      FEATURE_REALTIME: ${FEATURE_REALTIME:-sse}
+    ports: ['3000:3000']
+    depends_on:
+      db: { condition: service_healthy }
+      migrate: { condition: service_completed_successfully }
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:3000/api/v1/health || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    restart: unless-stopped
+
+volumes:
+  beacon-pgdata:

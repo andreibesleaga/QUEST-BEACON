@@ -1,0 +1,154 @@
+{
+  "_meta": {
+    "purpose": "D5.2 inbound EDXL-RM fixtures for finding F-31 — the emit side validated, the INGEST side did not. Each `invalid` document is one that the OLD raw-cast path (`b as unknown as EdxlRmMessage`, src/adapters/channels/http/routes/feature-router.ts:287) accepted and that schemas/edxl-rm.schema.json rejects.",
+    "shape": "schemas/edxl-rm.schema.json",
+    "clock": "fixed — 2026-07-05, no wall-clock dependence",
+    "cases": {
+      "invalidUnknownMember": "carries a top-level member the standard does not define; the schema is additionalProperties:false, the raw cast was not",
+      "invalidMessageType": "messageType is not in the EDXL-RM message set; the mapper never reads messageType on ingest, so the raw cast mapped it happily",
+      "invalidMissingCorrelationId": "no originatingMessageID — the round-trip correlation id the mutual-aid board groups by. Schema-required; the mapper would have stored `undefined`",
+      "invalidSentDateTime": "sentDateTime is not an ISO-8601 date-time; ajv-formats is compiled with the schema, the raw cast checked nothing"
+    }
+  },
+  "valid": {
+    "messageType": "RequestResource",
+    "messageID": "urn:beacon:rm:req-7781",
+    "sentDateTime": "2026-07-05T14:30:00-07:00",
+    "messageContentType": "RequestResource",
+    "originatingMessageID": "urn:beacon:rm:req-7781",
+    "incidentInformation": [
+      {
+        "incidentID": "inc-1"
+      }
+    ],
+    "contentObject": [
+      {
+        "resourceInformation": [
+          {
+            "resourceInfoElementID": "task-inbound-1",
+            "resource": {
+              "resourceID": "res-engine-7",
+              "name": "Resource res-engine-7",
+              "resourceStatus": {
+                "deploymentStatus": "Requested",
+                "statusDateTime": "2026-07-05T14:30:00-07:00"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "invalidUnknownMember": {
+    "messageType": "RequestResource",
+    "messageID": "urn:beacon:rm:req-7782",
+    "sentDateTime": "2026-07-05T14:30:00-07:00",
+    "messageContentType": "RequestResource",
+    "originatingMessageID": "urn:beacon:rm:req-7782",
+    "priorityOverride": "IMMEDIATE",
+    "incidentInformation": [
+      {
+        "incidentID": "inc-1"
+      }
+    ],
+    "contentObject": [
+      {
+        "resourceInformation": [
+          {
+            "resourceInfoElementID": "task-inbound-2",
+            "resource": {
+              "resourceID": "res-engine-8",
+              "name": "Resource res-engine-8",
+              "resourceStatus": {
+                "deploymentStatus": "Requested"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "invalidMessageType": {
+    "messageType": "PleaseSendHelp",
+    "messageID": "urn:beacon:rm:req-7783",
+    "sentDateTime": "2026-07-05T14:30:00-07:00",
+    "messageContentType": "PleaseSendHelp",
+    "originatingMessageID": "urn:beacon:rm:req-7783",
+    "incidentInformation": [
+      {
+        "incidentID": "inc-1"
+      }
+    ],
+    "contentObject": [
+      {
+        "resourceInformation": [
+          {
+            "resourceInfoElementID": "task-inbound-3",
+            "resource": {
+              "resourceID": "res-engine-9",
+              "name": "Resource res-engine-9",
+              "resourceStatus": {
+                "deploymentStatus": "Requested"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "invalidMissingCorrelationId": {
+    "messageType": "RequestResource",
+    "messageID": "urn:beacon:rm:req-7784",
+    "sentDateTime": "2026-07-05T14:30:00-07:00",
+    "messageContentType": "RequestResource",
+    "incidentInformation": [
+      {
+        "incidentID": "inc-1"
+      }
+    ],
+    "contentObject": [
+      {
+        "resourceInformation": [
+          {
+            "resourceInfoElementID": "task-inbound-4",
+            "resource": {
+              "resourceID": "res-engine-10",
+              "name": "Resource res-engine-10",
+              "resourceStatus": {
+                "deploymentStatus": "Requested"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "invalidSentDateTime": {
+    "messageType": "RequestResource",
+    "messageID": "urn:beacon:rm:req-7785",
+    "sentDateTime": "last Tuesday",
+    "messageContentType": "RequestResource",
+    "originatingMessageID": "urn:beacon:rm:req-7785",
+    "incidentInformation": [
+      {
+        "incidentID": "inc-1"
+      }
+    ],
+    "contentObject": [
+      {
+        "resourceInformation": [
+          {
+            "resourceInfoElementID": "task-inbound-5",
+            "resource": {
+              "resourceID": "res-engine-11",
+              "name": "Resource res-engine-11",
+              "resourceStatus": {
+                "deploymentStatus": "Requested"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

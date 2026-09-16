@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Recorded MeteoAlarm Romania legacy-Atom sample (real upstream response, trimmed to 3 entries).
+  Source : https://feeds.meteoalarm.org/feeds/meteoalarm-legacy-atom-romania
+  Fetched: 2026-07-07T09:35:05Z  ·  License: MeteoAlarm, terms equivalent to CC BY 4.0
+  Verbatim entries (Vrancea, Vâlcea, Vaslui) — NO geometry in the feed: only NUTS3 codes,
+  county names (cap:areaDesc) and awareness_type/level. Hence this adapter maps to NewsIntelPort.NewsItem.
+-->
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:cap="urn:oasis:names:tc:emergency:cap:1.2">
+  <link rel="hub" href="https://pubsubhubbub.appspot.com/"/>
+  <link type="application/atom+xml" rel="self" href="https://feeds.meteoalarm.org/feeds/meteoalarm-legacy-atom-romania"/>
+  <link type="text/html" rel="alternate" href="https://meteoalarm.org"/>
+  <rights>Copyright © 2026 MeteoAlarm.Org. Licensed under terms equivalent to CC BY 4.0, with additional requirements for redistributing outlined in our Terms and Conditions.</rights>
+  <generator>MeteoAlarm Producer Server</generator>
+  <logo>https://feeds.meteoalarm.org/images/logo.svg</logo>
+  <author>
+    <name>meteoalarm.org</name>
+    <uri>https://meteoalarm.org</uri>
+    <email>meteoalarm@geosphere.at</email>
+  </author>
+  <id>tag:meteoalarm.org,2021-02-19:RO</id>
+  <title>MeteoAlarm - Alerting Europe for Extreme Weather</title>
+  <updated>2026-07-07T09:35:05.700604Z</updated>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO226</value>
+    </cap:geocode>
+    <link title="Vrancea" href="https://meteoalarm.org?geocode=EMMA_ID:RO032" hreflang="en"/>
+    <cap:areaDesc>Vrancea</cap:areaDesc>
+    <cap:event>awareness_type=3, awareness_level=2</cap:event>
+    <cap:sent>2026-07-07T07:00:50+00:00</cap:sent>
+    <cap:expires>2026-07-08T20:00:00+00:00</cap:expires>
+    <cap:effective>2026-07-07T06:44:00+00:00</cap:effective>
+    <cap:onset>2026-07-08T09:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2607070944.28dafbf6a5fa8f4d</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/f2c95d33-764e-42c4-b845-402602e2ae0c"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-07-07T07:00:50Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/f2c95d33-764e-42c4-b845-402602e2ae0c?index_info=1&amp;index_area=37&amp;index_geocode=0</id>
+    <title>Yellow Thunderstorm Warning issued for Romania - Vrancea</title>
+    <updated>2026-07-07T07:00:50Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO415</value>
+    </cap:geocode>
+    <link title="Vâlcea" href="https://meteoalarm.org?geocode=EMMA_ID:RO037" hreflang="en"/>
+    <cap:areaDesc>Vâlcea</cap:areaDesc>
+    <cap:event>awareness_type=3, awareness_level=2</cap:event>
+    <cap:sent>2026-07-07T07:00:50+00:00</cap:sent>
+    <cap:expires>2026-07-08T20:00:00+00:00</cap:expires>
+    <cap:effective>2026-07-07T06:44:00+00:00</cap:effective>
+    <cap:onset>2026-07-08T09:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2607070944.28dafbf6a5fa8f4d</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/f2c95d33-764e-42c4-b845-402602e2ae0c"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-07-07T07:00:50Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/f2c95d33-764e-42c4-b845-402602e2ae0c?index_info=1&amp;index_area=36&amp;index_geocode=0</id>
+    <title>Yellow Thunderstorm Warning issued for Romania - Vâlcea</title>
+    <updated>2026-07-07T07:00:50Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO216</value>
+    </cap:geocode>
+    <link title="Vaslui" href="https://meteoalarm.org?geocode=EMMA_ID:RO007" hreflang="en"/>
+    <cap:areaDesc>Vaslui</cap:areaDesc>
+    <cap:event>awareness_type=3, awareness_level=2</cap:event>
+    <cap:sent>2026-07-07T07:00:50+00:00</cap:sent>
+    <cap:expires>2026-07-08T20:00:00+00:00</cap:expires>
+    <cap:effective>2026-07-07T06:44:00+00:00</cap:effective>
+    <cap:onset>2026-07-08T09:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2607070944.28dafbf6a5fa8f4d</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/f2c95d33-764e-42c4-b845-402602e2ae0c"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-07-07T07:00:50Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/f2c95d33-764e-42c4-b845-402602e2ae0c?index_info=1&amp;index_area=35&amp;index_geocode=0</id>
+    <title>Yellow Thunderstorm Warning issued for Romania - Vaslui</title>
+    <updated>2026-07-07T07:00:50Z</updated>
+  </entry>
+</feed>

@@ -1,0 +1,238 @@
+/* BEACON — global styles + design tokens (E8·T-345/T-347; UI/UX Charter §1). Dark-first, light-capable.
+   All colors are SEMANTIC design tokens as CSS variables → mapped to Tailwind utilities via @theme inline.
+   Components must use token utilities (bg-surface, text-fg, border-line, …), never raw hex (lint/T-345).
+   No CDN: Inter is self-hosted via @fontsource-variable/inter (imported in layout.tsx). Offline-identical.
+
+   V2 CSS-POLISH PASS (WS-B, 2026-09-10): token VALUES only — no token was renamed, added to the colour
+   set, or removed, and no component/markup/IA changed. Every colour that carries TEXT was re-tuned to
+   clear 7:1 (WCAG AAA body) against every background it is actually rendered on, in BOTH themes, with
+   HUE HELD (saturation raised, never lowered, where lightness had to move). Evidence + the full
+   before/after ratio table: docs/audit/V2-CSS-POLISH-REVIEW.md. */
+@import 'tailwindcss';
+
+/* Theme toggling: [data-theme] on <html> wins in both directions; default (no attr) = dark (EOC night ops). */
+@custom-variant light (&:where([data-theme='light'], [data-theme='light'] *));
+
+:root,
+[data-theme='dark'] {
+  --bg: #0b0f14; /* app background */
+  --surface: #121a24; /* panels/cards */
+  --surface-2: #1a2532; /* raised/hover */
+  --overlay: #0e1620e6; /* glass overlay base (alpha) */
+  --line: #2c3847; /* 1px borders — lifted from #26313f so the hairline reads crisply at 1px on both
+                      --surface and --surface-2 (it was near-invisible on the raised surface at 1.18:1). */
+  --fg: #e8eef5; /* primary text (≥ 12:1 on bg) */
+  --fg-muted: #a3b4c6; /* secondary text — ≥ 7:1 on bg, surface AND surface-2 (was 6.99:1 on surface-2) */
+  --primary: #69b3ff; /* interactive accent — lifted from #4aa3ff so it clears 7:1 as TEXT on surface-2
+                          (map tooltip link) as well as on bg/surface; also lifts primary-fg-on-primary. */
+  --primary-fg: #04121f;
+  --focus: #7cc0ff; /* focus ring (2px, offset) */
+  /* Hazard severities (color is NEVER the only signal — always paired with icon/shape/text, T-346) */
+  --sev-minor: #59c3a5;
+  --sev-moderate: #e2b53d;
+  --sev-severe: #f08e42;
+  --sev-extreme: #ff8189;
+  /* Status: alert red is RESERVED for alerts only */
+  --alert: #ff8189;
+  --ok: #59c3a5;
+  --warn: #e2b53d;
+  /* Warn colour for SMALL text (<14pt): the dark-theme warn already clears 7:1, so it is the same hue. */
+  --warn-strong: #e2b53d;
+  --stale: #a3b4c6; /* cached/degraded label — tracks --fg-muted */
+  --unverified: #bf9dff; /* unverified badge (distinct hue + icon) */
+  /* Elevation ramp (V2·B0-2). ONE shadow scale for the whole app instead of per-component treatments;
+     dark surfaces need a deeper, blacker shadow than light ones to read at all, so the ramp is defined
+     per theme here and mapped onto the shadow-sm/md/lg utilities in @theme inline below. */
+  --elev-1: 0 1px 2px -1px rgb(0 0 0 / 0.55), 0 1px 1px rgb(0 0 0 / 0.35);
+  --elev-2: 0 2px 8px -2px rgb(0 0 0 / 0.6), 0 1px 2px rgb(0 0 0 / 0.4);
+  --elev-3: 0 12px 28px -8px rgb(0 0 0 / 0.68), 0 4px 10px -4px rgb(0 0 0 / 0.45);
+}
+
+[data-theme='light'] {
+  --bg: #f6f8fb;
+  --surface: #ffffff;
+  --surface-2: #eef2f7;
+  --overlay: #ffffffe6;
+  --line: #cbd6e3; /* deepened from #d6dee8 — same crispness step as the dark hairline */
+  --fg: #0d1826; /* ≥ 12:1 on bg */
+  --fg-muted: #414f60; /* ≥ 7:1 on bg, surface AND surface-2 (was 6.20:1 on surface-2) */
+  --primary: #0850a0; /* deepened from #0b6bd6: as TEXT it now clears 7:1 on every surface, and as the
+                         primary BUTTON FILL white-on-primary clears 7:1 too (it was 5.14:1 — an AA miss). */
+  --primary-fg: #ffffff;
+  --focus: #0b6bd6; /* the focus RING is non-text UI (WCAG 1.4.11 → 3:1); keeping the brighter azure at
+                       5.14:1 keeps the ring reading as a ring, and leaves focus appearance unchanged. */
+  --sev-minor: #155c49;
+  --sev-moderate: #6d4c00;
+  --sev-severe: #853c13;
+  --sev-extreme: #a01a25;
+  --alert: #a01a25;
+  --ok: #155c49;
+  --warn: #6d4c00;
+  /* --warn was #9a6b00 = 4.41:1 on the light bg, so a darker --warn-strong existed purely to keep SMALL
+     warn text (e.g. the machine-translation notice) legible. --warn itself now clears 7:1 everywhere, so
+     the two converge — exactly as they already do in the dark theme. Both tokens stay (nothing renamed). */
+  --warn-strong: #6d4c00;
+  --stale: #414f60;
+  --unverified: #5c2fc5;
+  /* Light-theme elevation: the same three steps, tinted with the fg navy instead of pure black so a
+     raised surface reads as lifted rather than smudged. */
+  --elev-1: 0 1px 2px -1px rgb(13 24 38 / 0.1), 0 1px 1px rgb(13 24 38 / 0.06);
+  --elev-2: 0 2px 8px -2px rgb(13 24 38 / 0.12), 0 1px 2px rgb(13 24 38 / 0.07);
+  --elev-3: 0 12px 28px -8px rgb(13 24 38 / 0.16), 0 4px 10px -4px rgb(13 24 38 / 0.1);
+}
+
+/* Map CSS vars → Tailwind theme tokens (utilities: bg-surface, text-fg, border-line, text-sev-severe, …). */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-focus: var(--focus);
+  --color-sev-minor: var(--sev-minor);
+  --color-sev-moderate: var(--sev-moderate);
+  --color-sev-severe: var(--sev-severe);
+  --color-sev-extreme: var(--sev-extreme);
+  --color-alert: var(--alert);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-warn-strong: var(--warn-strong);
+  --color-stale: var(--stale);
+  --color-unverified: var(--unverified);
+  /* One stack for every locale (ADR-030; FR-I18N-8). Fonts are matched PER GLYPH: Latin/Greek/Cyrillic
+     resolve to Inter, and only a glyph Inter lacks falls through to the bundled Noto script face — so a
+     reader never downloads a script they are not looking at. CJK deliberately uses the SYSTEM stack: a
+     usable Simplified-Chinese face is 5–10 MB even subsetted by unicode-range, which would blow both the
+     1 MB font budget and the repo-size budget; every system able to display Chinese already has one, and a
+     system font is local, so this keeps the air-gapped guarantee. Stated in SPEC "Known limitations". */
+  --font-sans:
+    'Inter Variable', 'Noto Sans Arabic', 'Noto Sans Devanagari', 'Noto Sans Bengali',
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', 'Source Han Sans SC',
+    ui-sans-serif, system-ui, sans-serif;
+  /* Radius scale (V2·B0-4): one consistent ramp so chips/badges/inputs/kbd (`rounded`) and cards/panels/
+     popovers (`rounded-lg`) relate to each other. Tailwind's bare `rounded` default is 0.25rem, which
+     read sharp beside the 0.625rem panels; 0.375rem is the matching small step. No className changes. */
+  --radius: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  /* Elevation utilities resolve to the per-theme ramp above (shadow-sm/md/lg keep their existing names
+     and every existing call site is unchanged — only the value each one resolves to). */
+  --shadow-sm: var(--elev-1);
+  --shadow-md: var(--elev-2);
+  --shadow-lg: var(--elev-3);
+}
+
+html {
+  color-scheme: dark;
+  /* A DEFINITE height for the whole chain (added 2026-08-04). Without it nothing above CopLayout had one,
+     so its `h-full` resolved to auto: the map slot was content-sized (it renders one `absolute inset-0`
+     child, contributing zero height — finding F-414), the side dock's `overflow-y-auto` never engaged, and
+     a long SitRep grew the PAGE instead. Net effect for an operator: the whole screen scrolled and the map
+     scrolled away with it. Height is applied at `lg` and up only (see #main) so the phone/tablet stacked
+     dock keeps its natural page-scroll behaviour. */
+  height: 100%;
+}
+[data-theme='light'] {
+  color-scheme: light;
+}
+
+body {
+  height: 100%; /* see the note on html — carries the definite height down to #main */
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-feature-settings: 'tnum' 1; /* tabular numbers in data tables/badges (UI/UX §1) */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Visible, token-colored focus ring everywhere (WCAG 2.2 §2.4.11 — focus never obscured).
+   The ring deliberately does NOT set border-radius: `outline` already follows the element's own
+   border-radius, and the previous hard `border-radius: 4px` here RESHAPED the focused element —
+   a rounded-lg (10px) button snapped to 4px corners the moment it took keyboard focus. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Text selection in the app accent rather than the UA default (V2·B0-7 interaction finish). */
+::selection {
+  background: var(--focus);
+  color: var(--primary-fg);
+}
+
+/* Scrollbar finish (V2·B0-6). Token-coloured, thin, and transparent-tracked so the dock/table scrollers
+   stop drawing a bright OS-default bar across a dark EOC screen. Firefox gets the standard properties;
+   WebKit/Blink get the -webkit- pseudo-elements. Both are styling only — scrolling behaviour is untouched. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--line);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--fg-muted);
+}
+
+/* Motion honored: reduce to opacity/instant when the user asks (UI/UX §2). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Increased-contrast preference honored (UI/UX §2; V2·B2). The palette already clears 7:1 for every text
+   token, so this raises the NON-text furniture — the hairline and the focus ring — which sit below the
+   text bar by design. Values only; nothing here changes layout, and severity still pairs colour+icon. */
+@media (prefers-contrast: more) {
+  :root,
+  [data-theme='dark'] {
+    /* #55657a cleared 3:1 (WCAG 1.4.11 non-text) only on --bg — it still measured 2.94:1 on --surface and
+       2.61:1 on --surface-2, i.e. a reader who explicitly ASKED for more contrast did not actually get a
+       conforming hairline on the panels. Same slate hue, lifted 10% toward white: 4.04/3.68/3.26:1. */
+    --line: #667487;
+    --fg-muted: #c3d0dd;
+  }
+  [data-theme='light'] {
+    --line: #7c8da0;
+    --fg-muted: #2c3a4a;
+  }
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* Skip-to-content link (keyboard landmark). LOGICAL inset so it parks off-screen on the correct side in
+   both writing directions — in an RTL locale `left: -9999px` would fly it off the wrong edge (ADR-030). */
+.skip-link {
+  position: absolute;
+  inset-inline-start: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.5rem 0.75rem;
+  background: var(--surface);
+  color: var(--fg);
+  border: 1px solid var(--line);
+}
+.skip-link:focus {
+  inset-inline-start: 0.5rem;
+  top: 0.5rem;
+}

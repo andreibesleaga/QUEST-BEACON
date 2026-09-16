@@ -1,0 +1,131 @@
+{
+ "success": true,
+ "type": "FeatureCollection",
+ "date": "2026-07-02T06:00:00+03:00",
+ "features": [
+  {
+   "type": "feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     "3113115.070000",
+     "5479112.020000"
+    ],
+    "zoom": 0
+   },
+   "properties": {
+    "umezeala": 96,
+    "fenomen_e": "indisponibil",
+    "zapada": "indisponibil",
+    "actualizat": "02-07-2026&nbsp;ora&nbsp;06:00",
+    "nebulozitate": "indisponibil",
+    "presiunetext": "991.4 mb, variabila",
+    "icon": "84",
+    "nume": "ADAMCLISI",
+    "tempe": "20.5",
+    "vant": "1.6 m/s, directia : VNV",
+    "tempapa": "indisponibil"
+   }
+  },
+  {
+   "type": "feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     "3024592.430000",
+     "5797145.790000"
+    ],
+    "zoom": 0
+   },
+   "properties": {
+    "umezeala": 86,
+    "fenomen_e": "indisponibil",
+    "zapada": "indisponibil",
+    "actualizat": "02-07-2026&nbsp;ora&nbsp;06:00",
+    "nebulozitate": "indisponibil",
+    "presiunetext": "998.2 mb, stationara",
+    "icon": "84",
+    "nume": "ADJUD",
+    "tempe": "20.2",
+    "vant": "2.5 m/s, directia : NV",
+    "tempapa": "indisponibil"
+   }
+  },
+  {
+   "type": "feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     "2623065.200000",
+     "5790595.750000"
+    ],
+    "zoom": 0
+   },
+   "properties": {
+    "umezeala": 83,
+    "fenomen_e": "indisponibil",
+    "zapada": "indisponibil",
+    "actualizat": "02-07-2026&nbsp;ora&nbsp;06:00",
+    "nebulozitate": "indisponibil",
+    "presiunetext": "982.3 mb, variabila",
+    "icon": "84",
+    "nume": "ALBA IULIA",
+    "tempe": "21.3",
+    "vant": "0.9 m/s, directia : N",
+    "tempapa": "indisponibil"
+   }
+  },
+  {
+   "type": "feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     "2904748.880000",
+     "5529432.680000"
+    ],
+    "zoom": 0
+   },
+   "properties": {
+    "umezeala": 92,
+    "fenomen_e": "indisponibil",
+    "zapada": "indisponibil",
+    "actualizat": "02-07-2026&nbsp;ora&nbsp;06:00",
+    "nebulozitate": "indisponibil",
+    "presiunetext": "1000.3 mb, in scadere",
+    "icon": "84",
+    "nume": "BUCURESTI FILARET",
+    "tempe": "20.5",
+    "vant": "1.9 m/s, directia : SSV",
+    "tempapa": "indisponibil"
+   }
+  },
+  {
+   "type": "feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     "3120537.620000",
+     "5696280.990000"
+    ],
+    "zoom": 2
+   },
+   "properties": {
+    "umezeala": 84,
+    "fenomen_e": "indisponibil",
+    "zapada": "indisponibil",
+    "actualizat": "02-07-2026&nbsp;ora&nbsp;06:00",
+    "nebulozitate": "indisponibil",
+    "presiunetext": "1001.7 mb, variabila",
+    "icon": "84",
+    "nume": "GALATI",
+    "tempe": "21.7",
+    "vant": "0.6 m/s, directia : N",
+    "tempapa": "indisponibil",
+    "offset": [
+     -48,
+     0
+    ]
+   }
+  }
+ ]
+}

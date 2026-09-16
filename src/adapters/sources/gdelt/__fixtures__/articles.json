@@ -1,0 +1,44 @@
+{
+  "articles": [
+    {
+      "url": "https://www.latimes.com/environment/story/2026-05-29/california-wildfire-prevention-funding-at-risk",
+      "title": "California wildfire prevention funding at risk of drying up",
+      "seendate": "20260530T044500Z",
+      "domain": "latimes.com",
+      "language": "English",
+      "sourcecountry": "United States"
+    },
+    {
+      "url": "https://finance.yahoo.com/news/mercury-insurance-invests-burnbot-wildfire-105428990.html",
+      "title": "Mercury Insurance invests in BurnBot for wildfire mitigation",
+      "seendate": "20260513T111500Z",
+      "domain": "finance.yahoo.com",
+      "language": "English",
+      "sourcecountry": "United States"
+    },
+    {
+      "url": "https://www.noozhawk.com/jennifer-berger-wildfire-preparedness-becoming-key-for-insurance-protection/",
+      "title": "Jennifer Berger: Wildfire Preparedness Becoming Key for Insurance Protection",
+      "seendate": "20260528T170000Z",
+      "domain": "noozhawk.com",
+      "language": "English",
+      "sourcecountry": "United States"
+    },
+    {
+      "url": "https://www.insurancejournal.com/news/west/2026/04/23/866933.htm",
+      "title": "California Wildfire Risk Bills Cruising Through Legislature",
+      "seendate": "20260423T063000Z",
+      "domain": "insurancejournal.com",
+      "language": "English",
+      "sourcecountry": "United States"
+    },
+    {
+      "url": "https://www.insurancebusinessmag.com/us/news/catastrophe/mercury-insurance-invests-in-wildfire-mitigation-firm-burnbot-574982.aspx",
+      "title": "Mercury Insurance invests in wildfire mitigation firm BurnBot",
+      "seendate": "20260513T080000Z",
+      "domain": "insurancebusinessmag.com",
+      "language": "English",
+      "sourcecountry": "United States"
+    }
+  ]
+}

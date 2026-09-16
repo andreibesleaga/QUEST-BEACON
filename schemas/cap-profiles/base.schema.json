@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/cap-profiles/base.schema.json",
+  "title": "BEACON CAP profile — base (CAP v1.2 and nothing more)",
+  "description": "The default CAP_PROFILE. It deliberately adds ZERO rules on top of schemas/cap-v1.2.schema.json, which has already been applied and passed by the time this rule set runs (ADR-036 §1: buildCapAlert → base schema → PROFILE rule set → sink). Shipping it as a real file rather than special-casing 'no profile' in code keeps one code path for every deployment and lets the shipped-config test validate every id CAP_PROFILE_IDS offers. A deployment with no downstream alerting authority uses this and makes no profile claim.",
+  "$comment": "Rules are NEVER invented in this directory. Any rule added here must carry the verbatim requirement text and a citation of the published specification it was transcribed from — see ipaws.schema.json for the pattern.",
+  "type": "object",
+  "required": ["identifier", "sender", "sent", "status", "msgType", "scope"]
+}

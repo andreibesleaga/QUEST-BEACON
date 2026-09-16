@@ -1,0 +1,104 @@
+# BEACON — the application. Stateless (all state in Postgres when FEATURE_STORE=postgres), so replicas
+# scale horizontally. NOTE: NEXT_PUBLIC_* flags are BUILD-time (inlined by `next build`) — they are
+# passed as Docker build args, not here; see docs/DEPLOYMENT.md § "Build-time vs runtime variables".
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beacon
+  namespace: beacon
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: beacon }
+  template:
+    metadata:
+      labels: { app: beacon }
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      # MIGRATE IN AN INIT CONTAINER, NOT BY WATCHING A JOB (2026-09-11 audit fix).
+      #
+      # What was here before polled `kubectl get job beacon-migrate` until `.status.succeeded` was 1.
+      # That deadlocked the cluster one hour after the first successful deploy: the Job carried
+      # `ttlSecondsAfterFinished: 3600`, so Kubernetes deleted it, and from then on EVERY new pod — an
+      # HPA scale-up, a node drain, a rescheduled crash, a rolling update — ran an init container that
+      # waited forever for a Job that no longer existed. The deployment could never scale or recover,
+      # and nothing in the pod's events said why; it simply sat in Init.
+      #
+      # Running the migrator directly removes the whole class of problem. It needs no Job to observe, no
+      # kubectl, no ServiceAccount and no RBAC, and the precondition it enforces is the real one — the
+      # schema is up to date — rather than a proxy for it that Kubernetes is entitled to garbage-collect.
+      # `scripts/migrate.mjs` is idempotent (drizzle skips journalled entries) and fail-fast (a broken
+      # migration exits non-zero, so the pod never starts against a schema it cannot use), and it now
+      # takes a Postgres advisory lock, so the two replicas below racing at first boot is safe.
+      initContainers:
+        - name: migrate
+          image: ghcr.io/YOUR_ORG/beacon:latest # the SAME image as the app; no third-party tool
+          command: ['node', 'scripts/migrate.mjs']
+          envFrom:
+            - configMapRef: { name: beacon-config }
+            - secretRef: { name: beacon-secrets }
+      containers:
+        - name: app
+          image: ghcr.io/YOUR_ORG/beacon:latest
+          ports: [{ containerPort: 3000, name: http }]
+          envFrom:
+            - configMapRef: { name: beacon-config }
+            - secretRef: { name: beacon-secrets }
+          # /api/v1/health is static ({status: ok}, no DB) — safe for liveness.
+          livenessProbe:
+            httpGet: { path: /api/v1/health, port: http }
+            initialDelaySeconds: 40
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 10
+          readinessProbe:
+            httpGet: { path: /api/v1/health, port: http }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 250m, memory: 512Mi }
+            limits: { cpu: '2', memory: 2Gi }
+      serviceAccountName: beacon
+---
+# The ServiceAccount stays, with NO Role bound to it. The migration init container needs nothing from the
+# Kubernetes API, so the Role and RoleBinding that let the old kubectl-poller read Jobs are gone: BEACON's
+# pods now hold no cluster permissions at all, which is the correct amount for a stateless web app.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: beacon
+  namespace: beacon
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beacon
+  namespace: beacon
+spec:
+  selector: { app: beacon }
+  ports: [{ port: 80, targetPort: http }]
+---
+# Ingress. SSE (FEATURE_REALTIME=sse) needs long-lived responses: raise the proxy read timeout and
+# disable buffering, or the live push silently degrades to the 15 s polling fallback.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: beacon
+  namespace: beacon
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '3600'
+    nginx.ingress.kubernetes.io/proxy-buffering: 'off'
+    cert-manager.io/cluster-issuer: letsencrypt # optional — remove if you terminate TLS elsewhere
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [beacon.your-agency.example]
+      secretName: beacon-tls
+  rules:
+    - host: beacon.your-agency.example
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend: { service: { name: beacon, port: { number: 80 } } }

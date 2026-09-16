@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.example/schemas/governance.schema.json",
+  "title": "BEACON governance parameters (ledger · SOP approval chain · retention sweep · drill mode)",
+  "description": "Validates config/governance.json — the SOP approval chain (ADR-034 §6), the Art. XIV retention window enforced by the sweep executor (finding F-25) and the drill-mode default (ADR-034 §7). Governance parameters are DATA, never literals in a use-case (ADR-012). Every block MUST declare its own `basis` prose, so a number cannot be added or changed here without stating what grounds it — the same discipline as schemas/forecast-trigger.schema.json. This schema is deliberately NOT related to schemas/threshold-rule.schema.json, which is dead and drifted (findings F-33/F-80); it is live, and is pinned to the shipped config by src/application/governance/governance-config.test.ts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "authority", "approval", "retention", "drill"],
+  "properties": {
+    "version": { "const": 1 },
+    "authority": { "$ref": "#/$defs/prose" },
+    "approval": {
+      "description": "The SOP approval chain. Both roles are drawn from the APPROVER_ROLES set, so no value here can produce an approval that no human gave: a delegation widens WHO may approve, never WHETHER approval is required (CONSTITUTION Art. XIII). There is deliberately no `autoApproveAfterMinutes` and no `requireApproval` boolean — an unapprovable-by-anyone or auto-approved state is not expressible.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorizerRole", "fallbackRole", "fallbackAfterMinutes", "basis"],
+      "properties": {
+        "authorizerRole": { "$ref": "#/$defs/approverRole" },
+        "fallbackRole": { "$ref": "#/$defs/approverRole" },
+        "fallbackAfterMinutes": {
+          "description": "How long the primary authorizer holds SOLE responsibility before the fallback role becomes co-responsible. Must be > 0: a zero window is an always-open delegation and must be written as such, not as a timeout of nothing.",
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "basis": { "$ref": "#/$defs/prose" }
+      }
+    },
+    "retention": {
+      "description": "The Art. XIV retention window the sweep executor enforces. Before MW-D/D4 `purgeAfter` was stamped and indexed with no executor, so the guarantee was claimed and unenforced (finding F-25).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publicReportRetentionDays", "sweepGraceMinutes", "basis"],
+      "properties": {
+        "publicReportRetentionDays": {
+          "description": "Days from intake to `purgeAfter`. Integer: retention stated in fractional days would be a deadline nobody can reason about.",
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 365
+        },
+        "sweepGraceMinutes": {
+          "description": "Extra minutes the sweep waits past a stamped `purgeAfter` deadline before deleting. 0 = delete exactly at the deadline. A non-zero value silently extends the retention the reporter was told about, so it must be justified in `basis`.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1440
+        },
+        "basis": { "$ref": "#/$defs/prose" }
+      }
+    },
+    "drill": {
+      "description": "Exercise (DRILL) mode default. The flag decides whether a drill composition is built; it is NOT what keeps an exercise artifact off a real channel — that is structural (ADR-034 §7, three layers, none a runtime branch).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "basis"],
+      "properties": {
+        "mode": { "enum": ["off", "on"] },
+        "basis": { "$ref": "#/$defs/prose" }
+      }
+    }
+  },
+  "$defs": {
+    "prose": { "type": "string", "minLength": 20 },
+    "approverRole": {
+      "description": "A role that carries approval authority (CONSTITUTION Art. XIII). PUBLIC and RESPONDER are deliberately NOT permitted — mirrors APPROVER_ROLES in src/domain/governance.ts.",
+      "enum": ["VERIFIER", "EM"]
+    }
+  }
+}

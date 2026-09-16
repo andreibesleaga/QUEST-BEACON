@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/d5-ems-overlay.schema.json",
+  "title": "BEACON D5 authoritative damage-assessment overlay — Copernicus EMS (FR-D4-5, FEV-24)",
+  "description": "The wire shape of the post-event damage-overlay layer (src/application/coordination/ems-overlay.ts). EMS here is the Copernicus Emergency MANAGEMENT Service (rapid mapping), not Emergency Medical Services — there is no patient, transport or casualty concept in this document and none may be added (finding F-150). Every product view is a LINK-OUT: `viewUrl` is an https product page BEACON never dereferences, and no product geometry is carried, rehosted or re-derived, so a foreign polygon can never reach the exposure engine (the F-48 lesson). `provider`, `licence` and `producedAt` are REQUIRED — FEV-24's attribution and production-date labels are structural, not render-time options.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["products", "attribution", "asOf", "rejected", "caveat"],
+  "properties": {
+    "products": {
+      "type": "array",
+      "description": "Renderable products, ascending by production date then product id.",
+      "items": { "$ref": "#/$defs/productView" }
+    },
+    "attribution": {
+      "type": "array",
+      "description": "Distinct `provider — licence` credits every render site shows.",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "asOf": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Injected as-of instant every ageDays is measured against."
+    },
+    "rejected": {
+      "type": "array",
+      "description": "Products excluded rather than mis-labelled (flag, never merge).",
+      "items": { "$ref": "#/$defs/rejected" }
+    },
+    "caveat": { "type": "string", "minLength": 1 }
+  },
+  "$defs": {
+    "productView": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "productId",
+        "activationCode",
+        "productType",
+        "areaOfInterest",
+        "producedAt",
+        "provider",
+        "licence",
+        "viewUrl",
+        "ageDays",
+        "productionLabel",
+        "linkOnly"
+      ],
+      "properties": {
+        "productId": { "type": "string", "minLength": 1 },
+        "activationCode": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Publisher activation code, e.g. EMSR773."
+        },
+        "productType": {
+          "type": "string",
+          "enum": ["DELINEATION", "GRADING"],
+          "description": "OVERLAY_PRODUCT_TYPES verbatim; pinned by test."
+        },
+        "areaOfInterest": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A PLACE label, never a person."
+        },
+        "producedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "REQUIRED by FEV-24 — an undated overlay may not be shown."
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1,
+          "description": "REQUIRED by FEV-24 — an unattributed overlay may not be shown."
+        },
+        "licence": { "type": "string", "minLength": 1 },
+        "viewUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "description": "Link-only product page; never fetched by BEACON."
+        },
+        "ageDays": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Whole days between production and asOf; never negative (future-dated products are rejected)."
+        },
+        "productionLabel": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The mandatory FEV-24 label, assembled from the product's own fields."
+        },
+        "linkOnly": { "const": true }
+      }
+    },
+    "rejected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["productId", "reason", "producedAt"],
+      "properties": {
+        "productId": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "enum": ["PRODUCED_AFTER_AS_OF"] },
+        "producedAt": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

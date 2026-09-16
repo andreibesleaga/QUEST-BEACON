@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/d6-supply.schema.json",
+  "title": "BEACON D6-2 Relief supply — new aggregate-only fields",
+  "description": "The NEW optional fields FR-D6-2 (ADR-035 §4) adds to a Resource of kind 'SUPPLY' — a supply lot is stock, counted and located as a LOT, never attributed to the person who gave it (Art. XIV; ADR-035 §4 hard boundary: 'no person-identifying field may exist on any D6 entity'). Scoped to ONLY the new fields, not the whole Resource entity ('SUPPLY' already exists in RESOURCE_KINDS at src/domain/resource.ts:9; id/status/orgId/geom are unchanged by this schema). PERMANENTLY OUT, restated here so it cannot creep back as a 'small addition': no donor field and no payment field, ever (ADR-035 §4 PERMANENTLY-OUT; CURRENT-MASTER-PLAN.md:123-124 'NO payments ever') — 'donor', 'donorId', 'payment', 'amount', 'cardNumber', 'iban' and 'account' are all in PERSON_IDENTIFYING_KEYS (src/domain/shared/aggregate-only.ts), so adding any of them fails Layer A (tsc), Layer B (this file's walk) and Layer C (runtime) at once. Layer B walks this file automatically via tests/architecture/d6-no-pii.test.ts's schemas/d6-*.schema.json glob — no change to the guard was needed to pick it up.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind"],
+  "properties": {
+    "kind": {
+      "const": "SUPPLY",
+      "description": "The Resource.kind discriminator this fields object extends. Already present in RESOURCE_KINDS — FR-D6-2 adds no kind, only the three optional fields below."
+    },
+    "quantity": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "An AGGREGATE stock count of the lot, in `unit`. Deliberately named `quantity`, NOT `amount`: 'amount' is in PERSON_IDENTIFYING_KEYS because it is the field a donation/payment record would use, and the D6 boundary must not carry one (ADR-035 §4). An integer, never a currency value — there is no currency field anywhere in D6."
+    },
+    "unit": {
+      "type": "string",
+      "enum": ["EACH", "CASE", "PALLET", "LITRE", "KILOGRAM"],
+      "description": "The unit `quantity` is counted in. A closed enum rather than free text so a quantity is always comparable across lots and no free-text field is introduced on this entity."
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC expiry of the lot (consumables/medication stock). A property of the STOCK, not of any person — no patient, no prescription, no recipient is modelled or retained."
+    }
+  }
+}

@@ -1,0 +1,599 @@
+{
+  "_meta": {
+    "locale": "fil",
+    "review": "machine",
+    "machineTranslated": true,
+    "comment": "Machine-translated from messages/en.json; NOT reviewed by a human translator. Labeled as such in the UI (FR-I18N-5). Backfilled to full key + value coverage on 2026-09-11; the strings that still read as English are loanwords Tagalog genuinely uses (password, user id, Live, min), listed per-locale in tests/i18n/catalog-parity.test.ts.",
+    "coverage": "full"
+  },
+  "channels": {
+    "digest": {
+      "trend": "takbo",
+      "noClaim": "(walang pahayag)",
+      "citations": "mga sanggunian",
+      "sources": "pinagmulan",
+      "freshness": "kasariwaan"
+    },
+    "alert": {
+      "headline": "BEACON ALERTO — {severity} {category} para sa insidente {incidentId} (alerto {alertId})"
+    }
+  },
+  "actMenu": {
+    "trigger": "Aksyon",
+    "title": "Aksyon sa napili",
+    "taskResource": "Italaga ang resource",
+    "drawRoute": "Iguhit ang evacuation route",
+    "createAlert": "Gumawa ng DRAFT na alerto"
+  },
+  "app": {
+    "title": "BEACON — Magkatuwang na Larawan ng Operasyon",
+    "description": "Open-source, local-first, near-real-time na COP para sa wildfire at baha.",
+    "skipToContent": "Laktawan papunta sa nilalaman",
+    "noLiveIncidentsTitle": "Walang live na insidente sa rehiyong ito",
+    "noLiveIncidentsDescription": "Walang live na pinagmulan ang nag-uulat ngayon ng wildfire o baha dito. Ipinapakita ng mapa ang inihahain ng mga live na pinagmulan; walang inimbento. Nakalista ang mga pinagmulan at kanilang katayuan sa Mga Pinagmulan.",
+    "noLiveIncidentsDemoDescription": "Walang live na pinagmulan ang nag-uulat ng wildfire o baha dito sa ngayon. Ang ipinapakitang insidente ay ang naka-preload na demo na senaryo, iningatan para sa walkthrough; ang mga live na layer ay iginuguhit habang inihahatid ng mga pinagmulan."
+  },
+  "commandPalette": {
+    "openLabel": "Buksan ang command palette",
+    "triggerText": "Maghanap",
+    "dialogLabel": "Palito ng mga utos",
+    "placeholder": "Pumunta sa rehiyon, insidente, panel — o kumilos…",
+    "empty": "Walang tugma.",
+    "groupRegions": "Mga rehiyon",
+    "groupIncidents": "Mga insidente",
+    "groupPanels": "Mga panel",
+    "groupLayers": "I-toggle ang mga layer",
+    "groupAct": "Aksyon",
+    "toggleLayer": "I-toggle ang layer na {layer}",
+    "shortcutsTitle": "Mga keyboard shortcut",
+    "shortcutsDescription": "Bawat aksyon sa COP ay maaabot nang walang pointer.",
+    "shortcut": {
+      "openPalette": "Buksan ang command palette",
+      "openShortcuts": "Buksan ang listahan ng mga shortcut",
+      "move": "Maglipat sa mga resulta ng palette",
+      "run": "Patakbuhin ang napiling aksyon",
+      "close": "Isara ang palette / overlay"
+    }
+  },
+  "decision": {
+    "sectionLabel": "Suporta sa pagdedesisyon",
+    "figures": "Deterministikong mga bilang",
+    "narration": "Naratibo ng AI",
+    "noNarration": "Walang naratibo (deterministic lamang).",
+    "citations": "Mga sanggunian",
+    "approved": "Inaprubahan ng tao",
+    "approve": "Aprubahan ang desisyon",
+    "humanApprovalRequired": "Kailangan ang pag-apruba ng tao bago ang anumang pampublikong aksyon.",
+    "noDraftToApprove": "Walang dapat aprubahan sa ngayon — walang draft na alerto ang naghihintay ng pagsusuri.",
+    "roleRequiredToApprove": "Mag-sign in bilang Verifier o Emergency Manager para mag-apruba.",
+    "approveFailed": "Nabigo ang pag-apruba —"
+  },
+  "draftAlerts": {
+    "title": "Pagsusuri ng alerto (DRAFT)",
+    "emptyTitle": "Walang DRAFT na alerto",
+    "emptyDescription": "Ang mga threshold rule ay gumagawa dito ng DRAFT na alerto.",
+    "provenance": "Pinagmulan",
+    "noProvenance": "Walang pinagmulan",
+    "reviewApprove": "Suriin at aprubahan…",
+    "approveFailed": "Nabigo ang pag-apruba —",
+    "forecastHeading": "Ebidensya ng forecast — paraan, input at kawalang-katiyakan",
+    "forecastCategory": "Kategorya ng forecast",
+    "forecastLeadTimeLabel": "Panahon ng paunang babala",
+    "forecastLeadTime": "{hours, number} oras, ayon sa sinabi ng pinagmulan. Hindi minomodelo ng BEACON ang oras ng paglalakbay ng panganib.",
+    "forecastCrossing": "Inaasahang paglampas at oras ng paglabas ng forecast",
+    "forecastLikelihood": "Posibilidad, input at paraan"
+  },
+  "locale": {
+    "label": "Wika",
+    "switcherLabel": "Wika ng display",
+    "machineTranslatedNotice": "Machine-translated — hindi nasuri ng human translator.",
+    "machineTranslatedShort": "isinalin ng makina"
+  },
+  "logistics": {
+    "title": "Lohistika",
+    "resource": "Yaman",
+    "shelter": "Evacuation center",
+    "noShelterData": "Walang datos sa kapasidad ng evacuation center.",
+    "shelterCapacity": "Kapasidad ng evacuation center",
+    "shelterCapacityVsDemand": "Kapasidad ng evacuation center kumpara sa pangangailangan",
+    "overCapacity": "Lampas sa kapasidad",
+    "withinCapacity": "Nasa loob ng kapasidad",
+    "resourceToTask": "Resource na iaatas",
+    "selectResource": "Pumili ng resource…",
+    "lifecycleTransition": "Paglipat ng estado",
+    "transition": {
+      "PROPOSED": "PROPOSED",
+      "ASSIGNED": "ASSIGNED",
+      "EN_ROUTE": "EN_ROUTE",
+      "ON_SCENE": "ON_SCENE",
+      "CLEARED": "CLEARED"
+    },
+    "task": "Atas",
+    "taskingRejected": "Tinanggihan ang pag-atas ({code}): {message}",
+    "resourcesUnavailable": "Hindi available ang mga resource",
+    "noResourcesTitle": "Walang resource",
+    "noResourcesDescription": "Walang maaatasang resource sa saklaw.",
+    "prePositioning": {
+      "heading": "Mga mungkahi sa pre-positioning",
+      "advisory": "Payo lamang — tao ang magdedesisyon",
+      "listLabel": "Listahan ng mga mungkahi sa pre-positioning",
+      "noIncidentTitle": "Walang napiling insidente",
+      "noIncidentDescription": "Pumili ng insidente para makita ang mga mungkahi sa pre-positioning.",
+      "unavailable": "Hindi available ang pre-positioning",
+      "noExtentTitle": "Wala pang projected na lawak",
+      "noExtentDescription": "Lalabas ang mga mungkahi kapag may available nang hazard projection para sa insidenteng ito.",
+      "noAssetsTitle": "Walang malapit na asset",
+      "noAssetsDescription": "Walang nakitang AVAILABLE na resource o OPEN na evacuation center malapit sa projected na lawak."
+    }
+  },
+  "map": {
+    "layersLegend": "Mga layer ng mapa",
+    "errorBoundaryLabel": "Mapa",
+    "unavailableTitle": "Hindi available ang interactive na mapa",
+    "unavailableDescription": "Hindi available ang WebGL dito. Nakalista sa ibaba ang lahat ng datos ng mapa bilang accessible na alternatibo.",
+    "layer": {
+      "fire": "Sunog (mga hotspot at perimeter)",
+      "flood": "Lawak ng baha at mga gauge",
+      "storm": "Landas ng bagyo, cone at storm surge",
+      "floodzone": "Mga flood zone (NFHL)",
+      "infra": "Imprastraktura",
+      "weather": "Panahon (hangin)",
+      "cameras": "Mga live na kamera",
+      "outage": "Mga power outage",
+      "cell": "Saklaw ng cell site",
+      "exposure": "Exposure (mga node sa loob ng hazard)",
+      "reports": "Mga ulat / SOS",
+      "prediction": "Kono ng hula",
+      "route": "Ruta ng paglikas",
+      "shelters": "Mga evacuation center"
+    },
+    "caveat": {
+      "fire": "Ang mga hotspot ng FIRMS ay thermal detection, hindi kumpirmadong perimeter ng sunog.",
+      "floodzone": "Mga regulatoryong flood zone — hindi live na lawak",
+      "weather": "Observation point — hindi forecast grid",
+      "camera": "Mga live na kamera — bubuksan ang site ng pinagmulan sa bagong tab",
+      "outage": "Antas-county (EAGLE-I): ang mga lugar ay estimasyon na ipinapalagay na offline, hindi kumpirmadong outage kada address.",
+      "cell": "Estimasyon ng coverage mula sa OpenCelliD — indikatibo lamang, hindi garantisadong signal map.",
+      "storm": "Produktong pang-bagyo ng ahensya na ipinapakita nang buo at walang pagbabago — hindi minomodelo ng BEACON ang landas ng bagyo, hangin o storm surge.",
+      "routeDirect": "Tuwirang ruta — hindi napatunayang iniiwasan nito ang panganib. Kumpirmahin bago magpadala ng sinuman."
+    },
+    "tooltip": {
+      "layer": "Patong: {group}",
+      "clickToOpen": "i-click para buksan ↗"
+    },
+    "region": {
+      "label": "Rehiyon",
+      "default": "Default na rehiyon",
+      "overlaysLegend": "Mga satellite overlay",
+      "attribution": "Larawang satelayt: NASA EOSDIS GIBS"
+    },
+    "gibs": {
+      "truecolor": "Tunay na kulay (VIIRS)",
+      "fires": "Aktibong sunog (VIIRS)",
+      "flood": "Baha (MODIS)",
+      "aerosol": "Lalim ng optikal na aerosol"
+    },
+    "list": {
+      "regionLabel": "Mga feature ng mapa (accessible na listahan)",
+      "empty": "Walang feature ng mapa sa kasalukuyang view.",
+      "caption": "Accessible na listahan ng lahat ng feature ng mapa — ang keyboard alternative sa interactive na mapa.",
+      "colType": "Uri",
+      "colFeature": "Tampok",
+      "colDetail": "Detalye",
+      "colLocation": "Lokasyon",
+      "colAction": "Aksyon",
+      "focus": "I-focus ang {label}"
+    },
+    "group": {
+      "fire": "Pagtuklas ng sunog",
+      "gauge": "Sukatan ng baha",
+      "infra": "Imprastraktura",
+      "exposure": "Pagkalantad",
+      "report": "Ulat / SOS",
+      "shelter": "Evacuation center"
+    },
+    "detail": {
+      "severity": "Tindi {severity}",
+      "thermalHotspot": "Mainit na bahagi (thermal)",
+      "stage": "Antas {stage}",
+      "gauge": "Sukatan",
+      "node": "Node",
+      "infra": "{kind} — {status}",
+      "inHazard": "Nasa loob ng hazard: {hazard}",
+      "nodeInHazard": "Node sa loob ng hazard"
+    },
+    "outage": {
+      "assumedOffline": "IPINAPALAGAY na offline",
+      "reportedOffline": "Naiulat na offline",
+      "withCount": "{count} na customer ang walang kuryente — {state}"
+    },
+    "zone": {
+      "label": "Sona {zone}"
+    },
+    "storm": {
+      "trackLabel": "Landas ng sentro ng bagyo — pang-abiso lamang, hindi lugar ng epekto",
+      "coneLabel": "Forecast cone — kawalan ng katiyakan sa sentro ng landas, hindi lugar ng epekto",
+      "surgeLabel": "Lawak ng storm surge — lugar ng epekto, kasama sa exposure",
+      "coneCaveat": "Forecast cone mula sa {agency}, abiso {advisoryAt} — ipinapakita kung saan maaaring dumaan ang sentro ng bagyo, HINDI ang lawak ng mapanganib na kalagayan.",
+      "coneCaveatUnattributed": "Ipinapakita ng forecast cone kung saan maaaring dumaan ang sentro ng bagyo — HINDI ang lawak ng mapanganib na kalagayan."
+    },
+    "shelter": {
+      "capacity": "Kap {capacity} · Kailangan {demand}"
+    },
+    "weather": {
+      "label": "Hangin {speed} km/h mula {compass} ({deg}°), obs {observedAt}"
+    },
+    "compass": {
+      "N": "N",
+      "NE": "NE",
+      "E": "E",
+      "SE": "SE",
+      "S": "S",
+      "SW": "SW",
+      "W": "W",
+      "NW": "NW"
+    },
+    "zoomIn": "Palakihin",
+    "zoomOut": "Paliitin",
+    "recenter": "I-sentro muli ang mapa",
+    "offlineBasemap": "Walang batayang mapa sa deployment na hiwalay sa network. Hindi apektado ang lahat ng patong ng operasyon sa ibabaw nito.",
+    "unavailableBasemap": "Walang basemap: walang serbisyo ng tile na maaabot. Hindi apektado ang lahat ng operasyonal na layer sa ibaba."
+  },
+  "anticipatory": {
+    "title": "Maagap na aksyon",
+    "tab": "Maagap",
+    "sectionLabel": "Maagap na aksyon — protokol ng maagang pagkilos",
+    "methodHeading": "Paraan, datos na ipinasok, at kawalang-katiyakan",
+    "ladderHeading": "Hagdan ng pag-trigger",
+    "cycleHeading": "Pagsusuri {index, number} sa {total, number}",
+    "inputs": "Datos na ipinasok",
+    "members": "{over, number} sa {total, number} miyembro ng forecast ang lumampas sa {threshold, number} {unit}",
+    "leadTimeLabel": "Panahon ng paunang babala",
+    "leadTime": "{hours, number} oras, ayon sa pinagmulan. Hindi minomodelo ng BEACON ang bilis ng paglalakbay ng panganib.",
+    "vintage": "Pagpapatakbo ng forecast at sandali ng paglalabas",
+    "methodLabel": "Paraan at uri",
+    "fired": "Na-trigger",
+    "notFired": "Hindi na-trigger",
+    "stageGate": "Hangganan: hindi bababa sa {fraction, number} ng mga miyembro ng forecast ang lalampas sa {threshold, number} {unit}, uri {klass} pataas, sa loob ng {hours, number} oras na paunang babala.",
+    "ledgerHeading": "Mga talaan ng pamamahala na nalilikha ng siklong ito:",
+    "actionsHeading": "Mga aksyong napagkasunduan nang maaga",
+    "suggested": "Iminumungkahi",
+    "approvalHeading": "Pag-apruba ng tao",
+    "pending": "Naghihintay ng pag-apruba ng tao mula sa: {roles}",
+    "noEmission": "Mga mungkahi lamang. Walang anuman sa panel na ito ang nagpapadala ng yaman o naglalabas ng pampublikong alerto; kailangang aprubahan ng isang pinangalanang tao ang bawat maagang aksyon.",
+    "stopMechanism": "Paraan ng paghinto: maaaring ihinto ng {role} ang pag-activate sa isang kondisyong napagkasunduan nang maaga, at awtomatiko itong ihihinto ng makina pagkalipas ng {hours, number} oras.",
+    "replay": "Muling pagpapatakbo mula sa mga naitalang file: bawat naitalang forecast ay muling sinusuri {lag, number} oras matapos ang sandali ng paglalabas na nakasaad sa file. Hindi ito live na datos — walang tinatanong na ensemble product ang BEACON habang tumatakbo.",
+    "noProtocolTitle": "Walang protokol ng maagang pagkilos para sa rehiyong ito",
+    "noProtocolBody": "Walang kasamang protokol ng maagang pagkilos ang BEACON na sumasaklaw sa rehiyong ito, kaya walang masusuri. Ang mga protokol ay konpigurasyon (config/eap/), hindi code.",
+    "noForecastTitle": "Walang naitalang forecast para sa protokol na ito",
+    "noForecastBody": "Kasama ang protokol, ngunit walang kasamang naitalang file ng forecast, kaya walang pagsusuring maaaring ulitin. Walang nakakabit na live na ensemble source ang BEACON.",
+    "engineRefusedTitle": "Tinanggihan ng maagap na makina ang datos na ito",
+    "engineRefusedBody": "Tinanggihan ng makina ang datos sa halip na magpakita ng di-kumpletong pagsusuri."
+  },
+  "outlook": {
+    "title": "Pananaw",
+    "sectionLabel": "Naka-rank na outlook",
+    "eta": "sa loob ng ~{hours, number} h",
+    "noEta": "walang lead time mula sa source",
+    "unclassified": "hindi naka-classify",
+    "uncertainty": "kawalang-katiyakan {value, number}"
+  },
+  "panels": {
+    "sitrepTitle": "Ulat ng sitwasyon",
+    "logisticsTitle": "Lohistika"
+  },
+  "shell": {
+    "sitrepDock": "Ulat ng Sitwasyon",
+    "logisticsDock": "Lohistika",
+    "mapLabel": "Mapa ng common operating picture",
+    "panelsLabel": "Mga panel ng COP",
+    "expand": "Palawakin ang {label}",
+    "collapse": "I-collapse ang {label}",
+    "region": {
+      "us-ca": "California (EU)",
+      "ro": "Romania (EU)",
+      "es": "Espanya (EU)",
+      "gr": "Gresya (EU)",
+      "ph": "Pilipinas"
+    }
+  },
+  "sitrep": {
+    "title": "Ulat ng Sitwasyon",
+    "uncited": "Walang sanggunian — kulang ang source (F2)",
+    "noPriorities": "Walang naka-rank na prayoridad.",
+    "rankedPriorities": "Mga naka-rank na prayoridad",
+    "deterministicOnly": "deterministic lamang",
+    "aiGenerated": "Binuo ng AI",
+    "trendLabel": "Takbo:",
+    "priorities": "Mga prayoridad",
+    "noIncidentTitle": "Walang napiling insidente",
+    "noIncidentDescription": "Pumili ng insidente para makita ang SitRep nito.",
+    "unavailable": "Hindi available ang SitRep",
+    "provenance": "Pinagmulan",
+    "externalViews": "Mga external na view"
+  },
+  "statusStrip": {
+    "regionLabel": "Buod ng katayuan ng rehiyon",
+    "active": "Aktibo",
+    "pending": "Nakabinbin",
+    "unverified": "Hindi pa napatunayan",
+    "sources": "Mga pinagkunan",
+    "dataAsOf": "Edad ng datos",
+    "clock": "UTC",
+    "liveOfTotal": "{live}/{total} na live",
+    "minutesAgo": "{minutes} min",
+    "unavailable": "Hindi available ang live na datos"
+  },
+  "suppliesPanel": {
+    "title": "Mga relief supply",
+    "unavailable": "Hindi available ang mga supply",
+    "emptyTitle": "Walang supply lot",
+    "emptyDescription": "Walang nakarehistrong stock ng relief supply.",
+    "expires": "Mag-e-expire {when}",
+    "asOf": "Noong {when}",
+    "provenance": "Pinagmulan"
+  },
+  "volunteerTeamsPanel": {
+    "title": "Mga volunteer team",
+    "unavailable": "Hindi available ang mga volunteer team",
+    "emptyTitle": "Walang volunteer team",
+    "emptyDescription": "Walang nakarehistrong team unit.",
+    "headcount": "Bilang {count}",
+    "skills": "Mga kakayahan",
+    "asOf": "Noong {when}",
+    "provenance": "Pinagmulan"
+  },
+  "shelterStatusPanel": {
+    "title": "Status ng evacuation center",
+    "unavailable": "Hindi available ang status ng evacuation center",
+    "emptyTitle": "Walang tala ng evacuation center",
+    "emptyDescription": "Walang evacuation center na maiuulat.",
+    "shelters": "Mga evacuation center",
+    "capacity": "Kapasidad",
+    "occupancy": "Bilang ng nakatira",
+    "availableOpen": "Bakanteng bukas na kapasidad",
+    "utilization": "Paggamit",
+    "available": "Bakante",
+    "provenance": "Pinagmulan"
+  },
+  "damageReportsPanel": {
+    "title": "Pinsala at pangangailangan",
+    "unavailable": "Hindi available ang mga ulat ng pinsala",
+    "emptyTitle": "Walang assessment entry",
+    "emptyDescription": "Walang ulat ng pinsala o pangangailangan sa saklaw.",
+    "entries": "Mga entry",
+    "sites": "Mga lugar (self-reported)",
+    "worstSeverity": "Pinakamataas na tindi",
+    "needs": "Mga pangangailangan",
+    "asOf": "Noong {when}",
+    "provenance": "Pinagmulan"
+  },
+  "emsOverlayPanel": {
+    "title": "Copernicus EMS layer",
+    "unavailable": "Hindi available ang EMS layer",
+    "emptyTitle": "Walang nailathalang produkto",
+    "emptyDescription": "Walang nailathalang produkto ng damage assessment para sa view na ito.",
+    "open": "Buksan ang pahina ng produkto",
+    "attribution": "Pagkilala sa pinagmulan",
+    "notShown": "Hindi ipinapakita",
+    "asOf": "Noong {when}",
+    "provenance": "Pinagmulan"
+  },
+  "routingPanel": {
+    "title": "Mga ruta ng paglikas",
+    "formLabel": "Humiling ng ruta ng paglikas",
+    "clickHint": "I-click ang mapa para itakda ang pinagmulan, o i-type ang mga koordinado.",
+    "originLat": "Latitud ng pinagmulan",
+    "originLon": "Longhitud ng pinagmulan",
+    "submit": "Humiling ng ruta",
+    "submitting": "Kinakalkula ang ruta…",
+    "needIncident": "Pumili muna ng insidente — kinakalkula ang ruta upang iwasan ang mapanganib na lugar ng insidenteng iyon.",
+    "requestFailed": "Nabigo ang paghiling ng ruta: {message}",
+    "resultLabel": "Resulta ng ruta",
+    "nearestShelters": "Pinakamalapit na evacuation center",
+    "noSheltersTitle": "Walang natagpuang evacuation center",
+    "noSheltersDescription": "Walang evacuation center na maaabot mula sa pinagmulang ito.",
+    "avoidsHazard": "Iniiwasan ng ruta ang mapanganib na lugar ng insidente.",
+    "heuristicFallback": "Tuwid na landas lamang — hindi naiwasan ang mapanganib na lugar (heuristic na pamalit). Gamitin nang may pag-iingat.",
+    "engineOrs": "Ruta sa kalsada (OpenRouteService)",
+    "engineHeuristic": "Heuristic na pag-iwas sa panganib (offline na makina — hindi sumusunod sa kalsada)",
+    "suggestedStart": "Iminungkahing simula ng paglikas:",
+    "suggestedStartCaveat": "(inaasahang pagdating ng panganib − oras ng paglalakbay sa ruta − margin ng kaligtasan; panimulang pagtantiya)",
+    "distance": "Distansya",
+    "duration": "Tinatayang oras ng biyahe",
+    "steps": "Hakbang-hakbang",
+    "straightLineCaveat": "tantiya sa tuwid na linya — hindi distansya sa kalsada",
+    "originDefaultHint": "Iwanang blangko ang dalawang field para magsimula mula sa lugar ng insidente."
+  },
+  "verifierQueue": {
+    "title": "Pila ng pagpapatunay",
+    "decisionFailed": "Nabigo ang desisyon — hindi na-update ang ulat. Subukang muli.",
+    "emptyTitle": "Walang laman ang pila",
+    "emptyDescription": "Walang hindi pa napapatunayang ulat na naghihintay ng pagsusuri.",
+    "noClaim": "Walang naitalang pahayag (mas maaga ang ulat kaysa sa pag-iimbak ng teksto)",
+    "confidence": "Antas ng tiwala",
+    "componentsLabel": "Mga sangkap ng antas ng tiwala",
+    "component": {
+      "geocode": "Geocode",
+      "authority": "Awtoridad ng pinagmulan",
+      "classifier": "Tagauri",
+      "corroboration": "Pagsang-ayon ng ibang ulat"
+    },
+    "liveFeed": "Live na feed — hindi opisyal",
+    "liveFeedCaption": "Hindi pa napapatunayang stream mula sa mamamayan, hindi kamera ng ahensiya — maaaring tanggihan ng tagapagpatunay ang ulat upang alisin ito sa listahan.",
+    "liveFeedExpired": "Live na feed — hindi opisyal (paso na ang live na link)",
+    "liveFeedExpiredCaption": "Lumampas na sa humigit-kumulang 2 oras na bisa ang hindi opisyal na live na link na ito. Tanggihan ang ulat upang alisin ito sa listahan (Art. XIII, desisyon ng tao).",
+    "visionFinding": "Computer vision (payo lamang): {label}",
+    "visionCaption": "Payo lamang — tumutulong sa talaan ng tao, hindi kailanman nagpapasya nang kusa (Art. XIII, desisyon ng tao).",
+    "visionToggle": "Pagsusuri sa pamamagitan ng computer vision (payo lamang — naitalang larawang satelayt; hindi kailanman nagbabago ng desisyon)",
+    "visionLiveToggle": "Gumamit ng live na larawan para sa lokasyon ng ulat na ito (NASA GIBS, ngayon) sa halip na ang naitalang larawan",
+    "approve": "Aprubahan",
+    "reject": "Tanggihan",
+    "rejectTitle": "Tanggihan bilang huwad / maling impormasyon — walang alerto ang ipadadala (Art. XIII/XIV)",
+    "approveWithCap": "Aprubahan + CAP",
+    "rejectCaption": "Minamarkahan ng pagtanggi ang ulat bilang huwad o maling impormasyon — mapupunta ito sa TINANGGIHAN nang walang anumang palabas na alerto (Art. XIII/XIV).",
+    "emittedAlertStatusFallback": "Alerto",
+    "emittedAlert": "Alertong {status} {id} — naghihintay ng pagpapadala ng tao.",
+    "emittedAlertWithHeadline": "Alertong {status} {id}: {headline} — naghihintay ng pagpapadala ng tao."
+  },
+  "sos": {
+    "errors": {
+      "tooShort": "Ilarawan ang emergency sa hindi bababa sa 10 karakter.",
+      "tooLong": "Panatilihin ang paglalarawan sa ilalim ng 2000 karakter.",
+      "generic": "Pakisuri ang form."
+    }
+  },
+  "tabs": {
+    "sitrep": "SitRep",
+    "decision": "Desisyon",
+    "drafts": "DRAFT na alerto",
+    "resources": "Mga yaman",
+    "verify": "Beripika",
+    "report": "Mag-report ng SOS",
+    "route": "Ruta ng paglikas"
+  },
+  "theme": {
+    "toLight": "Lumipat sa light theme",
+    "toDark": "Lumipat sa dark theme"
+  },
+  "toolbar": {
+    "layers": "Mga layer",
+    "legend": "Alamat",
+    "devBadge": "dev",
+    "actingRole": "Kasalukuyang papel (demo)",
+    "roleSwitcherTitle": "Para sa demo lamang — ginagaya ang x-beacon-role; ang server pa rin ang nag-a-authorize (AUTH_DEV_TRUST_HEADER)",
+    "devLoginUserId": "user id para sa dev-login",
+    "devLoginUserPlaceholder": "user id",
+    "devLogin": "dev-login",
+    "signedIn": "naka-sign in",
+    "loginUserLabel": "user id",
+    "loginUserPlaceholder": "gumagamit",
+    "loginPasswordLabel": "password",
+    "loginPasswordPlaceholder": "password",
+    "signIn": "Mag-sign in",
+    "signOut": "Mag-sign out",
+    "signInFailed": "Nabigo ang pag-sign in",
+    "liveBadge": "live",
+    "liveBadgeTitle": "Production deployment — ang mga tungkulin ay galing lamang sa naka-sign-in na account.",
+    "currentRole": "Kasalukuyang tungkulin"
+  },
+  "ui": {
+    "severity": {
+      "MINOR": "Bahagya",
+      "MODERATE": "Katamtaman",
+      "SEVERE": "Malubha",
+      "EXTREME": "Napakalubha"
+    },
+    "mode": {
+      "LIVE": "Live",
+      "CACHED": "Nakaimbak",
+      "MOCK": "Pansamantalang datos",
+      "DB": "Operator"
+    },
+    "freshness": {
+      "fresh": "Live",
+      "stale": "Luma na",
+      "unavailable": "Hindi available"
+    },
+    "unverified": "Hindi beripikado",
+    "dialog": {
+      "close": "Isara ang dialog"
+    },
+    "skeleton": {
+      "loading": "Naglo-load"
+    },
+    "errorState": {
+      "title": "May nangyaring mali",
+      "retry": "Subukan muli"
+    },
+    "errorBoundary": {
+      "title": "Hindi na-render ang panel na ito",
+      "labelledTitle": "Hindi na-render ang {label}"
+    },
+    "provenance": {
+      "trigger": "Pinagmulan",
+      "triggerAria": "{label} — {count, plural, one {# pinagmulan} other {# pinagmulan}}",
+      "heading": "Mga pinagmulan",
+      "empty": "Walang naitalang pinagmulan."
+    },
+    "legend": {
+      "regionLabel": "Legend ng mapa",
+      "severityHeading": "Severity ng hazard",
+      "statusHeading": "Status ng datos",
+      "modeHeading": "Mode ng source",
+      "status": {
+        "fresh": "Bago",
+        "stale": "Luma na",
+        "unavailable": "Hindi available",
+        "unverified": "Hindi beripikado"
+      }
+    },
+    "externalViews": {
+      "caption": "External na konteksto — nagbubukas ng mga third-party na site.",
+      "captionFor": "External na konteksto — nagbubukas ng mga third-party na site para sa {label}.",
+      "listLabel": "Mga link ng external na konteksto",
+      "kind": {
+        "map": "Mapa",
+        "satellite": "Satelayt",
+        "street": "Kalye",
+        "3d": "3D",
+        "weather": "Panahon",
+        "imagery": "Mga larawan",
+        "fire": "Sunog",
+        "flood": "Baha"
+      }
+    },
+    "relativeTime": {
+      "unknown": "hindi alam",
+      "seconds": "{value}s ang nakalipas",
+      "minutes": "{value}m ang nakalipas",
+      "hours": "{value}h ang nakalipas",
+      "days": "{value}d ang nakalipas"
+    }
+  },
+  "warning": {
+    "headline": "{event} — {severity}",
+    "label": {
+      "what": "ANO",
+      "where": "SAAN",
+      "when": "KAILAN",
+      "impacts": "EPEKTO",
+      "action": "AKSYON"
+    },
+    "what": "{event}, antas ng bigat {severity}.",
+    "where": "{area}.",
+    "when": "{when}.",
+    "impacts": "{impacts}",
+    "action": {
+      "Shelter": "Magsilong na ngayon. Manatili sa loob ng gusali sa {area}, malayo sa mga bintana, hanggang sa may abiso ng ligtas na.",
+      "Evacuate": "Lumisan na ngayon sa {area}. Dalhin ang go-bag, gamitin ang markadong ruta, at huwag bumalik hanggang sa may abiso ng ligtas na.",
+      "Prepare": "Maghanda nang lumisan sa {area}. Maghanda ng go-bag, magpakarga ng gasolina, at sundan ang channel na ito.",
+      "Execute": "Isagawa na ngayon ang planong ibinigay sa inyo para sa {area}.",
+      "Avoid": "Huwag pumasok sa {area}. Huwag maglakbay papunta sa lugar.",
+      "Monitor": "Sundan ang mga update tungkol sa {area}. Maging handang kumilos kung magbago ang babala.",
+      "Assess": "Tingnan ang inyong sitwasyon sa {area} at iulat ang nakikita ninyo.",
+      "AllClear": "Tapos na ang panganib sa {area}. Maaari na kayong bumalik. Sundin ang gabay ng lokal na awtoridad.",
+      "None": "Walang kailangang gawin sa {area} ngayon."
+    },
+    "event": {
+      "Fire": "Sunog sa kagubatan",
+      "Met": "Baha o malakas na panahon",
+      "Safety": "Panganib sa kaligtasan ng publiko"
+    },
+    "allClear": {
+      "headline": "LIGTAS NA — {event}",
+      "description": "Tapos na ang {event} sa {area}."
+    }
+  },
+  "content": {
+    "originalLanguage": "EN",
+    "untranslatedHint": "Ipinapakita sa Ingles — hindi isinalin"
+  },
+  "pwa": {
+    "offline": "Offline — ipinapakita ang larawang na-save noong {time}",
+    "offlineUnknown": "Offline — ipinapakita ang huling larawang na-save sa device na ito",
+    "offlineNoCopy": "Offline — wala pang na-save na larawan sa device na ito",
+    "stale": "Hindi maabot ang server — ipinapakita ang larawang na-save noong {time}",
+    "staleUnknown": "Hindi maabot ang server — ipinapakita ang huling larawang na-save sa device na ito"
+  }
+}

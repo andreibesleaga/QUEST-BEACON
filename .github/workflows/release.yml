@@ -1,0 +1,96 @@
+# BEACON — release. Supply-chain evidence (docs/CI_CD_PLAN.md §3 Phase 3, audit Pillar 6):
+#   build → CycloneDX SBOM → SLSA L2 provenance → Sigstore cosign keyless signature → signed GitHub Release.
+#
+# Gated by: a green ci.yml on the commit + a semver tag `vX.Y.Z`. Has NOT been executed (no remote/tag yet).
+#
+# TODO(pin): replace every `@vN` with a full commit SHA before enabling — EXCEPT the SLSA generator
+#   reusable workflow, which MUST stay referenced by a semantic version TAG (it verifies its own ref;
+#   SHA-pinning it is unsupported). See .github/PINNING_CHECKLIST.md for the per-action list + this exception.
+#
+# Artifact note: BEACON is a Next.js app, not a publishable library, so there is no `dist/*.tgz`. We sign
+# `npm pack` output (the versioned source+manifest tarball). Packaging the `.next` standalone build instead
+# is a follow-up (docs/CI_CD_PLAN.md). `npm pack` works despite `"private": true` (private only blocks publish).
+
+name: release
+
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build + SBOM + hash
+    runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.hash.outputs.digest }}
+      tarball: ${{ steps.pack.outputs.tarball }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: CycloneDX SBOM (1.6)
+        run: npx --yes @cyclonedx/cyclonedx-npm --output-file sbom.cdx.json
+      - name: Pack release tarball
+        id: pack
+        run: |
+          FILE=$(npm pack --silent)
+          echo "tarball=$FILE" >> "$GITHUB_OUTPUT"
+          echo "packed: $FILE"
+      - name: Compute base64 sha256 subject (for SLSA provenance)
+        id: hash
+        run: |
+          echo "digest=$(sha256sum "${{ steps.pack.outputs.tarball }}" | base64 -w0)" >> "$GITHUB_OUTPUT"
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: |
+            ${{ steps.pack.outputs.tarball }}
+            sbom.cdx.json
+          retention-days: 30
+
+  provenance:
+    # SLSA Level 2 build provenance. Referenced by TAG on purpose (see header TODO(pin) exception).
+    needs: [build]
+    permissions:
+      id-token: write # OIDC — sign the provenance
+      contents: write # attach the .intoto.jsonl to the GitHub Release
+      actions: read
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0
+    with:
+      base64-subjects: ${{ needs.build.outputs.digest }}
+      upload-assets: true
+
+  sign-and-publish:
+    name: cosign keyless + GitHub Release
+    needs: [build, provenance]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # OIDC — keyless cosign (Fulcio + Rekor)
+      contents: write # create/attach the GitHub Release
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-artifacts
+      - uses: sigstore/cosign-installer@v3
+      - name: Sign the tarball (keyless)
+        run: |
+          cosign sign-blob --yes "${{ needs.build.outputs.tarball }}" \
+            --bundle beacon.cosign.bundle
+      - name: Publish signed GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ needs.build.outputs.tarball }}
+            sbom.cdx.json
+            beacon.cosign.bundle

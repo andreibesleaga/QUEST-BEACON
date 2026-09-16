@@ -1,0 +1,94 @@
+{
+ "content": [
+  {
+   "downloadsLink": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/archives/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026218.h05v04.061.2026219021103.hdf",
+   "mtime": 1786068688,
+   "name": "MCDWD_L3_NRT.A2026218.h05v04.061.hdf",
+   "resourceType": "File",
+   "self": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/details/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026218.h05v04.061.hdf",
+   "size": 14920035,
+   "status": "Online"
+  },
+  {
+   "downloadsLink": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/archives/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026218.h05v05.061.2026219021317.hdf",
+   "mtime": 1786068808,
+   "name": "MCDWD_L3_NRT.A2026218.h05v05.061.hdf",
+   "resourceType": "File",
+   "self": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/details/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026218.h05v05.061.hdf",
+   "size": 3405981,
+   "status": "Online"
+  },
+  {
+   "downloadsLink": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/archives/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026218.h06v04.061.2026219021156.hdf",
+   "mtime": 1786068728,
+   "name": "MCDWD_L3_NRT.A2026218.h06v04.061.hdf",
+   "resourceType": "File",
+   "self": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/details/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026218.h06v04.061.hdf",
+   "size": 6664330,
+   "status": "Online"
+  },
+  {
+   "downloadsLink": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/archives/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026218.h06v05.061.2026219021317.hdf",
+   "mtime": 1786068813,
+   "name": "MCDWD_L3_NRT.A2026218.h06v05.061.hdf",
+   "resourceType": "File",
+   "self": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/details/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026218.h06v05.061.hdf",
+   "size": 10688507,
+   "status": "Online"
+  },
+  {
+   "downloadsLink": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/archives/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026218.h20v04.061.2026219020846.hdf",
+   "mtime": 1786068538,
+   "name": "MCDWD_L3_NRT.A2026218.h20v04.061.hdf",
+   "resourceType": "File",
+   "self": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/details/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026218.h20v04.061.hdf",
+   "size": 10605500,
+   "status": "Online"
+  },
+  {
+   "downloadsLink": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/archives/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026219.h05v04.061.2026220031204.hdf",
+   "mtime": 1786158738,
+   "name": "MCDWD_L3_NRT.A2026219.h05v04.061.hdf",
+   "resourceType": "File",
+   "self": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/details/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026219.h05v04.061.hdf",
+   "size": 13678621,
+   "status": "Online"
+  },
+  {
+   "downloadsLink": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/archives/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026219.h05v05.061.2026220031412.hdf",
+   "mtime": 1786158863,
+   "name": "MCDWD_L3_NRT.A2026219.h05v05.061.hdf",
+   "resourceType": "File",
+   "self": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/details/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026219.h05v05.061.hdf",
+   "size": 2786546,
+   "status": "Online"
+  },
+  {
+   "downloadsLink": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/archives/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026219.h06v04.061.2026220031514.hdf",
+   "mtime": 1786158938,
+   "name": "MCDWD_L3_NRT.A2026219.h06v04.061.hdf",
+   "resourceType": "File",
+   "self": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/details/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026219.h06v04.061.hdf",
+   "size": 8098615,
+   "status": "Online"
+  },
+  {
+   "downloadsLink": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/archives/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026219.h06v05.061.2026220031347.hdf",
+   "mtime": 1786158858,
+   "name": "MCDWD_L3_NRT.A2026219.h06v05.061.hdf",
+   "resourceType": "File",
+   "self": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/details/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026219.h06v05.061.hdf",
+   "size": 11757700,
+   "status": "Online"
+  },
+  {
+   "downloadsLink": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/archives/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026219.h20v04.061.2026220030417.hdf",
+   "mtime": 1786158448,
+   "name": "MCDWD_L3_NRT.A2026219.h20v04.061.hdf",
+   "resourceType": "File",
+   "self": "https://nrt3.modaps.eosdis.nasa.gov/api/v2/content/details/allData/61/MCDWD_L3_NRT/Recent/MCDWD_L3_NRT.A2026219.h20v04.061.hdf",
+   "size": 12681112,
+   "status": "Online"
+  }
+ ]
+}

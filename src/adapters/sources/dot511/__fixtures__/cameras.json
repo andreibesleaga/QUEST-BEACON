@@ -1,0 +1,120 @@
+[
+  {
+    "Id": 1001,
+    "Source": "GDOT",
+    "Roadway": "I-75",
+    "Direction": "Northbound",
+    "Latitude": 33.7756,
+    "Longitude": -84.3963,
+    "Location": "I-75 NB at Downtown Connector",
+    "Views": [
+      { "Id": 1, "Url": "https://511ga.org/map/Cctv/1001", "Status": "Enabled", "Description": "I-75 NB view" }
+    ]
+  },
+  {
+    "Id": 1002,
+    "Source": "GDOT",
+    "Roadway": "I-85",
+    "Direction": "Southbound",
+    "Latitude": 33.8140,
+    "Longitude": -84.3410,
+    "Location": "I-85 SB at Clairmont Rd",
+    "Views": [
+      { "Id": 2, "Url": "https://511ga.org/map/Cctv/1002", "Status": "Enabled", "Description": "I-85 SB view" }
+    ]
+  },
+  {
+    "Id": 1003,
+    "Source": "GDOT",
+    "Roadway": "I-285",
+    "Direction": "Eastbound",
+    "Latitude": 33.8478,
+    "Longitude": -84.3305,
+    "Location": "I-285 EB at Chamblee Tucker Rd",
+    "Views": [
+      { "Id": 3, "Url": "https://511ga.org/map/Cctv/1003", "Status": "Enabled", "Description": "I-285 EB view" }
+    ]
+  },
+  {
+    "Id": 1004,
+    "Source": "GDOT",
+    "Roadway": "SR-400",
+    "Direction": "Northbound",
+    "Latitude": 33.9200,
+    "Longitude": -84.3540,
+    "Location": "SR-400 NB at Abernathy Rd",
+    "Views": [
+      { "Id": 4, "Url": "https://511ga.org/map/Cctv/1004", "Status": "Enabled", "Description": "SR-400 NB view" }
+    ]
+  },
+  {
+    "Id": 1005,
+    "Source": "GDOT",
+    "Roadway": "I-20",
+    "Direction": "Westbound",
+    "Latitude": 33.7488,
+    "Longitude": -84.4610,
+    "Location": "I-20 WB at MLK Jr Dr",
+    "Views": [
+      { "Id": 5, "Url": "https://511ga.org/map/Cctv/1005", "Status": "Enabled", "Description": "I-20 WB view" }
+    ]
+  },
+  {
+    "Id": 1006,
+    "Source": "GDOT",
+    "Roadway": "I-75",
+    "Direction": "Southbound",
+    "Latitude": 33.6801,
+    "Longitude": -84.4193,
+    "Location": "I-75 SB at Old National Hwy",
+    "Views": [
+      { "Id": 6, "Url": "https://511ga.org/map/Cctv/1006", "Status": "Enabled", "Description": "I-75 SB view" }
+    ]
+  },
+  {
+    "Id": 1007,
+    "Source": "GDOT",
+    "Roadway": "I-85",
+    "Direction": "Northbound",
+    "Latitude": 33.9870,
+    "Longitude": -84.1400,
+    "Location": "I-85 NB at Indian Trail Rd",
+    "Views": [
+      { "Id": 7, "Url": "https://511ga.org/map/Cctv/1007", "Status": "Enabled", "Description": "I-85 NB view" }
+    ]
+  },
+  {
+    "Id": 1008,
+    "Source": "GDOT",
+    "Roadway": "I-675",
+    "Direction": "Northbound",
+    "Latitude": 33.6280,
+    "Longitude": -84.2760,
+    "Location": "I-675 NB at Anvil Block Rd",
+    "Views": []
+  },
+  {
+    "Id": 1009,
+    "Source": "GDOT",
+    "Roadway": "I-985",
+    "Direction": "Southbound",
+    "Latitude": 34.1070,
+    "Longitude": -83.9820,
+    "Location": "I-985 SB at Mundy Mill Rd",
+    "Views": [
+      { "Id": 9, "Url": "https://511ga.org/map/Cctv/1009", "Status": "Disabled", "Description": "Camera offline for maintenance" }
+    ]
+  },
+  {
+    "Id": 1010,
+    "Source": "GDOT",
+    "Roadway": "SR-141",
+    "Direction": "Northbound",
+    "Latitude": 34.0210,
+    "Longitude": -84.2330,
+    "Location": "SR-141 NB at Abbotts Bridge Rd",
+    "Views": [
+      { "Id": 10, "Url": "http://511ga.org/map/Cctv/1010", "Status": "Enabled", "Description": "Non-https view (dropped)" }
+    ]
+  }
+]

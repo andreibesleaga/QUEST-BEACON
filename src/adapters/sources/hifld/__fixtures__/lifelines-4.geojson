@@ -1,0 +1,142 @@
+{
+ "type": "FeatureCollection",
+ "crs": {
+  "type": "name",
+  "properties": {
+   "name": "EPSG:4326"
+  }
+ },
+ "properties": {
+  "exceededTransferLimit": true
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "id": 1829,
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -121.463113303436,
+     39.6511051705672
+    ]
+   },
+   "properties": {
+    "OBJECTID": 1829,
+    "LICENSEE": "NEW CINGULAR WIRELESS PCS, LLC",
+    "CALLSIGN": "KNKA692",
+    "LOCNUM": "2",
+    "LAT_DMS": "39,39,4",
+    "LATDIR": "N",
+    "LON_DMS": "121,27,47",
+    "LONDIR": "W",
+    "LOCADD": "Bloomer Hill Road",
+    "LOCCITY": "BERRY CREEK",
+    "LOCCOUNTY": "BUTTE",
+    "LOCSTATE": "CA",
+    "NEPA": "N",
+    "QZONE": " ",
+    "TOWREG": " ",
+    "SUPSTRUC": 43.9,
+    "ALLSTRUC": 46.3,
+    "STRUCTYPE": "MAST",
+    "LIC_ID": "11828"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 1832,
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -121.856413363286,
+     39.6417051381816
+    ]
+   },
+   "properties": {
+    "OBJECTID": 1832,
+    "LICENSEE": "NEW CINGULAR WIRELESS PCS, LLC",
+    "CALLSIGN": "KNKA692",
+    "LOCNUM": "6",
+    "LAT_DMS": "39,38,30",
+    "LATDIR": "N",
+    "LON_DMS": "121,51,23",
+    "LONDIR": "W",
+    "LOCADD": "9160 Aguas Frais Road",
+    "LOCCITY": "Chico",
+    "LOCCOUNTY": "BUTTE",
+    "LOCSTATE": "CA",
+    "NEPA": "N",
+    "QZONE": " ",
+    "TOWREG": " ",
+    "SUPSTRUC": 37.2,
+    "ALLSTRUC": 37.8,
+    "STRUCTYPE": "POLE",
+    "LIC_ID": "11828"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 2453,
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -121.938913353768,
+     39.4783051185864
+    ]
+   },
+   "properties": {
+    "OBJECTID": 2453,
+    "LICENSEE": "NEW CINGULAR WIRELESS PCS, LLC",
+    "CALLSIGN": "KNKN337",
+    "LOCNUM": "14",
+    "LAT_DMS": "39,28,42",
+    "LATDIR": "N",
+    "LON_DMS": "121,56,20",
+    "LONDIR": "W",
+    "LOCADD": "ROAD Z 13 MILES WEST/NORTHWEST OF BIGGS",
+    "LOCCITY": "BUTTE CITY",
+    "LOCCOUNTY": "GLENN",
+    "LOCSTATE": "CA",
+    "NEPA": "N",
+    "QZONE": " ",
+    "TOWREG": "1013367",
+    "SUPSTRUC": 61.9,
+    "ALLSTRUC": 64.6,
+    "STRUCTYPE": "TOWER",
+    "LIC_ID": "11848"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": 11212,
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -121.636713343746,
+     39.748105164222
+    ]
+   },
+   "properties": {
+    "OBJECTID": 11212,
+    "LICENSEE": "SACRAMENTO VALLEY LIMITED PARTNERSHIP",
+    "CALLSIGN": "KNKA463",
+    "LOCNUM": "2",
+    "LAT_DMS": "39,44,53",
+    "LATDIR": "N",
+    "LON_DMS": "121,38,12",
+    "LONDIR": "W",
+    "LOCADD": "(Paradise Relo) 5541 Vista Way",
+    "LOCCITY": "PARADISE",
+    "LOCCOUNTY": "BUTTE",
+    "LOCSTATE": "CA",
+    "NEPA": "N",
+    "QZONE": " ",
+    "TOWREG": " ",
+    "SUPSTRUC": 33.5,
+    "ALLSTRUC": 35,
+    "STRUCTYPE": "POLE",
+    "LIC_ID": "12533"
+   }
+  }
+ ]
+}

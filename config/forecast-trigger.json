@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "authority": "ADR-033 §6 (threshold-engine extension to forecast crossings) + FEV-9 — docs/architecture/decisions/ADR-033-forecast-likelihood-and-outlook.md. These are the gates a FORECAST_GAUGE_CATEGORY threshold rule must clear before it fires. They are BEACON's own operational parameters, not numbers any source publishes; each one below states its own basis. They are DATA on purpose (ADR-012): changing when an anticipatory DRAFT appears must be a reviewable config edit, never a literal buried in the evaluator.",
+  "firePolicy": "A FORECAST_GAUGE_CATEGORY rule fires only when ALL of these hold: the forecast flood category reaches the rule's value, the reading carries a lead time inside the window below, the reading carries a forecast issue instant inside the vintage window below, and (when minLikelihood is present) the reading carries a source-derived likelihood class at or above it. A fire yields a DRAFT alert and nothing else — promotion to an ACTUAL public CAP/EDXL alert always requires a human VERIFIER/EM approval (CONSTITUTION Art. XIII). No gate here can ever produce a public alert.",
+  "minLikelihood": {
+    "class": "LIKELY",
+    "basis": "The lowest class the GloFAS derived-exceedance-probability table in config/likelihood-thresholds.json can produce: that table leaves anything below 0.30 unclassified and its first band is LIKELY. Requiring LIKELY therefore means an anticipatory DRAFT is only ever raised off a probability signal the source itself put in its classified range, and a bare ordinal 'low' advisory tier (POSSIBLE) cannot raise one on its own. A DRAFT alert costs a human's attention under load, so the floor is deliberately not the weakest class BEACON can express."
+  },
+  "leadTime": {
+    "minHours": 0,
+    "maxHours": 168,
+    "basis": "minHours 0 (inclusive) rejects a negative lead time: a crossing instant already in the past is a stale forecast, not an anticipatory one, and an observed crossing is what the GAUGE_CATEGORY target already covers. maxHours 168 (7 days) is BEACON'S OWN operational window and is NOT a source-published parameter — GloFAS reporting points are defined over a 30-day horizon (audit/DATA_SOURCE_VERIFICATION.md row 36), and a DRAFT alert three weeks ahead of a possible crossing is noise a duty officer cannot act on. It lives here so an operator running a longer-lead early-action protocol can widen it without a code change."
+  },
+  "vintage": {
+    "maxForecastAgeHours": 24,
+    "basis": "A reading must carry the source's own forecast issue instant, and that instant must be no more than one full source update cycle old. Copernicus GloFAS publishes one forecast run per day (update frequency 'daily', audit/DATA_SOURCE_VERIFICATION.md row 89; 'forecast issue date' is one of the documented reporting-point attributes), so a reading older than 24 h has necessarily been superseded by a newer run and must not fire as if it were current. A reading with no issue instant at all also cannot fire: absence of a vintage is not evidence of freshness."
+  }
+}

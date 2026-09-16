@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/cap-profiles/ipaws.schema.json",
+  "title": "BEACON CAP profile — IPAWS (transcribed from the published OASIS profile)",
+  "description": "Selected by CAP_PROFILE=ipaws. Applied AFTER schemas/cap-v1.2.schema.json and BEFORE the AlertSink records anything (ADR-036 §1). Passing this rule set is a self-check, NOT a conformance certification and NOT authorisation: BEACON performs no live IPAWS origination (IPAWS_ENABLED=off, CAP_EMIT_MODE=draft — ADR-010, Art. XIII). It produces + validates documents for the authority that owns the dissemination path.",
+  "$comment": "SOURCE OF EVERY RULE BELOW — transcribed, never invented (spec-delta §2): OASIS, 'Common Alerting Protocol, v. 1.2 USA Integrated Public Alert and Warning System Profile Version 1.0', Committee Specification 01, 13 October 2009, §2 (Tables 1 and 2). https://docs.oasis-open.org/emergency/cap/v1.2/ipaws-profile/v1.0/cap-v1.2-ipaws-profile-v1.0.html — Each rule carries the requirement text VERBATIM in its own $comment. Rules from the same source that are deliberately NOT enforced here are listed in x-transcribed-not-enforced below, with the reason, so the transcription is complete and the gap is visible rather than silent.",
+  "type": "object",
+  "required": ["code", "info"],
+  "properties": {
+    "status": {
+      "$comment": "VERBATIM: \"A value of 'Actual' SHALL be used for messages intended for dissemination to the public, including test messages intended for delivery to the public.\" Enforced as a constant because this rule set runs ONLY on the pre-emit path — i.e. only for documents that are, by definition, intended for dissemination. A Draft preview never reaches a profile gate.",
+      "const": "Actual"
+    },
+    "code": {
+      "$comment": "VERBATIM: \"Value SHALL include the string 'IPAWSv1.0' to indicate the Profile version in use.\" Supplied by configuration (CapOptions.code), never hardcoded by the mapper: BEACON must not assert a profile version it was not configured for.",
+      "type": "array",
+      "contains": { "const": "IPAWSv1.0" }
+    },
+    "info": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["expires", "eventCode", "area"],
+        "properties": {
+          "expires": {
+            "$comment": "VERBATIM: \"REQUIRED.\" (base CAP v1.2 makes <expires> optional; the profile does not.)",
+            "type": "string",
+            "minLength": 1
+          },
+          "eventCode": {
+            "$comment": "VERBATIM: \"Messages intended for EAS, CMAS and HazCollect dissemination MUST include one and only one instance of this with a <valueName> of 'SAME' and using a SAME-standard three-letter value.\" Enforced unconditionally because selecting CAP_PROFILE=ipaws is precisely the statement 'validate as if for IPAWS dissemination'. The three-letter form is enforced as a shape (^[A-Z]{3}$); the SAME code LIST itself is not reproduced here — BEACON does not ship a copy of a code table it cannot keep current, and an unknown-but-well-formed code is the authority's to reject.",
+            "type": "array",
+            "contains": {
+              "type": "object",
+              "required": ["valueName", "value"],
+              "properties": {
+                "valueName": { "const": "SAME" },
+                "value": { "type": "string", "pattern": "^[A-Z]{3}$" }
+              }
+            },
+            "minContains": 1,
+            "maxContains": 1
+          },
+          "area": {
+            "$comment": "VERBATIM: \"At least one <area> block MUST be present.\"",
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "VERBATIM: \"All related messages that have not yet expired MUST be referenced for 'Update' and 'Cancel' messages.\" Restated here so the profile file reads standalone; schemas/cap-v1.2.schema.json already enforces the same conditional, and src/domain/alert.ts rejects a reference-less UPDATE/CANCEL earlier still, at authoring time. BEACON cannot verify the 'all ... that have not yet expired' part — it references the alert being superseded, which is what buildFollowUpAlert guarantees; completeness across a longer chain is the operator's, and is recorded as a limitation.",
+      "if": {
+        "properties": { "msgType": { "enum": ["Update", "Cancel"] } },
+        "required": ["msgType"]
+      },
+      "then": { "required": ["references"] }
+    }
+  ],
+  "x-transcribed-not-enforced": [
+    {
+      "element": "parameter (EAS-ORG)",
+      "verbatim": "Messages intended for EAS and/or HazCollect dissemination MUST include an instance of <parameter> with a <valueName> of 'EAS-ORG' with a <value> of the originator's 'SAME organization code.'",
+      "reason": "Conditional on EAS/HazCollect dissemination specifically. BEACON has no EAS or HazCollect path and is not an originating organization with a SAME organization code, so requiring the element would force operators to fabricate one. CapOptions.parameter carries it when a real originator supplies it."
+    },
+    {
+      "element": "resourceDesc / mimeType",
+      "verbatim": "A value of 'EAS Broadcast Content' SHALL be used to indicate elements intended for EAS broadcast. A mimeType of 'audio/x-ipaws-audio', 'audio/x-ipaws-streaming-audio', 'video/x-ipaws-video' and 'video/x-ipaws-streaming-video' SHALL be used to identify broadcast content.",
+      "reason": "Applies to CAP <resource> blocks. BEACON emits no <resource> block at all (no broadcast media is produced), so there is nothing to constrain."
+    },
+    {
+      "element": "geocode (SAME)",
+      "verbatim": "At least one <geocode> with a <valueName> of 'SAME' and a six-digit SAME location value SHOULD be present.",
+      "reason": "A SHOULD, not a MUST. Enforcing it would turn a recommendation into a blocker for non-US regions. CapOptions.geocode writes it into every <area> block when configured."
+    },
+    {
+      "element": "info (cross-block agreement)",
+      "verbatim": "All <info> blocks in a single alert MUST relate to a single incident or update, with the same <category> and <eventCode> values.",
+      "reason": "Not expressible in JSON Schema (it constrains array items relative to each other). Enforced in CODE and blocking on the same pre-emit path: capMachineValuesAgree() in src/adapters/interop/cap-mapper.ts compares category, eventCode, responseType, urgency, severity, certainty, web, parameter and area across every <info> block and fails the emission if any differ."
+    },
+    {
+      "element": "effective / onset",
+      "verbatim": "Ignored if present. Alerts SHALL be effective upon issuance.",
+      "reason": "A receiver-behaviour statement, not a document constraint. BEACON emits neither element, so there is nothing to validate."
+    }
+  ]
+}

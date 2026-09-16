@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beacon.local/schemas/d6-volunteer-team.schema.json",
+  "title": "BEACON D6-1 Volunteer Team — new aggregate-only fields",
+  "description": "The NEW optional fields FR-D6-1 (ADR-035 §4) would add to a Resource of kind 'TEAM' — a volunteer team is tasked and tracked as a UNIT, never as a roster of named individuals (Art. XIV; ADR-035 §4 hard boundary: 'no person-identifying field may exist on any D6 entity'). Scoped to ONLY the new fields, not the whole Resource entity (id/kind/status/orgId/geom already exist at src/domain/resource.ts and are unchanged by this schema). D6.0 (this wave) builds the no-person-identifying-field GUARD MECHANISM, not the D6 modules themselves: this file has no application/domain/UI wiring (RESOURCE_KINDS, the DB CHECK, the board icon map, the port are all NOT changed) — it exists purely so the guard's Layer B (schemas/d6-*.schema.json recursive walk, tests/architecture/d6-no-pii.test.ts) has one real, on-disk target to walk end-to-end, matching the exact fields ADR-035 §4 names in its own worked example.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "const": "TEAM",
+      "description": "The Resource.kind discriminator this fields object would extend."
+    },
+    "callsign": {
+      "type": "string",
+      "description": "Free-text UNIT designator, e.g. 'TEAM ALPHA 3'. RECORDED RESIDUAL RISK (ADR-035 §4): structure cannot stop a human typing a person's name into a free-text field. This pattern + maxLength MITIGATE (constrain the shape to an uppercase unit designator) — they do not eliminate the risk, and it is accepted and documented rather than claimed solved.",
+      "pattern": "^[A-Z0-9][A-Z0-9 \\-/]{1,23}$",
+      "maxLength": 24
+    },
+    "headcount": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "An AGGREGATE count of people on the team — a tally, never a roster or a list of names (Art. XIV)."
+    },
+    "skills": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 40 },
+      "description": "Team-level capability tags (e.g. 'chainsaw', 'swiftwater'), never tied to a named individual."
+    },
+    "availability": {
+      "type": "string",
+      "enum": ["AVAILABLE", "COMMITTED", "OFF_DUTY"],
+      "description": "Team-level (not per-person) availability state."
+    }
+  }
+}

@@ -1,0 +1,142 @@
+BEACON — Browser-based Emergency Awareness & Coordination Open Network
+Copyright 2026 Andrei Besleaga and the BEACON contributors.
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+================================================================================
+Third-party data attributions (free/open sources — wired adapters + planned catalog)
+================================================================================
+BEACON consumes only free, open, license-compatible data. Attribution is required
+by several sources and is reproduced here (and surfaced in-app via provenance).
+
+45 sources have a wired adapter. This is machine-verifiable, and was re-verified
+on 2026-09-16: `config/adapters.json` (45 rows) and the typed `ADAPTER_FACTORIES`
+map in `src/main/adapter-registry.ts` (45 entries) are an EXACT id-for-id
+match — firms, nws, nwps, glofas, gdacs, meteoalarm-ro, meteoalarm-gr,
+meteoalarm-es, wmo-swic, open-meteo, usgs-water, gdelt, reliefweb, agency-rss,
+bluesky, mastodon, nifc, effis, osm-overpass, worldpop, census, nfhl, eagle-i,
+opencellid, itu, camara-gsma, caltrans-cctv, alertwildfire, windy-webcams,
+dot511, cnadnr-ro, metno, anm, hdxpop, hifld, eonet, cemsrm, openfema, caphub,
+lanceflood, nri, openaq, airnow, sensorcommunity, shelters-fema. All 45 are attributed below.
+
+"Wired" here means the adapter exists and its port registration is validated at
+boot. WHICH of the 45 are additionally CONSUMED by the live COP/map composition
+is a separate question with a single authority — audit/DATA_SOURCE_VERIFICATION.md
+§0 — and is deliberately not restated in this file. Four are known NOT to be
+consumed: `itu` and `camara-gsma` (operator-gated MOCK-only plugins by design),
+`hifld` (registered but HELD out of every region's allowlist pending a
+merge-not-replace slot design — its static 2019 snapshot displaces the seeded
+infrastructure the outage derivation depends on) and `dot511` (covers Georgia
+only). Attribution is reproduced for all 45 regardless, since a MOCK/CACHED rung still carries the upstream
+provider's recorded data.
+
+The "Not-yet-wired" entries further below are attribution-reserved for genuinely
+planned adapters (`config/planned-sources.md`) and are NOT consumed by the running
+app at all. Each is listed with its compatible license.
+
+Wired (45 adapters; one line may attribute several):
+- NASA FIRMS (active fire) ......................... U.S. Government, public domain
+- NOAA/NWS api.weather.gov (weather/alerts) ........ U.S. Government, public domain
+- NOAA NWPS (river/flood forecasts) ................ U.S. Government, public domain
+- USGS Water Services (gauges) ..................... U.S. Government, public domain
+- GDACS (global disaster alerts) .................. open, attribution
+- Open-Meteo (weather) ............................ CC BY 4.0 (non-commercial free tier)
+- Copernicus EMS — GloFAS (flood forecasts) ....... Copernicus open licence
+- EUMETNET MeteoAlarm (EU/Romania alerts) ......... MeteoAlarm terms (attribution)
+- EUMETNET MeteoAlarm — Greece / Spain per-country Atom (same generic adapter) .. MeteoAlarm terms
+  (attribution); mandatory credit "Data provided by EUMETNET members" (ES provider: AEMET)
+- PAGASA public alerts via the WMO SWIC CAP relay (Philippines) .. **CC BY 4.0** (declared verbatim in
+  PAGASA's own feed); relay additionally under the WMO Unified Data Policy (Res. 1). Mandatory credit
+  "PAGASA-DOST / WMO Severe Weather Information Centre". Alert/advisory intel only — the tropical-cyclone
+  CAP polygon is PAGASA's Area of Responsibility (alerting extent), never rendered as a storm footprint.
+- GDELT (global news events) ...................... GDELT open, attribution
+- ReliefWeb (UN OCHA, reports/updates) ............. UN OCHA terms (attribution; registered appname)
+- Agency/media RSS aggregation (incl. GDACS/ReliefWeb/InciWeb + verified media) .. per-feed (verified open feeds)
+- Bluesky public AppView (vetted-social, corroboration-only) .. Bluesky public API terms
+- NIFC/WFIGS (fire perimeters) ..................... U.S. Government, public domain
+- Copernicus EFFIS/GWIS (EU/global fire) .......... Copernicus/JRC open (attribution)
+- OpenStreetMap via Overpass (infrastructure) ...... © OpenStreetMap contributors, ODbL 1.0 (attribution + share-alike)
+- WorldPop (population) ............................ CC BY 4.0
+- US Census Bureau (ACS 5-year, population) ........ U.S. Government, public domain
+- FEMA NFHL (flood zones) .......................... U.S. Government, public domain
+- FEMA ESF#6 Shelter System (shelter directory) .... U.S. Government, public domain (17 U.S.C. §105);
+    the service's own copyrightText credits three parties, so all three are named:
+    "FEMA, Mass Care, American Red Cross"
+- DOE/ORNL EAGLE-I (power outages) ................. U.S. Government, public domain
+- OpenCelliD (cell coverage) ...................... CC BY-SA (attribution + share-alike)
+- ITU connectivity (aggregate; MOCK-only, gated data) .. ITU terms (gated)
+- CAMARA / GSMA Open Gateway (telecom; MOCK-only, operator-gated) .. operator terms (CAMARA/GSMA)
+- Caltrans District CCTV (US-CA traffic cameras) .......... Caltrans open data; credit "Caltrans"
+- ALERTCalifornia / ALERTWildfire (US fire-spotting PTZ cameras) .. CC BY-NC-ND 4.0 (imagery;
+  link-only use — never rehosted); mandatory credit "ALERTCalifornia | UC San Diego"
+- Windy Webcams API v3 (global webcams) .................. Windy Webcams API ToS (link-only;
+  attribution required); mandatory UI credit "Webcams provided by windy.com"
+- 511 DOT (US state traveler-info traffic cameras) ........ State DOT open data (developer key);
+  credit "511 DOT (state traveler info)"
+- CNADNR/CNAIR Trafic Live (RO national-road cameras; MOCK-only, hand-curated) .. official public
+  agency pages (link-only); credit "CNAIR (cnadnr.ro)"
+
+Live-demo increment S2 (2026-08-08) — 11 further wired adapters:
+- Mastodon public instance API (vetted-social, corroboration-only) .. per-instance ToS (mastodon.social:
+  public timeline/hashtag read is unauthenticated and permitted); posts are aggregated + cited, never
+  auto-trusted (Art. XIV), and the recorded fixture is structurally real with content anonymized.
+- met.no Locationforecast (Norwegian Meteorological Institute) ..... NLOD / CC BY 4.0; credit
+  "Data from MET Norway". Their ToS REQUIRES an identifying contact User-Agent (METNO_USER_AGENT) —
+  BEACON fail-fasts on LIVE without one rather than sending an anonymous request.
+- ANM — Administrația Națională de Meteorologie (Romania) .......... public agency data (attribution)
+- HDX / UN OCHA CKAN (population + impact datasets) ................ per-dataset (predominantly CC BY /
+  CC BY-IGO); each record carries its own dataset licence in provenance.
+- HIFLD (US lifeline infrastructure) .............................. U.S. Government, public domain.
+  STATIC 2019 package — the HIFLD Open portal was discontinued; used as context, never as fresh truth.
+- NASA EONET (curated natural-event feed) ......................... U.S. Government, public domain
+- Copernicus EMS Rapid Mapping (activations, e.g. EMSR758) ......... Copernicus open licence (attribution)
+- OpenFEMA (declared disasters, PA/IA programs) .................... U.S. Government, public domain
+- Worldwide official-CAP aggregation (Alert-Hub / IFRC hub) ........ NO single aggregate licence grant:
+  each relayed alert carries its OWN issuing authority and terms, cited per-alert. Ships CACHED for
+  exactly that reason.
+- NASA LANCE NRT (near-real-time granule availability) ............. U.S. Government, public domain;
+  Earthdata token required for LIVE. Emits which NRT products cover a bbox/date — NOT observed extent.
+- FEMA National Risk Index ......................... U.S. Government, public domain (see below: parsed
+  but not yet emitted as a domain fact — provenance/context only)
+- NASA GIBS / Worldview imagery (vision `burn-area` rung) .......... U.S. Government, public domain;
+  keyless WMTS snapshots (MODIS/VIIRS — Sentinel-2 is NOT served keyless by GIBS). Imagery is analyzed
+  advisory-only and never rehosted.
+- OpenAQ v3 (global air quality aggregate) ......... per-location open licences (typically CC BY 4.0),
+  attribution required — "OpenAQ and the contributing networks". Wired 2026-08-08 (S3) with the SitRep
+  air-quality threshold fact; LIVE requires a free API key.
+- AirNow (US EPA official AQI; keyless file product) .. U.S. Government, public domain; attribution
+  requested and the PRELIMINARY status of hourly observations stated. Wired 2026-08-08 (S3);
+  North-America coverage only (NOT_COVERED elsewhere).
+- Sensor.Community (citizen PM sensor network) ...... ODbL 1.0 (database) / DbCL 1.0 (contents) —
+  attribution + SHARE-ALIKE; required credit "Data: Sensor.Community contributors". Wired 2026-08-08
+  (S3). Raw concentrations only — BEACON never derives an AQI category from them.
+
+Not-yet-wired (attribution-reserved, planned catalog — see config/planned-sources.md):
+- Google FloodHub (flood forecasts) ............... CC BY 4.0 (gated/waitlist; MOCK in demo)
+- FEMA IPAWS (alert origination) .................. requires FEMA authority/MOU — out of scope
+
+Wired as a FEATURE adapter (not a source adapter, so it is not in config/adapters.json):
+- OpenRouteService (hazard-avoiding routing) ....... © openrouteservice.org by HeiGIT, CC BY 4.0
+  (selected by FEATURE_ROUTING=ors; degrades to the hazard-avoiding heuristic without a key)
+
+Deliberately EXCLUDED (license-incompatible with Apache-2.0 — never bundled):
+- xView2 / xBD (building-damage imagery+labels) ... CC BY-NC-SA 4.0 → evaluation/model-only, not shipped.
+- Georgia Tech IODA (internet-outage measurement) .. "Copyright © 2021-2025 Georgia Tech Research
+  Corporation. All Rights Reserved." — a public, keyless API with NO open-licence grant. An adapter was
+  written and unit-tested, then deleted unregistered (2026-08-08). Consequence stated plainly: non-US
+  regions have NO feed-based outage signal; Romania's outage layer is derived-only and says so.
+
+Full per-source verification (endpoints, auth, rate limits, coverage, verdicts):
+  audit/DATA_SOURCE_VERIFICATION.md
+
+================================================================================
+Third-party software: see package.json and the generated CycloneDX SBOM (release
+artifact). All runtime dependencies carry OSI-approved permissive licenses
+(see docs/LIBRARIES.md).
+================================================================================
+
+## Region boundaries (config/boundaries/*.geojson)
+
+Natural Earth 1:50m cultural vectors, v5.1.1 — `ne_50m_admin_0_countries` (Romania, Spain, Greece,
+Philippines) and `ne_50m_admin_1_states_provinces` (California). Public domain (no attribution required;
+given anyway). Coordinates rounded to four decimals (~11 m). https://www.naturalearthdata.com/

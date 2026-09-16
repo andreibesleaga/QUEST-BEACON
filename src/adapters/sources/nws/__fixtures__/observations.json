@@ -1,0 +1,38 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-121.4936, 38.5069] },
+      "properties": {
+        "timestamp": "2026-07-05T21:15:00+00:00",
+        "temperature": { "unitCode": "wmoUnit:degC", "value": 34.4 },
+        "windSpeed": { "unitCode": "wmoUnit:km_h-1", "value": 18.36 },
+        "windDirection": { "unitCode": "wmoUnit:degree_(angle)", "value": 200 },
+        "relativeHumidity": { "unitCode": "wmoUnit:percent", "value": 22.7 }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-122.2971, 37.72] },
+      "properties": {
+        "timestamp": "2026-07-05T21:10:00+00:00",
+        "temperature": { "unitCode": "wmoUnit:degC", "value": 21.1 },
+        "windSpeed": { "unitCode": "wmoUnit:km_h-1", "value": 25.2 },
+        "windDirection": { "unitCode": "wmoUnit:degree_(angle)", "value": 250 },
+        "relativeHumidity": { "unitCode": "wmoUnit:percent", "value": 61.4 }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-119.7181, 36.7758] },
+      "properties": {
+        "timestamp": "2026-07-05T21:05:00+00:00",
+        "temperature": { "unitCode": "wmoUnit:degC", "value": 39.0 },
+        "windSpeed": { "unitCode": "wmoUnit:km_h-1", "value": 7.2 },
+        "windDirection": { "unitCode": "wmoUnit:degree_(angle)", "value": 315 },
+        "relativeHumidity": { "unitCode": "wmoUnit:percent", "value": 15.2 }
+      }
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "_meta": {
+    "purpose": "D5.5 overlay fixture — published Copernicus EMS rapid-mapping products, fed through the REAL makeDamageOverlayProduct factory (src/domain/damage-overlay.ts).",
+    "honesty": "These are ILLUSTRATIVE product records in the real product's shape, not a recorded API response: BEACON has no EMS adapter and this module is consume-only (it never requests an activation and never dereferences viewUrl). The activation code and product-id pattern follow the publisher's published naming so the shape is realistic; the fixture is not presented as a live capture.",
+    "clock": "fixed — production dates precede the project's fixed test instant 2026-07-05T22:00:00Z; the last entry is deliberately FUTURE-dated to exercise the flag-never-mis-age path",
+    "shape": "src/domain/damage-overlay.ts MakeDamageOverlayProductInput[]"
+  },
+  "products": [
+    {
+      "productId": "EMSR773_AOI01_DEL_PRODUCT_r1",
+      "activationCode": "EMSR773",
+      "productType": "DELINEATION",
+      "areaOfInterest": "Lower valley — AOI01",
+      "producedAt": "2026-07-03T08:00:00Z",
+      "provider": "Copernicus Emergency Management Service",
+      "licence": "CC BY 4.0 — © European Union, Copernicus EMS",
+      "viewUrl": "https://emergency.copernicus.eu/mapping/list-of-components/EMSR773"
+    },
+    {
+      "productId": "EMSR773_AOI02_GRA_PRODUCT_r1",
+      "activationCode": "EMSR773",
+      "productType": "GRADING",
+      "areaOfInterest": "Eastern district — AOI02",
+      "producedAt": "2026-07-04T16:30:00Z",
+      "provider": "Copernicus Emergency Management Service",
+      "licence": "CC BY 4.0 — © European Union, Copernicus EMS",
+      "viewUrl": "https://emergency.copernicus.eu/mapping/list-of-components/EMSR773/AOI02"
+    },
+    {
+      "productId": "EMSR773_AOI03_DEL_PRODUCT_r2",
+      "activationCode": "EMSR773",
+      "productType": "DELINEATION",
+      "areaOfInterest": "Ridge corridor — AOI03",
+      "producedAt": "2026-07-09T09:00:00Z",
+      "provider": "Copernicus Emergency Management Service",
+      "licence": "CC BY 4.0 — © European Union, Copernicus EMS",
+      "viewUrl": "https://emergency.copernicus.eu/mapping/list-of-components/EMSR773/AOI03"
+    }
+  ]
+}
