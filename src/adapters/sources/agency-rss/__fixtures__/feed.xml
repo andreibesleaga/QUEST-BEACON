@@ -5,11 +5,11 @@
     <link>https://www.gdacs.org/</link>
     <copyright>public domain</copyright>
     <description>Near real-time notification about natural disaster with a potential humanitarian impact</description>
-    <managingEditor>stefano.paris@ext.ec.europa.eu</managingEditor>
+    <managingEditor>rss-feed@example.org</managingEditor>
     <!--Records number 170-->
     <!--Start 7/15/2026 10:55:02 AM-->
     <!--=Start 7/15/2026 10:55:02 AM-->
-    <webMaster>stefano.paris@ext.ec.europa.eu</webMaster>
+    <webMaster>rss-feed@example.org</webMaster>
     <pubDate>Wed, 15 Jul 2026 08:55:02 GMT</pubDate>
     <atom:link href="https://www.gdacs.org/xml/rss.xml" rel="self" type="application/rss+xml" />
     <item>

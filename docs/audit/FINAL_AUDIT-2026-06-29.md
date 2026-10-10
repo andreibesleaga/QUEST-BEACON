@@ -3,7 +3,7 @@
 *Whole-project audit after the S00→S03 spec base + S03 consistency fixes, run 2026-06-27 via three
 parallel read-only auditors (logic/golden-thread, semantic/informational, simplification) over all 40
 committed artifacts (requirements, discovery, architecture + 16 ADRs, SPEC, OpenAPI, schemas, DDL,
-configs, audit). Cross-checked against the Phase-2 accepted baseline (`../../Phase2/submission/`).*
+configs, audit). Cross-checked against the Phase-2 accepted baseline (the Phase-2 submission (not part of this repository)).*
 
 > **The original 2026-06-27 audit is preserved below. The current, governing verdict is the
 > POST-HARDENING audit immediately following.**
@@ -105,7 +105,7 @@ surface (openapi/schema/seed/policies) + the ~448-task backlog.*
   tags · golden-thread **Trace** · testable acceptance; TDD-first ordering. **267 `[PARALLEL]`, 117 `[SEC]`.**
 - **Coverage:** every FR-1…16, F1–F19, 22 API operations (21 paths), 19 entities, 37 source adapters
   (a pre-build S04 planning-catalog figure, dated 2026-07-01 — the shipped catalog is 27 registered
-  adapters; see `audit/DATA_SOURCE_VERIFICATION.md` §0), and the 3 redundancy
+  adapters; see `docs/audit/DATA_SOURCE_VERIFICATION.md` §0), and the 3 redundancy
   acceptance tests trace to ≥1 task. Blast-radius segregated (E6 proxy sequential + fail-closed before
   consumers; E7 auth before routes). orch-judge self-check **PASS** (`project/TASKS.md §7`).
 - **Change-resilience (per mandate):** epic-modular files, composite `E#·T-n` IDs, label-based cross-epic
@@ -278,6 +278,6 @@ present in `schemas/`. **S9** (ADR trim) **deferred** per the judgment-call note
 (json.load OK). No stray "EFAS" remains in active content.
 
 *Files touched: `docs/api/openapi.yaml`, `docs/SPEC.md`, `docs/requirements/PRD.md`,
-`docs/architecture/C4_ARCHITECTURE.md`, `docs/architecture/THREAT_MODEL.md`, `audit/CLARIFICATIONS.md`,
+`docs/architecture/C4_ARCHITECTURE.md`, `docs/architecture/THREAT_MODEL.md`, `docs/audit/v1/CLARIFICATIONS.md`,
 `docs/audit/S03_CONSISTENCY.md`, `schemas/schema.sql`, `schemas/MIGRATION_PLAN.md`,
 `schemas/source-ref.schema.json`, `.env.example`.*

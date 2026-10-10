@@ -191,7 +191,7 @@ source = add a manifest entry + an adapter file implementing the port. No core e
       "circuitBreaker": { "failureThreshold": 5, "cooldownSec": 120, "halfOpenTrials": 1 },
       "cache": { "ttlSec": 900 },
       "mock": { "fixture": "osm-overpass/lifelines.json" },
-      "verifiedTier": "LIVE"               // per audit/DATA_SOURCE_VERIFICATION.md
+      "verifiedTier": "LIVE"               // per docs/audit/DATA_SOURCE_VERIFICATION.md
     }
   ]
 }

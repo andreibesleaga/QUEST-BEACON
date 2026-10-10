@@ -4,7 +4,7 @@
 // declared, implemented, and called from NO production code path, so `GET /api/v1/stream` served `hello`
 // plus heartbeats forever. The COP still refreshed — on the client's 15 s polling rung — so nothing looked
 // broken, and every existing test passed. It was the sixth instance of "code exists, nothing runs it" in
-// this project, and it sat on **Timeliness**, the lowest-scored rubric category (4.2/5), behind a demo beat
+// this project, and it sat on **Timeliness**, the rubric category Phase 2 flagged as weakest, behind a demo beat
 // the shot-list told the entrant to FILM.
 //
 // The unit test (`http-dispatcher.test.ts`) proves the dispatcher calls `publish`. That is necessary and

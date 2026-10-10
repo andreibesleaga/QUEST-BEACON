@@ -83,7 +83,7 @@ global-equivalent fallback rung directly.
 - **Constitution:** Art. XV (adapter coverage, graceful degradation), XVI (global-equivalent fallback rung), XI (first-class free-world data, global-equivalents), II (region-agnostic core).
 - **Decision source:** CLARIFICATIONS §A U4, §B Q9 / Q13 / §D.
 - **Related ADRs:** ADR-001 (adapters/registry in the hexagon), ADR-009 (global-equivalent rung), ADR-010 (GLIDE/GeoJSON cross-region identity/geometry), ADR-012 (region config).
-- **Config:** `../CONFIGURATION.md` §9 (`REGIONS_CONFIG`, `DEFAULT_REGION_ID`); data verdicts in `../../audit/DATA_SOURCE_VERIFICATION.md`.
+- **Config:** `../CONFIGURATION.md` §9 (`REGIONS_CONFIG`, `DEFAULT_REGION_ID`); data verdicts in `docs/audit/DATA_SOURCE_VERIFICATION.md`.
 - **Implementation:** S03 region schema/seed + S05 coverage-aware adapters — pending S04 gate.
 
 ## Review

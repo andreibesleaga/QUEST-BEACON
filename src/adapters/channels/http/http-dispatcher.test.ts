@@ -938,7 +938,7 @@ describe('handleHttp — a feature-route throw is contained (F-350)', () => {
 // served `hello` + heartbeats forever: the push channel was infrastructure with no producer, and the COP
 // refreshed only on the client's 15 s polling rung. The sixth instance of "code exists, nothing runs it"
 // in this project (after F-53, F-152, F-280, F-328, F-320) — and the one landing on **Timeliness**, the
-// lowest-scored rubric category.
+// rubric category Phase 2 flagged as weakest.
 describe('handleHttp — a mutation publishes a region-keyed SSE delta (F-416)', () => {
   /** Capture every publish without changing behaviour, so the assertions are about the REAL dispatcher. */
   function capturingDeps(): { deps: HttpDeps; published: { topic: string; event: unknown }[] } {

@@ -12,13 +12,13 @@
 > evidence, production readiness, what's genuinely new, and the honest limitations. Everything below and
 > throughout `docs/` is the supporting detail behind it.
 
-> **Access.** Repository: https://github.com/andreibesleaga/QUEST-BEACON (private during judging; **access is granted on request**) · Live deployment: https://quest-beacon.up.railway.app (brought online for the judging window; its public picture needs no account, and the operator sign-in accounts are supplied with the entry). No access is needed to evaluate: **the uploaded archive is the complete, self-contained product** — `docker compose -f infra/docker-compose.yml up -d --build` reproduces the full COP with zero keys and zero network.
+> **Access.** Repository: https://github.com/andreibesleaga/QUEST-BEACON (public) · Live deployment: https://quest-beacon.up.railway.app (brought online for the judging window and on request; its public picture needs no account, and the operator sign-in accounts are supplied with the entry). No access is needed to evaluate: **the uploaded archive is the complete, self-contained product** — `docker compose -f infra/docker-compose.yml up -d --build` reproduces the full COP with zero keys and zero network.
 
 ## Why it exceeds the brief
 
-![Beacon Live 1](docs/screenshots/live/BEACON1.png)
-![Beacon Live 2](docs/screenshots/live/BEACON2.png)
-![Beacon Live 3](docs/screenshots/live/BEACON3.png)
+![BEACON live — California (US): fire, infrastructure and logistics on the common operating picture](docs/screenshots/live/BEACON1.png)
+![BEACON live — Romania, Romanian locale: flood layers and the situation report](docs/screenshots/live/BEACON2.png)
+![BEACON live — California (US): map layers, air quality and shelter capacity](docs/screenshots/live/BEACON3.png)
 
 Promised a concept → shipped a **live deployment** and one-command local reproduction with zero keys.
 Promised some live sources → **45 adapters**, 38 live-capable. Promised a US demo → **5 regions on 3
@@ -62,10 +62,10 @@ front of every model call · real Telegram broadcast of human-approved alerts ·
 external context deep-links · a WCAG 2.2-AA crisis-first UI that works air-gapped · an installable,
 offline-capable browser app (flag, ADR-047) that keeps the last public picture and says when it was saved.
 
-**Repository:** https://github.com/andreibesleaga/QUEST-BEACON (private during judging; **access on request**) · **Live deployment:** https://quest-beacon.up.railway.app — production posture, named-account sign-in, online for the judging window. Not required: the uploaded archive is the complete product and runs locally with one command (below).
+**Repository:** https://github.com/andreibesleaga/QUEST-BEACON (public) · **Live deployment:** https://quest-beacon.up.railway.app — production posture, named-account sign-in, online for the judging window and on request. Not required: the uploaded archive is the complete product and runs locally with one command (below).
 
 *Where the detail lives:* per-source verdicts in
-[`audit/DATA_SOURCE_VERIFICATION.md`](audit/DATA_SOURCE_VERIFICATION.md) · the delivery history in
+[`docs/audit/DATA_SOURCE_VERIFICATION.md`](docs/audit/DATA_SOURCE_VERIFICATION.md) · the delivery history in
 [`CHANGELOG.md`](CHANGELOG.md) · the contract of record in [`docs/SPEC.md`](docs/SPEC.md) · the
 criteria-by-criteria evidence map in [`JUDGE_MATRIX.md`](JUDGE_MATRIX.md).
 
@@ -135,7 +135,7 @@ project has been fighting, and it has bitten here before** (`depcruise 0/723`, `
 | [docs/SPEC.md](docs/SPEC.md) | the contract of record — **§13 is the limitations ledger** |
 | [docs/SUMMARY.md](docs/SUMMARY.md) | executive summary of the spec base |
 | [docs/requirements/PRD.md](docs/requirements/PRD.md) | requirements (FR-1…16, EARS) |
-| [audit/DATA_SOURCE_VERIFICATION.md](audit/DATA_SOURCE_VERIFICATION.md) | every data source, verified, with fallbacks (US · Romania · worldwide) |
+| [docs/audit/DATA_SOURCE_VERIFICATION.md](docs/audit/DATA_SOURCE_VERIFICATION.md) | every data source, verified, with fallbacks (US · Romania · worldwide) |
 | [project/TASKS.md](project/TASKS.md) | the build backlog + execution model |
 | [docs/ENGINEERING_PRINCIPLES.md](docs/ENGINEERING_PRINCIPLES.md) | the quality bar every phase honors |
 | [JUDGE_MATRIX.md](JUDGE_MATRIX.md) | **the state hub** — verification snapshot, Phase-2 → Phase-3 delivery map, the five judging criteria with evidence, production readiness, honest limitations, innovations, roadmap |
@@ -147,12 +147,13 @@ offline/air-gapped works) · free/open data only · fail-closed AI-compliance ga
 WCAG 2.2 AA crisis-first UX.
 
 ## Repo layout note
-`audit/` (root) = the **Phase-2 carry-over audits** (Phase-2 review, clarified decisions, and the living
-data-source verification catalog). `docs/audit/` = the **Phase-3 audits of record** (final audit,
-external and live verification, the unimplemented register). Both are authoritative for their scope.
+`docs/audit/` holds the audits of record: the **Phase-2 carry-over** (Phase-2 review and clarified
+decisions under `docs/audit/v1/`), the **living data-source verification catalog**
+(`docs/audit/DATA_SOURCE_VERIFICATION.md`), and the **dated Phase-3 audits** (`FINAL_AUDIT-2026-06-29.md`,
+`FINAL_LIVE_AUDIT-2026-08.md`, `FINAL-AUDIT-2026-09-16.md`, external and live verification, the
+unimplemented register).
 The product was built with a governed, AI-assisted SDLC whose working files are not part of the
-repository; its durable output — decisions, ADRs, audits, task ledgers — is committed under `docs/`,
-`audit/` and `project/`. Security disclosures: [SECURITY.md](SECURITY.md). Contributing:
+repository; its durable output — decisions, ADRs, audits, task ledgers — is committed under `docs/` and `project/`. Security disclosures: [SECURITY.md](SECURITY.md). Contributing:
 [CONTRIBUTING.md](CONTRIBUTING.md) · [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 ## License & attribution

@@ -218,7 +218,7 @@ POST /alerts/:id/approve PUBLIC → 403  {"code":"FORBIDDEN","message":"requires
 | **Comprehensiveness** | **30 registered adapters, 28 consumed** (recounted 2026-08-02; was `27/24`, which predated the three B3 aggregators + reflected a stale consumed-set — see §6), news/social fusion, outage/cell/weather/flood-zone COP layers, NFHL∩crest prediction, US+RO | Scenarios B/D/H, `*-01-cop.png` |
 | **Integration/Responsible-data** | Cited AI SitRep (F3), HITL DRAFT→ACTUAL, CAP/EDXL, consent+verify, no-PII (responder-gated), JWT | §4 outputs, Scenario F |
 | **Usability/Readiness** | Untrained monitor→assess→decide→act; WCAG 2.2 AA; phone + EOC; `docker compose up` reproducible | §3 workflow, Scenario E/G |
-| **Scenario-fit/Innovation** | Deterministic-AI-human + offline-first + logistics + free-data ≈ $0; compliance proxy; sustainability; EDXL round-trip | §4, `docs/audit/FINAL_LIVE_AUDIT.md` |
+| **Scenario-fit/Innovation** | Deterministic-AI-human + offline-first + logistics + free-data ≈ $0; compliance proxy; sustainability; EDXL round-trip | §4, `docs/audit/FINAL_LIVE_AUDIT-2026-08.md` |
 
 ---
 
@@ -283,4 +283,4 @@ alerts (HITL side-effect only — never an alternate emit path). All keys are fr
      update (Telegram retry semantics). Delete any webhook before switching back to the poller.
 
 Companion docs: [`docs/audit/LIVE_VERIFICATION.md`](audit/LIVE_VERIFICATION.md) (captured live evidence),
-[`docs/audit/FINAL_LIVE_AUDIT.md`](audit/FINAL_LIVE_AUDIT.md) (S00→S09 audit).
+[`docs/audit/FINAL_LIVE_AUDIT-2026-08.md`](audit/FINAL_LIVE_AUDIT-2026-08.md) (S00→S09 audit).

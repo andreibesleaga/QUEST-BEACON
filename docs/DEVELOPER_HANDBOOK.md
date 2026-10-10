@@ -269,7 +269,7 @@ fixtures, fresh server per Playwright run, serial browser workers.
 | Can a report become a public alert automatically? | No: `alert` is DRAFT until `POST /alerts/{id}/approve` by VERIFIER+; `CAP_EMIT_MODE` draft-only; audit chain (`routes/queue.ts`, `audit-chain.ts`) |
 | Where does precise location go? | Only to RESPONDER+ (`toReportItem(r, role)`); PUBLIC gets the generalised position; the PWA cache stores only anonymous answers |
 | Is it really offline-capable? | `npm run dev` with no `.env`; the Playwright gates run with zero egress; `NEXT_PUBLIC_BASEMAP_MODE=offline`; `NEXT_PUBLIC_PWA=on` for the browser |
-| How do you know the data is real? | `audit/DATA_SOURCE_VERIFICATION.md` per source; `docs/audit/LIVE_VERIFICATION.md`; `check:live` on the deployment; provenance on every envelope |
+| How do you know the data is real? | `docs/audit/DATA_SOURCE_VERIFICATION.md` per source; `docs/audit/LIVE_VERIFICATION.md`; `check:live` on the deployment; provenance on every envelope |
 | How portable to a new region? | `config/regions.json` + adapters with `coverage`; Romania, Spain, Greece, the Philippines shipped that way; `tests/zones` |
 | How is misinformation handled? | Social sources are corroboration-only and flagged, never merged (`Art. XIV`, `bluesky`/`mastodon` adapters, `sitrep-synthesis` grounding order) |
 | What is not done? | `docs/SPEC.md` §13, `docs/audit/UNIMPLEMENTED_REGISTER.md` — read before claiming anything |

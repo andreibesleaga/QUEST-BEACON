@@ -7,7 +7,7 @@
       "kind": "CONTINUOUS",
       "sourceField": "Gauge.exceedanceProbability",
       "unit": "dimensionless probability fraction in [0,1] — never a percentage, never rescaled",
-      "source": "Copernicus GloFAS reporting points publish a derived probability of exceeding the point's 2-/5-/20-year return-period threshold (https://confluence.ecmwf.int/display/CEMS/GloFAS+Reporting+Points; verified in audit/DATA_SOURCE_VERIFICATION.md row 36, tier CACHED, account-gated). BEACON reads that published number and nothing else.",
+      "source": "Copernicus GloFAS reporting points publish a derived probability of exceeding the point's 2-/5-/20-year return-period threshold (https://confluence.ecmwf.int/display/CEMS/GloFAS+Reporting+Points; verified in docs/audit/DATA_SOURCE_VERIFICATION.md row 36, tier CACHED, account-gated). BEACON reads that published number and nothing else.",
       "method": "deterministic threshold lookup on the source-published derived exceedance probability — no model, no interpolation, no smoothing, no cross-source fusion. The class is shown with the raw source value beside it.",
       "unclassifiedBelow": 0.3,
       "bands": [

@@ -49,4 +49,4 @@ without introducing a heavyweight IdP for a ~$0 open-source demo.
 ## Implementation status (2026-07-13, Phase B) — ✅ realized, gate green
 `resolvePrincipal`/`actorId`/`signDevToken(sub)`/`handleDevLogin` implemented + tested (unit + e2e + the
 cloud-hard-off regression). Confirmed fail-closed + spoof-proof by the Phase-C security audit
-(`docs/audit/FINAL_LIVE_AUDIT.md` §3).
+(`docs/audit/FINAL_LIVE_AUDIT-2026-08.md` §3).

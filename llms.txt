@@ -33,7 +33,7 @@ release (`docs/RELEASE_GUIDE.md` §2). The final audit of code and documentation
   `ALL_IDS` must force-MOCK every adapter id in `config/adapters.json`. Never weaken, skip, or
   vacuous-ify an assertion to make something pass; coverage floors are never lowered.
 - **Free/open data only; no ToS-protected scraping.** Every source's licence/attribution is tracked
-  in `NOTICE` + `audit/DATA_SOURCE_VERIFICATION.md`.
+  in `NOTICE` + `docs/audit/DATA_SOURCE_VERIFICATION.md`.
 - **Honest limitations.** Degradations, mock/cached modes and approximations are stated openly in the
   UI and the docs — never claim LIVE for CACHED/MOCK, never delete limitation wording, never let doc
   counts drift from code (`docs/audit/UNIMPLEMENTED_REGISTER.md` is the ledger).
@@ -57,8 +57,7 @@ release (`docs/RELEASE_GUIDE.md` §2). The final audit of code and documentation
   everything declared-but-not-real.
 
 The governed, AI-assisted SDLC that built the product kept its working files (agent governance,
-memory ledgers) outside the repository; their durable output is committed under `docs/`, `audit/` and
-`project/`.
+memory ledgers) outside the repository; their durable output is committed under `docs/` and `project/`.
 
 ## Commands (exact)
 
@@ -159,7 +158,7 @@ plus an ACL test.
   every source live and the honest ceiling.
 - [docs/LIVE_STATUS_SOURCE_OF_TRUTH.md](docs/LIVE_STATUS_SOURCE_OF_TRUTH.md): per-source truth on the
   reference deployment, produced by `npm run check:live`.
-- [audit/DATA_SOURCE_VERIFICATION.md](audit/DATA_SOURCE_VERIFICATION.md): per-source verdicts;
+- [docs/audit/DATA_SOURCE_VERIFICATION.md](docs/audit/DATA_SOURCE_VERIFICATION.md): per-source verdicts;
   [NOTICE](NOTICE): attribution and licences.
 - [docs/audit/FINAL-AUDIT-2026-09-16.md](docs/audit/FINAL-AUDIT-2026-09-16.md): the final audit —
   what is implemented and supported, what was found wrong and corrected, what remains.

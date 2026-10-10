@@ -185,7 +185,7 @@ dated `**2026-09-10 re-verified:**` clause appended. No section was rewritten.
 | 52 / 104 / 111 | the three class headings `(26)` / `(2)` / `(5)` | **Annotated** in place: `26 → **28**`, `2 → **1**`, `5 → **4**`, each tagged `as of 2026-09-10, WP A3`. | A heading that says "(26)" above a list of 28 entries is a defect on its own; the arrow keeps the original number visible. |
 | §3 all-live profile block (`class D/E stay honest`) | `SOURCE_GLOFAS_MODE` / `SOURCE_ANM_MODE` | **Added** a dated comment above the two lines pointing at footnotes 6 and 7, incl. the `SOURCE_GLOFAS_POINTS` value proven in G3. The two `=cached` lines themselves are unchanged. | §3 is outside §1 but would otherwise contradict it. The lines stay `cached` because the *mode decision* is the owner's; the comment removes the false implication that live is impossible. |
 
-### 3.2 `audit/DATA_SOURCE_VERIFICATION.md`
+### 3.2 `docs/audit/DATA_SOURCE_VERIFICATION.md`
 
 | Line(s) after edit | Row | Change | Why |
 |---|---|---|---|
@@ -199,7 +199,7 @@ dated `**2026-09-10 re-verified:**` clause appended. No section was rewritten.
 ## 4. What did **not** change
 
 * **No source file, test, fixture, schema or config was modified by A3.** This work package's entire
-  footprint is three files: `docs/LIVE_PRODUCTION_GUIDE.md`, `audit/DATA_SOURCE_VERIFICATION.md`, and this
+  footprint is three files: `docs/LIVE_PRODUCTION_GUIDE.md`, `docs/audit/DATA_SOURCE_VERIFICATION.md`, and this
   document. Note for whoever reads `git status` next: the tree carries many other modified files at the
   time of writing (`app/**`, `src/**`, `messages/**`, `.env.example`, `src/config/index.ts`,
   `docs/architecture/CONFIGURATION.md`, the two new ADRs, …) — **those belong to the other V2 work packages

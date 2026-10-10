@@ -34,7 +34,7 @@
 > history, not as the current count.
 
 45 adapters are registered. Their live-capability, verified against each adapter's own source and the
-per-row verdicts in [`audit/DATA_SOURCE_VERIFICATION.md`](../audit/DATA_SOURCE_VERIFICATION.md):
+per-row verdicts in [`docs/audit/DATA_SOURCE_VERIFICATION.md`](audit/DATA_SOURCE_VERIFICATION.md):
 
 | Class | Count | Meaning |
 |---|---|---|
@@ -466,6 +466,6 @@ whole design.
 
 *See also: [`docs/OPERATOR_GUIDE.md`](OPERATOR_GUIDE.md) (using the three core workflows),
 [`docs/CLOUD_DEPLOY_RAILWAY.md`](CLOUD_DEPLOY_RAILWAY.md) (one-platform deploy),
-[`audit/DATA_SOURCE_VERIFICATION.md`](../audit/DATA_SOURCE_VERIFICATION.md) (per-source verdicts and
+[`docs/audit/DATA_SOURCE_VERIFICATION.md`](audit/DATA_SOURCE_VERIFICATION.md) (per-source verdicts and
 evidence), [`docs/SPEC.md`](SPEC.md) §13 and
 [`docs/audit/UNIMPLEMENTED_REGISTER.md`](audit/UNIMPLEMENTED_REGISTER.md) (the honest-limitations ledgers).*

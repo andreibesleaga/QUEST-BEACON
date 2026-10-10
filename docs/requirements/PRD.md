@@ -50,7 +50,7 @@ Cross-cutting (apply to all four): **provenance/citations**, **deterministic→A
 ### 4.1 Delivery status (Phase-D "deliver the over-claims", 2026-07) — flagship claims now TRUE
 
 All four flagship features are **built and verified end-to-end** (gates green; see
-`../audit/RUBRIC_DEFENSIBILITY.md` + `../E2E_TESTING_PLAYBOOK.md`). The two capabilities previously scoped as
+`../E2E_TESTING_PLAYBOOK.md`). The two capabilities previously scoped as
 roadmap are now **delivered**, with their honest caveats kept:
 
 - **Flagship 2 — AI fusion (news/social) is REAL.** `src/application/sitrep-synthesis/news-grounding.ts`
@@ -267,11 +267,11 @@ carries `provenance[]` + `freshness`; SitRep carries `citations[]`.
 > the served-surface contrast: **`docs/SPEC.md` §13.11**; the honest per-path markers are already in
 > `docs/api/openapi.yaml` (`x-status: planned`).
 
-## 9. Data scope (sources by tier — see `../../audit/DATA_SOURCE_VERIFICATION.md`)
+## 9. Data scope (sources by tier — see `docs/audit/DATA_SOURCE_VERIFICATION.md`)
 
 > First-class **free-world** data only (Constitution XI). The per-source **LIVE/CACHED/MOCK** tier
 > verdicts are single-sourced (verified) in
-> [`../../audit/DATA_SOURCE_VERIFICATION.md`](../../audit/DATA_SOURCE_VERIFICATION.md) — the full
+> [`docs/audit/DATA_SOURCE_VERIFICATION.md`](../audit/DATA_SOURCE_VERIFICATION.md) — the full
 > source-by-source enumeration is **not duplicated here**. Headline: a **LIVE** golden-path set for the
 > California flagship (FIRMS/NWS/NWPS/USGS/Overpass/GDELT/ReliefWeb/ORS + GDACS/Open-Meteo global
 > secondary-LIVE), a **CACHED** tier for snapshot/periodic and non-US sources (incl. Copernicus
@@ -299,7 +299,7 @@ carries `provenance[]` + `freshness`; SitRep carries `citations[]`.
 
 ## 11. Security & privacy considerations
 
-RBAC (PUBLIC/RESPONDER/VERIFIER/EM — matrix in `../../audit/CLARIFICATIONS.md` §B.Q6); consent before
+RBAC (PUBLIC/RESPONDER/VERIFIER/EM — matrix in `docs/audit/v1/CLARIFICATIONS.md` §B.Q6); consent before
 intake; PII screened (incl. SOS images) and never logged/retained beyond incident; precise location
 responder-only; every state change → AUDIT_EVENT; full threat model at S02. CAP produced+validated, **no
 live IPAWS origination**.
@@ -346,7 +346,7 @@ in the deterministic exposure engine (§5.1 SPEC), surfaced on the COP and in ex
 
 - RBAC matrix final sign-off (proposed in CLARIFICATIONS §B.Q6) — confirm at S02.
 - Exact non-US flagship region (EU country) for the cached portability demo.
-- ~~Final per-source verdicts pending~~ — **DONE: verified in `../../audit/DATA_SOURCE_VERIFICATION.md`** (re-confirm live status at S05 before flipping any `SOURCE_*_MODE=live`).
+- ~~Final per-source verdicts pending~~ — **DONE: verified in `docs/audit/DATA_SOURCE_VERIFICATION.md`** (re-confirm live status at S05 before flipping any `SOURCE_*_MODE=live`).
 - ~~ORM choice (Prisma vs Drizzle)~~ — **RESOLVED at S02: Drizzle (ADR-013).**
 
 ## 14. Approval (S01 gate)

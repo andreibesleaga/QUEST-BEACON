@@ -49,7 +49,7 @@ The measured results live in **one place — `README.md` § Gates** — and are 
 | **Quality bar / Definition of Done (every phase)** | `docs/ENGINEERING_PRINCIPLES.md` |
 | **Deploy anywhere** (local · Docker · Railway · Kubernetes · other clouds) | `docs/DEPLOYMENT.md` → `infra/docker-compose.yml`, `infra/k8s/` |
 | Config (12-factor, everything env) | `docs/architecture/CONFIGURATION.md` + `.env.example` |
-| Data sources + verdicts (LIVE/CACHED/MOCK) + consumption counts | `audit/DATA_SOURCE_VERIFICATION.md` (§0 = wired/consumed authority; §10 = deep fallback catalog) |
+| Data sources + verdicts (LIVE/CACHED/MOCK) + consumption counts | `docs/audit/DATA_SOURCE_VERIFICATION.md` (§0 = wired/consumed authority; §10 = deep fallback catalog) |
 | Data-source attribution + licences | `NOTICE` |
 | Build backlog (~496 atomic tasks) | `project/TASKS.md` → the 10 epic files in `project/tasks/` (E0, E1, E3–E10 — there is no E2 file); findings register: `project/TASKS-FINAL-VERSION.md` |
 | Pinned free/OSS libraries | `docs/LIBRARIES.md` |
@@ -60,7 +60,7 @@ The measured results live in **one place — `README.md` § Gates** — and are 
 | Security posture + what CI does and does **not** scan | `SECURITY.md` |
 
 > **Not in a clone:** the governed AI-assisted SDLC's working files (agent governance, skills, memory)
-> are not part of the repository. Their durable output is committed under `docs/`, `audit/` and `project/`.
+> are not part of the repository. Their durable output is committed under `docs/` and `project/`.
 
 ## Iron rules (never break)
 LLM never computes numbers (F3) · every SitRep field cited (F2) · provenance+freshness on every response

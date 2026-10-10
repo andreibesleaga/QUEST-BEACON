@@ -15,7 +15,7 @@
 | 6 | **Provenance on everything.** Every datum → SOURCE_RECORD; every response → `provenance[]+freshness`; every SitRep field → `citations[]`. | **Art. XI** · **F1/F2** contract tests |
 | 7 | **Misinformation flagged, never merged.** Conflicting/low-authority signals lower `source_authority` confidence and are flagged — not asserted as fact. *Tier split (reconciles Phase-2 §6 wording): official agency **RSS/API** posts = authoritative-news tier (adapter T-175); **social-platform** posts — even from official accounts — = confidence-scored corroboration, never auto-trusted (T-177/T-179).* | Art. XIV · SPEC §5.4 · E8 T-380 |
 | 8 | **AI never invents.** Numbers are deterministic; LLM narrates cited facts only; every AI call passes the fail-closed compliance proxy. | **Art. XII** · **F3/F16** · ADR-017 |
-| 9 | **No scraping / ToS-protected platforms.** Free/open, license-compatible sources only (X/Twitter excluded; xView2 never bundled). | Art. XI · `NOTICE` · `audit/DATA_SOURCE_VERIFICATION.md` |
+| 9 | **No scraping / ToS-protected platforms.** Free/open, license-compatible sources only (X/Twitter excluded; xView2 never bundled). | Art. XI · `NOTICE` · `docs/audit/DATA_SOURCE_VERIFICATION.md` |
 | 10 | **Accountable.** Every state change and AI call is written to the hash-chained, append-only audit trail. | ADR-022 · AUDIT_EVENT (prev_hash/hash) · F19 |
 | 11 | **Honest limitations.** Source limits (FIRMS ≠ perimeters; EAGLE-I county-granular; cache staleness) are stated in the UI and docs. | Art. XI · freshness badges (FR-2) · E8 T-355 |
 

@@ -4,7 +4,7 @@
 correctness · completeness · non-redundancy · simplest-implementation (reuse libs/APIs) · redundancy/
 availability (OSS/free) · scalable/secure/reliable · MVP-out-of-the-box · rubric satisfaction · clean+safe
 code/arch/AI · usable · innovative · extensible · clear/concise/documented/searchable/testable — via **7
-parallel GABBE-persona read-only lenses**. Companion to `FINAL_AUDIT.md`; enforced against
+parallel GABBE-persona read-only lenses**. Companion to `FINAL_AUDIT-2026-06-29.md`; enforced against
 `docs/ENGINEERING_PRINCIPLES.md`.*
 
 ## Verdict: **BUILD-READY — sound, complete, defensible.** No true blockers.

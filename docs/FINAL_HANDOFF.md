@@ -28,9 +28,9 @@ is frozen at the `v1.0.0-submission` tag; the repository continues as the projec
 | Live deployment (`npm run check:live`, 2026-09-15 on main a1c76eb) | us-ca **12 pass / 2 warn / 0 fail** · ro **11 / 2 / 0** (anonymous; warnings = sources not live + signed-in checks skipped). The deployment is switched off between judging windows; re-run on the day it is brought up |
 
 **Method, not just numbers:** the final code-and-docs audit is `docs/audit/FINAL-AUDIT-2026-09-16.md`
-(what is implemented and supported, what was found wrong and corrected); correctness audited in `docs/audit/FINAL_AUDIT.md`, external facts in
+(what is implemented and supported, what was found wrong and corrected); correctness audited in `docs/audit/FINAL_AUDIT-2026-06-29.md`, external facts in
 `docs/audit/EXTERNAL_VERIFICATION.md`, live behaviour in `docs/audit/LIVE_VERIFICATION.md` and
-`docs/LIVE_STATUS_SOURCE_OF_TRUTH.md`, data sources per row in `audit/DATA_SOURCE_VERIFICATION.md`,
+`docs/LIVE_STATUS_SOURCE_OF_TRUTH.md`, data sources per row in `docs/audit/DATA_SOURCE_VERIFICATION.md`,
 security and AI governance in `docs/architecture/{THREAT_MODEL,COMPLIANCE_MATRIX}.md`, everything
 declared-but-not-real in `docs/audit/UNIMPLEMENTED_REGISTER.md`.
 

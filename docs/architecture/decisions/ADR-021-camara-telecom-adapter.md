@@ -23,7 +23,7 @@ and carries acute privacy obligations — so it cannot be a live demo dependency
 aggregate-only (no individual tracking, Art. XIV). We decide now because we want the *wireability* proven
 (zero-core-change plugin via the registry/manifest) and the canonical mapping fixed, while keeping the
 adapter MOCK for the demo and documenting it as a v1.1 plugin. The CAMARA SDK/OpenAPI live at
-`/home/andrei/work/camara/` (TypeScript SDK + unified OpenAPI aggregator).
+a local CAMARA SDK checkout (TypeScript SDK + unified OpenAPI aggregator).
 
 **Current state:** P13 `Telecom` port reserved; no telecom data wired. CAMARA SDK/OpenAPI available locally.
 **Constraint(s):** aggregate-only, no individual location/identity/device tracking (Art. XIV); free/open + offline-capable demo (live CAMARA is commercial — must default MOCK, Art. XVI); zero core change to add the adapter (adapter-contract §5, FR-10/OP2/OP3); advisory only — telecom signals never auto-alert and never override deterministic geometry (Art. XII/XIII); honest labeling (modeled/aggregate).
@@ -50,7 +50,7 @@ deployment with a GSMA Open Gateway agreement flips `SOURCE_CAMARA_MODE=live` �
 - Live CAMARA is commercial and carrier-specific; the demo only ever exercises the MOCK rung.
 - Aggregate-only mapping discards detail by design (acceptable — that detail is exactly what Art. XIV forbids).
 
-**Source:** CAMARA SDK/OpenAPI at `/home/andrei/work/camara/` (Population Density Data, Region Device Count, Connectivity Insights APIs); adapter-contract §5; DOMAIN_MODEL §6 (P13 Telecom); CAMARA/GSMA Open Gateway (public standard); the author's agentic-AI engineering framework (adapter discipline).
+**Source:** CAMARA SDK/OpenAPI (local checkout) (Population Density Data, Region Device Count, Connectivity Insights APIs); adapter-contract §5; DOMAIN_MODEL §6 (P13 Telecom); CAMARA/GSMA Open Gateway (public standard); the author's agentic-AI engineering framework (adapter discipline).
 
 ### Option B: Bake CAMARA into core / make it a live dependency
 Wire CAMARA calls directly or require live access for telecom layers.
@@ -75,7 +75,7 @@ fixture; it stays MOCK for the demo and is documented as a v1.1 plugin, flag-to-
 Because:
 1. It proves zero-core-change extensibility of the hexagon (manifest + adapter file only; adapter-contract §5) for a real, standards-backed telecom source.
 2. It is privacy-safe by construction — aggregate-only `TelecomSignal`, no individual tracking (Art. XIV) — and advisory-only, never auto-alerting or overriding deterministic geometry (Art. XII/XIII).
-3. `mode: "MOCK"` keeps the demo free/offline/reliable while a single config flip (`SOURCE_CAMARA_MODE=live`) enables it where a GSMA Open Gateway agreement exists (Art. XVI ladder), using the real CAMARA API definitions in `/home/andrei/work/camara/`.
+3. `mode: "MOCK"` keeps the demo free/offline/reliable while a single config flip (`SOURCE_CAMARA_MODE=live`) enables it where a GSMA Open Gateway agreement exists (Art. XVI ladder), using the real CAMARA API definitions in the local CAMARA SDK checkout.
 
 ---
 
@@ -116,7 +116,7 @@ Because:
 
 ## Links
 
-- **SDK / API:** CAMARA TypeScript SDK + unified OpenAPI at `/home/andrei/work/camara/` (Population Density Data, Region Device Count, Connectivity Insights, Device Location); CAMARA Project / GSMA Open Gateway (public standard).
+- **SDK / API:** CAMARA TypeScript SDK + unified OpenAPI (local checkout) (Population Density Data, Region Device Count, Connectivity Insights, Device Location); CAMARA Project / GSMA Open Gateway (public standard).
 - **Manifest entry:** `config/adapters.json` (`id: camara-gsma`, `port: Telecom`, `coverage: COUNTRIES`, `mode: MOCK`).
 - **Fixture:** `fixtures/camara-gsma/population-density.json` (aggregate-only; no PII).
 - **Contract:** `schemas/adapter-contract.md` §3/§5 (SourceAdapterPort, registry/manifest, redundancy ladder).

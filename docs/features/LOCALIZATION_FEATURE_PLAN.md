@@ -6,10 +6,10 @@
 > **Shipped behaviour of record: [`../SPEC.md`](../SPEC.md) §3.5** (incl. the localization "Known
 > limitations" set) and [`../architecture/CONFIGURATION.md`](../architecture/CONFIGURATION.md) §12a
 > (registry, `beacon-locale` cookie, add-a-language procedure).
-> **EXECUTION DOC OF RECORD: [`../../../CURRENT-MASTER-PLAN.md`](../../../CURRENT-MASTER-PLAN.md)**
+> **EXECUTION DOC OF RECORD: `CURRENT-MASTER-PLAN.md` (entrant planning file, not part of this repository)**
 > (all three features collapsed into one; this i18n content = master §2A / wave MW-A).
-> Detail annex: [`../../../CURRENT-PLAN.md`](../../../CURRENT-PLAN.md) (repo root). Build order
-> & integration: [`../../../CURRENT-PLANS-INTEGRATION.md`](../../../CURRENT-PLANS-INTEGRATION.md).
+> Detail annex: `CURRENT-PLAN.md` (entrant planning file, not part of this repository). Build order
+> & integration: `CURRENT-PLANS-INTEGRATION.md` (entrant planning file, not part of this repository).
 > Implemented plans are consolidated into `../../CHANGELOG.md`.
 
 Localizes all UI + alerts (nothing else) via translation files. **14 locales shipped:** the 12-locale

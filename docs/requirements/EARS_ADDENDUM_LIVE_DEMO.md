@@ -81,7 +81,7 @@
   (FIRMS and GDACS, both global), regardless of which regional sources are reachable.
 - **FR-LD-20** — IF a source is unreachable, gated, or licence-incompatible, THEN the system SHALL ship it
   CACHED or MOCK with written access instructions, or remove the source and every claim about it — and
-  SHALL NOT present it as live. *Proof:* `audit/DATA_SOURCE_VERIFICATION.md` verdict per source.
+  SHALL NOT present it as live. *Proof:* `docs/audit/DATA_SOURCE_VERIFICATION.md` verdict per source.
 - **FR-LD-21** — THE SYSTEM SHALL expose air-quality observations behind an `AirQualityPort`, and WHERE an
   AQI threshold is crossed SHALL emit it as a deterministic, cited SitRep fact (Art. XII, F2).
 

@@ -3,7 +3,7 @@
 // that shape to a canonical NewsItem. This is the ONLY place either raw feed shape exists; no upstream
 // field escapes above this module (AGENTS.md §3).
 //
-// VERIFIED SOURCES (audit/DATA_SOURCE_VERIFICATION.md §10.4/§10.5): the AGENCYRSS_FEEDS / AGENCYRSS_FEEDS_RO
+// VERIFIED SOURCES (docs/audit/DATA_SOURCE_VERIFICATION.md §10.4/§10.5): the AGENCYRSS_FEEDS / AGENCYRSS_FEEDS_RO
 // catalog — ReliefWeb, GDACS, EONET, FloodList, MeteoAlarm-equivalent agency wires, Al Jazeera/CBS world
 // news, and (RO) Digi24/ProTV/HotNews/Mediafax. Mixed RSS 2.0 and Atom shapes across the set (verified
 // 2026-07-02/07).

@@ -4,7 +4,7 @@
 > (offline → fully-live, US + Romania, all sources, AI, Telegram, routing, vision, logistics,
 > misinformation check, alerts/interop), what you must SEE at each step, and the final demo script
 > mapped to the 5 IEEE rubric categories. Companion detail: `E2E_TESTING_PLAYBOOK.md` (captured real
-> outputs + screenshots), `audit/FINAL_LIVE_AUDIT.md` (what is proven), `DEMO_SCRIPT.md` (video cut).
+> outputs + screenshots), `audit/FINAL_LIVE_AUDIT-2026-08.md` (what is proven), `DEMO_SCRIPT.md` (video cut).
 > Status of record **(recounted by machine 2026-08-02 — lens-7, F-411 class; every figure in the preserved
 > line below was stale)**: **30 adapters registered, 28 consumed**; the **two** not consumed by any shipped
 > zone are `itu` and `camara-gsma` (operator-gated MOCK-only, by design) — `usgs-water` **is** consumed now
@@ -299,7 +299,7 @@ DATA_SOURCE_COMPOSITION=adapters AUTH_DEV_TRUST_HEADER=on rm -rf .next && npm ru
 ## 4. Remaining human steps to contest end (9 Oct 2026)
 1. **You:** review + commit the `phase-d-deliver` diff; PR → main (Copilot review → merge — per your standing flow).
 2. **You:** run scenarios A→M above with your keys; file anything off as issues.
-3. Record the video per §3 (self-score against the rubric first — JUDGE_SCORE_PREDICTION.md §checklist).
+3. Record the video per §3 (self-score against the rubric first).
 4. Portal product submission: repo link (public state), video, updated FORM answers; attestations unchanged.
 5. Optional stretch (docs/architecture/MESSAGING_CHANNEL_OPTIONS.md): Matrix OSS channel for the
    air-gapped-alert on-camera moment.

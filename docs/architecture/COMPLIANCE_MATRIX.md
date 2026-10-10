@@ -46,7 +46,7 @@ Note: the sustainability-reporting and CAMARA items are **out-of-core optional p
 - **Status:** `implemented` = the control is BUILT, wired into the running app, and test/gate-verified
   (S00→S09 complete; Phase-B go-live merged). The compliance gateway, JWT/role-scope, semantic firewall,
   PII redact, deterministic-truth/F3, rate-limit, cost guardrails, and circuit-breaker degrade were all
-  confirmed present + fail-closed by the Phase-C security audit (see `docs/audit/FINAL_LIVE_AUDIT.md`).
+  confirmed present + fail-closed by the Phase-C security audit (see `docs/audit/FINAL_LIVE_AUDIT-2026-08.md`).
   (Historical note: earlier revisions marked rows `implemented-spec`/`planned-S05` during the spec phase.)
 - **Status:** `not-implemented` = the control is DESIGNED and specified here, and no code implements it.
   Three rows carry it (C20, C24, C26), corrected on 2026-09-11 after an audit found them marked

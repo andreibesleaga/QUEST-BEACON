@@ -2,8 +2,8 @@
 # Strategy (current): CANONICAL GABBE LAYOUT (matches Super-Brand / kaiban-distributed).
 # The GABBE kit + agent wiring + manifest (agents/, .claude/, .gabbe/) are LOCAL-ONLY — present on
 # disk and fully USED at runtime by the agent (governance, skills, memory, checkpoints), but NOT
-# committed (keeps the repo lean; the kit is regenerable from /home/andrei/work/AI/GABBE).
-# COMMITTED project work: audit/, docs/ (discovery, requirements, architecture incl. ADRs, api),
+# committed (keeps the repo lean; the kit is regenerable from the GABBE toolkit).
+# COMMITTED project work: docs/ (audit, discovery, requirements, architecture incl. ADRs, api),
 # schemas/, gabbe.config.json, .mcp.json, .env.example, README. IGNORE caches/runtime/build/secrets.
 
 # ── Secrets / env ───────────────────────────────────────────────────────────

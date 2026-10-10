@@ -81,7 +81,7 @@ project's core "comprehensiveness + adapter discipline, zero core change" claim 
    adapter directory (acl + adapter + fixtures + tests) + one manifest row + one `ADAPTER_FACTORIES` entry
    + a `SOURCE_<PREFIX>_MODE` (+ optional key). Mode/key gating means a gated/paid source ships MOCK/CACHED
    and flips LIVE per-deployment when the operator has the rights/key. The clause is mirrored into SPEC
-   §12.8 and `audit/DATA_SOURCE_VERIFICATION.md`.
+   §12.8 and `docs/audit/DATA_SOURCE_VERIFICATION.md`.
 
 ## Consequences
 
@@ -121,5 +121,5 @@ adapter + recorded fixture + tests; registry 22→27 (`src/main/adapter-registry
 `config/adapters.json` rows; live-seed consumption + CA/RO seed pins (`src/main/live-seed.ts`); violet
 camera layer + click-to-open + tooltip (`app/_components/map/build-layers.ts`); legend attribution. Gate
 green after CW0–CW4 (tsc 0 · eslint 0 · vitest 1816 pass/2 skip). See THREAT_MODEL T5.10/T5.11,
-`audit/DATA_SOURCE_VERIFICATION.md` "Live camera sources (E11)", and `docs/api/openapi.yaml`
+`docs/audit/DATA_SOURCE_VERIFICATION.md` "Live camera sources (E11)", and `docs/api/openapi.yaml`
 `GET /regions/{id}/map` `cameras` slice.

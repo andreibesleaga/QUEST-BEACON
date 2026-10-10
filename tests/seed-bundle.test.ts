@@ -6,7 +6,7 @@
 // DATABASE_URL before reading anything). Review caught what that proof could not: two registry loaders
 // resolve `config/*.json` relative to `import.meta.url`, which inside the bundle is the bundle's own path, so
 // in production the seed would have died on ENOENT before its first INSERT. Observed:
-//   seed failed: … ENOENT … open '/home/andrei/work/IEEE/config/regions.json'
+//   seed failed: … ENOENT … open '<workspace>/config/regions.json'
 //
 // So this test runs the REAL bundle with plain `node` from a fresh directory that holds only `config/`, the
 // way /app does in the runner image, against an unreachable database. The seed must get PAST every config

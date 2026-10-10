@@ -12,7 +12,7 @@
 `PUBLIC_REPORT.confidence` and "AI confidence" are referenced across the concept, but no method was
 specified. Constitution Art. XII forbids the LLM from producing the score itself; it must be a
 **deterministic, reproducible blend** with surfaced components (Art. XI provenance). Sketched in
-`../../audit/CLARIFICATIONS.md` §B.Q4; recorded here.
+`docs/audit/v1/CLARIFICATIONS.md` §B.Q4; recorded here.
 
 **Constraints:** deterministic blend (Art. XII); components visible, not just a number; LLM contributes
 only cited sub-signals.
@@ -50,7 +50,7 @@ geocode + intent-classification sub-signals. Feeds the verify pipeline (never au
 > and auditable, and the LLM never invents the number (Art. XII).
 
 ## Links
-- `../../audit/CLARIFICATIONS.md` §B.Q4; PRD EARS EV4; Constitution Art. XI, XII, XIV.
+- `docs/audit/v1/CLARIFICATIONS.md` §B.Q4; PRD EARS EV4; Constitution Art. XI, XII, XIV.
 - `../DOMAIN_MODEL.md` (PUBLIC_REPORT.confidence_components); `../C4_ARCHITECTURE.md` Flow B.
 
 ## Review

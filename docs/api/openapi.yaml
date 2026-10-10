@@ -5,7 +5,7 @@
 #   - docs/requirements/PRD.md          (§5 EARS, §8 API sketch)
 #   - docs/architecture/DOMAIN_MODEL.md (entities → schema components)
 #   - docs/architecture/CONFIGURATION.md
-#   - audit/CLARIFICATIONS.md           (§B.Q6 RBAC matrix)
+#   - docs/audit/v1/CLARIFICATIONS.md           (§B.Q6 RBAC matrix)
 #
 # CONTRACT INVARIANTS encoded here (DOMAIN_MODEL §6, AGENTS §4/§14):
 #   - Every data response carries `provenance[]` (→ SOURCE_RECORD) + `freshness` (U1).
@@ -53,7 +53,7 @@ info:
     ## Authorization
     Roles (ascending privilege): `PUBLIC`, `RESPONDER`, `VERIFIER`, `EM`.
     See the per-operation `x-required-role` extension and the RBAC matrix in
-    `audit/CLARIFICATIONS.md` §B.Q6.
+    `docs/audit/v1/CLARIFICATIONS.md` §B.Q6.
 
     ## Envelope canonicity (single source of truth)
     This document (`docs/api/openapi.yaml`) is the **canonical** definition of the API-boundary

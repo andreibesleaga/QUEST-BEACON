@@ -43,7 +43,7 @@ and (e) EU-AI-Act dates. **All fixed**; recognized standards (GSF SCI / GHG Prot
 
 ---
 
-## Pass 2 — Data sources & APIs (cross-check vs `audit/DATA_SOURCE_VERIFICATION.md`)
+## Pass 2 — Data sources & APIs (cross-check vs `docs/audit/DATA_SOURCE_VERIFICATION.md`)
 
 | Source | Verdict | Authoritative source | Correction applied (Phase 3) |
 |---|---|---|---|
@@ -103,7 +103,7 @@ cross-check are recorded here and resolved **in Phase 3** only:
 1. **Stray "NestJS" backend reference** in a Phase-2 doc → contradicts the locked lean stack (Next.js API
    routes). **Voided in Phase 3 via ADR-003**; Phase-2 text left verbatim.
 2. **Phase-2 liveness checks partly sandbox-blocked** at submission time → re-done properly in Phase 3
-   `audit/DATA_SOURCE_VERIFICATION.md`; Phase-2 `AUDIT.md` unchanged.
+   `docs/audit/DATA_SOURCE_VERIFICATION.md`; Phase-2 `AUDIT.md` unchanged.
 3. **Source-status drift since Phase-2 submission** (HIFLD Open closed 2025, NOAA Billion-Dollar DB closed
    2025-05, X/Twitter free tier gone) → recorded in the Phase-3 data audit; Phase-2 `DATA_SOURCES.md` left
    verbatim.

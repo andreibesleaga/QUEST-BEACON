@@ -94,7 +94,7 @@ per region.*
 
 *E4 headroom is now fully allocated (T-130…T-189). Post-v1 catalog additions (Netatmo, CrowdHydrology,
 Ushahidi, OSM-Notes, HOT-TM, APRS/Meshtastic, OpenSky, Mastodon, Reddit-pending-approval, Charter
-activations, self-host Valhalla/OSRM) are documented in `audit/DATA_SOURCE_VERIFICATION.md §10.4` — each
+activations, self-host Valhalla/OSRM) are documented in `docs/audit/DATA_SOURCE_VERIFICATION.md §10.4` — each
 lands later as one manifest row + one templated task, zero core change (FR-10). **GDELT DOC 2.0
 incident-search mode** folds into T-157's acceptance (search + monitor modes). ⚠️ PurpleAir = conflicting
 ToS verification → MOCK only, re-verify at S05. Google Earth Engine = research-only (noncommercial terms),

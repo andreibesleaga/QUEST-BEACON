@@ -121,6 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Public-release pass (2026-10-10).** Audit documents relocated (`docs/audit/v1/` for the Phase-2 carry-over, `docs/audit/DATA_SOURCE_VERIFICATION.md`, dated `FINAL_AUDIT-2026-06-29.md` / `FINAL_LIVE_AUDIT-2026-08.md`) with every reference rewritten; README gains three live screenshots; access wording says the repository is public and the deployment is brought online for the judging window and on request; local machine paths, a third-party address in a feed fixture and references to internal strategy documents removed. Recorded in `docs/audit/FINAL-AUDIT-2026-09-16.md` §8.
 - Visual baselines regenerated **once** for the tablet and phone viewports — the locale switcher wraps the
   COP toolbar at those widths. This was the single regeneration budgeted for MW-A.
 - `config/regions.json`: the misleading `units` field was **removed**. It was declared and never read, and
@@ -340,7 +341,7 @@ Every figure below was re-derived by running the command on 2026-08-02, not copi
   27 in another; the README said 28). Removed both rather than adding a third: the file now asserts only
   what is machine-re-derivable — `config/adapters.json` ↔ `ADAPTER_FACTORIES`
   (`src/main/adapter-registry.ts:56`) is an exact **30 ↔ 30** match — and points at the single authority
-  (`audit/DATA_SOURCE_VERIFICATION.md` §0) for the consumption split. `NOTICE` was given the same
+  (`docs/audit/DATA_SOURCE_VERIFICATION.md` §0) for the consumption split. `NOTICE` was given the same
   treatment; its wired list already covered all 30 ids correctly.
 - **`CODE_OF_CONDUCT.md` shipped the placeholder `[maintainer contact — set on publish]`** as its
   enforcement channel. Replaced with the two real private channels (GitHub private security advisory /
@@ -389,7 +390,7 @@ Every figure below was re-derived by running the command on 2026-08-02, not copi
 
 Phase-B (go-live) + Phase-C (6-lens audit + fixes) + Phase-D ("deliver the over-claims" full delivery) +
 E11 (Live Views), summarized. Full, verified gate status and honest limitations:
-`docs/audit/FINAL_LIVE_AUDIT.md` §6, `docs/audit/S09_RELEASE_GATE.md`, `docs/FINAL_LIVE_TEST_AND_DEMO.md`.
+`docs/audit/FINAL_LIVE_AUDIT-2026-08.md` §6, `docs/audit/S09_RELEASE_GATE.md`, `docs/FINAL_LIVE_TEST_AND_DEMO.md`.
 
 ### Added
 
@@ -403,7 +404,7 @@ E11 (Live Views), summarized. Full, verified gate status and honest limitations:
 - **Phase-D — 27-adapter catalog:** 14 new source adapters (GDELT, ReliefWeb, agency-RSS, Bluesky, NIFC,
   EFFIS, OSM-Overpass, WorldPop, Census, NFHL, EAGLE-I, OpenCelliD, ITU, CAMARA/GSMA) added to the
   original 8, bringing the registered catalog to 22 data-source adapters (27 with the 5 E11 camera
-  sources below; see `audit/DATA_SOURCE_VERIFICATION.md` §0 for the wired/consumed breakdown).
+  sources below; see `docs/audit/DATA_SOURCE_VERIFICATION.md` §0 for the wired/consumed breakdown).
 - **Phase-D — news/social → SitRep fusion:** deterministic news-grounding (authority ranking
   OFFICIAL>MEDIA>SOCIAL, corroboration counts, misinformation flagged-not-merged, minted before the LLM
   so AI-on == AI-off; `src/application/sitrep-synthesis/news-grounding.ts`), with an `ai-parity.test.ts`
@@ -451,7 +452,7 @@ E11 (Live Views), summarized. Full, verified gate status and honest limitations:
 - Supply-chain evidence pipeline authored for release: CycloneDX SBOM + SLSA L2 provenance + Sigstore
   cosign keyless signing (tag-driven `release.yml`).
 
-### Known limitations (current — see `docs/audit/FINAL_LIVE_AUDIT.md` §6 and
+### Known limitations (current — see `docs/audit/FINAL_LIVE_AUDIT-2026-08.md` §6 and
 `docs/audit/S09_RELEASE_GATE.md` for the full, current honest-limitations list)
 
 - 3 of 27 registered source adapters are not consumed by the live composition: `usgs-water` (a

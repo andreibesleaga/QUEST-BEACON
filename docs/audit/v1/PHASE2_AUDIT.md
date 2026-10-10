@@ -6,7 +6,7 @@ cut redundancy, simplify, and surface every gap so Phase 3 specs start from a cl
 
 - **Scope audited:** `Phase2/submission/{CONCEPT,PRD,ARCHITECTURE,DESIGN,DATA_SOURCES,RESPONSIBLE_DATA,AUDIT,FORM_ANSWERS,SUMMARY,ONE_PAGER}.md`,
   13 `submission/diagrams/*.png`, 3 `submission/mockups/*.png`, and `Phase2/project/*.md` research files.
-- **Companion docs:** [`DATA_SOURCE_VERIFICATION.md`](DATA_SOURCE_VERIFICATION.md) (authoritative live source checks),
+- **Companion docs:** [`../DATA_SOURCE_VERIFICATION.md`](../DATA_SOURCE_VERIFICATION.md) (authoritative live source checks),
   [`CLARIFICATIONS.md`](CLARIFICATIONS.md) (every ambiguity resolved with a recommended decision).
 
 ---
@@ -79,7 +79,7 @@ working specs, which need a single source of truth per fact.
 | Rubric mapping (Cat 1–5) | CONCEPT §3, AUDIT §2, FORM_ANSWERS | S00 discovery (one rubric-traceability table) |
 | Decision-intelligence explanation | CONCEPT §4.4 **and** ARCH §13 (near-duplicate prose) | S02 `C4_ARCHITECTURE.md` (one authoritative section); PRD references it |
 | Logistics "inclusions" paragraph | CONCEPT §4 (two near-identical blockquotes) + PRD §4.1 | S01 PRD (one definition) |
-| Data-source limitations | DATA_SOURCES (inline) + CONCEPT §3.2 + AUDIT §3 | `DATA_SOURCE_VERIFICATION.md` (one verified table) |
+| Data-source limitations | DATA_SOURCES (inline) + CONCEPT §3.2 + AUDIT §3 | `../DATA_SOURCE_VERIFICATION.md` (one verified table) |
 | "Golden path / mock secondaries" philosophy | CONCEPT §5.1/§6, ARCH §10/§12, PRD §8, DATA_SOURCES §intro | S02 ADR + S01 PRD scope (state once) |
 
 **Notable intra-file redundancy:** CONCEPT §4 contains the logistics description **twice** (the numbered
@@ -95,7 +95,7 @@ items that would otherwise stall implementation or cause rework.
 
 | # | Ambiguity | Why it blocks the build |
 |---|---|---|
-| Q1 | **Exact live-vs-mock source set & per-region.** "Core subset (FIRMS, NWS, Overpass)" is named, but the full live set, and which sources are live in *which* region, is not pinned. Critical given the **broad multi-region** scope. | Adapters, demo script, and reliability budget all depend on it. Resolved against `DATA_SOURCE_VERIFICATION.md`. |
+| Q1 | **Exact live-vs-mock source set & per-region.** "Core subset (FIRMS, NWS, Overpass)" is named, but the full live set, and which sources are live in *which* region, is not pinned. Critical given the **broad multi-region** scope. | Adapters, demo script, and reliability budget all depend on it. Resolved against `../DATA_SOURCE_VERIFICATION.md`. |
 | Q2 | **EDXL-RM / EDXL-SitRep schema versions + resource data model.** Cited repeatedly but no version (EDXL-RM 1.0?) or field mapping. | Can't write import/export contracts or `RESOURCE`/`RESOURCE_TASK` serialization. |
 | Q3 | **Shelter-capacity data source.** Shelter capacity-vs-demand is a feature, but no external source is named; `SHELTER.capacity/occupancy` appear in the model with no provenance. | Determines whether shelters are agency-entered, imported (EDXL-RM/NSS), or mocked. |
 | Q4 | **SOS & AI confidence-scoring algorithm.** `PUBLIC_REPORT.confidence` and "AI confidence" are referenced; no method given. | Needs a defined, testable formula (e.g. geocode precision × source-authority × text-classifier score). |
@@ -167,7 +167,7 @@ simplify the **infrastructure** while keeping the **breadth** in the adapter lay
    already the design — make it an explicit acceptance test.
 6. **Secondary sources:** **cache/mock** anything gated, slow, or flaky (CAMARA, Sentinel-2 NBR, FEMA
    NFHL, EAGLE-I live) behind the *same* port, so the COP never dead-ends. Live = FIRMS, NWS, Overpass,
-   NWPS, USGS, GDELT, ReliefWeb, ORS (subject to `DATA_SOURCE_VERIFICATION.md`).
+   NWPS, USGS, GDELT, ReliefWeb, ORS (subject to `../DATA_SOURCE_VERIFICATION.md`).
 7. **Predictions:** ship the **honest first-order** projections (wind buffer, crest∩NFHL) with visible
    uncertainty; defer physics-grade models (FARSITE/Rothermel) as documented adapter extensions.
 8. **Multi-region:** ship **one fully-live flagship region** + additional regions on cached/mock data
@@ -200,7 +200,7 @@ that Phase 3 is meant to close (C2–C3, Q1–Q10), and the **expected absence o
 feed directly into Phase-3 specs:
 
 - Contradictions → resolved in [`CLARIFICATIONS.md`](CLARIFICATIONS.md).
-- Data claims → verified in [`DATA_SOURCE_VERIFICATION.md`](DATA_SOURCE_VERIFICATION.md).
+- Data claims → verified in [`../DATA_SOURCE_VERIFICATION.md`](../DATA_SOURCE_VERIFICATION.md).
 - Gaps → assigned to S01–S04 deliverables (§5 table).
 - Simplifications → become S02 ADRs (§7).
 

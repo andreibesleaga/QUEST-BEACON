@@ -381,7 +381,7 @@ live-production posture — those live in the database and are untouched.
 | `DATA_SOURCE_COMPOSITION` | `seed` \| `adapters` | How `buildCore` assembles the COP inputs. `seed` (default) = the hand-seeded, air-gapped demo dataset (byte-identical, zero net). `adapters` = OPT-IN live path: the runtime adapter registry (`config/adapters.json` + 30 registered `make*Adapter` factories — 25 data-source adapters + 5 E11 camera adapters, see §6a/§6d) supplies the hazard/gauge/weather/infrastructure/population/outage/telecom/flood-zone/news slices via `buildCoreLive`/`buildInteractionLive`/`live-seed.ts`; two factories are registered + boot-validated but NOT consumed by `live-seed.ts`'s fetch calls — `itu` + `camara-gsma` (operator-gated MOCK-only plugins by design); the three MW-B B3 aggregators `meteoalarm-gr`/`meteoalarm-es`/`wmo-swic` ARE consumed as of B3.3 by the `gr`/`es`/`ph` zones (see §6d) — and slices with no adapter at all (buffers/trend) stay seeded — an honest hybrid scope, not a hidden gap. **Corrected 2026-07-31 (E1):** `usgs-water` is now also consumed — the region-generic `consultationPlan` (`live-seed.ts:507`) consults every adapter in a region's `enabled_adapters` whose port fills a used slot, and `us-ca`'s list includes `usgs-water` alongside `nwps` in its `gauges` slot (both consulted/cited; `nwps` serves first by precedence order). It is a cited redundancy rung, not an unused registration. Per-source mode is still chosen by each `SOURCE_<PREFIX>_MODE` (→ region override → manifest). |
 | `LIVE_PICTURE` | `auto` \| `hybrid` \| `live-only` | What the COP shows under `DATA_SOURCE_COMPOSITION=adapters` (2026-09-14, ADR-043). `auto` (default) = `live-only` on the live posture: incidents are only those DISCOVERED from live hazards (`discovered:<region>:…`), map layers hold only what a LIVE or CACHED source served (a MOCK answer is cited in provenance, never drawn), shelters come from the agency registry `config/shelters.json`; the hand-seeded demo incidents and layers exist only as the offline seed (`DATA_SOURCE_COMPOSITION=seed`). `hybrid` = the seeded demo picture enriched by live slices (the behaviour before 2026-09-14; the offline-demo and test profiles). A region with no live hazards shows no incident, and says so. |
 | `LIVE_REGION_CONCURRENCY` | `1`–`8` (default `2`) | How many regions the live composition assembles concurrently (2026-09-14). Regions do not share registry, engine or cache keys, so the only cost is upstream request bursts. `1` restores the serial order (~300 s for five regions). |
-| `SOURCE_<NAME>_MODE` | `live` \| `cached` \| `mock` | Per-source mode (see verdicts in `../../audit/DATA_SOURCE_VERIFICATION.md`) |
+| `SOURCE_<NAME>_MODE` | `live` \| `cached` \| `mock` | Per-source mode (see verdicts in `docs/audit/DATA_SOURCE_VERIFICATION.md`) |
 | `SOURCE_<NAME>_INTERVAL_SEC` | _(=INGEST_DEFAULT_INTERVAL_SEC)_ | Per-source poll cadence |
 | `SOURCE_OSM_OVERPASS_MIRRORS` | _(unset ⇒ a single endpoint)_ | **A10 (V2).** Ordered, comma-separated Overpass mirror ladder for `osm-overpass`, tried in order **inside the existing circuit breaker** — a fully failed ladder is ONE breaker failure, then the engine degrades cache → recorded mock as before. A rung falls through on any HTTP failure *and* on a 200 carrying an unparseable body (an overloaded mirror's error page). The endpoint that actually answered is stamped into provenance as `OSM Overpass (host)` (`SourceRecord` has no endpoint field); cache/mock rungs keep the bare `OSM Overpass`. **Unset ⇒ exactly one endpoint** — `SOURCE_OSM_OVERPASS_URL` if set, else `https://overpass-api.de/api/interpreter` — i.e. pre-V2 behaviour; **set ⇒ this list IS the ladder and supersedes `SOURCE_OSM_OVERPASS_URL`**. Entries are validated as absolute http(s) URLs at boot (fail-fast `CONFIG`) and de-duplicated. Verified 2026-09-10: `overpass-api.de` (announces `gall.openstreetmap.de`) and `lz4.overpass-api.de` (announces `lambert.openstreetmap.de` — a genuinely different server) both 200; `overpass.private.coffee` is the renamed `overpass.kumi.systems` (OSM wiki) and did not answer from the dev box, so it belongs last. **Keep the list ≤2 on a request path**: worst case per live attempt is mirrors × `SOURCE_OSM_OVERPASS_TIMEOUT_MS` × breaker retries, and the cloud edge cuts a request at 60 s. Note the per-mirror provenance NAME is a display label, not a stable key — the durable `source_record` upsert (ADR-039) keys on the ADAPTER id, so mirrors never fragment a source's row |
 | `SOURCE_OSM_OVERPASS_USER_AGENT` | `BEACON/1.0 (open-source emergency COP; +https://github.com/andreibesleaga/QUEST-BEACON)` | **2026-09-15.** The `User-Agent` sent to every Overpass mirror. The public instances answer **`406 Not Acceptable`** to a request that carries none — Node's default `fetch` sends none, so every live attempt against `overpass-api.de` and `lz4.overpass-api.de` was refused before this header existed (verified with and without it the same day) — and the OSM usage policy asks every client to identify itself. Put the deployment's own contact in it; blank falls back to the default. Tested in `osm-overpass-adapter.test.ts` |
@@ -425,7 +425,7 @@ live-production posture — those live in the database and are untouched.
 > broken declaration — but "41 registered" must never be reported as "41 live on the COP". Enabling them
 > is scheduled with their consumption work (session 3); an S2-close attempt was reverted after `hifld`
 > displaced the seeded infrastructure and broke the derived outage marking. Full evidence:
-> `audit/DATA_SOURCE_VERIFICATION.md` §0.
+> `docs/audit/DATA_SOURCE_VERIFICATION.md` §0.
 >
 > Three further adapters (`openaq`, `airnow`, `sensorcommunity`) exist with passing tests but are
 > deliberately **unregistered** — F-52 forbids enabling a port no assembly consults, and their SitRep
@@ -473,7 +473,7 @@ live-production posture — those live in the database and are untouched.
 > `nfhl`, `eagle-i`, and `opencellid`. Only `itu` and `camara-gsma` are registered + boot-validated but not
 > consumed there (operator-gated MOCK-only plugins by design, not a gap). Combined with the original 8,
 > the full registered catalog is 22 data-source adapters — 19 consumed, 3 not (`usgs-water`, `itu`,
-> `camara-gsma`; see `audit/DATA_SOURCE_VERIFICATION.md` §0 for the exact 27/24/3 breakdown incl. the 5
+> `camara-gsma`; see `docs/audit/DATA_SOURCE_VERIFICATION.md` §0 for the exact 27/24/3 breakdown incl. the 5
 > E11 camera adapters). **MW-B B3 update (2026-07-27):** three aggregator rows were added on top of that
 > catalog — `meteoalarm-gr`, `meteoalarm-es`, `wmo-swic` — taking the registered total to 30 (§6d).
 > **Corrected 2026-07-31 (E1 docs truth-up):** the 27/24/3 breakdown above predates the B3.3 zone rollout.
@@ -482,7 +482,7 @@ live-production posture — those live in the database and are untouched.
 > "consumed" once the region-generic `consultationPlan` started reading `us-ca`'s `enabled_adapters`
 > directly (it now consults `usgs-water` alongside `nwps` for the `gauges` slot, cited as a redundancy
 > rung). Only `itu` and `camara-gsma` remain genuinely unconsumed (MOCK-only by design). See
-> `audit/DATA_SOURCE_VERIFICATION.md` §0 for the corrected per-adapter table.
+> `docs/audit/DATA_SOURCE_VERIFICATION.md` §0 for the corrected per-adapter table.
 >
 > **Current as of 2026-09-16 (final audit): 45 registered / 41 consumed / 4 not consumed** —
 > `shelters-fema` joined on 2026-09-11, and `dot511` (Georgia-only) is the fourth unconsumed id. The
@@ -494,7 +494,7 @@ live-production posture — those live in the database and are untouched.
 > the eleven S2 ids were enabled per-slot in `config/regions.json` — each APPENDED after its slot's
 > existing sources so no precedence moved (D-38/D-39). Not consumed: `itu` + `camara-gsma` (MOCK-only by
 > design) and `hifld` (held — its static-2019 snapshot displaces seeded infrastructure; merge-not-replace
-> slot design is an open register item). `audit/DATA_SOURCE_VERIFICATION.md` §0 remains the authority.
+> slot design is an open register item). `docs/audit/DATA_SOURCE_VERIFICATION.md` §0 remains the authority.
 
 Representative source names (adapter `prefix`; the env var is `SOURCE_<PREFIX>_MODE`): `FIRMS`, `NIFC`,
 `EFFIS`, `SENTINEL2` _(planned — NBR lands via the vision `burn-area` task, not a source adapter)_,

@@ -9,10 +9,10 @@
   "leadTime": {
     "minHours": 0,
     "maxHours": 168,
-    "basis": "minHours 0 (inclusive) rejects a negative lead time: a crossing instant already in the past is a stale forecast, not an anticipatory one, and an observed crossing is what the GAUGE_CATEGORY target already covers. maxHours 168 (7 days) is BEACON'S OWN operational window and is NOT a source-published parameter — GloFAS reporting points are defined over a 30-day horizon (audit/DATA_SOURCE_VERIFICATION.md row 36), and a DRAFT alert three weeks ahead of a possible crossing is noise a duty officer cannot act on. It lives here so an operator running a longer-lead early-action protocol can widen it without a code change."
+    "basis": "minHours 0 (inclusive) rejects a negative lead time: a crossing instant already in the past is a stale forecast, not an anticipatory one, and an observed crossing is what the GAUGE_CATEGORY target already covers. maxHours 168 (7 days) is BEACON'S OWN operational window and is NOT a source-published parameter — GloFAS reporting points are defined over a 30-day horizon (docs/audit/DATA_SOURCE_VERIFICATION.md row 36), and a DRAFT alert three weeks ahead of a possible crossing is noise a duty officer cannot act on. It lives here so an operator running a longer-lead early-action protocol can widen it without a code change."
   },
   "vintage": {
     "maxForecastAgeHours": 24,
-    "basis": "A reading must carry the source's own forecast issue instant, and that instant must be no more than one full source update cycle old. Copernicus GloFAS publishes one forecast run per day (update frequency 'daily', audit/DATA_SOURCE_VERIFICATION.md row 89; 'forecast issue date' is one of the documented reporting-point attributes), so a reading older than 24 h has necessarily been superseded by a newer run and must not fire as if it were current. A reading with no issue instant at all also cannot fire: absence of a vintage is not evidence of freshness."
+    "basis": "A reading must carry the source's own forecast issue instant, and that instant must be no more than one full source update cycle old. Copernicus GloFAS publishes one forecast run per day (update frequency 'daily', docs/audit/DATA_SOURCE_VERIFICATION.md row 89; 'forecast issue date' is one of the documented reporting-point attributes), so a reading older than 24 h has necessarily been superseded by a newer run and must not fire as if it were current. A reading with no issue instant at all also cannot fire: absence of a vintage is not evidence of freshness."
   }
 }

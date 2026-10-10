@@ -10,7 +10,7 @@ S00→S09 of the SDLC are done, and three further delivery phases (Phase-B go-li
 Phase-D "deliver the over-claims" full delivery) are complete and merged to `main`. This summary compares the
 final build to the accepted Phase-2 concept and states what remains (a human sign-off, a demo video, and the
 portal submission — no further engineering). ~2 pages. Authoritative build-state detail:
-[`docs/audit/FINAL_LIVE_AUDIT.md`](audit/FINAL_LIVE_AUDIT.md); this file's §5 pre-implementation checklist is
+[`docs/audit/FINAL_LIVE_AUDIT-2026-08.md`](audit/FINAL_LIVE_AUDIT-2026-08.md); this file's §5 pre-implementation checklist is
 retained below as the historical readiness record.*
 
 ---
@@ -107,10 +107,11 @@ and say so in the file itself via `x-status: planned` + "NOT YET SERVED (v1)": `
 `/incidents/{id}/exposure`, `/threshold-rules`, `/audit-events`, `/health/adapters` — see `docs/SPEC.md`
 §13.11, findings F-323/F-401); `schemas/` (9 JSON-Schemas + `schema.sql`
 19 tables + `MIGRATION_PLAN.md` + `adapter-contract.md`) + `config/{policies.yml,adapters.json}`;
-`audit/{PHASE2_AUDIT,CLARIFICATIONS,DATA_SOURCE_VERIFICATION}.md` + `docs/audit/FINAL_AUDIT.md`.
-The SDLC's governance and memory files are not part of the repository; their durable output is committed under `docs/`, `audit/` and `project/`.
+`docs/audit/v1/{PHASE2_AUDIT,CLARIFICATIONS}.md` + `docs/audit/DATA_SOURCE_VERIFICATION.md` +
+`docs/audit/FINAL_AUDIT-2026-06-29.md`.
+The SDLC's governance and memory files are not part of the repository; their durable output is committed under `docs/` and `project/`.
 
-**Audit verdict (`FINAL_AUDIT.md`):** sound, internally consistent, **standards-current**, build-ready.
+**Audit verdict (`FINAL_AUDIT-2026-06-29.md`):** sound, internally consistent, **standards-current**, build-ready.
 Golden thread complete (FR→EARS→component→schema→test); Constitution Articles XI–XVI **enforced** (DB CHECK
 + API codes + schema-required + 19 fitness functions F1–F19), not merely asserted. All audit 🔴/🟡
 remediated across four lenses (logic, security+AI+test/CI, semantic+simplification, architecture+diagrams).
@@ -195,6 +196,6 @@ insights ("weather impact on operations", "radio/TV broadcast outage" — road a
 - **Nothing blocks S05.** The remaining "open questions" are build-time confirmations, not design gaps.
 
 ---
-*Links: `FINAL_AUDIT.md` + `EXTERNAL_VERIFICATION.md` (audits) · `audit/FINAL-AUDIT-2026-09-16.md` (the
+*Links: `FINAL_AUDIT-2026-06-29.md` + `EXTERNAL_VERIFICATION.md` (audits) · `audit/FINAL-AUDIT-2026-09-16.md` (the
 final code-and-docs audit) · `CLARIFICATIONS.md` (decisions) · `DATA_SOURCE_VERIFICATION.md` (sources) ·
 `SPEC.md` (contract of record).*

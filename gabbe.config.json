@@ -1,5 +1,5 @@
 {
-  "$comment": "BEACON (IEEE Response Quest 2026, Phase 3) per-project GABBE policy. Pure-markdown operation (the GABBE Python CLI/MCP is optional); these values guide agent self-tuning, budgets, and gates. See ../audit/CLARIFICATIONS.md for locked technical decisions.",
+  "$comment": "BEACON (IEEE Response Quest 2026, Phase 3) per-project GABBE policy. Pure-markdown operation (the GABBE Python CLI/MCP is optional); these values guide agent self-tuning, budgets, and gates. See docs/audit/v1/CLARIFICATIONS.md for locked technical decisions.",
   "project": {
     "name": "BEACON",
     "description": "Open-source, local-first near-real-time COP for wildfires & floods.",
@@ -38,7 +38,7 @@
     "deployment": "identical artifacts: local docker-compose (air-gapped, ~$0, no egress) AND cloud free tiers \u2014 config-driven"
   },
   "data_policy": {
-    "$comment": "First-class free-world data only. See ../audit/DATA_SOURCE_VERIFICATION.md for the verified catalog + LIVE/CACHED/MOCK verdicts.",
+    "$comment": "First-class free-world data only. See docs/audit/DATA_SOURCE_VERIFICATION.md for the verified catalog + LIVE/CACHED/MOCK verdicts.",
     "preferred_providers": [
       "UN OCHA (ReliefWeb, HDX/HAPI, GDACS)",
       "ESA/Copernicus (EFFIS, GWIS, GloFAS, Sentinel-2)",
@@ -72,7 +72,7 @@
     "agents/CONSTITUTION.md",
     "agents/AGENTS.md",
     "gabbe.config.json",
-    "audit/**",
+    "docs/audit/**",
     "package.json",
     "*.lock",
     "Dockerfile",

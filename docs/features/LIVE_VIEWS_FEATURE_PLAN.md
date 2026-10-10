@@ -9,7 +9,7 @@
 > engine and AI never read a pixel from any external view. Multi-region (US + Romania), multi-source, live.
 >
 > Grounded in verified research (2026-07-17) + a file:line seam map of the current build. Companion:
-> `docs/FINAL_LIVE_TEST_AND_DEMO.md`, `docs/audit/FINAL_LIVE_AUDIT.md`, `docs/audit/PHASE3-FULL-DELIVERY-PLAN.md` (implemented, archived).
+> `docs/FINAL_LIVE_TEST_AND_DEMO.md`, `docs/audit/FINAL_LIVE_AUDIT-2026-08.md`, `docs/audit/PHASE3-FULL-DELIVERY-PLAN.md` (implemented, archived).
 
 ---
 

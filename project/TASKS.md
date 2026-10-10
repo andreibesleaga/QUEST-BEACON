@@ -33,7 +33,7 @@ across S05 implementation waves + three post-S09 delivery phases (Phase-B/C/D), 
 superseded by this wave-level delivery record** — do NOT hand-mark 496 rows retroactively; this ledger + the
 `Trace` column on each row (which still points to the governing FR/ADR/schema/test) is the traceability
 mechanism going forward. The authoritative build-state record is
-[`docs/audit/FINAL_LIVE_AUDIT.md`](../docs/audit/FINAL_LIVE_AUDIT.md) §6 (Phase-D addendum) and
+[`docs/audit/FINAL_LIVE_AUDIT-2026-08.md`](../docs/audit/FINAL_LIVE_AUDIT-2026-08.md) §6 (Phase-D addendum) and
 [`agents/memory/RESUME_POINTER.md`](../agents/memory/RESUME_POINTER.md) resume-15…18 (Phase-D) /
 resume-3…7 (S05→S09). Session dates below reference `agents/memory/AUDIT_LOG.md`.
 

@@ -1,8 +1,8 @@
 # BEACON — Data Source Verification
 
 *Authoritative verification of every data source/API in the BEACON catalog, for Phase 3. Pairs with
-`PHASE2_AUDIT.md` + `CLARIFICATIONS.md`. Each source gets a **demo verdict: LIVE / CACHED / MOCK**
-(governed at runtime by `SOURCE_<NAME>_MODE`, see `../docs/architecture/CONFIGURATION.md`).*
+`v1/PHASE2_AUDIT.md` + `v1/CLARIFICATIONS.md`. Each source gets a **demo verdict: LIVE / CACHED / MOCK**
+(governed at runtime by `SOURCE_<NAME>_MODE`, see `../architecture/CONFIGURATION.md`).*
 
 > **Method & honesty note:** consolidated from the Phase-2 catalog, the Phase-2 liveness check (3 Jun
 > 2026), and three live web-research passes in this audit. Some endpoints could not be re-fetched from

@@ -10,7 +10,7 @@
 > report, and ties it to responder logistics — with **total redundancy** (Article XVI) at ≈ $0.
 >
 > **Authority chain.** This doc refines the Phase-2 `../../../Phase2/submission/ARCHITECTURE.md` against
-> the **LOCKED stack** in `../../audit/CLARIFICATIONS.md §D`, the S01 `../requirements/PRD.md` EARS, the
+> the **LOCKED stack** in `docs/audit/v1/CLARIFICATIONS.md §D`, the S01 `../requirements/PRD.md` EARS, the
 > feature-flag contract in `./CONFIGURATION.md`, and the binding `../../agents/CONSTITUTION.md` Articles
 > **XI–XVI**. Where Phase-2 said "flexible/illustrative" (or strayed into NestJS/PostGIS/BullMQ as
 > defaults), §D wins: **Next.js/TS, CRON-default↔BullMQ-flag, Postgres+Turf-default↔PostGIS-flag,
@@ -642,4 +642,4 @@ Threshold:     each cycle → ThresholdEval over canonical model → transition 
 
 *Last updated: 2026-06-27 (S02) · Author: prod-architect*
 *Review when: a new container/port is added, a feature-flag ladder changes, the LOCKED stack (CLARIFICATIONS §D) is amended, or an ADR is accepted/superseded.*
-*Binding references: `../../agents/CONSTITUTION.md` Articles XI–XVI · `../../audit/CLARIFICATIONS.md §D` · `../requirements/PRD.md` · `./CONFIGURATION.md`.*
+*Binding references: `../../agents/CONSTITUTION.md` Articles XI–XVI · `docs/audit/v1/CLARIFICATIONS.md §D` · `../requirements/PRD.md` · `./CONFIGURATION.md`.*

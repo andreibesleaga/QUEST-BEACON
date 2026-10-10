@@ -113,5 +113,4 @@ AI that never invents numbers, HITL, no-PII. 4. *Usability* — one crisis-first
 *Latencies are targets validated by the E8/E9 perf gate; the video shows a **keyless-LIVE** layer
 (NWPS river gauges + Open-Meteo weather — proven live over real egress, no API key, `npm run live:probe`)
 and a **CACHED** layer (Romania GloFAS/MeteoAlarm-RO) to demonstrate honest source labeling. (FIRMS is
-LIVE only with a free `FIRMS_MAP_KEY`; without it, it renders from its MOCK fixture — labeled as such.)
-Full per-shot video plan: `docs/audit/JUDGE_SCORE_PREDICTION.md` §2 (internal, gitignored).*
+LIVE only with a free `FIRMS_MAP_KEY`; without it, it renders from its MOCK fixture — labeled as such.)*

@@ -12,7 +12,7 @@
 FR-11 requires threshold-triggered early-warning alerts (gauge crosses a flood category; hazard polygon
 enters an infrastructure buffer). This must be **deterministic, testable, and configurable per region**,
 and must never auto-emit a public alert (Constitution Art. XIII). A representation was sketched in
-`../../audit/CLARIFICATIONS.md` §B.Q5; this ADR records it as the decision.
+`docs/audit/v1/CLARIFICATIONS.md` §B.Q5; this ADR records it as the decision.
 
 **Current state:** Phase-2 named FR-11 and one Gherkin scenario but no rule representation/semantics.
 **Constraints:** deterministic (Art. XII); HITL before CAP (Art. XIII); per-region; flap-safe.
@@ -52,7 +52,7 @@ requires human approval (Art. XIII). Evaluation is pure/deterministic and unit-t
 > heavyweight rules engine, it is per-region-configurable, flap-safe, and unit-testable.
 
 ## Links
-- PRD FR-11 / EARS EV6; `../../audit/CLARIFICATIONS.md` §B.Q5; Constitution Art. XII, XIII.
+- PRD FR-11 / EARS EV6; `docs/audit/v1/CLARIFICATIONS.md` §B.Q5; Constitution Art. XII, XIII.
 - Depicted in `../C4_ARCHITECTURE.md` Flow C; `../DOMAIN_MODEL.md` (THRESHOLD_RULE, ALERT state machine).
 
 ## Review

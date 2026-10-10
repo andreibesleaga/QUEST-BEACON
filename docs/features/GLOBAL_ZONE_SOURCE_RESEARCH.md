@@ -333,7 +333,7 @@ verification was required and none was fabricated:
 *footprint* source for PH; FIRMS covers PH wildfire; EFFIS/GWIS is global for fire danger.
 **Not verified live for a PH bbox in this spike** — deliberately, per the spike's no-live-key rule.
 
-### DATA_SOURCE_VERIFICATION row (house format — to be transcribed into `audit/DATA_SOURCE_VERIFICATION.md`)
+### DATA_SOURCE_VERIFICATION row (house format — to be transcribed into `docs/audit/DATA_SOURCE_VERIFICATION.md`)
 
 | Source | Live? | Endpoint | Free/Auth | License | Cadence | Coverage | Verdict | Notes |
 |---|---|---|---|---|---|---|---|---|

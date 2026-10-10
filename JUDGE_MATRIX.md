@@ -18,14 +18,14 @@ situational synthesis, human-gated alerting, evacuation routing and responder lo
 
 | | |
 |---|---|
-| **Live deployment** | https://quest-beacon.up.railway.app — production posture; **access on request** (sign-in accounts provided with it) |
-| **Repository** | https://github.com/andreibesleaga/QUEST-BEACON — **access on request**; not required — the uploaded archive is the complete, self-contained product |
+| **Live deployment** | https://quest-beacon.up.railway.app — production posture; online for the judging window and on request (sign-in accounts provided with the entry) |
+| **Repository** | https://github.com/andreibesleaga/QUEST-BEACON — **public**; not required — the uploaded archive is the complete, self-contained product |
 | **Reproduce locally** | `npm run docker:up` → http://localhost:3000 — full COP with **zero keys, zero egress, ~$0** |
 | **License / data** | Apache-2.0; 100 % open-source dependencies; free/open data sources only |
 | **Phase-2 concept score** | **4.48 / 5** (Review Committee 1, 10 evaluators) — advanced to Phase 3 |
 | **Entrant** | Andrei Nicolae Besleaga (individual entry, active IEEE member) |
 
-> **Access.** Repository: https://github.com/andreibesleaga/QUEST-BEACON (private during judging; **access is granted on request**) · Live deployment: https://quest-beacon.up.railway.app (online for the judging window; the public picture needs no account, the operator sign-in accounts are supplied with the entry). No access is needed to evaluate: **the uploaded archive is the complete, self-contained product** — `docker compose -f infra/docker-compose.yml up -d --build` reproduces the full COP with zero keys and zero network.
+> **Access.** Repository: https://github.com/andreibesleaga/QUEST-BEACON (public) · Live deployment: https://quest-beacon.up.railway.app (brought online for the judging window and on request; the public picture needs no account, the operator sign-in accounts are supplied with the entry). No access is needed to evaluate: **the uploaded archive is the complete, self-contained product** — `docker compose -f infra/docker-compose.yml up -d --build` reproduces the full COP with zero keys and zero network.
 
 > **Submission cut-off & living repository.** The product submitted to the contest is the repository
 > state at the submission tag — everything the judges evaluate is frozen there and reproducible from it.
@@ -105,7 +105,7 @@ Reproduce the gates yourself: `npm install && npx tsc --noEmit && npx eslint . &
 
 | Phase-2 form promise | Shipped in Phase 3 | Evidence |
 |---|---|---|
-| Fire, flood, weather/alerts, infrastructure, outages, cell, population, news, crowdsourced | All families shipped through **45 port-conforming adapters**: FIRMS, NIFC, EFFIS, NWPS, USGS, GloFAS, FEMA NFHL, NWS CAP, Open-Meteo, OSM Overpass, EAGLE-I, OpenCelliD, WorldPop, Census, ReliefWeb, GDACS, InciWeb/agency RSS, GDELT, Bluesky/Mastodon, air quality (OpenAQ/AirNow/Sensor.Community), and more | `audit/DATA_SOURCE_VERIFICATION.md` (per-source verified table) · `src/main/adapter-registry.ts` |
+| Fire, flood, weather/alerts, infrastructure, outages, cell, population, news, crowdsourced | All families shipped through **45 port-conforming adapters**: FIRMS, NIFC, EFFIS, NWPS, USGS, GloFAS, FEMA NFHL, NWS CAP, Open-Meteo, OSM Overpass, EAGLE-I, OpenCelliD, WorldPop, Census, ReliefWeb, GDACS, InciWeb/agency RSS, GDELT, Bluesky/Mastodon, air quality (OpenAQ/AirNow/Sensor.Community), and more | `docs/audit/DATA_SOURCE_VERIFICATION.md` (per-source verified table) · `src/main/adapter-registry.ts` |
 | Novel/underutilized sources: NWPS crest, EAGLE-I, Sentinel-2 burn-area, GDELT, CAMARA/GSMA | NWPS crest × NFHL predicted flood impact **shipped**; EAGLE-I outage layer **shipped** (honestly labelled "ASSUMED offline" — county-granular inference); Sentinel-2 burn-area as consent-gated advisory **vision** finding; GDELT wired; CAMARA/GSMA modelled as a MOCK-only adapter awaiting operator agreements (honest) | COP layers · verifier vision chip · §7 |
 | Derived layers no single source publishes | Risk intersections, NFHL∩crest predicted impact, assumed-offline inference, authority-ranked news corroboration | `src/application/` + prediction layer labels |
 | Region coverage declared per adapter | **Region-generic composition**: 5 zones on 3 continents; a new zone is a config entry (test: `tests/zones/add-a-zone.test.ts`) | `config/regions.json` |
@@ -183,7 +183,7 @@ The product was built under **GABBE**, the author's agentic-SDLC governance fram
 - **AI-assisted, never AI-trusted**: agents wrote code under frozen operational law, with quality gates
   (types, lint, 99 % coverage floors, boundary checks, golden tests) that no change may weaken; every
   external fact was verified against the real provider (per-row verdicts in
-  `audit/DATA_SOURCE_VERIFICATION.md`; zero fabricated facts — `docs/audit/EXTERNAL_VERIFICATION.md`).
+  `docs/audit/DATA_SOURCE_VERIFICATION.md`; zero fabricated facts — `docs/audit/EXTERNAL_VERIFICATION.md`).
 - **Human-gated**: every commit, baseline, release and public action was taken by the human author;
   audits (`docs/audit/`) record findings *and their resolutions* rather than hiding them.
 - **Honesty as a gate**: the register of everything declared-but-not-real

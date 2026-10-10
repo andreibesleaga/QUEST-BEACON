@@ -174,7 +174,7 @@
         },
         "verifiedTier": {
           "type": "string",
-          "description": "Verified verdict per audit/DATA_SOURCE_VERIFICATION.md.",
+          "description": "Verified verdict per docs/audit/DATA_SOURCE_VERIFICATION.md.",
           "enum": ["LIVE", "CACHED", "MOCK"]
         },
         "gaugeUnit": {

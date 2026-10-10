@@ -4,7 +4,7 @@
 //
 // VERIFIED SOURCE (2026-07-15, apidoc.reliefweb.int/{parameters,fields-tables,result-structure}):
 //   GET https://api.reliefweb.int/v2/reports?appname=<APPNAME>&query[value]=<q>&limit=20&profile=list
-//   audit/DATA_SOURCE_VERIFICATION.md §5: v1 is **410 Gone -- v2 ONLY**; since **2025-11-01** `appname`
+//   docs/audit/DATA_SOURCE_VERIFICATION.md §5: v1 is **410 Gone -- v2 ONLY**; since **2025-11-01** `appname`
 //   must be a **pre-approved/registered** name (no longer self-declared) -- see keyEnv RELIEFWEB_APPNAME
 //   in reliefweb-adapter.ts. `profile=list` = "results suited to lists and tables" (vs `minimal`/`full`).
 //   Envelope: { time, href, count, totalCount, data: [ { id, href, fields: {...} } ] }.

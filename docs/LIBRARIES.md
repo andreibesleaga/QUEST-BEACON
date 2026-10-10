@@ -63,7 +63,7 @@
 | Supply chain | **CycloneDX** (SBOM), **cosign/sigstore**, **SLSA**, **OpenSSF Scorecard** | Apache-2.0 | release gate |
 | Git hooks | **husky** + **lint-staged** + **commitlint** | MIT | pre-commit + conventional commits |
 
-## Data & routing APIs (free/open — see `audit/DATA_SOURCE_VERIFICATION.md`)
+## Data & routing APIs (free/open — see `docs/audit/DATA_SOURCE_VERIFICATION.md`)
 NASA FIRMS · NWS api.weather.gov · OSM Overpass · NOAA NWPS · USGS Water (OGC) · GDELT · ReliefWeb v2 ·
 OpenRouteService (routing; self-host **Valhalla/OSRM** fallback) · Copernicus EFAS/GloFAS/EFFIS · MeteoAlarm ·
 Open-Meteo · WorldPop. All free; keys (where needed) are free-tier; golden path degrades to cached/mock offline.

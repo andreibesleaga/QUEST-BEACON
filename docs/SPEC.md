@@ -1,7 +1,7 @@
 # BEACON — Master Technical Specification (S03)
 
 <!-- Derived from: docs/requirements/PRD.md (S01, approved) · docs/architecture/{C4_ARCHITECTURE,DOMAIN_MODEL,
-     CONFIGURATION,THREAT_MODEL}.md + ADR-001..022 (+ADR-008a) (S02) · audit/CLARIFICATIONS.md (locked decisions). -->
+     CONFIGURATION,THREAT_MODEL}.md + ADR-001..022 (+ADR-008a) (S02) · docs/audit/v1/CLARIFICATIONS.md (locked decisions). -->
 <!-- Created by: prod-tech-lead (GABBE SDLC S03 — Specification) · Date: 2026-06-27 -->
 <!-- Extended by: §12 "Phase-D delivery addendum" (2026-07-15) covers ADR-023..026 (+ADR-024's Phase-B rung),
      added post-S04 as the implementation caught up to the S03 spec of record; the original S03 body above
@@ -495,7 +495,7 @@ canonical entry shape (verbatim from `config/adapters.json`, the OSM-Overpass ad
       "cache": { "ttlSec": 900 },           // last-known-good cache block
       "circuitBreaker": { "failureThreshold": 5, "cooldownSec": 120, "halfOpenTrials": 1 },
       "mock": { "fixture": "osm-overpass/lifelines.json" },  // recorded-mock fallback (enables F5 offline test)
-      "verifiedTier": "LIVE"                 // verified verdict per audit/DATA_SOURCE_VERIFICATION.md
+      "verifiedTier": "LIVE"                 // verified verdict per docs/audit/DATA_SOURCE_VERIFICATION.md
     }
   ]
 }
@@ -538,7 +538,7 @@ live (primary API) → secondary/global-equivalent → last-known-good cache →
   straight to cache/mock until half-open probe succeeds.
 - **`SOURCE_*_MODE` lifecycle:** `live` → real API; `cached` → serve last-known-good/snapshot only (no
   egress for that source); `mock` → fixtures only (CONFIGURATION §6, OP3). A source's verified verdict is
-  in `audit/DATA_SOURCE_VERIFICATION.md`; re-confirm live before flipping any `SOURCE_*_MODE=live` (PRD §13).
+  in `docs/audit/DATA_SOURCE_VERIFICATION.md`; re-confirm live before flipping any `SOURCE_*_MODE=live` (PRD §13).
 
 ### 4.4 Worked example — OSM Overpass adapter (P4 Infrastructure)
 
@@ -906,7 +906,7 @@ always labeled (U4, never a silent stale map).
 
 Defaults below; all overridable per source/region (config). `INGEST_DEFAULT_INTERVAL_SEC` = 300 s.
 This table is **cadence-only**: the LIVE/CACHED/MOCK tier verdicts are single-sourced to
-`audit/DATA_SOURCE_VERIFICATION.md` (PRD §9) — do not duplicate the tier column here.
+`docs/audit/DATA_SOURCE_VERIFICATION.md` (PRD §9) — do not duplicate the tier column here.
 
 | Source | Default cadence | Notes |
 |---|---|---|
@@ -1027,7 +1027,7 @@ secrets/availability.
 ## 11. References & approval
 
 **Binding inputs:** `docs/requirements/PRD.md` (S01, approved) · `docs/architecture/{C4_ARCHITECTURE,
-DOMAIN_MODEL,CONFIGURATION,THREAT_MODEL}.md` + `decisions/ADR-001..022 (+ADR-008a)` (S02) · `audit/CLARIFICATIONS.md`
+DOMAIN_MODEL,CONFIGURATION,THREAT_MODEL}.md` + `decisions/ADR-001..022 (+ADR-008a)` (S02) · `docs/audit/v1/CLARIFICATIONS.md`
 (locked) · `agents/CONSTITUTION.md` (Art. I–XVI). **Sibling S03 artifacts (other authors):**
 `docs/api/openapi.yaml` (machine API spec) · `schemas/` (CAP v1.2, EDXL-RM, EDXL-SitRep, adapter-manifest,
 sitrep, threshold-rule JSON-Schemas). **Constitution articles cited:** I (test-first), II/VIII
@@ -1227,7 +1227,7 @@ chain-of-rights, a paid directory when a client pays) — is addable with ZERO c
 row + one `ADAPTER_FACTORIES` entry + a `SOURCE_<PREFIX>_MODE` (+ optional key)). Mode/key gating ships a
 gated/paid source MOCK/CACHED and flips it LIVE per-deployment. The ONLY permanent exclusion is the
 constitutional one: unsecured/non-consenting camera aggregators (**Insecam-class**) are banned regardless of
-technical feasibility. (Mirrored into `audit/DATA_SOURCE_VERIFICATION.md` §9a.)
+technical feasibility. (Mirrored into `docs/audit/DATA_SOURCE_VERIFICATION.md` §9a.)
 
 ---
 
@@ -1273,13 +1273,13 @@ warning so the misreading cannot recur). **Do not narrate this as "EMS/ambulance
   adapter is US-only by coverage, and no equivalent public directory is wired for `ro`/`es`/`gr`/`ph`.
   The board, its RFC-4180 CSV export and the provenance labelling are unchanged. *(Original bullet, now
   superseded: "no shelter source adapter … the FEMA Open-Shelters ArcGIS feed was never wired.")*
-- **FIRMS hotspots are points, not fire perimeters** (`audit/DATA_SOURCE_VERIFICATION.md:76`) — thermal
+- **FIRMS hotspots are points, not fire perimeters** (`docs/audit/DATA_SOURCE_VERIFICATION.md:76`) — thermal
   false positives exist, and native resolution is 375 m–1 km. NIFC/EFFIS perimeter polygons are merged
   alongside FIRMS specifically to give a real footprint where one is published; where only FIRMS answers,
   the map is showing detections, not a boundary.
 - **EAGLE-I outage data is county-granular, and BEACON derives "ASSUMED offline"** from hazard∩infrastructure
   geometry rather than showing a live per-address outage feed — the live EAGLE-I feed is gov-operational,
-  not public (`audit/DATA_SOURCE_VERIFICATION.md:114`). The UI must never claim a confirmed outage from it.
+  not public (`docs/audit/DATA_SOURCE_VERIFICATION.md:114`). The UI must never claim a confirmed outage from it.
 - **Satellite revisit gaps are real and stated openly** (Art. XV/XVI; `docs/SPEC.md:872`) — a fire or
   flood event between two satellite passes is invisible to FIRMS/GDACS/Sentinel-derived layers until the
   next pass; the freshness badge is the honest signal, not a guarantee of continuous coverage.

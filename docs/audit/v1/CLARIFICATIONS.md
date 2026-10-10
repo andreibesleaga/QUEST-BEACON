@@ -23,7 +23,7 @@ user's explicit confirmation are listed first.*
 ## B. Resolved ambiguities (from PHASE2_AUDIT §4)
 
 ### Q1 — Live-vs-mock source set (per region)
-**Decision:** Source tiering is governed by [`DATA_SOURCE_VERIFICATION.md`](DATA_SOURCE_VERIFICATION.md).
+**Decision:** Source tiering is governed by [`../DATA_SOURCE_VERIFICATION.md`](../DATA_SOURCE_VERIFICATION.md).
 - **LIVE (golden path, US flagship):** NASA FIRMS, NWS api.weather.gov, OSM Overpass, NOAA NWPS, USGS
   Water, GDELT, ReliefWeb v2, OpenRouteService, **GDACS, Open-Meteo** (global secondary-LIVE).
 - **CACHED (nightly/periodic snapshot):** FEMA NFHL, EAGLE-I (historical), WorldPop, OSM infra, HIFLD-Next
@@ -150,7 +150,7 @@ This is now a graded operational-readiness requirement, carried into S01 NFRs an
 (FIRMS), **NOAA/USGS/NWS/FEMA/NIFC**, **OpenStreetMap**, **WorldPop**. Global-equivalent adapters give
 non-US regions genuine coverage (supports the broad multi-region scope, U4). No paid/proprietary data;
 no scraping ToS-protected platforms. Verified catalog + LIVE/CACHED/MOCK verdicts in
-[`DATA_SOURCE_VERIFICATION.md`](DATA_SOURCE_VERIFICATION.md).
+[`../DATA_SOURCE_VERIFICATION.md`](../DATA_SOURCE_VERIFICATION.md).
 
 ---
 

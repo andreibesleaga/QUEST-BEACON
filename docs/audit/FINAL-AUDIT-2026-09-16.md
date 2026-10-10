@@ -54,7 +54,7 @@ audit 0 high / 0 critical.
 
 | Claim as found | Where | Truth (final commit) | Action |
 |---|---|---|---|
-| 44 adapters, 44↔44 registry, "35 of 44 can serve live", "other nine" | `JUDGE_MATRIX.md` (six places), `docs/OPERATOR_GUIDE.md`, `docs/LIVE_PRODUCTION_GUIDE.md` header, `NOTICE`, `docs/SUMMARY.md`, `docs/FINAL_LIVE_TEST_AND_DEMO.md`, `audit/DATA_SOURCE_VERIFICATION.md` §0, `docs/architecture/CONFIGURATION.md` | **45 registered / 41 consumed / 4 not**; `shelters-fema` joined 2026-09-11; **38 can serve live** (29 keyless + 9 free-credential), seven cannot on free public routes | corrected; dated recount notes added to the two catalogues |
+| 44 adapters, 44↔44 registry, "35 of 44 can serve live", "other nine" | `JUDGE_MATRIX.md` (six places), `docs/OPERATOR_GUIDE.md`, `docs/LIVE_PRODUCTION_GUIDE.md` header, `NOTICE`, `docs/SUMMARY.md`, `docs/FINAL_LIVE_TEST_AND_DEMO.md`, `docs/audit/DATA_SOURCE_VERIFICATION.md` §0, `docs/architecture/CONFIGURATION.md` | **45 registered / 41 consumed / 4 not**; `shelters-fema` joined 2026-09-11; **38 can serve live** (29 keyless + 9 free-credential), seven cannot on free public routes | corrected; dated recount notes added to the two catalogues |
 | "26 keyless" | `README.md`, `docs/FINAL_HANDOFF.md`, `JUDGE_MATRIX.md`, `docs/LIVE_PRODUCTION_GUIDE.md` | **29** (class A: 28 listed on 2026-09-10 + `shelters-fema`) | corrected; `shelters-fema` added to class A with a footnote |
 | "all 30 wired sources listed" in NOTICE | `README.md`; `NOTICE` header said 44 and listed 44 ids | 45; `shelters-fema` was attributed (FEMA ESF#6 row) but missing from the id list and count | corrected |
 | "48 ADR records" / "38 ADRs" / "39 ADR records" | `JUDGE_MATRIX.md` (two places), `docs/FINAL_HANDOFF.md`, `docs/SUMMARY.md` | **49 files** (001–047 + 008a; two files share the 036 number) | corrected |
@@ -76,7 +76,7 @@ audit 0 high / 0 critical.
 | CI "pinned GitHub Actions" | `docs/SECURITY_BASELINE.md` §5 | Major-version tags as an interim measure; full SHA pinning is open (`.github/PINNING_CHECKLIST.md`) | qualified |
 | `SOURCE_<PREFIX>_INTERVAL_SEC` presented as a working per-source cadence knob | `.env.example` (pattern block + the `shelters-fema` entry), `docs/LIVE_PRODUCTION_GUIDE.md` (footnote ² and the cadence block of the all-live profile), `docs/SPEC.md` §4.4 | Parsed by `resolveSourceConfig`, consumed by nothing; the live cadence is the global `LIVE_REINGEST_INTERVAL_SEC` | registered in `UNIMPLEMENTED_REGISTER.md`; every one of those places qualified. SPEC §4.4 also named the prefix `SOURCE_OVERPASS_*`, which is not the manifest prefix (`osm-overpass`) — corrected |
 | `FEATURE_TTS`, `FEATURE_ANTICIPATORY`, `FEATURE_PREDICTION_IMPACT` presented as configuration | `docs/SPEC-FINAL-VERSION-DELTA.md` var table; ADR-034, ADR-035, ADR-036; EARS FOP-3 | None exists. TTS was never built; the panel flag is `FEATURE_ANTICIPATORY_PANEL` (default off); the D6 surfaces are the five `FEATURE_D6_*` flags | as-built notes; TTS and the two names registered in `UNIMPLEMENTED_REGISTER.md` |
-| "Both [repo and live] are private during judging" | `README.md`, `JUDGE_MATRIX.md` | The repository is private; the deployment is public when online (PUBLIC role needs no account) and is brought up for the judging window | reworded |
+| "Both [repo and live] are private during judging" | `README.md`, `JUDGE_MATRIX.md` | The repository was private during this audit and is public since 2026-10-10 (§8); the deployment is public when online (PUBLIC role needs no account) and is brought up for the judging window and on request | reworded |
 | "Demo (as deployed)" posture row = `memory` | `docs/DEPLOYMENT.md` §0 | The reference deployment runs the *durable* row (`FEATURE_STORE=postgres`) | row relabelled |
 | "The gates below ran offline" (gates are above) | `README.md` | — | fixed |
 | Judge-matrix preamble said the figures were a frozen 2026-08-26 snapshot with "known drift 45/4864" while §1 carried 2026-09-15 figures | `JUDGE_MATRIX.md` | one document, one date | preamble rewritten: final state on `main`, the tag is the historical record |
@@ -125,7 +125,7 @@ rows above name every location rather than a sample:
 |---|---|
 | `docs/E2E_TESTING_PLAYBOOK.md` §6 heading: "45 adapters registered, **42** consumed" | 41; a dated 2026-09-16 recount note added above the preserved 2026-08-10 block |
 | `docs/architecture/CONFIGURATION.md` §6 note presented 44/41/3 as *current* | current line (45/41/4) added; the 2026-08-10 note relabelled as the record of that day |
-| `audit/DATA_SOURCE_VERIFICATION.md` still said "registry (44 rows)" below the new recount | the recount block now states the 45 rows / 45 factories explicitly and scopes every later "44" to its dated block |
+| `docs/audit/DATA_SOURCE_VERIFICATION.md` still said "registry (44 rows)" below the new recount | the recount block now states the 45 rows / 45 factories explicitly and scopes every later "44" to its dated block |
 | `docs/LIVE_PRODUCTION_GUIDE.md` §1 offered three ceilings (26/35-of-44 baseline, 37-of-44 correction, 38-of-45 footnote) | a current-ceiling box at the top of §1; the two older blocks explicitly labelled as the preserved baseline and its correction |
 | `docs/SPEC.md` §13.2 kept the old present-tense "no shelter adapter" text above the closure note | bullet rewritten; the superseded sentence quoted at the end so the record survives |
 | `docs/RELEASE_GUIDE.md` §4 replaced the demo runbook link with an implementation path | both: runbook `docs/ops/DEMO_SWITCH.md`, implementation `scripts/demo.mjs` |
@@ -172,7 +172,7 @@ a free credential (`firms`, `census`, `reliefweb`, `opencellid`, `openaq`, `wind
 `cnadnr-ro` (no machine-readable feed), `eagle-i` (entitled endpoint), `effis` (WMS images only).
 Not consumed by any zone: `itu`, `camara-gsma`, `hifld`, `dot511`. Every adapter is attributed in
 `NOTICE`; per-source evidence is `docs/LIVE_PRODUCTION_GUIDE.md` §1 and
-`audit/DATA_SOURCE_VERIFICATION.md`.
+`docs/audit/DATA_SOURCE_VERIFICATION.md`.
 
 ### 4.3 Configuration surface
 
@@ -233,3 +233,35 @@ npm run docs                                                # OpenAPI 36 / 39 / 
 
 *Prepared on the final commit of `main`, 2026-09-16. Every correction in §3 is in the same change set
 as this file; the exported judge repository carries both.*
+
+## 8. Public-release pass (2026-10-10)
+
+Scope: the delivered repository `andreibesleaga/QUEST-BEACON` as it stood on 2026-10-10 (the 2026-09-16
+export plus three owner commits: audit documents relocated, live screenshots added to the README), checked
+against the monorepo commit the live deployment was last built from (Railway deployment of 2026-09-21,
+repository `andreibesleaga/Quest`, branch `main`, commit `e7debcb`, root `/Phase3`, builder
+`infra/Dockerfile`).
+
+**Verified.** File-by-file hash comparison of the committed monorepo tree (minus the entrant-process
+documents the export drops) against the delivered tree: every file identical except `README.md` (the
+owner's screenshot lines) and the three screenshots; nothing missing. The two frozen tags
+(`v1.0.0-submission` of 2026-08-26, `v2.0.0-live` of 2026-09-15) carry no secrets, judge addresses or
+personal data; the 2026-08-26 tree still contains ten internal plan and gate documents, kept on the
+owner's decision as the submission of record. Leak scan of the delivered tree: no secrets, no `.env`
+tracked, no judge or contest-portal addresses, no entrant-process documents.
+
+**Corrected in this pass.**
+
+| What | Where | Correction |
+|---|---|---|
+| The owner's relocation of five audit files broke 80 references in 40 files | repository-wide | Moves adopted in the monorepo: `docs/audit/v1/{CLARIFICATIONS,PHASE2_AUDIT}.md`, `docs/audit/DATA_SOURCE_VERIFICATION.md` (kept out of `v1/` because it is the current single authority for sources), `docs/audit/FINAL_AUDIT-2026-06-29.md`, `docs/audit/FINAL_LIVE_AUDIT-2026-08.md`; every reference rewritten, every markdown link re-validated |
+| The Phase-2 per-category jury score for Timeliness, quoted in two test-file comments and the task ledger | `e2e/sse-push.spec.ts`, `http-dispatcher.test.ts`, `project/TASKS-FINAL-VERSION.md` | reworded to "the category Phase 2 flagged as weakest"; the overall score stays by the owner's decision |
+| Local machine paths (`/home/<user>/…`) | `.gitignore`, ADR-021, `tests/seed-bundle.test.ts` | replaced with neutral wording |
+| A named third-party address copied verbatim from a public RSS feed into a test fixture | `src/adapters/sources/agency-rss/__fixtures__/feed.xml` | replaced with a placeholder address; no test depends on it |
+| References to three internal, never-committed strategy documents | `docs/DEMO_SCRIPT.md`, `docs/ENGINEERING_PRINCIPLES.md`, `docs/FINAL_LIVE_TEST_AND_DEMO.md`, `docs/requirements/PRD.md` | removed |
+| "private during judging; access on request" | `README.md`, `JUDGE_MATRIX.md` | the repository is public; the deployment is brought online for the judging window and on request |
+| Repository layout note described a root `audit/` directory | `README.md`, `docs/SUMMARY.md`, `docs/QUICK_GUIDE.md`, `llms.txt`, `gabbe.config.json` | describes `docs/audit/` |
+
+**Deployment state.** Switched off by the owner since 2026-09-16; brought online only for the judging
+window or on request. The staged Railway variables noted in §6 are still unapplied.
+

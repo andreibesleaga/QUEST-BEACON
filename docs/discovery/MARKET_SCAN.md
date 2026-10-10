@@ -6,7 +6,7 @@
 > **Sourcing note:** synthesized from established domain knowledge with canonical source URLs. Items
 > marked *(verify)* — pricing, current repo activity, DPG status, 2025–2026 funding/deprecation events,
 > named recent AI entrants — should be confirmed against live sources before relying on them (the live
-> data-source check is tracked separately in `../../audit/DATA_SOURCE_VERIFICATION.md`).
+> data-source check is tracked separately in `docs/audit/DATA_SOURCE_VERIFICATION.md`).
 
 ---
 
@@ -147,7 +147,7 @@ region (U4) and the vision layer:
 - **xView2 / xBD** — open building-damage-assessment models (vision layer).
 - **FEMA National Risk Index** — free baseline hazard-vulnerability layer (US).
 
-→ Action: add these to `../../audit/DATA_SOURCE_VERIFICATION.md` for live/licensing confirmation and to
+→ Action: add these to `docs/audit/DATA_SOURCE_VERIFICATION.md` for live/licensing confirmation and to
 the PRD data scope (S01).
 
 ---

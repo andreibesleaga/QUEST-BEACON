@@ -21,7 +21,7 @@ lanceflood, nri, openaq, airnow, sensorcommunity, shelters-fema. All 45 are attr
 
 "Wired" here means the adapter exists and its port registration is validated at
 boot. WHICH of the 45 are additionally CONSUMED by the live COP/map composition
-is a separate question with a single authority — audit/DATA_SOURCE_VERIFICATION.md
+is a separate question with a single authority — docs/audit/DATA_SOURCE_VERIFICATION.md
 §0 — and is deliberately not restated in this file. Four are known NOT to be
 consumed: `itu` and `camara-gsma` (operator-gated MOCK-only plugins by design),
 `hifld` (registered but HELD out of every region's allowlist pending a
@@ -127,7 +127,7 @@ Deliberately EXCLUDED (license-incompatible with Apache-2.0 — never bundled):
   regions have NO feed-based outage signal; Romania's outage layer is derived-only and says so.
 
 Full per-source verification (endpoints, auth, rate limits, coverage, verdicts):
-  audit/DATA_SOURCE_VERIFICATION.md
+  docs/audit/DATA_SOURCE_VERIFICATION.md
 
 ================================================================================
 Third-party software: see package.json and the generated CycloneDX SBOM (release

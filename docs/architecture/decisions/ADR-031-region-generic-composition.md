@@ -329,7 +329,7 @@ This refactor touches the composition root, so the safety argument has to be exp
 - **Negative / accepted — relayed provenance is one hop from the authority.** A SWIC-relayed CAP is as fresh
   and as correct as the relay; the WMO feeds also lack per-feed licence pages
   (`GLOBAL_ZONE_SOURCE_RESEARCH.md:24`). Both facts are labelled in `NOTICE` and
-  `audit/DATA_SOURCE_VERIFICATION.md`, and the relay is named in provenance (§4).
+  `docs/audit/DATA_SOURCE_VERIFICATION.md`, and the relay is named in provenance (§4).
 - **Negative / accepted — demo-grade zones are shallow, and the UI says so.** Three of five shipped zones have
   no national gauge/outage/flood-zone/camera coverage (§5). The explicit no-coverage state makes this visible
   rather than hidden — which is the honest-limitations rubric item, not a weakness.
@@ -390,7 +390,7 @@ This refactor touches the composition root, so the safety argument has to be exp
 | 11 | `src/adapters/channels/http/routing.test.ts` + openapi lint (`npx @redocly/cli lint docs/api/openapi.yaml`) — `GET /regions` served, envelope carries `provenance[]` + `freshness`, `x-status: planned` removed, `RegionView` widened | FU-6, item 14 |
 | 12 | Formatting/alerting tests — every displayed timestamp uses `Intl.DateTimeFormat` in the region's `tz`; CAP `effective`/`expires` respect it; CAP carries the region's primary language **plus English** | **FU-8**, ADR-030 §7 |
 | 13 | `npx depcruise` + `tests/architecture/*` — role resolution lives in `src/main`/`src/adapters/_shared`; **zero** new edges into `src/domain`/`src/application` | ADR-001 boundary |
-| 14 | `NOTICE` + `audit/DATA_SOURCE_VERIFICATION.md` + THREAT_MODEL — an entry per new source with licence and attribution (EUMETNET, WMO Res.1, AEMET), a row per new egress host, and the region-config validation row | Art. XI/XIV, master plan §4 |
+| 14 | `NOTICE` + `docs/audit/DATA_SOURCE_VERIFICATION.md` + THREAT_MODEL — an entry per new source with licence and attribution (EUMETNET, WMO Res.1, AEMET), a row per new egress host, and the region-config validation row | Art. XI/XIV, master plan §4 |
 
 ## Implementation complete: No (planned — wave MW-B, master plan §3)
 

@@ -15,7 +15,7 @@ enforced** so it is testable, not aspirational.*
 - Golden thread unbroken: **requirement → EARS → component/ADR → schema/contract → test → task → code**. No
   requirement without a test (Constitution Art. I); no orphan code. *Enforced:* traceability audit + Gate 7.
 - Covers **all** requirements + all 5 IEEE rubric categories + the 4 flagship features — nothing silently
-  dropped; de-scopes are recorded openly. *Enforced:* `RUBRIC_DEFENSIBILITY.md`, per-FR BDD triads.
+  dropped; de-scopes are recorded openly. *Enforced:* per-FR BDD triads.
 
 ## 2. Simplest thing that fully works (+ extensible)
 - Prefer the **simplest implementation that covers the need**; lean core, pluggable edges. If a task has an
