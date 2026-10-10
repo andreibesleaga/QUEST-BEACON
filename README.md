@@ -16,6 +16,10 @@
 
 ## Why it exceeds the brief
 
+![Beacon Live 1](docs/screenshots/live/BEACON1.png)
+![Beacon Live 2](docs/screenshots/live/BEACON2.png)
+![Beacon Live 3](docs/screenshots/live/BEACON3.png)
+
 Promised a concept → shipped a **live deployment** and one-command local reproduction with zero keys.
 Promised some live sources → **45 adapters**, 38 live-capable. Promised a US demo → **5 regions on 3
 continents, 14 locales**. Promised WCAG 2.1 AA → shipped **2.2 AA with a CI gate**. Promised cited AI →
