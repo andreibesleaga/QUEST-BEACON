@@ -1,0 +1,322 @@
+/* BEACON — always-on front page. Same design tokens as the app (app/globals.css): dark-first,
+   light-capable through the viewer's colour-scheme preference. No script, no external resources. */
+
+:root {
+  --bg: #0b0f14;
+  --surface: #121a24;
+  --surface-2: #1a2532;
+  --line: #2c3847;
+  --fg: #e8eef5;
+  --fg-muted: #a3b4c6;
+  --primary: #69b3ff;
+  --warn: #e2b53d;
+  --ok: #59c3a5;
+  --font-sans:
+    'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f6f8fb;
+    --surface: #ffffff;
+    --surface-2: #eef2f7;
+    --line: #cbd6e3;
+    --fg: #0d1826;
+    --fg-muted: #414f60;
+    --primary: #0850a0;
+    --warn: #8a6100;
+    --ok: #1c7a60;
+    color-scheme: light;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-height: 100vh;
+}
+
+/* Header — mirrors the app's toolbar: logo, title, live pill. */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.logo {
+  border-radius: 12px;
+  flex: none;
+}
+
+.hero-text {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.55rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.dash {
+  color: var(--fg-muted);
+  font-weight: 400;
+}
+
+.tagline {
+  margin: 4px 0 0;
+  color: var(--fg-muted);
+  font-size: 0.92rem;
+}
+
+.pill {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--warn);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--warn);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--warn) 25%, transparent);
+}
+
+/* Two columns on desktop, one on phones. */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 28px 36px;
+  align-items: start;
+  flex: 1;
+}
+
+@media (max-width: 860px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pill {
+    white-space: normal;
+  }
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+h2 + * {
+  margin-top: 0;
+}
+
+.col > h2:not(:first-child) {
+  margin-top: 22px;
+}
+
+p {
+  margin: 0;
+  max-width: 62ch;
+}
+
+/* Contest status as label / value rows. */
+.status {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.status div {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.status dt {
+  color: var(--fg-muted);
+  font-size: 0.9rem;
+}
+
+.status dd {
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .status div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+}
+
+.steps {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 8px;
+  max-width: 64ch;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 2px 6px;
+  overflow-wrap: anywhere;
+}
+
+/* Right column: screenshot, facts, links. */
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.shot {
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px;
+}
+
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.shot figcaption {
+  padding: 8px 4px 2px;
+  color: var(--fg-muted);
+  font-size: 0.85rem;
+}
+
+.facts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.facts li {
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 0.92rem;
+  color: var(--fg-muted);
+}
+
+.facts b {
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+}
+
+@media (max-width: 480px) {
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.links a {
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 550;
+  font-size: 0.92rem;
+}
+
+.links a:hover,
+.links a:focus-visible {
+  background: var(--surface-2);
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.foot {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  color: var(--fg-muted);
+  font-size: 0.85rem;
+}
+
+.foot p {
+  max-width: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dot {
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    50% {
+      box-shadow: 0 0 0 6px color-mix(in srgb, var(--warn) 12%, transparent);
+    }
+  }
+}

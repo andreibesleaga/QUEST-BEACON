@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BEACON — Common Operating Picture</title>
+    <meta
+      name="description"
+      content="BEACON, Entry #5320 of the IEEE Response Quest 2026: what it is, where the contest stands, and how to have the live deployment brought online."
+    />
+    <link rel="icon" href="/offline-assets/beacon-192.png" />
+    <link rel="stylesheet" href="/offline-assets/style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <img class="logo" src="/offline-assets/beacon-192.png" alt="" width="52" height="52" />
+        <div class="hero-text">
+          <h1>BEACON <span class="dash">—</span> Common Operating Picture</h1>
+          <p class="tagline">
+            Browser Emergency Awareness Coordination Open Network · IEEE Response Quest 2026 · Entry
+            #5320
+          </p>
+        </div>
+        <p class="pill">
+          <span class="dot"></span>Live deployment offline — brought online on request
+        </p>
+      </header>
+
+      <div class="grid">
+        <section class="col">
+          <h2>What it is</h2>
+          <p>
+            BEACON is an open-source common operating picture for emergency managers. It gathers
+            live public data — fire detections, floods and river gauges, weather and air quality,
+            storm products, official alerts, population and infrastructure — onto one map with a
+            source-cited situation report, and ties it to responder logistics: resources, tasks,
+            shelters and evacuation routes. Every figure is computed deterministically and traced to
+            its source; the AI only narrates, and a human confirms every public action. It runs
+            fully offline with zero keys, and live on free public sources.
+          </p>
+
+          <h2>Contest status</h2>
+          <dl class="status">
+            <div>
+              <dt>Challenge</dt>
+              <dd>IEEE Response Quest 2026, a competition of the IEEE</dd>
+            </div>
+            <div>
+              <dt>Entry</dt>
+              <dd>#5320 “BEACON” · Phase-2 concept accepted (jury 4.48 / 5)</dd>
+            </div>
+            <div>
+              <dt>Phase 3 — product</dt>
+              <dd>Submitted. The submission window closed on Friday 9 October 2026.</dd>
+            </div>
+            <div>
+              <dt>Evaluation and winners</dt>
+              <dd>November to December 2026, per the official timeline. Awaiting evaluation.</dd>
+            </div>
+          </dl>
+
+          <h2>Access for judges and reviewers</h2>
+          <ol class="steps">
+            <li>
+              The live deployment at this address is switched off between review sessions and is
+              <strong>brought online on request</strong> by the entrant, usually within the same
+              day.
+            </li>
+            <li>
+              To review it, contact the entrant through the Response Quest portal or the e-mail
+              address given in the entry. The deployment is then started and sign-in accounts for
+              the operator roles are provided. The public picture needs no account.
+            </li>
+            <li>
+              No access is needed to evaluate: the repository reproduces the complete product on
+              your own machine with one command and zero keys —
+              <code>docker compose -f infra/docker-compose.yml up -d --build</code>
+            </li>
+          </ol>
+        </section>
+
+        <aside class="col side">
+          <figure class="shot">
+            <img
+              src="/offline-assets/cop-california.jpg"
+              alt="The BEACON common operating picture for California: live fire detections, infrastructure and logistics on a map, with the situation report and resource list beside it"
+              width="1400"
+              height="874"
+            />
+            <figcaption>
+              The live picture for California (US), as deployed in September 2026.
+            </figcaption>
+          </figure>
+
+          <ul class="facts" aria-label="Key facts">
+            <li><b>45</b> data adapters, <b>38</b> live-capable (29 need no key)</li>
+            <li><b>5</b> regions on 3 continents · <b>14</b> languages</li>
+            <li><b>5,378</b> automated tests · WCAG 2.2 AA · works offline</li>
+            <li>Apache-2.0 · free and open data only</li>
+          </ul>
+
+          <nav class="links" aria-label="Project links">
+            <a href="https://github.com/andreibesleaga/QUEST-BEACON">Repository</a>
+            <a href="https://github.com/andreibesleaga/QUEST-BEACON#readme">README</a>
+            <a href="https://github.com/andreibesleaga/QUEST-BEACON/blob/main/JUDGE_MATRIX.md"
+              >Judge matrix</a
+            >
+            <a
+              href="https://github.com/andreibesleaga/QUEST-BEACON/blob/main/docs/OPERATOR_GUIDE.md"
+              >Operator guide</a
+            >
+          </nav>
+        </aside>
+      </div>
+
+      <footer class="foot">
+        <p>
+          This address is served by a small always-on front. When the full deployment is running,
+          the same address serves it directly. Page of 12 October 2026.
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>

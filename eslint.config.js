@@ -66,7 +66,7 @@ export default tseslint.config(
   {
     // ESM Node tooling (scripts/migrate.mjs — the production migrator that runs inside the runtime
     // image): Node globals for `process`/`console`; module sourceType is the flat-config default.
-    files: ['scripts/**/*.mjs'],
+    files: ['scripts/**/*.mjs', 'homepage-offline/**/*.mjs'],
     languageOptions: {
       globals: { ...globals.node },
     },

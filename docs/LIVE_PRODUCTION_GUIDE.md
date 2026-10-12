@@ -469,3 +469,14 @@ whole design.
 [`docs/audit/DATA_SOURCE_VERIFICATION.md`](audit/DATA_SOURCE_VERIFICATION.md) (per-source verdicts and
 evidence), [`docs/SPEC.md`](SPEC.md) §13 and
 [`docs/audit/UNIMPLEMENTED_REGISTER.md`](audit/UNIMPLEMENTED_REGISTER.md) (the honest-limitations ledgers).*
+
+## Always-on front for the public address (`homepage-offline/`)
+
+The public address https://quest-beacon.up.railway.app is owned by a separate, very small Railway
+service built from `homepage-offline/` (Node core only, no dependencies, no build step). When the
+deployment is running it passes every request through unchanged; when the deployment is switched off
+it serves one page that explains the project, the contest status and how to request access, and
+answers API paths with a JSON `503`. It decides by probing `GET /api/v1/health` on the deployment's own
+address (`UPSTREAM_URL`) every few seconds. Nothing is switched by hand: start or stop the deployment's
+services and the address follows. Setup, settings and the two modes are in `homepage-offline/README.md`.
+

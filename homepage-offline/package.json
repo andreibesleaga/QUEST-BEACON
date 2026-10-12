@@ -1,0 +1,15 @@
+{
+  "name": "beacon-front",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Always-on front for the BEACON deployment: passes traffic through when the app is up, serves a one-page status otherwise.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test server.test.mjs"
+  }
+}

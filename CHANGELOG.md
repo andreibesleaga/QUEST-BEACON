@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Always-on front for the public address (2026-10-12).** `homepage-offline/`: a zero-dependency Node service that owns https://quest-beacon.up.railway.app, passes traffic through to the deployment when it is up and serves a one-screen status page (project, contest status, how to request access) when it is off; its own tests (`node --test homepage-offline/server.test.mjs`), Dockerfile and `railway.json`. Documented in `homepage-offline/README.md` and `docs/LIVE_PRODUCTION_GUIDE.md`.
 - **Final audit of code and documentation (2026-09-16).** `docs/audit/FINAL-AUDIT-2026-09-16.md`: the
   inventory of what is implemented and supported, the method, and every stale or wrong statement found
   in the current-truth documents (more than forty: adapter/live/keyless counts, ADR/module/table/test
