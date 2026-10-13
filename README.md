@@ -15,6 +15,8 @@
 > throughout `docs/` is the supporting detail behind it.
 
 > **Access.** Repository: https://github.com/andreibesleaga/QUEST-BEACON (public) · Live deployment: https://quest-beacon.up.railway.app (brought online for the judging window and on request; its public picture needs no account, and the operator sign-in accounts are supplied with the entry). No access is needed to evaluate: **the uploaded archive is the complete, self-contained product** — `docker compose -f infra/docker-compose.yml up -d --build` reproduces the full COP with zero keys and zero network.
+>
+> This repository contains the actively developed, latest version, expanding on the Phase 3 contest submission.
 
 ## Why it exceeds the brief
 
