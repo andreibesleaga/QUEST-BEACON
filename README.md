@@ -83,47 +83,6 @@ criteria-by-criteria evidence map in [`JUDGE_MATRIX.md`](JUDGE_MATRIX.md).
 ![BEACON live — California (US): fire, infrastructure and logistics on the common operating picture](docs/screenshots/live/BEACON1.png)
 
 
-## Run it — one command, no keys, no network
-From this directory (the project root — `Phase3/` in the current monorepo layout):
-```bash
-docker compose -f infra/docker-compose.yml up -d --build   # Postgres → migrations → app
-open http://localhost:3000
-```
-That is the whole setup. **No API key, no account, no egress** — the stack ships air-gapped by default
-(`AI_MODE=off`, sources cached/mock) and still renders a full COP with its built-in demo seed. Demo zones:
-**California**, **Romania**, Spain, Greece, Philippines. Walkthrough:
-[docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
-
-> ⚠️ The compose file lives at `infra/docker-compose.yml`, so the `-f` flag is **required** — a bare
-> `docker compose up` from the project root exits 1 with *"no configuration file provided: not found"*.
-> Tear down with `docker compose -f infra/docker-compose.yml down -v`.
-> The command above is the **offline** judge path and is meant to land on the air-gapped defaults. For
-> the **live** posture use `npm run docker:up` instead — it renders your `.env` into the compose
-> env-file first; bare compose skips that and falls back to the offline defaults.
-> To develop without Docker: `nvm use && npm install && npm run dev`.
-
-## Gates — machine-produced, not asserted from memory
-| Gate | Command | Result |
-|---|---|---|
-| Lint | `./node_modules/.bin/eslint .` | **0** |
-| Types | `./node_modules/.bin/tsc --noEmit` | **0** |
-| Unit/integration | `./node_modules/.bin/vitest run` | **5378 passed / 6 skipped (5384), exit 0** (2026-09-16) |
-| Integration (real Postgres) | `npm run test:integration` | **18 passed** against PostgreSQL 16 (2026-09-11). Opt-in via `DATABASE_URL_TEST`; absent ⇒ skipped, so `npm test` and CI are unaffected. It applies the REAL migration files rather than pushing the schema, because the defect it was built for lived in a migration the schema definition knew nothing about |
-| …with coverage | `./node_modules/.bin/vitest run --coverage` | **green, every floor met (2026-09-15: 96.0 % statements / 90.9 % branches overall)** — and now enforced on every PR by CI. Its first CI run *failed* at 98.97% branch coverage against the 99% `src/application/**` floor: real drift accumulated since 2026-08-02, closed by covering `newsOutletProvenance`'s degrade branches. The floor was **not** lowered |
-| Architecture boundaries | `./node_modules/.bin/depcruise src app` | **0 violations across 911 modules** (2026-09-15) |
-| API contract | `npm run docs` (`tests/api/openapi-contract.test.ts`) | **36 paths · 39 operations · 66 schemas**; every operation with an id, summary and responses; every operation but the unauthenticated `/health` liveness probe declares its minimum role; every `$ref` resolves (2026-09-15) |
-| Dependencies | `npm audit --audit-level=high` | **exit 0 — 0 high / 0 critical** (7 moderate, dev-only; re-measured **2026-09-11**). This gate was **RED** on 2026-09-11 before that measurement: 2 critical (unauthenticated RCE in Next.js ×2, and an XSS sanitizer bypass in the library that renders the map) and 3 high. Cleared by patching the non-breaking set and taking `maplibre-gl` 5→6 for the critical, which needed a source change for its v6 named export. Recorded here rather than quietly re-measured, because a gate that was red is a fact about the project |
-| Build | `./node_modules/.bin/next build` | ✅ (2026-09-15) |
-| Browser | `./node_modules/.bin/playwright test` | **214 passed / 26 skipped / 0 failed** (2026-09-15), run on every PR by CI on a clean runner across 4 device projects × 5 zones, including a real offline reload through the service worker (`e2e/pwa-offline.spec.ts`). The 2026-08-10 "mid-re-baseline" state (5 moved visual baselines + 2 flake classes) is fully resolved: baselines re-minted, and the flakes root-caused to a stale reused web server (`reuseExistingServer` now off by default). Read the WebGL caveat above before quoting this |
-
-Every row was re-run on **2026-09-15** on the commit this README ships with; each carries its own
-machine-produced date rather than being restated as fresh, because *"an unverified thing is
-'unverified', never 'fine'"* is the rule this project is graded against. **Every figure on this page must
-be re-produced on the tagged commit; a stale gate figure in a README is precisely the drift class this
-project has been fighting, and it has bitten here before** (`depcruise 0/723`, `301 files / 3615 tests`,
-`Playwright 86 passed` were all wrong at the time they were displayed).
-**Hexagonal boundaries are machine-enforced, not merely described** — the rules live in
-[`.dependency-cruiser.cjs`](.dependency-cruiser.cjs) and "0 violations across 911 modules" is the claim.
 
 ## Orient in 5 minutes
 | Read | For |
@@ -149,6 +108,54 @@ Provenance + citations on everything · deterministic source of truth (LLM never
 human-in-the-loop before any public action · **total redundancy** (every layer has a fallback ladder;
 offline/air-gapped works) · free/open data only · fail-closed AI-compliance gateway on every model call ·
 WCAG 2.2 AA crisis-first UX.
+
+
+## Run it — one command, no keys, no network
+From this directory (the project root — `Phase3/` in the current monorepo layout):
+```bash
+docker compose -f infra/docker-compose.yml up -d --build   # Postgres → migrations → app
+open http://localhost:3000
+```
+That is the whole setup. **No API key, no account, no egress** — the stack ships air-gapped by default
+(`AI_MODE=off`, sources cached/mock) and still renders a full COP with its built-in demo seed. Demo zones:
+**California**, **Romania**, Spain, Greece, Philippines. Walkthrough:
+[docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
+
+> ⚠️ The compose file lives at `infra/docker-compose.yml`, so the `-f` flag is **required** — a bare
+> `docker compose up` from the project root exits 1 with *"no configuration file provided: not found"*.
+> Tear down with `docker compose -f infra/docker-compose.yml down -v`.
+> The command above is the **offline** judge path and is meant to land on the air-gapped defaults. For
+> the **live** posture use `npm run docker:up` instead — it renders your `.env` into the compose
+> env-file first; bare compose skips that and falls back to the offline defaults.
+> To develop without Docker: `nvm use && npm install && npm run dev`.
+
+Backend Database is already populated with demo/mock/real data, and it can always be changed/updated, via deployment tools or other CRUD UIs (like the live production deployment Directus).
+
+![BEACON Backend DB Admin](docs/screenshots/live/BEACONBACKENDDB.png)
+
+
+## Gates — machine-produced, not asserted from memory
+| Gate | Command | Result |
+|---|---|---|
+| Lint | `./node_modules/.bin/eslint .` | **0** |
+| Types | `./node_modules/.bin/tsc --noEmit` | **0** |
+| Unit/integration | `./node_modules/.bin/vitest run` | **5378 passed / 6 skipped (5384), exit 0** (2026-09-16) |
+| Integration (real Postgres) | `npm run test:integration` | **18 passed** against PostgreSQL 16 (2026-09-11). Opt-in via `DATABASE_URL_TEST`; absent ⇒ skipped, so `npm test` and CI are unaffected. It applies the REAL migration files rather than pushing the schema, because the defect it was built for lived in a migration the schema definition knew nothing about |
+| …with coverage | `./node_modules/.bin/vitest run --coverage` | **green, every floor met (2026-09-15: 96.0 % statements / 90.9 % branches overall)** — and now enforced on every PR by CI. Its first CI run *failed* at 98.97% branch coverage against the 99% `src/application/**` floor: real drift accumulated since 2026-08-02, closed by covering `newsOutletProvenance`'s degrade branches. The floor was **not** lowered |
+| Architecture boundaries | `./node_modules/.bin/depcruise src app` | **0 violations across 911 modules** (2026-09-15) |
+| API contract | `npm run docs` (`tests/api/openapi-contract.test.ts`) | **36 paths · 39 operations · 66 schemas**; every operation with an id, summary and responses; every operation but the unauthenticated `/health` liveness probe declares its minimum role; every `$ref` resolves (2026-09-15) |
+| Dependencies | `npm audit --audit-level=high` | **exit 0 — 0 high / 0 critical** (7 moderate, dev-only; re-measured **2026-09-11**). This gate was **RED** on 2026-09-11 before that measurement: 2 critical (unauthenticated RCE in Next.js ×2, and an XSS sanitizer bypass in the library that renders the map) and 3 high. Cleared by patching the non-breaking set and taking `maplibre-gl` 5→6 for the critical, which needed a source change for its v6 named export. Recorded here rather than quietly re-measured, because a gate that was red is a fact about the project |
+| Build | `./node_modules/.bin/next build` | ✅ (2026-09-15) |
+| Browser | `./node_modules/.bin/playwright test` | **214 passed / 26 skipped / 0 failed** (2026-09-15), run on every PR by CI on a clean runner across 4 device projects × 5 zones, including a real offline reload through the service worker (`e2e/pwa-offline.spec.ts`). The 2026-08-10 "mid-re-baseline" state (5 moved visual baselines + 2 flake classes) is fully resolved: baselines re-minted, and the flakes root-caused to a stale reused web server (`reuseExistingServer` now off by default). Read the WebGL caveat above before quoting this |
+
+Every row was re-run on **2026-09-15** on the commit this README ships with; each carries its own
+machine-produced date rather than being restated as fresh, because *"an unverified thing is
+'unverified', never 'fine'"* is the rule this project is graded against. **Every figure on this page must
+be re-produced on the tagged commit; a stale gate figure in a README is precisely the drift class this
+project has been fighting, and it has bitten here before** (`depcruise 0/723`, `301 files / 3615 tests`,
+`Playwright 86 passed` were all wrong at the time they were displayed).
+**Hexagonal boundaries are machine-enforced, not merely described** — the rules live in
+[`.dependency-cruiser.cjs`](.dependency-cruiser.cjs) and "0 violations across 911 modules" is the claim.
 
 ## Repo layout note
 `docs/audit/` holds the audits of record: the **Phase-2 carry-over** (Phase-2 review and clarified
