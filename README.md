@@ -1,11 +1,13 @@
-# BEACON — Browser-based Emergency Awareness & Coordination Open Network
+# Browser-based Emergency Awareness & Coordination Open Network - Common Operating Picture
 
 > Open-source, **local-first**, near-real-time **common operating picture (COP)** for wildfires and floods.
-> One browser app that ingests free/authoritative data through pluggable adapters, fuses it into a
-> **source-cited AI situational report**, and ties it to **responder logistics** — working **fully offline**
-> and at ≈ $0, so a real agency could self-host it with no licensing or lock-in.
+> Emergency reporting and management in a one responsive browser app that ingests free/authoritative data
+> through pluggable adapters, fuses it into a **source-cited AI situational report**, and ties it to 
+> **responder logistics** — working (at $0), so a real agency could self-host it with no licensing or lock-in.
 >
-> **IEEE Response Quest™ 2026 · Phase 3 (product)** · entry #5320 · Apache-2.0 · by Andrei Besleaga
+> **IEEE Response Quest™ 2026 · Phase 3 (product)** · entry #5320 · Apache-2.0 · by Andrei N Besleaga
+
+![IEEE Response Quest - BEACON COP](docs/screenshots/banner/quest-beacon.png)
 
 > ### 🔎 Judges & first-time readers — start here: **[JUDGE_MATRIX.md](JUDGE_MATRIX.md)**
 > One page, built for a fast scan: what was promised vs what shipped, the five judging criteria with
@@ -16,9 +18,8 @@
 
 ## Why it exceeds the brief
 
-![BEACON live — California (US): fire, infrastructure and logistics on the common operating picture](docs/screenshots/live/BEACON1.png)
-![BEACON live — Romania, Romanian locale: flood layers and the situation report](docs/screenshots/live/BEACON2.png)
 ![BEACON live — California (US): map layers, air quality and shelter capacity](docs/screenshots/live/BEACON3.png)
+![BEACON live — Romania, Romanian locale: flood layers and the situation report](docs/screenshots/live/BEACON2.png)
 
 Promised a concept → shipped a **live deployment** and one-command local reproduction with zero keys.
 Promised some live sources → **45 adapters**, 38 live-capable. Promised a US demo → **5 regions on 3
@@ -78,6 +79,9 @@ criteria-by-criteria evidence map in [`JUDGE_MATRIX.md`](JUDGE_MATRIX.md).
    verification → CAP alert; hazard-avoiding routes + shelter capacity.
 4. **Responder logistics** — live resource registry, tasking, shelter capacity-vs-demand, full
    **EDXL-RM mutual-aid round-trip** + CAP v1.2 interop.
+
+![BEACON live — California (US): fire, infrastructure and logistics on the common operating picture](docs/screenshots/live/BEACON1.png)
+
 
 ## Run it — one command, no keys, no network
 From this directory (the project root — `Phase3/` in the current monorepo layout):
