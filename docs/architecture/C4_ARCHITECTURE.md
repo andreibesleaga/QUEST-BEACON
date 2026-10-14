@@ -92,7 +92,7 @@ scraping ToS-protected platforms.
 
 ```mermaid
 C4Container
-    title Container Diagram — BEACON (LOCKED stack; scale rungs flagged)
+    title Container Diagram — BEACON (LOCKED stack, scale rungs flagged)
 
     Person(user, "Responders / EOC / Public", "Browser (desktop/tablet/phone) · SMS gateway")
 
@@ -327,12 +327,12 @@ sequenceDiagram
     W->>L: geocode + classify "in-danger" intent (grounded)
     L-->>W: {geocode, classifier_score, citations}
     W->>UC: compute confidence = 0.40·geocode + 0.30·authority + 0.20·classifier + 0.10·corroboration (deterministic, Q4)
-    UC->>UC: store TRIAGED + provenance; emit AUDIT_EVENT
+    UC->>UC: store TRIAGED + provenance, emit AUDIT_EVENT
     UC-->>UI: push pin (badged "Unverified" + confidence components)
     Note over UC,K: ST1/UW5 — NO outbound CAP/EDXL while UNVERIFIED/TRIAGED
     H->>UI: review → Verify (or Reject/misinformation)
     UI->>API: PATCH /reports/:id {VERIFIED}
-    API->>UC: transition → VERIFIED; emit AUDIT_EVENT
+    API->>UC: transition → VERIFIED, emit AUDIT_EVENT
     UC->>K: build + JSON-Schema-validate CAP v1.2 (CAP_EMIT_MODE=draft→actual on human approve)
     K-->>H: CAP emitted to partners (no live IPAWS origination)
 ```
