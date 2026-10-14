@@ -26,7 +26,7 @@
 Promised a concept → shipped a **live deployment** and one-command local reproduction with zero keys.
 Promised some live sources → **45 adapters**, 38 live-capable. Promised a US demo → **5 regions on 3
 continents, 14 locales**. Promised WCAG 2.1 AA → shipped **2.2 AA with a CI gate**. Promised cited AI →
-shipped an LLM that **structurally cannot emit a number**, provable in one toggle. Promised human-in-the-loop
+shipped an LLM that narrates and summarizes information, provable in one toggle. Promised human-in-the-loop
 → enforced **at the type level** behind a fail-closed AI-compliance gateway. Promised CAP/EDXL → **full
 round-trips**. Promised push → **SSE in ~1.7 s**, trustworthy picture in **~1 s**.
 
