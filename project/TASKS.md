@@ -56,7 +56,7 @@ skip · coverage two-tier floors pass · depcruise 499 modules/0 violations · n
 53 pass/0 fail/3 designed-skip · axe 0 serious/critical (WCAG 2.2 AA) · TTTP 0.81–1.03s`. Merged to `main`:
 PR#1 `4f29d75` (S05) → PR#2 `2ea5769` (Phase-B) → PR#3 `a4828a5` (Phase-C) → PR#4 `6507d95` (Phase-D).
 **Remaining work is non-technical:** S08 human GO/NO-GO → 2–5 min demo video → IEEE portal product
-submission (entry #5320, deadline 9 Oct 2026) → repo-visibility decision.
+submission (deadline 9 Oct 2026) → repo-visibility decision.
 
 ---
 

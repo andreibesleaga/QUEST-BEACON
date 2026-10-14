@@ -109,7 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   them too (`iso` enforced as ISO-3166-1 alpha-2 by a factory invariant).
 - `llms.txt` at Phase3 root — AI-agent orientation file (absolute rules, architecture map, exact
   commands/gates, verified counts) reflecting the audited state as of 2026-07-18.
-- `docs/SUBMISSION_CHECKLIST.md` — consolidated IEEE portal #5320 submission checklist (repo-scope
+- `docs/SUBMISSION_CHECKLIST.md` — consolidated IEEE portal submission checklist (repo-scope
   decision, live validation, video, portal mechanics; deadline 9 Oct 2026).
 - Baseline security response headers in `next.config.mjs` (nosniff, X-Frame-Options DENY,
   Referrer-Policy); `.gitignore` hardened to `.env*` + `!.env.example`.
@@ -122,6 +122,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Contest entry number removed from the public product (2026-10-15).** README, judge matrix, task ledger, changelog and the always-on front page no longer carry the portal entry number; the contest is still named.
 - **Public-release pass (2026-10-10).** Audit documents relocated (`docs/audit/v1/` for the Phase-2 carry-over, `docs/audit/DATA_SOURCE_VERIFICATION.md`, dated `FINAL_AUDIT-2026-06-29.md` / `FINAL_LIVE_AUDIT-2026-08.md`) with every reference rewritten; README gains three live screenshots; access wording says the repository is public and the deployment is brought online for the judging window and on request; local machine paths, a third-party address in a feed fixture and references to internal strategy documents removed. Recorded in `docs/audit/FINAL-AUDIT-2026-09-16.md` §8.
 - Visual baselines regenerated **once** for the tablet and phone viewports — the locale switcher wraps the
   COP toolbar at those widths. This was the single regeneration budgeted for MW-A.

@@ -5,7 +5,7 @@
 > through pluggable adapters, fuses it into a **source-cited AI situational report**, and ties it to 
 > **responder logistics** — working (at $0), so a real agency could self-host it with no licensing or lock-in.
 >
-> **IEEE Response Quest™ 2026 · Phase 3 (product)** · entry #5320 · Apache-2.0 · by Andrei N Besleaga
+> **IEEE Response Quest™ 2026 · Phase 3 (product)** · Apache-2.0 · by Andrei N Besleaga
 
 ![IEEE Response Quest - BEACON COP](docs/screenshots/banner/quest-beacon.png)
 

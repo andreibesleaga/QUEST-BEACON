@@ -10,7 +10,7 @@
 
 ---
 
-# BEACON — Judge Matrix (IEEE Response Quest 2026 · Phase 3 · Entry #5320)
+# BEACON — Judge Matrix (IEEE Response Quest 2026 · Phase 3)
 
 **BEACON** — Browser-based Emergency Awareness & Coordination Open Network: an open-source,
 local-first, near-real-time **common operating picture (COP)** for wildfires and floods, with cited AI
