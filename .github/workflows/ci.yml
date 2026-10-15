@@ -178,6 +178,7 @@ jobs:
     # Gate 5 (SCA + secrets). NON-BLOCKING on purpose for now ("earn the right to block"):
     # a scanner quirk / rate-limit must not red the very FIRST CI run. These graduate to blocking
     # (drop continue-on-error) once calibrated on real runs. Documented in docs/CI_CD_PLAN.md §3.
+    # Each scanner must also continue on error so findings do not skip the remaining scans.
     name: security (audit · gitleaks · osv) [non-blocking]
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -195,9 +196,12 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-      - name: npm audit (high+)
-        run: npm audit --audit-level=high
+      - name: npm audit (production high+)
+        continue-on-error: true
+        # The runtime image uses `npm ci --omit=dev`; OSV-Scanner below still checks the full lockfile.
+        run: npm audit --omit=dev --audit-level=high
       - name: gitleaks (secret scan)
+        continue-on-error: true
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -208,6 +212,7 @@ jobs:
       # supported form is a reusable workflow requiring `security-events: write` for SARIF upload; the
       # official container needs neither and was verified locally before commit.
       - name: OSV-Scanner (lockfile CVEs)
+        continue-on-error: true
         run: |
           docker run --rm -v "${{ github.workspace }}:/src" ghcr.io/google/osv-scanner:v2.5.1 \
             scan source --lockfile=/src/package-lock.json
