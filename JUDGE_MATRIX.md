@@ -46,7 +46,7 @@ on the live deployment right now.
 | "Some sources live, some cached or mocked" | **45 adapters**, honestly tiered — **38 can serve live**, 29 with no key at all |
 | Demonstrated on US data | **5 regions on 3 continents · 14 locales** incl. RTL — a new region is a config entry, proven by a test |
 | WCAG 2.1 AA | **WCAG 2.2 AA** with an **axe gate in CI** |
-| AI-fused, cited situational report | Cited SitRep where the LLM is **structurally unable to emit a number** — provable in one toggle (AI-on == AI-off) |
+| AI-fused, cited situational report | Cited SitRep where **any model prose containing a figure is rejected** (digits in any script; number words in English), so every number comes from the engine — provable in one toggle (AI-on == AI-off) |
 | Human-in-the-loop before action | Enforced **at the type level**, behind a **fail-closed AI-compliance gateway** no adapter can bypass |
 | CAP / EDXL interoperability | **CAP v1.2 + EDXL-RM + EDXL-SitRep round-trips**, schema-validated |
 | Push, don't poll | Real **SSE push ~1.7 s**; time-to-trustworthy-picture **~1 s** against a < 10 s budget |

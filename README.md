@@ -27,8 +27,9 @@ Promised a concept → shipped a **live deployment** and one-command local repro
 Promised some live sources → **45 adapters**, 38 live-capable. Promised a US demo → **5 regions on 3
 continents, 14 locales**. Promised WCAG 2.1 AA → shipped **2.2 AA with a CI gate**. Promised cited AI →
 shipped an LLM that narrates and summarizes information, provable in one toggle. Promised human-in-the-loop
-→ enforced **at the type level** behind a fail-closed AI-compliance gateway. Promised CAP/EDXL → **full
-round-trips**. Promised push → **SSE in ~1.7 s**, trustworthy picture in **~1 s**.
+→ enforced **at the type level** behind a fail-closed AI-compliance gateway. Promised CAP/EDXL → **CAP 1.2 and
+EDXL data models as JSON**, validated against project schemas. Promised push → **SSE with polling fallback**;
+the map and cited report appear **within 2 s** on seed data in CI (20 runs).
 
 Beyond the brief entirely — all working in the live demo: early warning, COP, cited synthesis and
 logistics on **one model** · anticipatory-action protocols as config · live cameras and external context
@@ -40,11 +41,11 @@ During a wildfire or flood an emergency manager juggles half a dozen sites and s
 together by hand while minutes matter. The bottleneck is **integration + synthesis + logistics**, not raw
 data. BEACON replaces that scramble with one trustworthy picture, and its distinguishing property is a
 discipline rather than a feature: **the deterministic engine owns every number and cites its source · the
-LLM only narrates and is structurally prevented from emitting a figure · no public alert leaves the system
+LLM only narrates, and any prose containing a figure is rejected · no public alert leaves the system
 without a named human approving it, enforced at the type level.**
 
 ## What is built
-**A complete, tested product — not a prototype.** The full hexagonal spine is implemented, gated in CI,
+**A complete, tested build.** The full hexagonal spine is implemented, gated in CI,
 and reproducible on any machine with one command.
 
 | | |
@@ -60,7 +61,7 @@ and reproducible on any machine with one command.
 with method/inputs/uncertainty on every figure · NFHL∩crest predicted impact · consent → triage → human
 verification → CAP alert · hazard-avoiding evacuation routing with real ORS road routes · the logistics
 board with tasking, shelter capacity-vs-demand and pre-positioning from predictions · real SSE push
-(~1.7 s to a listening browser) · durable Postgres persistence · a fail-closed AI-compliance gateway in
+(server-sent events to listening browsers) · durable Postgres persistence · a fail-closed AI-compliance gateway in
 front of every model call · real Telegram broadcast of human-approved alerts · live camera layers and
 external context deep-links · a WCAG 2.2-AA crisis-first UI that works air-gapped · an installable,
 offline-capable browser app (flag, ADR-047) that keeps the last public picture and says when it was saved.
