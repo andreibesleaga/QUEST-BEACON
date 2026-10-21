@@ -181,7 +181,41 @@ deterministic→AI→human principle the product itself implements.*
 
 ---
 
-## What is honestly not done
+## Limits, stated plainly
+
+Everything above is built and tested. A tool for emergencies must not overstate itself, so this is
+what still needs setup, what the data allows, and what is not done. Full lists:
+[docs/SPEC.md §13](docs/SPEC.md) and [docs/audit/UNIMPLEMENTED_REGISTER.md](docs/audit/UNIMPLEMENTED_REGISTER.md).
+
+**Works once configured**
+- **Telegram alerts, image analysis and CAMARA telecom data** are built but off, or on sample data,
+  by default. Set their environment variables to turn them on. CAMARA also needs a mobile-operator agreement.
+- **Stored history.** With `FEATURE_STORE=postgres`, situation reports, citations, evacuation routes
+  and source records are saved. Without a database, BEACON recomputes them on every request.
+- **The five operator panels** (supplies, volunteer teams, shelter status, damage reports, EMS overlay)
+  show the agency's own records from the database, edited in Directus. `npm run db:seed` loads a
+  starting set. Without a database, or before data is entered, they show sample data marked MOCK.
+  The EMS overlay has no seed data, so it stays on samples.
+
+**Limited by the data sources**
+- **38 of 45 data sources serve live data, 29 of them with no key.** The other 7 cannot on free public
+  routes: ITU and CAMARA (operator access only), EAGLE-I (agency access only), USGS Water (its move to a
+  new API is unfinished), CNADNR (no machine-readable feed), EFFIS (map images, not data) and HIFLD
+  (a 2019 snapshot, not used). They fall back to cached or sample data, labelled as such. Details:
+  [docs/LIVE_PRODUCTION_GUIDE.md §1](docs/LIVE_PRODUCTION_GUIDE.md).
+- **Power outages are estimated, not observed.** Areas where a hazard meets infrastructure are marked
+  "assumed offline" at county level, and labelled that way.
+
+**Not done yet**
+- Automated browser tests run without WebGL. One test confirms the map renders on all four device types, and unit tests check the layers and shapes. (Live Operator Browser working tests and visual inspections were done on multiple devices and screens).
+- **Rumor board, mutual aid, and reunification links** are built but not yet switched on in the app, by plan.
+- **The check on how the AI words likelihood** works for English text only.
+
+
+
+
+
+
 Everything above is built, tested and running. What follows is the short, deliberate list of what is
 **not** — stated openly because honest limitation is part of this product's integrity, and because a
 system used in an emergency must never overstate itself. None of it blocks the delivered product; each
