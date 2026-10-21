@@ -32,7 +32,7 @@ jobs:
     name: static (type · lint · format · boundaries)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -53,7 +53,7 @@ jobs:
     name: unit (coverage ≥99% domain+application)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -73,7 +73,7 @@ jobs:
     name: build (next build)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -102,7 +102,7 @@ jobs:
     env:
       DATABASE_URL: postgres://postgres:ci@localhost:5432/beacon
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -158,7 +158,7 @@ jobs:
     name: browser (playwright e2e · axe · perf)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -189,7 +189,7 @@ jobs:
       # contents:read only, so the job must raise its own scope.
       pull-requests: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # gitleaks needs full history to scan commits
       - uses: actions/setup-node@v4

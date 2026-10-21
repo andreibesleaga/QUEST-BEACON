@@ -29,7 +29,7 @@ jobs:
       digest: ${{ steps.hash.outputs.digest }}
       tarball: ${{ steps.pack.outputs.tarball }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -77,7 +77,7 @@ jobs:
       id-token: write # OIDC — keyless cosign (Fulcio + Rekor)
       contents: write # create/attach the GitHub Release
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
