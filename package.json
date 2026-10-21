@@ -71,7 +71,7 @@
     "cockatiel": "^3.2.1",
     "drizzle-orm": "^0.45.2",
     "fast-xml-parser": "^5.9.3",
-    "jose": "^5.9.6",
+    "jose": "^6.2.12",
     "js-yaml": "^4.3.0",
     "lucide-react": "^1.23.0",
     "maplibre-gl": "^6.9.0",
