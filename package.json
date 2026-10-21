@@ -103,7 +103,7 @@
     "autoprefixer": "^10.5.2",
     "dependency-cruiser": "^16.8.0",
     "drizzle-kit": "^0.31.10",
-    "eslint": "^9.17.0",
+    "eslint": "^10.13.0",
     "eslint-config-next": "^15.1.0",
     "happy-dom": "^20.10.6",
     "madge": "^8.0.0",
