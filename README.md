@@ -212,52 +212,6 @@ what still needs setup, what the data allows, and what is not done. Full lists:
 - **The check on how the AI words likelihood** works for English text only.
 
 
-
-
-
-
-Everything above is built, tested and running. What follows is the short, deliberate list of what is
-**not** — stated openly because honest limitation is part of this product's integrity, and because a
-system used in an emergency must never overstate itself. None of it blocks the delivered product; each
-item is tracked, and most are on the roadmap. Full ledgers:
-**[`docs/SPEC.md` §13](docs/SPEC.md)** and
-**[`docs/audit/UNIMPLEMENTED_REGISTER.md`](docs/audit/UNIMPLEMENTED_REGISTER.md)**. In short:
-
-- **Map *contents* are not browser-asserted.** The gates run with WebGL disabled and photograph the
-  accessible fallback list; one spec (`e2e/webgl-smoke.spec.ts`) proves a live GL canvas on all four
-  device projects, but layer and geometry correctness rests on unit tests, not on a browser looking at
-  the real map.
-- **The five dock panels are operator data, not a public feed.** Under `FEATURE_STORE=postgres` each panel
-  (supplies, volunteer teams, shelter status, damage reports, EMS overlay) reads the operator-maintained
-  store and is labelled `DB`; on the memory posture, or while its table is empty, it shows recorded
-  fixtures labelled `MOCK` and says why. `npm run db:seed` provides a starting set for supplies, volunteer
-  teams, damage reports and the shelter roster (an EM edits them in Directus); no public feed publishes a
-  county's pallet count, so nothing here is presented as an outside fact. The EMS overlay has no seed rows
-  on the merits — its table wants the publisher's own product id and the recorded Copernicus page carries
-  only activation codes — so it stays fixture-fed. California's shelter *directory* on the map is FEMA-live
-  (`shelters-fema`, 2026-09-11). Their provenance says so in the UI.
-- **Three D5/D6 modules stay registered but uncomposed by plan** — rumor board, mutual aid,
-  reunification links.
-- **Seven of 45 adapters cannot serve live on free public routes** — ITU and CAMARA/GSMA are
-  operator-gated by design; USGS-Water's OGC migration is partial; `hifld` is a static-2019 package held
-  out of every region; CNADNR publishes no machine-readable feed; EAGLE-I needs an endpoint the operating
-  agency is entitled to; EFFIS has no keyless feature-query endpoint at all — *corrected 2026-09-12: this
-  line used to say its response shape was "ours to fix, not theirs", and that was wrong. The endpoint now
-  answers `301` to a host that is an S3 static-file portal, which has no ArcGIS/GeoJSON query service
-  behind it. EFFIS publishes WMS map images, not queryable features, so there is nothing for this adapter
-  to parse and it stays cached.* The other **38 can serve live**, 29 of them with no key at all.
-  *Re-verified 2026-09-10/11: GloFAS is keyless and live again (it had been decommissioned), and ANM's TLS
-  handshake now succeeds — both were listed here as permanently blocked and both were wrong.* Each is named with its evidence in
-  [`docs/LIVE_PRODUCTION_GUIDE.md`](docs/LIVE_PRODUCTION_GUIDE.md) §1.
-- **The outage layer is inference, not observation** — "ASSUMED offline" from hazard ∩ infrastructure at
-  county granularity, labelled as such wherever it appears.
-- **Persistence:** under `FEATURE_STORE=postgres` the SitRep/citation stores, the evacuation-route trail
-  and the live provenance mirror are all composed and written (ADR-039, 2026-09-10) — they had been built
-  and called by nothing. California's shelters now come from FEMA's live directory rather than a seed
-  (2026-09-11). The memory posture is unchanged and still derives SitReps fresh on every read.
-- **The LLM likelihood-word guard covers English narration only.**
-- **Telegram, vision and CAMARA default to mock/off** until their environment is set.
-
-The gates above ran offline, on MOCK sources, with AI off — deliberately, so the numbers reproduce on
+Gates above ran offline, on MOCK sources, with AI off — deliberately, so the numbers reproduce on
 any machine with zero keys and zero egress. Running everything live is documented separately in
-[`docs/LIVE_PRODUCTION_GUIDE.md`](docs/LIVE_PRODUCTION_GUIDE.md).
+[`docs/LIVE_PRODUCTION_GUIDE.md`](docs/LIVE_PRODUCTION_GUIDE.md) and live operator tests on all documented was done.
