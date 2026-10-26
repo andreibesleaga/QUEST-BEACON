@@ -37,7 +37,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - name: CycloneDX SBOM (1.6)
-        run: npx --yes @cyclonedx/cyclonedx-npm --output-file sbom.cdx.json
+        run: npx --yes @cyclonedx/cyclonedx-npm --package-lock-only --output-file sbom.cdx.json
       - name: Pack release tarball
         id: pack
         run: |
