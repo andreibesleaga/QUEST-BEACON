@@ -88,7 +88,7 @@ jobs:
           cosign sign-blob --yes "${{ needs.build.outputs.tarball }}" \
             --bundle beacon.cosign.bundle
       - name: Publish signed GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             ${{ needs.build.outputs.tarball }}
