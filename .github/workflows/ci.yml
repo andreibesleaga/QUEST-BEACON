@@ -202,7 +202,7 @@ jobs:
         run: npm audit --omit=dev --audit-level=high
       - name: gitleaks (secret scan)
         continue-on-error: true
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ github.token }}
       # NOT `uses: google/osv-scanner-action@vN` — that repo's action.yml is a STUB with no `runs:`
