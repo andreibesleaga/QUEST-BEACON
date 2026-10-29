@@ -22,7 +22,7 @@ docker compose -f infra/docker-compose.yml down -v          # tear down
 ```
 ⚠️ The `-f` is **required** — the compose file lives in `infra/`, so a bare `docker compose up` from the
 project root exits 1 with *"no configuration file provided: not found"*.
-Without Docker: `nvm use && npm install && npm run dev`. Defaults are air-gapped (`AI_MODE=off`, sources
+Without Docker: `nvm use && npm ci && npm run dev`. Defaults are air-gapped (`AI_MODE=off`, sources
 cached/mock) and still render a full COP from the built-in demo seed.
 
 **Gate commands** (exact — the same ones CI runs, mirrored in `README.md`):

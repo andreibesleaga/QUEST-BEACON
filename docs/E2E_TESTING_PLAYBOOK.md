@@ -79,7 +79,7 @@ Every key is **free** unless noted. The default offline + keyless-live paths nee
 | `ANTHROPIC_API_KEY` | paid | Cloud AI (direct Anthropic) | https://console.anthropic.com | Cloud-AI (alt) |
 | `LLM_TIER_DEFAULT_MODEL/_BASE/_KEY` | — | The actual ladder tier the proxy calls (maps a provider) | see §2 Cloud-AI | Cloud-AI |
 | `RELIEFWEB_APPNAME` | free | ReliefWeb news adapter LIVE (`SOURCE_RELIEFWEB_MODE=live`) — feeds news fusion | any registered/approved string | News fusion (LIVE) |
-| `ORS_API_KEY` | free | Real OpenRouteService road routing (`FEATURE_ROUTING=ors`) | https://openrouteservice.org/dev | ORS live route |
+| `ORS_API_KEY` | free | Real OpenRouteService road routing (`FEATURE_ROUTING=ors`) | https://account.heigit.org/signup | ORS live route |
 | `OPENCELLID_API_KEY` | free | Cell-coverage layer LIVE (`SOURCE_OPENCELLID_MODE=live`) | https://opencellid.org | Cell layer (LIVE) |
 | `CENSUS_API_KEY` | free | US Census/ACS population LIVE (`SOURCE_CENSUS_MODE=live`) | https://api.census.gov/data/key_signup.html | Population (LIVE) |
 | `WINDY_WEBCAMS_API_KEY` | free | Windy Webcams live camera pins (`SOURCE_WINDY_WEBCAMS_MODE=live`) — mandatory "provided by windy.com" badge | https://api.windy.com (Windy API portal → Webcams API) | Live cameras (Windy) |

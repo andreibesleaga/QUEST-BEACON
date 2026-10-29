@@ -9,6 +9,11 @@ Please read the two governing documents before your first change:
 - **`agents/CONSTITUTION.md`** — project law (≥99% coverage / test-first, deterministic→AI→human,
   provenance & citations, security-by-default). These are non-negotiable.
 
+> Both files live in the maintainer's `agents/` governance folder, which is gitignored and is **not in
+> this repository** (`SECURITY.md`, Scope). In a clone, the same rules are in this file,
+> `docs/ENGINEERING_PRINCIPLES.md` (quality bar and Definition of Done) and `llms.txt` ("Absolute
+> rules"); `AGENTS.md` at the root points coding agents to them.
+
 ## 1. Setup
 
 ```sh
@@ -35,7 +40,7 @@ npm run test:coverage    # Gate 3 — vitest run --coverage; FAILS under 99% on 
 npm run build            # next build
 npm run migrate          # Gate 4 — drizzle-kit migrate (needs a Postgres 16 + DATABASE_URL)
 npx playwright test      # Browser — golden-path e2e + axe WCAG 2.2 AA + TTTP budget (builds+starts prod itself)
-npm audit --audit-level=high   # Gate 5 — no high/critical CVEs
+npm audit --audit-level=high   # Gate 5 — no high/critical CVEs (CI adds --omit=dev: runtime deps only)
 ```
 
 > The security lane (`npm audit`, gitleaks, OSV-Scanner) is currently **non-blocking** in CI
@@ -99,7 +104,9 @@ tracked in `.github/PINNING_CHECKLIST.md` ("Follow-ups deferred").
 ## 7. CI/CD
 
 What is actually wired is `.github/workflows/` (`ci.yml` PR-blocking, `nightly.yml` non-blocking,
-`release.yml` tag-driven); `docs/CI_CD.md` is the CI/CD *standard* — the target lane design, with an
+`release.yml` tag-driven; on 2026-10-29 `nightly.yml` and `release.yml` are both disabled on GitHub,
+and `ci.yml` runs on pull requests and on pushes to branches other than `main`); `docs/CI_CD.md` is
+the CI/CD *standard* — the target lane design, with an
 as-built note stating which parts the workflows implement today. Every third-party action is pinned
 to a major tag with a `# TODO(pin)` — resolve to full SHAs before enabling protection (checklist:
 `.github/PINNING_CHECKLIST.md`). Changing CI/CD is a governance-gated action requiring human approval.

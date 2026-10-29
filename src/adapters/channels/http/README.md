@@ -17,6 +17,9 @@ RBAC + business logic. Tested deterministically without spinning up Next.js.
 | `routing.ts` | REST route → canonical `Command` mapping + body validation |
 | `sustainability.ts` | Standalone `/.well-known/sustainability` (schema-valid, cached, non-blocking) |
 | `http-dispatcher.ts` | `handleHttp` + `createHttpDeps` / `getHttpDeps` (build core ONCE, reuse) |
+| `credentials.ts` | Named-user accounts from `AUTH_USERS` behind `POST /auth/login` (scrypt-derived keys, constant-time compare) |
+| `index.ts` | Barrel: the public exports of this channel |
+| `routes/` | Feature routes beside the core commands (`feature-router.ts` and one module per area: interop, logistics, panels, map, stream, queue, incidents, threshold rules, audit events, adapter health, incident summary) |
 
 The Next.js App-Router delegators (`app/api/v1/[...path]/route.ts`,
 `app/.well-known/sustainability/route.ts`) are trivial: `Request → HttpRequest → handleHttp → Response`.
@@ -31,8 +34,8 @@ The Next.js App-Router delegators (`app/api/v1/[...path]/route.ts`,
 | `GET /api/v1/incidents/{id}/sitrep` | `{verb:'sitrep', incidentId}` | PUBLIC | 200 (+ citations) |
 | `GET /api/v1/sources` | `{verb:'sources', regionId?}` | PUBLIC | 200 |
 | `POST /api/v1/reports` `{text,consent,lat?,lng?}` | `{verb:'report',…}` | PUBLIC | 201 |
-| `PATCH /api/v1/reports/{id}` `{decision,actorId}` | `{verb:'verify',…}` | VERIFIER | 202 |
-| `POST /api/v1/alerts` `{incidentId,headline}` | `{verb:'alert:draft',…}` | RESPONDER | 200 |
+| `PATCH /api/v1/reports/{id}` `{decision,emitCap?}` | `{verb:'verify',…}` | VERIFIER | 202 |
+| `POST /api/v1/alerts` `{incidentId,headline}` | `{verb:'alert:draft',…}` | VERIFIER | 201 |
 | `GET /api/v1/health` | — (liveness probe) | PUBLIC | 200 `{status:'ok'}` |
 | `GET /api/v1/me` | — (echoes resolved role) | PUBLIC | 200 `{role}` |
 | `GET /.well-known/sustainability` | — (plugin, origin-root) | PUBLIC | 200 (schema-valid) |

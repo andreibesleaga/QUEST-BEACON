@@ -50,7 +50,7 @@ Three rules shape everything you see, and they are enforced by the software rath
 |---|---|---|
 | **PUBLIC** (no sign-in) | See the whole public picture; send an SOS/report with consent; request an evacuation route | See precise report positions; see the verification queue; approve anything |
 | **RESPONDER** | Everything above, plus precise report positions, resources, tasking, pre-positioning, cameras' operator views | Verify reports or approve alerts |
-| **VERIFIER** | Everything above, plus triage and verify public reports, draft and review alerts | Emit a public alert |
+| **VERIFIER** | Everything above, plus triage and verify public reports, draft, review and approve alerts (approval produces the CAP message) | Read the threshold rules; export an EDXL situation report |
 | **EM** (emergency manager) | Everything, including approving an alert (which produces the CAP message), all-clear, threshold rules, the database admin link | — |
 
 Signing in uses a named account (id + password) issued by the operator of your deployment. A session

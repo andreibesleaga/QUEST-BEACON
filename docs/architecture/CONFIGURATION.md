@@ -52,16 +52,16 @@ Enumerated flags list the **default first**.
 | `DATABASE_URL_DEV` | _(=DATABASE_URL)_ | Used by the `postgres-dev` MCP server |
 | `FEATURE_STORE` | `memory` \| `postgres` | Durable store for public reports + hash-chained triage audit + regions + sources. `memory` = offline-first default (Art. XVI); `postgres` moves those stores onto the DB (incidents COP stays in-memory either way). `postgres` **requires a real `DATABASE_URL`** — the placeholder default is rejected fail-fast |
 | `FEATURE_SPATIAL` | `turf` \| `postgis` | Geo-compute engine (Turf = no PostGIS dependency) |
-| `FEATURE_CACHE` | `memory` \| `redis` | Cache backend |
+| `FEATURE_CACHE` | `memory` \| `redis` | Cache backend. `redis` is not built in this release: it selects a stub whose every call returns an error (`src/adapters/cache/redis-cache.ts`) |
 | `REDIS_URL` | _(empty)_ | Required only if `FEATURE_CACHE=redis` or `FEATURE_QUEUE=bullmq` or `FEATURE_REALTIME` uses Redis Streams |
 
 ## 3. Workers / queue / realtime (feature-flagged infra — Article XVI)
 
 | Var | Values (default first) | Purpose |
 |---|---|---|
-| `FEATURE_QUEUE` | `cron` \| `bullmq` | Ingestion worker engine. `cron` = zero-dependency; `bullmq` needs `REDIS_URL` |
-| `FEATURE_EVENTBUS` | `memory` \| `redis` | Delta event bus |
-| `FEATURE_REALTIME` | `sse` \| `polling` | Browser push. SSE primary; polling is the auto-fallback if the stream drops |
+| `FEATURE_QUEUE` | `cron` \| `bullmq` | Ingestion worker engine. `cron` = zero-dependency; `bullmq` is validated (needs `REDIS_URL`) but not built: no adapter implements `QueuePort` |
+| `FEATURE_EVENTBUS` | `memory` \| `redis` | Delta event bus. Only the in-memory bus exists (`src/adapters/eventbus/`); `redis` is not built |
+| `FEATURE_REALTIME` | `sse` \| `polling` | Browser push. SSE primary; polling is the auto-fallback if the stream drops (the browser client `app/_lib/sse.ts` then refetches every 15 s). The flag itself is read only by the schema (`src/config/index.ts`); no server-side polling adapter exists |
 | `INGEST_DEFAULT_INTERVAL_SEC` | `300` | Default poll cadence (per-adapter overrides below) |
 | `SSE_DEBOUNCE_MS` | `1500` | Coalesce window for delta pushes |
 | `SSE_HEARTBEAT_SEC` | `15` | Liveness heartbeat. **Corrected 2026-08-01 (F-411 class): this row said `20`; the code default is `15`** (`app/api/v1/stream/route.ts` `heartbeatMsFromEnv`, and `.env.example:42`). `0`/invalid ⇒ heartbeat disabled |
@@ -778,8 +778,8 @@ does not get that latitude.
 | AI budget | `BUDGET_*`, `REQUIRE_HUMAN_ABOVE_THRESHOLD` | soft within budget (auto + per-call audit) → escalate at threshold (degrade→escalate→terminate) → HARD-BLOCK + human approval over threshold/cap (ADR-018) |
 | Store | `FEATURE_STORE` (+ `DATABASE_URL`) | postgres (durable public reports + hash-chained triage audit + regions + sources) ↔ memory (offline-first default; incidents COP derives in-memory in both) |
 | Geo | `FEATURE_SPATIAL` | postgis ↔ turf (either alone suffices) |
-| Queue | `FEATURE_QUEUE` | bullmq ↔ cron |
-| Cache/bus | `FEATURE_CACHE`,`FEATURE_EVENTBUS` | redis ↔ memory |
+| Queue | `FEATURE_QUEUE` | bullmq ↔ cron (bullmq not built) |
+| Cache/bus | `FEATURE_CACHE`,`FEATURE_EVENTBUS` | redis ↔ memory (redis not built) |
 | Realtime | `FEATURE_REALTIME` | sse → polling |
 | Routing | `FEATURE_ROUTING` | ors → heuristic (valhalla/osrm are a documented future ladder rung, not yet accepted `FEATURE_ROUTING` values — see §7) |
 | Deploy | `DEPLOY_MODE` | identical artifacts: local (air-gapped, ~$0, no egress) ↔ cloud |

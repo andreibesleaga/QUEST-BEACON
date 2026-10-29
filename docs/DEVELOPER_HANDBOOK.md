@@ -52,7 +52,7 @@
 | `src/application/` | Use-cases: `derivation` (derive-cop, derive-alerts), `risk-intersection`, `priority-ranking`, `threshold-evaluation` (+ `live-signals`), `prediction-projection`, `escalation-trend`, `evac-routing`, `sitrep-synthesis`, `forecast-likelihood`, `outlook`, `anticipatory`, `impact`, `pre-positioning`, `coordination` (D4/D6 panels), `aggregate`, `governance` (retention sweep), `privacy`, `interaction` (command router = the one InteractionPort) |
 | `src/ports/` | The interfaces adapters implement: data sources, infrastructure sources, cameras, air quality, intel (LLM/Vision/compliance), public reports, logistics/routing/shelters, panels, interaction (Envelope, Command), infra (repository, cache, spatial, event bus, provenance sink, incident snapshot) |
 | `src/adapters/_shared/` | The adapter framework: `redundancy.ts` (ladder), `circuit-breaker.ts`, `resilient-http.ts` (timeouts, manual redirects, SSRF guard), `last-known-good-cache.ts`, `recorded-mock.ts`, `source-config.ts` (`SOURCE_<PREFIX>_*` resolution), `coverage.ts`, `manifest.ts`, `provenance.ts`, `anti-corruption.ts` |
-| `src/adapters/sources/<id>/` | One directory per data source (45). Each has `<id>-adapter.ts` (factory + class implementing `SourceAdapterPort<T>` and the outward domain port), `__fixtures__/` (recorded upstream responses = the MOCK rung), tests |
+| `src/adapters/sources/<id>/` | One directory per data source: 44 directories for the 45 adapters (`meteoalarm/` serves both `meteoalarm-gr` and `meteoalarm-es`). Each has `<id>-adapter.ts` (factory + class implementing `SourceAdapterPort<T>` and the outward domain port), `__fixtures__/` (recorded upstream responses = the MOCK rung), tests |
 | `src/adapters/channels/` | Driving adapters: `http/` (dispatcher, routing, rbac, credentials, rate limit, routes/*), `cli/`, `messaging/` (Telegram webhook/poll) |
 | `src/adapters/persistence/` | Drizzle schema (`schema/*.ts`), `client.ts`, read-models, repositories, seed, region/reference/shelter registries, provenance sink, incident snapshot, threshold rules, retention store; SQL migrations in `drizzle/` |
 | `src/adapters/{ai,compliance,alerting,interop,routing,logistics,spatial,cache,eventbus,memory,governance}/` | LLM/vision ladder + observability; the compliance proxy (firewall, PII, budget, audit chain, gate token); CAP/EDXL mappers + schema validation; ORS/heuristic routing; logistics stores; Turf/PostGIS; caches; event bus; the in-memory core read-models; drill recorder |
@@ -70,7 +70,7 @@
 ## 2. Run it
 
 ```bash
-nvm use && npm install
+nvm use && npm ci
 npm run dev                     # http://localhost:3000 — offline seed, no keys, MOCK sources
 cp .env.example .env            # then set what you need (see docs/RELEASE_GUIDE.md §3)
 npm run docker:up               # renders .env for compose: Postgres → migrate → seed → app
@@ -255,8 +255,9 @@ fixtures, fresh server per Playwright run, serial browser workers.
 - Composition cost is per region and per re-ingest (five regions ≈ 15–20 s on the cloud host, bounded by
   the slowest adapter's timeout); tune `LIVE_REGION_CONCURRENCY`, per-source `_TIMEOUT_MS`, and keep the
   Overpass ladder ≤ 3. The picture is served from memory between re-ingests (sub-second).
-- Narration is synchronous on the read path with `AI_MODE=cloud` (30–90 s first call per fact set;
-  memoised after) — behind a 60 s edge use `AI_MODE=off/local` or the async narration seam (ADR-038).
+- A model call can take 30–90 s for a new fact set (memoised after). The SitRep read waits at most
+  `AI_NARRATION_DEADLINE_MS` (default 1500 ms, `src/main/build-core.ts`) and then serves the
+  deterministic report while narration finishes in the background (ADR-038); `0` makes it synchronous.
 - The browser measures TTTP in `e2e/perf.spec.ts` (< 10 s budget, ≈ 1 s measured on the offline seed).
 - Build assets are hashed and immutable; the PWA makes repeat loads local.
 

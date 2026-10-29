@@ -14,7 +14,7 @@ BEACON is the **same artifact** in every posture; only environment variables dif
 | **Air-gapped** | `memory` | `off` | cached/mock | nothing — no keys, no egress | judges' one-command reproduction, field laptops |
 | **Demo, in-memory** | `memory` | `off` | live where keyless/keyed | free keys | a fast hosted demo — every feature works, fresh seed each boot (the reference deployment runs the *durable* row) |
 | **Durable** | `postgres` | `off` | live | Postgres + keys | an agency pilot: logistics/reports/audit survive restarts |
-| **Full production** | `postgres` | `cloud`/`local` | all live-capable | + LLM key or Ollama | see the latency note in §6 before enabling `cloud` |
+| **Full production** | `postgres` | `cloud`/`local` | all live-capable | + LLM key or Ollama | see the latency note in §6 (narration deadline) |
 
 Every number is deterministic in all four; `AI_MODE=off` only removes the narrated prose and labels
 the SitRep `deterministic-only`. That label is honest, not a failure.
@@ -31,7 +31,7 @@ air-gapped default. To run the **live** profile from a local `.env`, use `npm ru
 it renders `.env` into a comment-free `infra/.env.docker` first (Docker's env-file parser does not strip
 inline comments; Next.js's does — two parsers, one file, and the render is the bridge).
 
-Without Docker: `nvm use && npm install && npm run dev`.
+Without Docker: `nvm use && npm ci && npm run dev`.
 
 ## 2. Any single Docker host (VPS, on-prem box, edge device)
 
@@ -48,7 +48,10 @@ With `FEATURE_STORE=postgres`, run `node scripts/migrate.mjs` once against `DATA
 
 ## 3. Railway — the reference cloud deployment
 
-This is exactly how https://quest-beacon.up.railway.app runs. Full runbook, judge accounts and the
+This is exactly how the reference deployment runs. Its public address, https://quest-beacon.up.railway.app,
+is answered by a separate always-on front service that passes requests through to the app when it is up
+and shows a status page when it is off ([`homepage-offline/README.md`](../homepage-offline/README.md)); the
+app service has its own domain behind it. Full runbook, judge accounts and the
 posture hard-offs: [`CLOUD_DEPLOY_RAILWAY.md`](CLOUD_DEPLOY_RAILWAY.md). The admin-UI companion
 (Directus over the same Postgres) and the three gotchas that cost real time:
 [`DEMO_INFRA_RAILWAY.md`](DEMO_INFRA_RAILWAY.md).
@@ -76,9 +79,13 @@ Build and push the image first (`docker build … --target runner`), then set `i
 `kustomization.yaml`. The manifests are plain YAML — they translate 1:1 into a Helm chart or Terraform
 if your platform team prefers.
 
-**Scaling beyond one instance:** switch `FEATURE_QUEUE=bullmq`, `FEATURE_EVENTBUS=redis`,
-`FEATURE_CACHE=redis` and set `REDIS_URL`, so replicas share one ingest schedule and fan SSE deltas
-out to every connected browser.
+**Scaling beyond one instance:** the shared-state rungs are not built in this release.
+`FEATURE_QUEUE=bullmq` has no adapter (there is no `src/adapters/queue/`), `FEATURE_EVENTBUS=redis` has
+none either (`src/adapters/eventbus/` holds only the in-memory bus), and `FEATURE_CACHE=redis` selects a
+stub whose every call returns an error (`src/adapters/cache/redis-cache.ts`). Each replica therefore runs
+its own ingest loop, keeps its own in-memory picture and pushes SSE deltas only to its own browsers;
+with `FEATURE_STORE=postgres` the durable records (reports, audit, logistics, panels) are shared. Keep
+those three flags at their defaults.
 
 ## 5. Other platforms
 
@@ -95,7 +102,12 @@ The image runs unchanged anywhere that runs a container and injects environment 
 
 `NEXT_PUBLIC_*` flags are **inlined by `next build`**, so they must reach the *build* (Docker
 `--build-arg`, or the platform's build-time variables), and changing one requires a rebuild. Everything
-else is read at runtime. `infra/Dockerfile` declares every `NEXT_PUBLIC_*` flag as an `ARG`.
+else is read at runtime. `infra/Dockerfile` declares seven of them as an `ARG`:
+`NEXT_PUBLIC_AUTH_TOKEN_LOGIN`, `NEXT_PUBLIC_DEPLOY_POSTURE`, `NEXT_PUBLIC_FEATURE_OUTLOOK_PANEL`,
+`NEXT_PUBLIC_FEATURE_CITIZEN_STREAM`, `NEXT_PUBLIC_FEATURE_VISION`, `NEXT_PUBLIC_FEATURE_EXTERNAL_VIEWS`
+and `NEXT_PUBLIC_PWA`. Any other `NEXT_PUBLIC_*` flag (for example `NEXT_PUBLIC_DRILL_MODE`, the
+`NEXT_PUBLIC_BASEMAP_*` settings or the D4/D6 panel mirrors) does not reach a Docker build until an `ARG`
+and `ENV` line for it is added there.
 
 **Installable / offline COP (ADR-047).** `NEXT_PUBLIC_PWA=on` (build-time, default off) links the web-app
 manifest and registers the service worker, so a browser keeps the app shell and the last public picture
@@ -103,12 +115,13 @@ when the network drops and says when that picture was saved. It needs HTTPS (or 
 refuses a worker on a plain-http origin — and a rebuild to change. Off builds retire a previously
 registered worker on the next visit. Details: `docs/architecture/CONFIGURATION.md` §10.
 
-**AI narration latency.** With `AI_MODE=cloud`, the SitRep read path narrates synchronously through the
-compliance gateway; a large-context model call can take 30–90 s. Behind an edge with a hard request
-timeout (Railway: 60 s) that surfaces as a hanging `/status`. A short-TTL narration memo
-(`src/adapters/compliance/narration-memo.ts`) collapses repeat calls, but the *first* narration per
-fact-set still pays the full round trip. Until narration is moved off the read path (roadmap), run
-`AI_MODE=off` behind short-timeout edges, or `AI_MODE=local` (Ollama) where latency is yours to control.
+**AI narration latency.** With `AI_MODE=cloud` or `local`, a large-context model call can take 30–90 s,
+and an edge with a hard request timeout (Railway: 60 s) would cut a read that waited for it. Since
+ADR-038 the SitRep read waits at most `AI_NARRATION_DEADLINE_MS` (default 1500 ms) for the model: past
+that it returns the deterministic report, labelled `deterministic-only`, and the narration finishes in the
+background, so a later read gets the prose from the narration memo
+(`src/adapters/compliance/narration-memo.ts`). `AI_NARRATION_DEADLINE_MS=0` restores the synchronous
+behaviour; do not use it behind a short-timeout edge.
 
 ## 7. Verify any deployment in 30 seconds
 

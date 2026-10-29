@@ -447,6 +447,21 @@ scanners, and a genuinely strong signed/SBOM'd/provenanced release lane. It is *
 describe. The difference is a backlog, and none of it can be closed without new dependencies, which the
 current scope freeze forbids.
 
+### Update 2026-10-29 (documentation audit; read from GitHub and the workflow files that day)
+
+- `ci.yml` runs on `pull_request` and on `push` to every branch except `main` (`branches-ignore: [main]`).
+  Its `integration` job no longer asserts "19 base tables": it derives the expected table set from the
+  `CREATE TABLE` / `DROP TABLE` statements in `drizzle/*.sql` (23 tables today) and also asserts one
+  migrated column by name (`public_report.report_text`, migration 0006).
+- `nightly.yml` and `release.yml` are **disabled** on GitHub.
+- `release.yml` has **never completed**: all 6 runs (tags `v1.0.0-submission` to `v2.0.3-live`) failed at
+  the `CycloneDX SBOM (1.6)` step, so the provenance and signing jobs never ran and no release carries an
+  SBOM, provenance or a signature. "A genuinely strong signed/SBOM'd/provenanced release lane" above
+  describes the workflow file, not a result.
+- The `.env.example` gap above is closed in the unit job: `src/config/env-example.test.ts` pushes every
+  documented value through the real loaders. `.env.example` still sets `AI_MODE=cloud` (line 56) while
+  the code default is `off`.
+
 ---
 
 *BEACON — IEEE Response Quest 2026, Phase 3 · GABBE SDLC S03 CI/CD standard · prod-tech-lead · 2026-06-29.*

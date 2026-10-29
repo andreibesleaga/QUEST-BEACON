@@ -190,7 +190,7 @@ flowchart TB
         P1["P1 HazardSourcePort"]
         P2["P2 WeatherSourcePort"]
         P3["P3 FloodGaugePort"]
-        P4["P4 InfrastructureSourcePort"]
+        P4["P4 InfrastructurePort"]
         P5["P5 OutagePort"]
         P6["P6 NewsIntelPort"]
         P7["P7 PublicReportPort"]
@@ -431,7 +431,7 @@ flowchart LR
 | Geo | `SpatialPort` | `FEATURE_SPATIAL` | Turf ↔ PostGIS (either alone suffices) | OP2 |
 | Queue | `QueuePort` | `FEATURE_QUEUE` | CRON only — **the BullMQ rung is specified, not built** (no `src/adapters/queue/`); the port exists so it can be added without touching core code | OP2 |
 | Cache/bus | `CachePort`/`EventBusPort` | `FEATURE_CACHE`, `FEATURE_EVENTBUS` | memory ↔ Redis Streams | OP2 |
-| Realtime | (SSE handler) | `FEATURE_REALTIME` | SSE only — **the polling rung is specified, not built**; the browser falls back to refetching on the TanStack Query interval, which is not the same thing as a polling adapter behind the port | OP2 |
+| Realtime | (SSE handler) | `FEATURE_REALTIME` | SSE only — **the polling rung is specified, not built**; the browser falls back to refetching on a 15 s timer in `app/_lib/sse.ts`, which is not the same thing as a polling adapter behind the port | OP2 |
 | Routing | `RoutingPort` | `FEATURE_ROUTING` | ORS → Valhalla/OSRM → heuristic | OP2 |
 | Deploy | composition root | `DEPLOY_MODE` | identical artifacts: local air-gapped ↔ cloud | NFR portability |
 
