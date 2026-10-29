@@ -41,7 +41,7 @@ In the command reference below, `beacon <cmd>` is shorthand for `npm run cli -- 
 | `beacon sources [--region <id>]` | monitor | PUBLIC |
 | `beacon report --text "<t>" --consent [--lat <n> --lng <n>]` | intake (consent required) | PUBLIC |
 | `beacon verify <reportId> <TRIAGED\|VERIFIED\|REJECTED>` | decide (HITL) | VERIFIER |
-| `beacon alert:draft <incidentId> --headline "<h>"` | act (DRAFT only) | RESPONDER |
+| `beacon alert:draft <incidentId> --headline "<h>"` | act (DRAFT only) | VERIFIER |
 
 Global flags: `--role <PUBLIC\|RESPONDER\|VERIFIER\|EM>` (default `PUBLIC`, sets the RBAC rank the router
 enforces), `--json` (print the raw Envelope instead of the human view).
@@ -53,8 +53,13 @@ beacon status --region us-ca
 beacon sitrep us-ca-wildfire-demo --json
 beacon report --text "smoke rising over the ridge" --consent --lat 39.5 --lng -121.6
 beacon verify rep-1 TRIAGED --role VERIFIER
-beacon alert:draft ro-flood-demo --headline "Siret river rising" --role RESPONDER
+beacon alert:draft ro-flood-demo --headline "Siret river rising" --role VERIFIER
 ```
+
+With the default in-memory store, each `npm run cli` invocation builds a fresh core, so a report created
+by one invocation is not there for the next; report ids are also `rep-<timestamp>-<n>`, so `verify rep-1`
+from a shell answers `NOT_FOUND`. The `verify` example works when the CLI is driven in one process with a
+shared `CliDeps.port` and a counter `newId`, as `cli-e2e.test.ts` does (`run.ts`).
 
 ## Guarantees (identical to the HTTP API — ADR-023 §guarantees)
 

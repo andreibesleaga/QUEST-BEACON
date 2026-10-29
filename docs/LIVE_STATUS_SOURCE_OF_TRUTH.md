@@ -22,7 +22,7 @@ landing in the verification queue, and every served layer inside the region outl
 | Tier | Sources | Why |
 |---|---|---|
 | **LIVE now** (26) | FIRMS · NIFC · NWS · NWPS · Open-Meteo · GDACS · EONET · agency RSS · ReliefWeb · Mastodon · Bluesky · MeteoAlarm (ES/GR) · met.no · WMO SWIC · NFHL · NRI · OpenFEMA · CAP hub · LANCE flood · HDX population · OpenCelliD (metered) · Caltrans CCTV · ALERTWildfire · Windy webcams · OpenAQ · Sensor.Community · FEMA shelters · CEMS-RM | fetched every cycle; each stamped with its own `fetchedAt` |
-| **CACHED by configuration** | ANM (RO), CNADNR (RO), Census (needs a free key), EAGLE-I (entitled endpoint), EFFIS (no queryable service), Sentinel-2/GWIS/InciWeb/outage-proxy (registered `cached`) | `cached` on a platform with an in-memory cache is MOCK after every restart until the mode is `live` |
+| **CACHED by configuration** | ANM (RO), CNADNR (RO), Census (needs a free key), EAGLE-I (entitled endpoint), EFFIS (no queryable service), and the Sentinel-2/GWIS/InciWeb mode variables, which have no adapter of their own (`NOT WIRED` in `.env.example`; GWIS ships inside `effis`, InciWeb inside `agency-rss`) | `cached` on a platform with an in-memory cache is MOCK after every restart until the mode is `live` |
 | **CACHED → MOCK by reachability** | **OSM Overpass** — `overpass-api.de` answers `fetch failed` from the Railway host every cycle (and `406` to any client without a User-Agent — fixed 2026-09-15); **GloFAS** for regions with no configured reporting point (the log now says so); **GDELT** rate-limits by IP | mirror ladder + User-Agent (see §4); `SOURCE_GLOFAS_POINTS` per region |
 | **MOCK by design** | ITU · CAMARA/GSMA (operator-gated) · USGS Water (partial OGC migration; NWPS is the live US gauge rung) · WorldPop (regional sync unsupported upstream) | documented limitations |
 | **Not consulted** | `hifld` (held out of every region), `dot511` (covers Georgia only; removed from California) | coverage, not failure |
@@ -63,7 +63,7 @@ differs from the store — compare with `railway ssh --service Quest-BEACON -- s
 
 ```bash
 # A) AIR-GAPPED (no keys, no egress, ≈ $0) — the reproducibility floor
-docker compose -f infra/docker-compose.yml up -d --build   # or: nvm use && npm install && npm run dev
+docker compose -f infra/docker-compose.yml up -d --build   # or: nvm use && npm ci && npm run dev
 
 # B) FULL LIVE, LOCAL (.env) — docs/LIVE_PRODUCTION_GUIDE.md profile
 npm run docker:up                    # renders .env for compose, builds, runs

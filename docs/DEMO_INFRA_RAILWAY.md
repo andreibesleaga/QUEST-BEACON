@@ -8,12 +8,17 @@
 
 | Service | What it is | URL |
 |---|---|---|
-| **Quest-BEACON** | The product — the live COP | https://quest-beacon.up.railway.app |
+| **Quest-BEACON** | The product — the live COP | https://quest-beacon-live.up.railway.app (its own domain since 2026-10-12; the public address below is answered by `beacon-front`) |
 | **Postgres** | The live database (`postgres-ssl:18`) | internal only, plus an on-demand TCP proxy |
 | **directus** | Database admin UI over that same Postgres | https://directus-production-6b36.up.railway.app |
 
 All three run in one Railway project, so the video can show the deployment graph, the app, and the
 database administration side by side.
+
+**Since 2026-10-12 the project has a fourth service, `beacon-front`**, built from `homepage-offline/`. It
+owns the public address [quest-beacon.up.railway.app](https://quest-beacon.up.railway.app): it passes
+every request through to `Quest-BEACON` while that service is up and shows a one-page status (API paths
+answer a JSON `503`) while it is off. Setup and settings: [`homepage-offline/README.md`](../homepage-offline/README.md).
 
 ## Directus — database administration UI
 

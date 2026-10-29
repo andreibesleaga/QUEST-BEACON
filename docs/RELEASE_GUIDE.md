@@ -33,8 +33,10 @@ Everything else is read at process start; a variable change needs a restart/rede
    `v1.0.0-submission`, immutable).
 4. **Deploy** (§4), **verify** (§5), then announce.
 
-The release workflow (`.github/workflows/release.yml`) builds the SBOM and signs the image on a tag; the
-CI workflow (`ci.yml`) is the PR gate: static, unit+coverage, build, integration (real Postgres), browser
+The release workflow (`.github/workflows/release.yml`) builds the SBOM, the SLSA provenance and a
+cosign signature of the release tarball on a tag. State on 2026-10-29: it has failed on every tag so far
+(6 of 6 runs, at the SBOM step) and is disabled on GitHub, so no release carries an SBOM or a signature.
+The CI workflow (`ci.yml`) is the PR gate: static, unit+coverage, build, integration (real Postgres), browser
 (Playwright), security (npm audit, gitleaks, OSV — non-blocking lane).
 
 ## 3. What a live deployment must set
@@ -50,7 +52,7 @@ a specific failure once):
 | `DATABASE_URL` | the platform's Postgres URL | The placeholder default is rejected under `postgres` |
 | `DEPLOY_MODE` | `cloud` | Hard-offs the dev header/dev-login seams; anonymous = PUBLIC |
 | `AUTH_SECRET` | a long random secret | Signs the session JWT; required in cloud |
-| `AUTH_USERS` | the named accounts (id, scrypt hash, role) | The only sign-in in cloud; mint with `npm run auth:mint-tokens` / see `CLOUD_DEPLOY_RAILWAY.md` §1 |
+| `AUTH_USERS` | the named accounts as comma-separated `id:ROLE:password` triples (the app keeps only a scrypt-derived key per password, in memory) | The only sign-in in cloud; see `CLOUD_DEPLOY_RAILWAY.md` §1. `npm run auth:mint-tokens` signs bearer tokens for headless/API use, not accounts |
 | `NEXT_PUBLIC_AUTH_TOKEN_LOGIN` | `on` (build-time) | Shows the sign-in control |
 | `NEXT_PUBLIC_DEPLOY_POSTURE` | `live` (build-time) | Green LIVE chip; hides the dev role switcher |
 | `NEXT_PUBLIC_PWA` | `on` (build-time) if you want the installable/offline COP | Default off; ADR-047 |
@@ -77,7 +79,7 @@ tracked file, never in a log, never pasted into a chat. Rotate on any exposure.
 
 - **Railway (reference):** `docs/CLOUD_DEPLOY_RAILWAY.md` §2 (steps) and §5 (every variable in order).
   Auto-deploy is off by design; `npm run demo:on` redeploys the latest build, `npm run demo:off` removes
-  the deployment, `npm run demo:status` asks the URL (runbook: `docs/ops/DEMO_SWITCH.md`; implementation:
+  the deployment, `npm run demo:status` asks the URL (implementation and its reasons:
   `scripts/demo.mjs`). Point the CLI at the
   right service first (`railway status`) — being linked to the database service is a mistake this
   project has already made.

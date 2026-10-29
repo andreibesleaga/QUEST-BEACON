@@ -70,7 +70,8 @@ memory ledgers) outside the repository; their durable output is committed under 
   src/main 97/79/96/97 · src/adapters 90/83/93/90 · app 89/86/89/89.
 - Other: `npm run cli -- <cmd>` (reference CLI) · `npm run live:probe` (live source probe) ·
   `npm run check:live -- --region <id>` (deployment check) · `npm run dev` · `npm run docker:up`
-  (renders `.env` for compose) · `npm run db:seed` · `npm run export:public` (cleanroom export) ·
+  (renders `.env` for compose) · `npm run db:seed` · `npm run export:public` (cleanroom export; its
+  script stays in the private monorepo, so it fails in this repository) ·
   `npm run docs:redocly` (optional Redocly lint, not a dependency).
 
 ## Architecture (hexagonal; boundaries enforced by dependency-cruiser, 0 violations across 911 modules)
@@ -84,7 +85,8 @@ memory ledgers) outside the repository; their durable output is committed under 
   evaluation, prediction (fire cone, NFHL∩crest, forecast likelihood), sitrep-synthesis + news-grounding
   (deterministic GroundedFacts minted BEFORE the LLM; misinformation flag-not-merge), pre-positioning,
   external views, evacuation routing, anticipatory action, coordination and aggregate tiers.
-- [src/adapters/](src/adapters/): sources/ (45 adapter directories — pattern below) · _shared/
+- [src/adapters/](src/adapters/): sources/ (44 adapter directories for the 45 adapters; `meteoalarm/`
+  serves two — pattern below) · _shared/
   (RedundancyEngine ladder LIVE → last-known-good cache → recorded mock → typed unavailable; circuit
   breaker; resilient HTTP; anti-corruption; manifest loader) · persistence/ (Drizzle schema, 23 migrated
   tables, natural-key resolvers, provenance sink, panel data, SitRep history) · channels/ (HTTP routing +

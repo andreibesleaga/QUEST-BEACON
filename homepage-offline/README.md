@@ -55,10 +55,13 @@ npm run test:front                                                 # tests (also
 ## Railway setup (one time)
 
 The service lives in the same Railway project as the deployment (`sunny-stillness`) and builds from
-this directory of the same repository.
+this directory. The front (`beacon-front`) builds from this repository's `main` branch; the deployment service
+builds from the private monorepo this repository is exported from.
 
-1. Create the service from the repository with **root directory `/Phase3/homepage-offline`**
-   (Railway finds the `Dockerfile` and `railway.json` there).
+1. Create the service from the repository with **root directory `/homepage-offline`** in this
+   repository (`/Phase3/homepage-offline` in the monorepo). Railway finds the `Dockerfile` and
+   `railway.json` there; the `watchPatterns` in `railway.json` redeploy the front only when a file
+   under `homepage-offline/` changes.
 2. Give the deployment service (`Quest-BEACON`) a new generated domain name, for example
    `quest-beacon-live`, which frees the name `quest-beacon`.
 3. Give this service the generated domain `quest-beacon`, so it owns

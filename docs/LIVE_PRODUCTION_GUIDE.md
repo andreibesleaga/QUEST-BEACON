@@ -105,7 +105,7 @@ from *your* network before relying on it; the fixture rung remains behind it eit
 |---|---|---|
 | `firms` | `FIRMS_MAP_KEY` | https://firms.modaps.eosdis.nasa.gov/api/map_key/ |
 | `census` | `CENSUS_API_KEY` | https://api.census.gov/data/key_signup.html |
-| `reliefweb` | `RELIEFWEB_APPNAME` | https://apidoc.reliefweb.int/parameters#appname — **must be registered/approved**; unregistered names get 403 |
+| `reliefweb` | `RELIEFWEB_APPNAME` | https://apidoc.reliefweb.int/#appname — **must be registered/approved**; unregistered names get 403 |
 | `opencellid` | `OPENCELLID_API_KEY` | https://opencellid.org/register |
 | `openaq` | `OPENAQ_API_KEY` | https://explore.openaq.org/register (v3, sent as `X-API-Key`) |
 | `windy-webcams` | `WINDY_WEBCAMS_API_KEY` | https://api.windy.com/webcams — attribution badge is mandatory |
@@ -152,7 +152,7 @@ Register the nine in class B above, plus these operational ones:
 
 | Purpose | Variable | Source |
 |---|---|---|
-| Real road routing | `ORS_API_KEY` | https://openrouteservice.org/dev/#/signup (free tier) |
+| Real road routing | `ORS_API_KEY` | https://account.heigit.org/signup (free tier) |
 | AI synthesis (pick ≥1) | `GROQ_API_KEY` / `OPENROUTER_API_KEY` / `ANTHROPIC_API_KEY` | provider console |
 | Alert broadcast | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALERT_CHAT_IDS` | @BotFather |
 | Required contact strings | `NWS_USER_AGENT`, `METNO_USER_AGENT` | your own contact e-mail — **not a placeholder** |

@@ -21,8 +21,8 @@ role at all. That is the structural difference from dev-login, and the reason th
 |---|---|---|
 | **PUBLIC** | nothing — the default for every anonymous visitor | aggregate COP, submit a consented SOS report. **No** precise locations, no queue, no approvals |
 | **RESPONDER** | sign in with a RESPONDER account | + precise report geometry (Art. XIV), logistics tasking, routing, pre-positioning |
-| **VERIFIER** | sign in with a VERIFIER account | + the triage queue: read a claim, TRIAGE → VERIFY / REJECT |
-| **EM** | sign in with an EM account | + approve a DRAFT alert → ACTUAL CAP + Telegram broadcast (HITL, Art. XIII) |
+| **VERIFIER** | sign in with a VERIFIER account | + the triage queue: read a claim, TRIAGE → VERIFY / REJECT; draft an alert and approve a DRAFT alert → ACTUAL CAP + Telegram broadcast (HITL, Art. XIII) |
+| **EM** | sign in with an EM account | + the threshold rules (`GET /threshold-rules`) and the EDXL-SitRep export (`POST /edxl/sitrep`), the two EM-only operations in `docs/api/openapi.yaml` |
 
 **Accounts are config** (`AUTH_USERS`, `id:ROLE:password` triples), so the same mechanism works
 air-gapped with `FEATURE_STORE=memory` and on a cloud deploy with no DB seeding step. A production
@@ -72,7 +72,7 @@ tier CLOUD`), with per-role rate limits and ADR-018 budget caps (`BUDGET_PER_*_U
    DATABASE_URL=${{Postgres.DATABASE_URL}}
    # Live data + AI — same values as the local live profile in .env:
    DATA_SOURCE_COMPOSITION=adapters
-   AI_MODE=off       # cloud narration exceeds Railway's 60 s edge timeout on the SitRep read path — see docs/DEPLOYMENT.md §6
+   AI_MODE=off       # deterministic-only; with cloud the SitRep read waits at most AI_NARRATION_DEADLINE_MS (default 1500) for the model (ADR-038) — see docs/DEPLOYMENT.md §6
    COMPLIANCE_PROXY_ENABLED=on
    # …then copy every SOURCE_*_MODE, key (FIRMS_MAP_KEY, SOURCE_GLOFAS_POINTS, OPENCELLID_API_KEY,
    # WINDY_WEBCAMS_API_KEY, RELIEFWEB_APPNAME, ORS_API_KEY), LLM_TIER_*, NWS_USER_AGENT,
@@ -84,8 +84,9 @@ tier CLOUD`), with per-role rate limits and ADR-018 budget caps (`BUDGET_PER_*_U
 
    > **Set the `NEXT_PUBLIC_*` variables BEFORE the first build.** They are inlined at `next build`
    > time, and two things must both hold for them to reach the build: the variable exists in Railway's
-   > store, **and** `infra/Dockerfile` declares it as an `ARG` (it now does, for all five
-   > `NEXT_PUBLIC_*` flags). A variable added after the first deploy needs a rebuild to take effect.
+   > store, **and** `infra/Dockerfile` declares it as an `ARG` (it does for seven flags, the two above
+   > among them; the list and what to do for any other flag are in `docs/DEPLOYMENT.md` §6). A variable
+   > added after the first deploy needs a rebuild to take effect.
 5. **Run migrations, then the seed.** (Since 2026-09-14 the app also seeds itself at boot when it finds the database unseeded — ADR-046 — so a missed pre-deploy command costs one boot, not the demo. Keep the command anyway: migrations must run before the app starts.) Set the service's pre-deploy command (Settings → **Deploy →
    Pre-deploy command**) to
 
@@ -189,8 +190,9 @@ NEXT_PUBLIC_DEPLOY_POSTURE=live
 **3. Set sources to `live`, not `cached`.** On a platform whose cache is in-memory and whose container
 restarts on every deploy, `cached` means MOCK permanently: the last-known-good cache is written only by a
 live fetch, and a `cached` source never performs one. See `docs/architecture/CONFIGURATION.md` §6 and the
-three tests in `src/adapters/_shared/redundancy.test.ts` that pin it. The per-source list, including which
-need a credential and which six variables are inert, is in the ops file above.
+three tests in `src/adapters/_shared/redundancy.test.ts` that pin it. Which sources need a credential is
+`docs/LIVE_PRODUCTION_GUIDE.md` §1; the six inert variables are the `SOURCE_*_MODE` rows marked
+`NOT WIRED` in `.env.example`.
 
 **4. Fix the two placeholders that block real data.** `NWS_USER_AGENT` and `METNO_USER_AGENT` ship as
 `BEACON (contact: you@example.org)`. met.no refuses that outright; NWS is entitled to. Put a real address in.
