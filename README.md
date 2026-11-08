@@ -132,9 +132,10 @@ That is the whole setup. **No API key, no account, no egress** — the stack shi
 > env-file first; bare compose skips that and falls back to the offline defaults.
 > To develop without Docker: `nvm use && npm install && npm run dev`.
 
-Backend Database is already populated with demo/mock/real data, and it can always be changed/updated, via deployment tools or other CRUD UIs (like the live production deployment Directus).
+Backend Database is already populated with demo/mock/real data, and it can always be changed/updated, via deployment tools or other CRUD UIs (like the live production deployment Directus), on a Railway deployed cloud, with multiple services states.
 
 ![BEACON Backend DB Admin](docs/screenshots/live/BEACONBACKENDDB.png)
+![Railway Deployment](docs/screenshots/live/RailwayDeploy.png)
 
 
 ## Gates — machine-produced, not asserted from memory
