@@ -3,6 +3,7 @@
 // canonical Command, stamps receivedAt from the injected clock, dispatches through buildInteraction()'s
 // InteractionPort, and serializes the universal Envelope. ZERO core change — the router owns RBAC + logic.
 import { DomainError } from '@/domain/errors.js';
+import type { Alert } from '@/domain/alert.js';
 import type { AppUserRole } from '@/domain/app-user.js';
 import type { CommandVerb, Envelope, InteractionRequest } from '@/ports/interaction.js';
 import type { PanelDataPort } from '@/ports/panels.js';
@@ -151,6 +152,57 @@ function localeFromCookie(headers: Record<string, string | undefined>): string |
   }
 }
 
+/**
+ * The DRAFT alert a command just produced, if it produced one: `verify` with `emitCap` carries it in
+ * `meta.emittedAlert`, `alert:draft` in `data.alert`. Anything that is not a DRAFT is not this function's
+ * business — an approved alert only ever comes out of the approval route.
+ */
+function draftedAlertOf(verb: CommandVerb, envelope: Envelope): Alert | undefined {
+  const candidate: unknown =
+    verb === 'verify'
+      ? envelope.meta?.['emittedAlert']
+      : verb === 'alert:draft'
+        ? (envelope.data as { readonly alert?: unknown } | null)?.alert
+        : undefined;
+  const alert = candidate as Partial<Alert> | null | undefined;
+  return typeof alert?.id === 'string' && alert.capStatus === 'DRAFT'
+    ? (alert as Alert)
+    : undefined;
+}
+
+/**
+ * Put a freshly drafted alert where a human can review and approve it (Art. XIII).
+ *
+ * The core drafts the alert and says "DRAFT — requires authenticated approval before emit", but the
+ * approval route reads the alert store — and nothing put the draft there. Found on the live deployment on
+ * 2026-11-21: a verifier confirmed a public report with `emitCap`, the answer carried the DRAFT, and
+ * `POST /alerts/{id}/approve` answered 404; the emergency manager's queue stayed empty. The only drafts
+ * that could ever be approved were the ones threshold rules proposed (`adoptLiveDrafts`, the seed).
+ *
+ * This layer holds both the core's answer and the store, so it is the one that joins them. An alert that
+ * is already in the store is never overwritten: `saveIfAbsent` checks and writes as one operation, so an
+ * approval landing at the same moment cannot be undone by this write. A store failure must not undo a
+ * decision the core has already committed (Art. XVI): it is swallowed, and the answer still carries the
+ * draft.
+ *
+ * SCOPE OF THE GUARANTEE. The alert store is in memory (`makeInMemoryAlertStore`, in every composition):
+ * the queue holds the draft for as long as this process lives, on this instance. It does not survive a
+ * restart and is not shared between instances — the same limit every alert in the store already has.
+ */
+async function keepDraftForReview(
+  verb: CommandVerb,
+  envelope: Envelope,
+  deps: HttpDeps,
+): Promise<void> {
+  const alert = draftedAlertOf(verb, envelope);
+  if (alert === undefined) return;
+  try {
+    await deps.features.interop.alerts.saveIfAbsent(alert);
+  } catch {
+    /* the draft is still in the answer; the queue will simply not show it */
+  }
+}
+
 /** Dispatch a resolved Command through the shared core and serialize the Envelope (or error). */
 async function dispatchCommand(
   route: Extract<RouteResult, { kind: 'command' }>,
@@ -182,6 +234,7 @@ async function dispatchCommand(
   try {
     const res = await deps.interaction.handle(request);
     if (!res.ok) return json(statusForError(res.error.code), apiErrorEnvelope(res.error));
+    await keepDraftForReview(route.command.verb, res.value, deps);
     await publishDelta(route.command.verb, res.value, deps);
     return json(SUCCESS_STATUS[route.command.verb] ?? 200, res.value);
   } catch (thrown) {
@@ -305,7 +358,7 @@ function dispatchRoute(
         ...operatorLinks(principal, deps.env),
       });
     case 'sustainability':
-      return handleSustainability(deps.clock);
+      return handleSustainability(deps.clock, deps.env);
     case 'dev-login':
       return handleDevLogin(route, deps);
     case 'login':
@@ -731,10 +784,7 @@ export async function adoptLiveDrafts(next: HttpDeps, seeds: LiveSeeds): Promise
   });
   let added = 0;
   for (const proposal of proposals) {
-    const existing = await next.features.interop.alerts.get(proposal.alert.id);
-    if (existing !== null) continue;
-    await next.features.interop.alerts.save(proposal.alert);
-    added += 1;
+    if (await next.features.interop.alerts.saveIfAbsent(proposal.alert)) added += 1;
   }
   return added;
 }

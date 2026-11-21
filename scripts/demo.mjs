@@ -65,8 +65,70 @@ function banner(lines) {
   console.log(`└${'─'.repeat(width)}┘\n`);
 }
 
+/** The environment the switch acts on. Railway's own name for it; a project can hold several. */
+const ENVIRONMENT = process.env.RAILWAY_ENVIRONMENT_NAME ?? 'production';
+
+/** What the CLI says when a service has no deployment left to redeploy (CLI 5.75, 2026-11-21). */
+const NO_DEPLOYMENT = /no deployment found/i;
+
+/** Run the Railway CLI and keep what it printed, echoing it as well. Never throws. */
+function railwayCaptured(args) {
+  const run = spawnSync('railway', args, { encoding: 'utf8' });
+  const output = `${run.stdout ?? ''}${run.stderr ?? ''}`;
+  process.stdout.write(output);
+  return { code: run.error ? 2 : (run.status ?? 1), output };
+}
+
+/**
+ * Start the service when there is NO deployment to redeploy.
+ *
+ * `demo:off` removes the deployment, and from then on `railway redeploy` has nothing to act on: the CLI
+ * answers "No deployment found for service" — the switch could be turned off and not on again. A fresh
+ * deployment of the service's configured source is the same outcome, and the public API offers it as
+ * one mutation. The ids come from `railway status --json`, so nothing about the project is written into
+ * this file — and ONLY the instance in the environment named above is used: a project with a staging
+ * environment has a service of the same name there, and starting that one would leave the public demo
+ * offline while reporting success.
+ */
+function deployFresh() {
+  const status = spawnSync('railway', ['status', '--json'], { encoding: 'utf8' });
+  let ids;
+  try {
+    const environment = JSON.parse(status.stdout).environments.edges.find(
+      (edge) => edge.node.name === ENVIRONMENT,
+    );
+    const instance = environment?.node.serviceInstances.edges.find(
+      (edge) => edge.node.serviceName === SERVICE,
+    );
+    if (instance !== undefined) ids = { s: instance.node.serviceId, e: environment.node.id };
+  } catch {
+    ids = undefined;
+  }
+  if (ids === undefined) {
+    console.error(
+      `could not find the service "${SERVICE}" in the "${ENVIRONMENT}" environment (railway status --json).`,
+    );
+    return 1;
+  }
+  return railway([
+    'api',
+    'mutation start($s: String!, $e: String!) { serviceInstanceDeployV2(serviceId: $s, environmentId: $e) }',
+    '--variables',
+    JSON.stringify(ids),
+  ]);
+}
+
 async function on() {
-  const code = railway(['redeploy', '--service', SERVICE, '--yes']);
+  const redeploy = railwayCaptured(['redeploy', '--service', SERVICE, '--yes']);
+  let code = redeploy.code;
+  // Only this one failure has a second way through. A login, link or network failure is reported as it
+  // is: retrying it by another route would hide the real cause behind a second error.
+  if (code !== 0 && NO_DEPLOYMENT.test(redeploy.output)) {
+    console.error(
+      '\nNothing to redeploy (the deployment was removed). Starting a fresh deployment.',
+    );
+    code = deployFresh();
+  }
   if (code !== 0) return code;
   banner([
     'THE DEMO IS NOW PUBLIC.',
@@ -75,7 +137,8 @@ async function on() {
     'Anyone with the link can reach it. Switch it off when you are done:',
     '  npm run demo:off',
     '',
-    'A deployment takes a minute or two to start serving. Check it with:',
+    'A deployment takes about five minutes to build and start, and a few more until every answer',
+    'is fast (the first data cycle). Until then the public address shows the offline page. Check with:',
     '  npm run demo:status     (or: node scripts/check-live.mjs)',
   ]);
   return 0;

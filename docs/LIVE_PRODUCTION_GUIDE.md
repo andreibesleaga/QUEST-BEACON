@@ -367,7 +367,9 @@ Three limits of the public openrouteservice API decide when the heuristic answer
   footprint as a grid of rectangles of at most 10 km a side over its bounding rectangle — the limit is
   per polygon, so the grid is accepted — and does not ask at all for a footprint over about
   100 km × 100 km.
-- **Route length with an avoid area: about 150 km** (code 2004).
+- **Route length with an avoid area: about 150 km** (code 2004). BEACON then asks for the plain road
+  route and accepts it only if no segment of it touches the bounding rectangle of the hazard
+  footprint; otherwise the labelled heuristic answers.
 - **A road within 350 m of each end** (code 2010) — the centre of a wildland fire often has none, so
   pick an origin on a road.
 

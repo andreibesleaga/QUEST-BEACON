@@ -15,7 +15,12 @@ import type {
   PolygonGeometry,
 } from '@/domain/value-objects/geo.js';
 import type { HttpClient, HttpResponse } from '@/adapters/ai/http-client.js';
-import { avoidAreaFor, makeOrsRoutingAdapter, type OrsRoutingAdapterDeps } from './ors-routing.js';
+import {
+  avoidAreaFor,
+  makeOrsRoutingAdapter,
+  routeClearOf,
+  type OrsRoutingAdapterDeps,
+} from './ors-routing.js';
 
 const FIXTURES_DIR = fileURLToPath(new URL('./__fixtures__', import.meta.url));
 const loadFixture = (name: string): unknown =>
@@ -404,13 +409,195 @@ describe('makeOrsRoutingAdapter — footprints over the service limits', () => {
     expect(isOk(r) && r.value.avoidsHazard).toBe(true);
   });
 
-  it('does not ask ORS at all when the footprint is too large to avoid — never a road route through it', async () => {
+  it('a footprint too large for the grid: takes the plain road route only because it is clear of it', async () => {
+    // The canned route runs through Heidelberg; the footprint is most of California. No avoid area can be
+    // sent, so ORS is asked for the plain route — and it is accepted because it never comes near.
     const { http, calls } = fakeHttp({ status: 200, ok: true, json: SUCCESS_BODY });
     const r = await makeOrsRoutingAdapter(
       makeDeps(http, () => rectangle(-124, 33, -115, 42)),
-    ).route({ incidentId: INCIDENT, from: [-121.5, 39.5], to: [-121.49, 38.58] });
-    expect(calls).toHaveLength(0);
+    ).route({ incidentId: INCIDENT, from: [8.68, 49.41], to: [8.69, 49.42] });
+    expect(calls).toHaveLength(1);
+    expect((calls[0]?.body as { options?: unknown }).options).toBeUndefined();
+    expect(isOk(r) && r.value.avoidsHazard).toBe(true);
+    expect(isOk(r) && r.value.engine).toBe('ors');
+  });
+
+  it('refuses the plain road route when it passes through the footprint — never a road route through it', async () => {
+    // Same canned route, but now the oversized footprint is central Europe: the route lies inside it.
+    const { http, calls } = fakeHttp({ status: 200, ok: true, json: SUCCESS_BODY });
+    const r = await makeOrsRoutingAdapter(makeDeps(http, () => rectangle(0, 40, 20, 60))).route({
+      incidentId: INCIDENT,
+      from: [8.68, 49.41],
+      to: [8.69, 49.42],
+    });
+    expect(calls).toHaveLength(1);
     if (!isErr(r)) throw new Error('expected err');
-    expect(r.error.message).toContain('too large');
+    expect(r.error.message).toContain('passes through the hazard footprint');
+  });
+
+  it('a route too long for any avoid area (ORS 2004): asks again without one and checks the answer', async () => {
+    // The live case of 2026-11-21: 181 km from a real fire to the nearest open shelter.
+    const calls: Call[] = [];
+    const replies: HttpResponse[] = [
+      { status: 400, ok: false, json: { error: { code: 2004, message: 'exceeds limits' } } },
+      { status: 200, ok: true, json: SUCCESS_BODY },
+    ];
+    const http: HttpClient = {
+      postJson(url, body, headers = {}) {
+        calls.push({ url, body, headers });
+        return Promise.resolve(replies[calls.length - 1] as HttpResponse);
+      },
+    };
+    const fire = rectangle(-121.75, 36.2, -121.7, 36.25); // small: sent as it is on the first ask
+    const r = await makeOrsRoutingAdapter(makeDeps(http, () => fire)).route({
+      incidentId: INCIDENT,
+      from: [8.68, 49.41],
+      to: [8.69, 49.42],
+    });
+    expect(calls).toHaveLength(2);
+    expect((calls[0]?.body as { options?: unknown }).options).toBeDefined();
+    expect((calls[1]?.body as { options?: unknown }).options).toBeUndefined();
+    expect(isOk(r) && r.value.avoidsHazard).toBe(true);
+  });
+
+  it('any other refusal is still a refusal — no second request', async () => {
+    const { http, calls } = fakeHttp({
+      status: 404,
+      ok: false,
+      json: { error: { code: 2010, message: 'no routable point' } },
+    });
+    const r = await makeOrsRoutingAdapter(
+      makeDeps(http, () => rectangle(-121.75, 36.2, -121.7, 36.25)),
+    ).route({ incidentId: INCIDENT, from: [-121.71, 36.25], to: [-119.77, 36.74] });
+    expect(calls).toHaveLength(1);
+    expect(isErr(r)).toBe(true);
+  });
+});
+
+describe('routeClearOf — is a road route clear of the hazard footprint?', () => {
+  const box: PolygonGeometry = {
+    type: 'Polygon',
+    coordinates: [
+      [
+        [10, 10],
+        [20, 10],
+        [20, 20],
+        [10, 20],
+        [10, 10],
+      ],
+    ],
+  };
+
+  it('is clear when the whole path stays outside the rectangle', () => {
+    expect(
+      routeClearOf(
+        [
+          [0, 0],
+          [5, 30],
+          [30, 30],
+        ],
+        box,
+      ),
+    ).toBe(true);
+  });
+
+  it('is NOT clear when a segment crosses the rectangle although no vertex lies inside it', () => {
+    // The case a vertex-only test would miss: two points on either side of the hazard.
+    expect(
+      routeClearOf(
+        [
+          [0, 15],
+          [30, 15],
+        ],
+        box,
+      ),
+    ).toBe(false);
+  });
+
+  it('is NOT clear when the path starts inside, ends inside, or only touches an edge', () => {
+    expect(
+      routeClearOf(
+        [
+          [15, 15],
+          [40, 40],
+        ],
+        box,
+      ),
+    ).toBe(false);
+    expect(
+      routeClearOf(
+        [
+          [40, 40],
+          [15, 15],
+        ],
+        box,
+      ),
+    ).toBe(false);
+    expect(
+      routeClearOf(
+        [
+          [0, 10],
+          [30, 10],
+        ],
+        box,
+      ),
+    ).toBe(false); // runs along the southern edge
+  });
+
+  it('a diagonal that passes just outside a corner is clear', () => {
+    expect(
+      routeClearOf(
+        [
+          [0, 9],
+          [9, 0],
+        ],
+        box,
+      ),
+    ).toBe(true);
+    expect(
+      routeClearOf(
+        [
+          [21, 30],
+          [30, 21],
+        ],
+        box,
+      ),
+    ).toBe(true);
+  });
+
+  it('checks every polygon of a MultiPolygon by its own rectangle, not one rectangle around them all', () => {
+    const two: MultiPolygonGeometry = {
+      type: 'MultiPolygon',
+      coordinates: [
+        box.coordinates,
+        [
+          [
+            [40, 40],
+            [50, 40],
+            [50, 50],
+            [40, 50],
+            [40, 40],
+          ],
+        ],
+      ],
+    };
+    expect(
+      routeClearOf(
+        [
+          [25, 0],
+          [35, 60],
+        ],
+        two,
+      ),
+    ).toBe(true); // between the two
+    expect(
+      routeClearOf(
+        [
+          [25, 0],
+          [45, 45],
+        ],
+        two,
+      ),
+    ).toBe(false); // ends in the second
   });
 });

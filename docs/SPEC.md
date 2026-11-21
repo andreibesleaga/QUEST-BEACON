@@ -1384,6 +1384,12 @@ need their own `schemas/d6-*.schema.json` + guard call sites (F-142).
 > merits — its table wants the publisher's own product id and the recorded Copernicus page carries only
 > activation codes — and its provenance still says MOCK.
 
+- **The alert store is in memory, in every composition (stated 2026-11-21).** Draft alerts, approvals
+  and the record of emitted CAP documents live in one process (`makeInMemoryAlertStore`); the `alert`
+  table is migrated and not written. After a restart the rule-proposed drafts come back on the next
+  data cycle, but a draft made from a verified report, an approval and the emitted document do not;
+  a second instance has its own store.
+
 ### 13.4 ✅ RESOLVED — a privacy guarantee that was implemented but not scheduled (F-280; closed S1, 2026-08-07)
 
 > **Status: FIXED (live-demo session S1, 2026-08-07; recorded here 2026-08-10).** `src/main/scheduler.ts`
