@@ -150,6 +150,44 @@ describe('makeOrsRoutingAdapter.route', () => {
     if (isErr(r)) expect(r.error.code).toBe('NOT_FOUND');
   });
 
+  it('names the cause of a refusal by ORS code, and never forwards the coordinates ORS quotes', async () => {
+    // The 2026-11-21 live case: a valid key, HTTP 400, because the route was too long for an avoid area.
+    const tooLong = {
+      error: {
+        code: 2004,
+        message:
+          'Request parameters exceed the server configuration limits. With avoid areas, the approximated route distance must not be greater than 150000.0 meters.',
+      },
+    };
+    const offRoad = {
+      error: {
+        code: 2010,
+        message:
+          'Could not find routable point within a radius of 350.0 meters of specified coordinate 0: -121.7100000 36.2500000.',
+      },
+    };
+    const messageFor = async (status: number, json: unknown): Promise<string> => {
+      const { http } = fakeHttp({ status, ok: false, json });
+      const r = await makeOrsRoutingAdapter(makeDeps(http, () => HAZARD)).route({
+        incidentId: INCIDENT,
+        from: [-121.71, 36.25],
+        to: [-119.77, 36.74],
+      });
+      if (!isErr(r)) throw new Error('expected err');
+      return r.error.message;
+    };
+    expect(await messageFor(400, tooLong)).toBe(
+      'ORS routing HTTP 400 (ORS code 2004: request exceeds the service limits (with an avoid area the route may not be this long))',
+    );
+    const offRoadMessage = await messageFor(404, offRoad);
+    expect(offRoadMessage).toContain('ORS code 2010');
+    expect(offRoadMessage).not.toContain('121.71');
+    expect(await messageFor(400, { error: { code: 2099 } })).toBe(
+      'ORS routing HTTP 400 (ORS code 2099)',
+    );
+    expect(await messageFor(503, null)).toBe('ORS routing HTTP 503');
+  });
+
   it('returns a typed err on a 5xx response (never throws)', async () => {
     const { http } = fakeHttp({ status: 503, ok: false, json: null });
     const adapter = makeOrsRoutingAdapter(makeDeps(http, () => HAZARD));
