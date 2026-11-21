@@ -52,3 +52,11 @@ Re-run 2026-10-29: `npm audit --audit-level=high` reports **2 critical, 2 high, 
 in a runtime dependency: `zod` < 4.6.6 (high), which is also what the CI step above reports. The rest are
 dev-only (`tinypool`, `@vitest/mocker` and the `vitest` packages that depend on them, `happy-dom`, and
 `esbuild` under `drizzle-kit`).
+
+Re-run 2026-11-21, after the dependency update: `npm audit --omit=dev --audit-level=high` exits **0** —
+no high or critical advisory in a runtime dependency (`zod` is now 4.6.7). The full tree reports
+**2 critical, 1 high, 22 moderate**, all in development tools: `tinypool` under Vitest 3 (critical),
+`happy-dom` (high) and moderates under the Vitest, coverage and `drizzle-kit` toolchains. Vitest 5 and
+happy-dom 21 were both tried that day and are held for measured reasons (coverage remapping below three
+enforced floors; unhandled animation rejections); each advisory is listed in `osv-scanner.toml` with
+its reason and an expiry of 2027-02-01, and OSV-Scanner over the lockfile reports nothing unrecorded.

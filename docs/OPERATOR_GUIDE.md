@@ -226,7 +226,7 @@ curl -s -X POST http://localhost:3000/api/v1/edxl/rm \
   -H 'Content-Type: application/json' \
   -d '{"messageType":"RequestResource","originatingMessageID":"ma-demo-001"}'
 
-# Export the message + its round-trip chain (JSON, or XML via Accept header)
+# Export the message + its round-trip chain (JSON; EDXL-RM has no XML output)
 curl -s http://localhost:3000/api/v1/edxl/rm/<messageId> \
   -H "Authorization: Bearer $TOKEN"
 ```

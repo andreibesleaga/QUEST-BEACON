@@ -17,14 +17,14 @@ is frozen at the `v1.0.0-submission` tag; the repository continues as the projec
 
 | Gate | Result |
 |---|---|
-| `tsc --noEmit` · `eslint .` · `depcruise src app` · `madge --circular src` | **0 · 0 · 0 violations (911 modules) · 0 cycles** |
-| `vitest run --coverage` | **5,378 passed / 6 skipped (406 files), exit 0**; every floor met (domain + application 99/99/99/99 · main 97/79/96/97 · adapters 90/83/93/90 · app 89/86/89/89); measured 96.0 % statements / 90.9 % branches overall |
+| `tsc --noEmit` · `eslint .` · `depcruise src app` · `madge --circular src` | **0 · 0 · 0 violations (913 modules) · 0 cycles** |
+| `vitest run --coverage` | **5,414 passed / 6 skipped (409 files), exit 0** (2026-11-21); every floor met (domain + application 99/99/99/99 · main 97/79/96/97 · adapters 90/83/93/90 · app 89/86/89/89); measured 95.88 % statements / 90.95 % branches overall |
 | `npm run docs` (OpenAPI contract test) | **36 paths / 39 operations / 66 schemas**, every operation with an id, summary and responses; every operation but the unauthenticated `/health` liveness probe declares its minimum role; every `$ref` resolves; nothing marked planned |
 | `next build` | ✅ |
 | Playwright (5 zones × 4 device projects; axe; TTTP; visual; SSE; session; i18n/RTL; WebGL; PWA offline) | see `README.md` § Gates for the run on this commit |
-| `npm audit --audit-level=high` | **0 high / 0 critical** (dev-only moderates recorded in `osv-scanner.toml`) |
+| `npm audit --omit=dev --audit-level=high` | **0 high / 0 critical in runtime dependencies** (2026-11-21); test-tool advisories recorded with reasons in `osv-scanner.toml` |
 | Adapter registry | **45 registered ↔ 45 factories · 41 consumed · 4 not** (`itu`, `camara-gsma` MOCK-only by design; `hifld` held; `dot511` covers Georgia only) |
-| Locales / zones / ADRs | **14 locales** (RTL: ar, ur) · **5 zones** · **49 ADR files** (001–047 + 008a; two share the 036 number — a recorded finding) |
+| Locales / zones / ADRs | **14 locales** (RTL: ar, ur) · **5 zones** · **50 ADR files** (001–048 + 008a; two share the 036 number — a recorded finding) |
 | Live deployment (`npm run check:live`, 2026-09-15 on main a1c76eb) | us-ca **12 pass / 2 warn / 0 fail** · ro **11 / 2 / 0** (anonymous; warnings = sources not live + signed-in checks skipped). The deployment is switched off between judging windows; re-run on the day it is brought up |
 
 **Method, not just numbers:** the final code-and-docs audit is `docs/audit/FINAL-AUDIT-2026-09-16.md`
@@ -38,7 +38,7 @@ declared-but-not-real in `docs/audit/UNIMPLEMENTED_REGISTER.md`.
 
 | Portal claim | Shipped as |
 |---|---|
-| Unified live COP (fire, flood, weather, infra, outage, cell, + more) | 14 layers with per-layer freshness and tooltips on every point; outage carries the "ASSUMED offline" caveat; accessible fallback lists all 14 |
+| Unified live COP (fire, flood, weather, infra, outage, cell, + more) | 15 layers: 14 data layers with per-layer freshness and tooltips on every point, plus the satellite precipitation overlay (ADR-048); outage carries the "ASSUMED offline" caveat; accessible fallback lists all 14 |
 | AI fusion → ranked, **cited** SitRep; misinformation flagged | Deterministic grounding minted BEFORE the LLM; authority ranking; flag-not-merge; the no-LLM-numbers contract; AI-off == AI-on numbers |
 | Responsible SOS → verify → CAP; evacuation routing | Consent → triage confidence → HITL verify → DRAFT-only CAP; ORS road routing with a labelled heuristic fallback |
 | Responder logistics + EDXL-RM round-trip | Roster, forward-only tasking, capacity-vs-demand, pre-positioning, EDXL-RM/SitRep/CAP interop; durable under `FEATURE_STORE=postgres` |

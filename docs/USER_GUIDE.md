@@ -27,7 +27,8 @@ Three rules shape everything you see, and they are enforced by the software rath
 
 - **Map** — the hazard footprint (fire perimeters, hotspots, flood extents, gauges), lifeline
   infrastructure (hospitals, power, cell sites), exposure (what is inside or near the hazard), shelters,
-  weather, cameras, and the projected spread or crest, each layer switchable with its own freshness badge.
+  weather, precipitation (a satellite estimate, several hours behind), cameras, and the projected spread
+  or crest, each layer switchable; every data layer carries its own freshness badge.
   Hover a point for its name and what it is. The **legend** explains colours; colour is never the only
   signal (there is always a shape, icon or label).
 - **Situation Report (right dock, top)** — the cited summary for the selected incident: what is

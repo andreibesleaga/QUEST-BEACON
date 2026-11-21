@@ -71,7 +71,7 @@ EFFIS CACHED-only, EAGLE-I "assumed-offline", ORS route not yet UI-distinguished
 > **Machine-verified, final commit (2026-09-16):** **45 registered adapters / 41 consumed / 4 not** (`itu` +
 > `camara-gsma` MOCK-only by design; `hifld` held pending a merge-not-replace slot design; `dot511`
 > covers Georgia only) · OpenAPI **36 paths / 39 operations / 66 schemas**, zero `x-status: planned` ·
-> **49 ADR files** · vitest **5,378 passed / 6 skipped** · dependency-cruiser **0 violations / 911 modules**
+> **50 ADR files** · vitest **5,414 passed / 6 skipped** · dependency-cruiser **0 violations / 913 modules**
 > · **5 zones · 14 locales** · Playwright **214 / 26 skipped / 0 failed**.
 > *Re-produce every figure at tag time rather than quoting these (`docs/RELEASE_GUIDE.md` §2).*
 >
@@ -79,7 +79,7 @@ EFFIS CACHED-only, EAGLE-I "assumed-offline", ORS route not yet UI-distinguished
 > volunteer teams, shelter status, damage reports, EMS overlay; operator data from the store under
 > `FEATURE_STORE=postgres`, labelled `DB`, or recorded fixtures labelled `MOCK`) beside
 > the incident-summary export and casualty tally, leaving rumor board, mutual aid and reunification links
-> inert by plan · FR-8 shelter capacity-vs-demand widget · accessible map fallback lists all 14 layers ·
+> inert by plan · FR-8 shelter capacity-vs-demand widget · accessible map fallback lists all 14 data layers ·
 > session survives a same-tab reload · a cited air-quality threshold fact (openaq/airnow/sensorcommunity)
 > · population figures cite their serving adapter (census→worldpop→nri) · multilingual CAP emission,
 > clipped exposure figures, scheduled retention purge, schema-validated inbound EDXL-RM and the logistics

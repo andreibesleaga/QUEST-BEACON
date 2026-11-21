@@ -794,6 +794,16 @@ disabled** (THREAT T2.4). `EDXL_VERSION=1.0`; `CAP_SENDER` identity from config;
 `draft`→`actual` only on human approval (Art. XIII); `IPAWS_ENABLED=off` (produce+validate only, no live
 origination — C6).
 
+**CAP v1.2 XML (added 2026-11-21).** The CAP document is built and validated as JSON
+(`schemas/cap-v1.2.schema.json`, then the selected profile), and the same document is also written as
+OASIS CAP v1.2 **XML** by `src/adapters/interop/cap-xml.ts`: root namespace
+`urn:oasis:names:tc:emergency:cap:1.2`, child elements in the sequence the OASIS schema declares, and
+every instant in the CAP form (`-00:00` for UTC, no fractional seconds). `POST /alerts/{id}/approve`
+returns both (`data.cap`, `data.capXml`). Output written this way was validated against the OASIS
+`CAP-v1.2.xsd` on 2026-11-21 (the schema file is not vendored; the unit tests pin namespace, order and
+date form). EDXL-RM and EDXL-SitRep remain JSON data models with no XML output, and nothing is sent to
+IPAWS or any outside system.
+
 ### 7.1 CAP v1.2 (events → alerts; FR-9, EV5/EV10)
 
 `ALERT` → CAP `alert/info/area`. `cap_status=DRAFT` maps to CAP `status=Draft`; promotion to `ACTUAL`
@@ -1283,6 +1293,12 @@ warning so the misreading cannot recur). **Do not narrate this as "EMS/ambulance
 - **Satellite revisit gaps are real and stated openly** (Art. XV/XVI; `docs/SPEC.md:872`) — a fire or
   flood event between two satellite passes is invisible to FIRMS/GDACS/Sentinel-derived layers until the
   next pass; the freshness badge is the honest signal, not a guarantee of continuous coverage.
+- **Precipitation is a coarse, late satellite field, not radar (ADR-048, added 2026-11-21).** The
+  `precipitation` layer draws NASA GPM IMERG's half-hourly rate from NASA GIBS: about 10 km cells, and
+  the newest image was about six and a half hours old when measured on 2026-11-21. It is fetched by the
+  browser, has no server-side source record and therefore no freshness badge, enters no report and no
+  threshold rule, and is absent on an offline build. Rain still reaches the *computed* picture only
+  through warnings, river gauges and forecast crests.
 - **EFFIS ships CACHED-only** — its live endpoint is unconfirmed, stated as such rather than assumed live.
 - **ITU and CAMARA/GSMA ship MOCK-only by design** — both are operator/data-gated with no reachable
   keyless or public-sandbox live route; they are registered and boot-validated plugins, not a gap to close
