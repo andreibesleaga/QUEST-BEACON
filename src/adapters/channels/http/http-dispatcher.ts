@@ -180,8 +180,14 @@ function draftedAlertOf(verb: CommandVerb, envelope: Envelope): Alert | undefine
  * that could ever be approved were the ones threshold rules proposed (`adoptLiveDrafts`, the seed).
  *
  * This layer holds both the core's answer and the store, so it is the one that joins them. An alert that
- * is already in the store is never overwritten. A store failure must not undo a decision the core has
- * already committed (Art. XVI): it is swallowed, and the answer still carries the draft.
+ * is already in the store is never overwritten: `saveIfAbsent` checks and writes as one operation, so an
+ * approval landing at the same moment cannot be undone by this write. A store failure must not undo a
+ * decision the core has already committed (Art. XVI): it is swallowed, and the answer still carries the
+ * draft.
+ *
+ * SCOPE OF THE GUARANTEE. The alert store is in memory (`makeInMemoryAlertStore`, in every composition):
+ * the queue holds the draft for as long as this process lives, on this instance. It does not survive a
+ * restart and is not shared between instances — the same limit every alert in the store already has.
  */
 async function keepDraftForReview(
   verb: CommandVerb,
@@ -191,8 +197,7 @@ async function keepDraftForReview(
   const alert = draftedAlertOf(verb, envelope);
   if (alert === undefined) return;
   try {
-    const store = deps.features.interop.alerts;
-    if ((await store.get(alert.id)) === null) await store.save(alert);
+    await deps.features.interop.alerts.saveIfAbsent(alert);
   } catch {
     /* the draft is still in the answer; the queue will simply not show it */
   }
@@ -779,10 +784,7 @@ export async function adoptLiveDrafts(next: HttpDeps, seeds: LiveSeeds): Promise
   });
   let added = 0;
   for (const proposal of proposals) {
-    const existing = await next.features.interop.alerts.get(proposal.alert.id);
-    if (existing !== null) continue;
-    await next.features.interop.alerts.save(proposal.alert);
-    added += 1;
+    if (await next.features.interop.alerts.saveIfAbsent(proposal.alert)) added += 1;
   }
   return added;
 }

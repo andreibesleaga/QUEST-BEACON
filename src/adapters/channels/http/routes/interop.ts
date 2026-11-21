@@ -43,6 +43,14 @@ export interface AlertStore {
   list(): Promise<readonly Alert[]>;
   get(id: AlertId): Promise<Alert | null>;
   save(alert: Alert): Promise<void>;
+  /**
+   * Store the alert ONLY when no alert with its id exists; answer whether it was stored. One operation,
+   * not a `get` followed by a `save`: between those two an approval could change the alert, and the
+   * `save` would then put the older DRAFT back over it. An implementation must make the check and the
+   * write indivisible (the in-memory store does both in one synchronous step; a database store would
+   * use `INSERT … ON CONFLICT DO NOTHING`).
+   */
+  saveIfAbsent(alert: Alert): Promise<boolean>;
 }
 
 /** EDXL-RM correlation store — persists the canonical task under its round-trip correlation id. */
@@ -457,7 +465,15 @@ export async function handleEdxlSitrepPost(
 
 // ── In-memory store impls (self-contained defaults; the root may swap for repo-backed stores) ──
 
-/** In-memory AlertStore seeded with DRAFT alerts (deterministic; no DB). */
+/**
+ * In-memory AlertStore seeded with DRAFT alerts (deterministic; no DB).
+ *
+ * WHAT THIS MEANS FOR A DEPLOYMENT, stated rather than left to be discovered: this is the only AlertStore
+ * there is, and the live composition uses it too (`feature-seed.ts`). Alerts — drafts, approvals and the
+ * record of what was emitted — therefore live in ONE process and are gone after a restart; a second
+ * instance has its own. Rule-proposed drafts come back on the next data cycle, a draft made from a
+ * verified report does not. The `alert` table exists and is not written (SPEC §13.3).
+ */
 export function makeInMemoryAlertStore(seed: readonly Alert[] = []): AlertStore {
   const byId = new Map<string, Alert>(seed.map((a) => [a.id, a]));
   return {
@@ -466,6 +482,12 @@ export function makeInMemoryAlertStore(seed: readonly Alert[] = []): AlertStore 
     save: (alert) => {
       byId.set(alert.id, alert);
       return Promise.resolve();
+    },
+    // Check and write in one synchronous step: nothing can run between them.
+    saveIfAbsent: (alert) => {
+      if (byId.has(alert.id)) return Promise.resolve(false);
+      byId.set(alert.id, alert);
+      return Promise.resolve(true);
     },
   };
 }

@@ -409,3 +409,26 @@ describe('handleEdxlSitrepPost (EDXL-SitRep emission, FR-9)', () => {
     expect(res.status).toBe(403);
   });
 });
+
+describe('makeInMemoryAlertStore.saveIfAbsent — one operation, never get-then-save', () => {
+  it('stores a new alert and says so; leaves an existing one exactly as it is', async () => {
+    const store = makeInMemoryAlertStore();
+    const draft = draftAlert('alert-x');
+    expect(await store.saveIfAbsent(draft)).toBe(true);
+    // The alert is approved in the meantime; a late "save the draft" must not put the DRAFT back.
+    const approved = { ...draft, capStatus: 'ACTUAL' as const, approvedBy: APPROVER };
+    await store.save(approved);
+    expect(await store.saveIfAbsent(draft)).toBe(false);
+    expect((await store.get(asId<AlertId>('alert-x')))?.capStatus).toBe('ACTUAL');
+  });
+
+  it('two simultaneous calls for the same id store it once', async () => {
+    const store = makeInMemoryAlertStore();
+    const results = await Promise.all([
+      store.saveIfAbsent(draftAlert('alert-y')),
+      store.saveIfAbsent(draftAlert('alert-y')),
+    ]);
+    expect(results.filter(Boolean)).toHaveLength(1);
+    expect(await store.list()).toHaveLength(1);
+  });
+});
