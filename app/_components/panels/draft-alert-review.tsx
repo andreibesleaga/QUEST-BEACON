@@ -10,7 +10,7 @@ import type { ForecastEvidence, SourceRef } from '../../_lib/types.js';
 
 export interface DraftAlertItem {
   readonly id: string;
-  readonly state: string; // always 'DRAFT' at this stage
+  readonly state: string; // 'DRAFT' until a VERIFIER/EM approves it, then 'ACTUAL'
   readonly headline: string;
   readonly incidentId?: string | undefined;
   readonly provenance?: readonly SourceRef[] | undefined;
@@ -142,7 +142,10 @@ export function DraftAlertReview({
                 ) : (
                   <span className="text-xs text-fg-muted">{t('noProvenance')}</span>
                 )}
-                {onApprove ? (
+                {/* Only an outstanding DRAFT can be approved. An approved alert stays listed with its
+                    ACTUAL badge as the record of the decision — offering the control again would
+                    only produce the server's 409 (2026-11-21). */}
+                {onApprove && a.state === 'DRAFT' ? (
                   <Button size="sm" variant="outline" onClick={() => onApprove(a.id)}>
                     {t('reviewApprove')}
                   </Button>

@@ -246,10 +246,13 @@ export interface ReportsData {
   readonly reports: readonly ReportSummary[];
 }
 
-/** A computed DRAFT alert as listed for review (GET /alerts, T-387). DRAFT-only — never emitted (Art. XIII). */
+/**
+ * A computed alert as listed for review (GET /alerts, T-387). Created DRAFT and never emitted by the read
+ * (Art. XIII); once a VERIFIER/EM approves it, the same row is listed with `state` ACTUAL.
+ */
 export interface AlertSummary {
   readonly id: string;
-  readonly state: string; // always 'DRAFT' here
+  readonly state: string; // 'DRAFT' | 'ACTUAL'
   readonly category?: string;
   readonly severity?: string;
   readonly incidentId?: string;

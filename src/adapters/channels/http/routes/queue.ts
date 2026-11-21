@@ -52,7 +52,10 @@ export interface ReportQueueItem {
   readonly submittedAt?: string;
 }
 
-/** One DRAFT alert row for review. Always DRAFT here — promotion needs the HITL approve gate (Art. XIII). */
+/**
+ * One alert row for review. Every alert is created DRAFT; `state` becomes ACTUAL only through the HITL
+ * approve gate (Art. XIII), and the approved row stays listed as the record of that decision.
+ */
 export interface AlertQueueItem {
   readonly id: string;
   readonly state: string;
@@ -169,8 +172,10 @@ function toAlertItem(alert: Alert, forecast: ForecastEvidence | undefined): Aler
 
 /**
  * GET /alerts — the DRAFT alerts the threshold engine COMPUTED (FR-11). VERIFIER+ only (SPEC §2.2 line 121:
- * the alert/CAP family is VERIFIER+). Every row is cap_status=DRAFT; promotion to ACTUAL is the separate,
- * authenticated HITL approve gate (POST /alerts/:id/approve, Art. XIII) — listing never emits.
+ * the alert/CAP family is VERIFIER+). Every alert is created cap_status=DRAFT; promotion to ACTUAL is the
+ * separate, authenticated HITL approve gate (POST /alerts/:id/approve, Art. XIII) — listing never emits.
+ * An approved alert stays in the list with state ACTUAL (the reviewer sees the outcome of the decision);
+ * the client offers the approve control for DRAFT rows only.
  */
 export async function handleAlertsGet(
   req: AlertsGetRequest,

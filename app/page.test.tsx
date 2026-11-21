@@ -332,3 +332,53 @@ describe('COP page — input-bearing dock tabs KEEP volatile state across tab sw
     ).toHaveValue('Trapped near the east bridge');
   });
 });
+
+describe('COP page — approval is offered for an OUTSTANDING draft only (2026-11-21)', () => {
+  // GET /alerts keeps an approved alert in the list with state ACTUAL. Before this, the Decision tab took
+  // the FIRST row whatever its state, so after one approval its control pointed at the alert already
+  // approved and could only earn the server's 409 (found on the live deployment as emergency manager).
+  const APPROVED = {
+    id: 'alert-approved-1',
+    state: 'ACTUAL',
+    category: 'Fire',
+    severity: 'MODERATE',
+  };
+  const OUTSTANDING = { id: 'alert-draft-2', state: 'DRAFT', category: 'Met', severity: 'SEVERE' };
+
+  function serveAlerts(alerts: readonly unknown[]): void {
+    vi.spyOn(globalThis, 'fetch').mockImplementation((input: RequestInfo | URL) => {
+      const url = String(input);
+      calls.push(url);
+      return Promise.resolve(url.includes('/alerts') ? envelope({ alerts }) : routeFetch(url));
+    });
+  }
+
+  it('says there is nothing to approve when the only listed alert is already ACTUAL', async () => {
+    useUiStore.setState({ actorRole: 'EM' });
+    serveAlerts([APPROVED]);
+    const user = userEvent.setup();
+    renderCop();
+
+    await waitFor(() => expect(countOf('/alerts')).toBeGreaterThan(0));
+    await user.click(screen.getByRole('tab', { name: 'Decision' }));
+    expect(await screen.findByTestId('approve-unavailable-reason')).toHaveTextContent(
+      /nothing to approve right now/i,
+    );
+  });
+
+  it('approves the outstanding DRAFT, not the approved alert listed before it', async () => {
+    useUiStore.setState({ actorRole: 'EM' });
+    serveAlerts([APPROVED, OUTSTANDING]);
+    const user = userEvent.setup();
+    renderCop();
+
+    await waitFor(() => expect(countOf('/alerts')).toBeGreaterThan(0));
+    await user.click(screen.getByRole('tab', { name: 'Decision' }));
+    const approveButton = await screen.findByRole('button', { name: /approve/i });
+    await waitFor(() => expect(approveButton).toBeEnabled());
+    await user.click(approveButton);
+
+    await waitFor(() => expect(countOf('/alerts/alert-draft-2/approve')).toBe(1));
+    expect(countOf('/alerts/alert-approved-1/approve')).toBe(0);
+  });
+});

@@ -105,6 +105,12 @@ describe('queryKeys', () => {
       expect(queryKeys.status(CA_REGION)).toEqual(['status', CA_REGION]);
       expect(queryKeys.incidents(CA_REGION)).toEqual(['incidents', CA_REGION]);
       expect(queryKeys.sitrep(CA_INCIDENT)).toEqual(['sitrep', CA_INCIDENT]);
+      // …and the report itself is role-scoped: the narration is for signed-in readers. The incident-level
+      // key above is the prefix a delta invalidates, so it covers every role's copy.
+      expect(queryKeys.sitrepFor(CA_INCIDENT, 'EM')).toEqual(['sitrep', CA_INCIDENT, 'EM']);
+      expect(queryKeys.sitrepFor(CA_INCIDENT, 'EM').slice(0, 2)).toEqual(
+        queryKeys.sitrep(CA_INCIDENT),
+      );
 
       // ROLE scoping. Every one of these endpoints returns a DIFFERENT body to a different role — an RBAC
       // rejection, an org-narrowed list, or precise geometry that Art. XIV reveals only to RESPONDER+. The
@@ -166,6 +172,23 @@ describe('the role-gated reads re-fetch when the acting role changes (F-201)', (
 
     await waitFor(() => expect(view.result.current.isSuccess).toBe(true));
     expect(view.result.current.data!.data.reports.length).toBeGreaterThan(0);
+  });
+
+  it('useSitRep: the report is read AGAIN as the signed-in role — the signed-out copy does not stay', async () => {
+    // The live defect of 2026-11-21: a signed-out reader gets the engine's sentences only; after signing
+    // in, the same cached report stayed on screen (marked deterministic-only) because the key held no role.
+    const h = harness();
+    asRole('PUBLIC');
+
+    const view = renderHook(() => useSitRep(CA_INCIDENT), { wrapper: h.wrapper });
+    await waitFor(() => expect(view.result.current.isSuccess).toBe(true));
+    const asPublic = h.countOf('/sitrep');
+    expect(asPublic).toBeGreaterThan(0);
+
+    asRole('EM');
+
+    await waitFor(() => expect(h.countOf('/sitrep')).toBeGreaterThan(asPublic));
+    await waitFor(() => expect(view.result.current.isSuccess).toBe(true));
   });
 
   it('useAlerts: the DRAFT queue fills in when the operator becomes a VERIFIER', async () => {

@@ -876,8 +876,9 @@ paths:
       description: |
         FR-11 / T-387 / Art. XIII. The DRAFT alerts the threshold engine COMPUTED from the current
         readings (never hand-seeded literals) — the review queue for the HITL approve gate. **VERIFIER+
-        only** (SPEC §2.2: the alert/CAP family is VERIFIER+). Every row is `state=DRAFT`; promotion to
-        ACTUAL is the separate authenticated `POST /alerts/{id}/approve` (this read never emits). Response
+        only** (SPEC §2.2: the alert/CAP family is VERIFIER+). Every alert is created `state=DRAFT`;
+        promotion to ACTUAL is the separate authenticated `POST /alerts/{id}/approve` (this read never
+        emits). An approved alert stays listed with `state=ACTUAL` as the record of the decision. Response
         carries non-empty `provenance[]` + `freshness` (F1).
       x-required-role: VERIFIER
       security:
@@ -3028,14 +3029,15 @@ components:
     AlertQueueItem:
       type: object
       description: |
-        One row of the DRAFT alert review queue (GET /alerts). Always `state=DRAFT` — a threshold fire
-        never produces an ACTUAL alert (Art. XIII); promotion is the separate HITL approve gate.
+        One row of the alert review queue (GET /alerts). A threshold fire never produces an ACTUAL
+        alert (Art. XIII): every row starts `state=DRAFT`, and becomes `ACTUAL` only through the separate
+        HITL approve gate, after which it stays listed.
       required: [id, state, category, severity, incidentId]
       properties:
         id: { type: string }
         state:
           type: string
-          enum: [DRAFT]
+          enum: [DRAFT, ACTUAL]
         category:
           type: string
           enum: [Fire, Met, Safety]

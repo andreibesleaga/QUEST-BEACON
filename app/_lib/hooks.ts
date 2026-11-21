@@ -60,7 +60,13 @@ import type {
 export const queryKeys = {
   status: (regionId?: string) => ['status', regionId ?? null] as const,
   incidents: (regionId: string) => ['incidents', regionId] as const,
+  /** One incident's SitRep, for every role — the INVALIDATION prefix a delta targets. */
   sitrep: (incidentId: string) => ['sitrep', incidentId] as const,
+  // The SitRep is ROLE-scoped on the server too: a signed-out reader gets the engine's sentences only,
+  // a signed-in one may get the AI narration. Without `role` in the key, someone who opened the COP
+  // signed out and then signed in kept the signed-out report — marked `deterministic-only` — until an
+  // unrelated delta arrived (seen on the live deployment, 2026-11-21). The same defect as F-201/F-366.
+  sitrepFor: (incidentId: string, role: string) => ['sitrep', incidentId, role] as const,
   sources: (regionId?: string) => ['sources', regionId ?? null] as const,
   // F-366: GET /reports is VERIFIER+ AND the row's `geomPrecise` is revealed only to RESPONDER+ (Art. XIV) —
   // `toReportItem(r, role)` projects a DIFFERENT row per role. Without `role` in the key, an operator who
@@ -184,8 +190,11 @@ export function finishedReads(state: {
 export function useSitRep(
   incidentId: string | undefined,
 ): UseQueryResult<Envelope<SitRepData>, ApiError> {
+  // Read here rather than passed in (see `useActorRole`): every caller wants the report of whoever is
+  // signed in, and a caller that forgot to pass the role would bring the defect straight back.
+  const role = useActorRole();
   return useQuery({
-    queryKey: queryKeys.sitrep(incidentId ?? ''),
+    queryKey: queryKeys.sitrepFor(incidentId ?? '', role),
     queryFn: () => api.getSitRep(incidentId as string),
     enabled: incidentId !== undefined && incidentId !== '',
     refetchInterval: (query) =>
