@@ -496,8 +496,8 @@ function makeReportStore(
  * The feature seed the live picture runs on (ADR-044). Live-only: the DISCOVERED incidents' threshold
  * specs, hazard footprints and regions REPLACE the demo incidents' — the demo's specs would propose drafts
  * for incidents the COP no longer serves. Hybrid (`overlay.keepSeeded`): the demo incident is still served,
- * so its specs and forecast triggers keep running and the live specs are ADDED. Everything else in the seed
- * (logistics, arrival estimates) stays. The rule catalogue is the overlay's in both pictures — what the
+ * so its specs and forecast triggers keep running and the live specs are ADDED — and it keeps its OWN
+ * hazard footprint (see below). Everything else in the seed (logistics, arrival estimates) stays. The rule catalogue is the overlay's in both pictures — what the
  * live rules were read from (the table under Postgres) is what GET /threshold-rules lists.
  */
 export function withLiveOverlay(base: FeatureSeed, overlay: LiveFeatureOverlay): FeatureSeed {
@@ -507,7 +507,14 @@ export function withLiveOverlay(base: FeatureSeed, overlay: LiveFeatureOverlay):
     thresholds: overlay.keepSeeded
       ? [...base.thresholds, ...overlay.thresholds]
       : overlay.thresholds,
-    hazards: new Map([...base.hazards, ...overlay.hazards]),
+    // Hybrid: a seeded incident keeps its seeded footprint. The overlay computes a footprint for every
+    // served incident as the rectangle around ALL hazard vertices of its derivation, and under hybrid the
+    // demo incident's derivation holds the region's live hazards as well — on 2026-11-21 that made the
+    // Butte County scenario's footprint a rectangle reaching a real fire 390 km south, which no routing
+    // engine can avoid. Discovered incidents are not in the base seed, so they keep the live footprint.
+    hazards: overlay.keepSeeded
+      ? new Map([...overlay.hazards, ...base.hazards])
+      : new Map([...base.hazards, ...overlay.hazards]),
     incidentRegions: new Map([...(base.incidentRegions ?? []), ...overlay.incidentRegions]),
     // What GET /threshold-rules lists = what runs: under hybrid the seeded specs' rules still run, so the
     // catalogue carries them ahead of the live rules (each id once; forecast triggers are appended where

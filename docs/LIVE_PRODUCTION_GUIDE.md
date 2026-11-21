@@ -360,11 +360,19 @@ This gives true road routing with **avoid-polygons built from the live hazard fo
 the hazard-avoiding heuristic serves through the same port — and the UI names which engine produced the
 route, so an operator always knows what they are looking at.
 
-Two limits of the public openrouteservice API decide when the heuristic answers even with a valid key
-(measured 2026-11-21): with an area to avoid it refuses a route longer than about 150 km (its error
-code 2004), and it needs a road within 350 m of each end (code 2010) — the centre of a wildland fire
-often has none. Both are named in the deploy log (`[beacon] routing degraded: ors -> heuristic — … (ORS
-code 2004: …)`). A self-hosted openrouteservice has neither limit.
+Three limits of the public openrouteservice API decide when the heuristic answers even with a valid key
+(measured 2026-11-21):
+
+- **Avoid area: 20 km across and 200 km² per polygon** (error code 2003). BEACON sends a larger
+  footprint as a grid of rectangles of at most 10 km a side over its bounding rectangle — the limit is
+  per polygon, so the grid is accepted — and does not ask at all for a footprint over about
+  100 km × 100 km.
+- **Route length with an avoid area: about 150 km** (code 2004).
+- **A road within 350 m of each end** (code 2010) — the centre of a wildland fire often has none, so
+  pick an origin on a road.
+
+Each is named in the deploy log (`[beacon] routing degraded: ors -> heuristic — … (ORS code 2004: …)`).
+A self-hosted openrouteservice has none of them.
 
 ## 8. Step 7 — worldwide coverage
 

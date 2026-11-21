@@ -8,9 +8,14 @@ import { describe, expect, it } from 'vitest';
 import { isErr, isOk } from '@/domain/shared/result.js';
 import { asId } from '@/domain/value-objects/ids.js';
 import type { IncidentId } from '@/domain/value-objects/ids.js';
-import type { Geometry, PointGeometry, PolygonGeometry } from '@/domain/value-objects/geo.js';
+import type {
+  Geometry,
+  MultiPolygonGeometry,
+  PointGeometry,
+  PolygonGeometry,
+} from '@/domain/value-objects/geo.js';
 import type { HttpClient, HttpResponse } from '@/adapters/ai/http-client.js';
-import { makeOrsRoutingAdapter, type OrsRoutingAdapterDeps } from './ors-routing.js';
+import { avoidAreaFor, makeOrsRoutingAdapter, type OrsRoutingAdapterDeps } from './ors-routing.js';
 
 const FIXTURES_DIR = fileURLToPath(new URL('./__fixtures__', import.meta.url));
 const loadFixture = (name: string): unknown =>
@@ -292,5 +297,120 @@ describe('makeOrsRoutingAdapter.route — narrative', () => {
     if (!isOk(r)) throw new Error('expected ok');
     expect(r.value.distanceM).toBeUndefined();
     expect(r.value.steps).toBeUndefined();
+  });
+});
+
+// The public service refuses an avoid polygon wider than 20 km or larger than 200 km² — per polygon
+// (measured 2026-11-21). These pin what is sent for a footprint on each side of that line.
+describe('avoidAreaFor — an avoid area the service will accept', () => {
+  const rect = (w: number, s: number, e: number, n: number): PolygonGeometry => ({
+    type: 'Polygon',
+    coordinates: [
+      [
+        [w, s],
+        [e, s],
+        [e, n],
+        [w, n],
+        [w, s],
+      ],
+    ],
+  });
+  /** Width, height and corner-to-corner size of one ring's bounding rectangle, in km. */
+  const sizeOf = (
+    ring: readonly (readonly [number, number])[],
+  ): { w: number; h: number; d: number } => {
+    const lons = ring.map((p) => p[0]);
+    const lats = ring.map((p) => p[1]);
+    const mid = ((Math.min(...lats) + Math.max(...lats)) / 2) * (Math.PI / 180);
+    const w = (Math.max(...lons) - Math.min(...lons)) * 111.32 * Math.cos(mid);
+    const h = (Math.max(...lats) - Math.min(...lats)) * 110.57;
+    return { w, h, d: Math.hypot(w, h) };
+  };
+
+  it('sends a footprint within the limits exactly as it is', () => {
+    expect(avoidAreaFor(HAZARD)).toBe(HAZARD);
+    // The seeded demo box: 0.1° × 0.1° at 39.7°N — about 8.6 km × 11.1 km, 14 km corner to corner.
+    const demoBox = rect(-121.65, 39.65, -121.55, 39.75);
+    expect(avoidAreaFor(demoBox)).toBe(demoBox);
+  });
+
+  it('tiles the real case of 2026-11-21: a 15 km × 13 km fire rectangle, 20 km corner to corner', () => {
+    const area = avoidAreaFor(rect(-121.791, 36.192, -121.622, 36.31));
+    if (area === null || area.type !== 'MultiPolygon') throw new Error('expected a tile grid');
+    expect(area.coordinates).toHaveLength(4); // 2 columns × 2 rows
+    for (const tile of area.coordinates) {
+      const { w, h, d } = sizeOf(tile[0] as [number, number][]);
+      expect(d).toBeLessThan(18);
+      expect(w * h).toBeLessThan(180);
+    }
+  });
+
+  it('covers the whole bounding rectangle with the tiles — nothing of the footprint is left out', () => {
+    const area = avoidAreaFor(rect(-121.95, 39.43, -121.25, 39.97)); // about 60 km × 60 km
+    if (area === null || area.type !== 'MultiPolygon') throw new Error('expected a tile grid');
+    const all = area.coordinates.flatMap((tile) => tile[0] as [number, number][]);
+    expect(Math.min(...all.map((p) => p[0]))).toBeCloseTo(-121.95, 9);
+    expect(Math.max(...all.map((p) => p[0]))).toBeCloseTo(-121.25, 9);
+    expect(Math.min(...all.map((p) => p[1]))).toBeCloseTo(39.43, 9);
+    expect(Math.max(...all.map((p) => p[1]))).toBeCloseTo(39.97, 9);
+    expect(area.coordinates.length).toBe(36); // 6 × 6
+    for (const tile of area.coordinates)
+      expect(sizeOf(tile[0] as [number, number][]).d).toBeLessThan(18);
+  });
+
+  it('leaves a MultiPolygon alone when each of its polygons is within the limits, however far apart', () => {
+    const scattered: MultiPolygonGeometry = {
+      type: 'MultiPolygon',
+      coordinates: [
+        rect(-121.7, 36.2, -121.65, 36.25).coordinates,
+        rect(-120.0, 39.0, -119.95, 39.05).coordinates,
+      ],
+    };
+    expect(avoidAreaFor(scattered)).toBe(scattered);
+  });
+
+  it('gives up on a footprint the grid cannot reasonably cover', () => {
+    expect(avoidAreaFor(rect(-124, 33, -115, 42))).toBeNull(); // most of California
+  });
+});
+
+describe('makeOrsRoutingAdapter — footprints over the service limits', () => {
+  const rectangle = (w: number, s: number, e: number, n: number): PolygonGeometry => ({
+    type: 'Polygon',
+    coordinates: [
+      [
+        [w, s],
+        [e, s],
+        [e, n],
+        [w, n],
+        [w, s],
+      ],
+    ],
+  });
+
+  it('asks ORS with the tile grid and reports the route as hazard-avoiding', async () => {
+    const { http, calls } = fakeHttp({ status: 200, ok: true, json: SUCCESS_BODY });
+    const big = rectangle(-121.791, 36.192, -121.622, 36.31);
+    const r = await makeOrsRoutingAdapter(makeDeps(http, () => big)).route({
+      incidentId: INCIDENT,
+      from: [-121.92, 36.55],
+      to: [-121.13, 36.21],
+    });
+    const body = calls[0]?.body as {
+      options?: { avoid_polygons?: { type: string; coordinates: unknown[] } };
+    };
+    expect(body.options?.avoid_polygons?.type).toBe('MultiPolygon');
+    expect(body.options?.avoid_polygons?.coordinates).toHaveLength(4);
+    expect(isOk(r) && r.value.avoidsHazard).toBe(true);
+  });
+
+  it('does not ask ORS at all when the footprint is too large to avoid — never a road route through it', async () => {
+    const { http, calls } = fakeHttp({ status: 200, ok: true, json: SUCCESS_BODY });
+    const r = await makeOrsRoutingAdapter(
+      makeDeps(http, () => rectangle(-124, 33, -115, 42)),
+    ).route({ incidentId: INCIDENT, from: [-121.5, 39.5], to: [-121.49, 38.58] });
+    expect(calls).toHaveLength(0);
+    if (!isErr(r)) throw new Error('expected err');
+    expect(r.error.message).toContain('too large');
   });
 });

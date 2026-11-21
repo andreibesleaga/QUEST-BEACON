@@ -179,6 +179,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   "no"; figures are removed together with their units from a fixed list ("9 km/h" no longer leaves
   "/h", "2 fire stations" no longer loses "fire"); ISO instants are removed whole; pollutant codes that
   carry a digit are given by name.
+- **Road routing never answered around a real fire (2026-11-21).** The public openrouteservice API
+  refuses an avoid polygon wider than 20 km or larger than 200 km², per polygon, and a real fire's
+  bounding rectangle was 15 km × 13 km — 20 km corner to corner. A footprint over the limit is now sent
+  as a grid of rectangles (at most 10 km a side) covering its bounding rectangle, which the service
+  accepts; one too large even for that (over about 100 km × 100 km) is not sent at all, so a road route
+  through the hazard is never returned as a real one.
+- **Under the hybrid picture the demo incident's footprint spanned the region (2026-11-21).** The live
+  overlay computed it as the rectangle around every hazard of the region and replaced the seeded box;
+  with a real fire 390 km away no routing engine could avoid it. A seeded incident now keeps its seeded
+  footprint under `LIVE_PICTURE=hybrid`; discovered incidents keep the live one.
 - **The routing fallback named no cause (2026-11-21).** `ORS routing HTTP 400` now carries
   openrouteservice's own error code and a reason — code 2004, the route is too long for an avoid area —
   without forwarding the coordinates its message quotes.
