@@ -9,7 +9,8 @@
 // WHAT IT DOES. For an IDENTICAL (actorRole, modelTier, operation, payload) request, within a short TTL,
 // it returns the decision the gateway ALREADY allowed instead of calling the model again. The facts are
 // the cache key, so any change to the deterministic record — a new hotspot, a fresher gauge, a different
-// role's view — is a different key and narrates afresh.
+// role's view — is a different key and narrates afresh. The per-read report id is NOT part of the key
+// (see `keyMaterial`): with it, no two reads were ever identical.
 //
 // WHERE IT SITS, AND WHY IN FRONT. A cache hit is NOT a model call: no tokens are spent and no money
 // moves. Placing the memo in FRONT of the gateway is therefore the honest placement — the hash-chained
@@ -122,8 +123,36 @@ function remember(
 }
 
 /** The identity of a request: role + tier + operation + a stable digest of the payload (the facts). */
+/**
+ * The request as far as "is this the same question?" is concerned.
+ *
+ * A SitRep read mints a NEW report id every time, and that id rides inside every citation
+ * (`citation.sitrepId`). Hashing the payload as sent therefore made two reads of the SAME facts two
+ * different keys: on the HTTP read path the memo never hit and never joined a flight. Found on the live
+ * deployment on 2026-11-21 — identical model calls four seconds apart, and a report whose narration takes
+ * longer than the read deadline (ADR-038) never showed its prose, because the answer the abandoned call
+ * left behind was filed under a key no later read would ever ask for.
+ *
+ * The report id is bookkeeping, not a fact, so it is left out of the key. Everything the model is shown
+ * and everything that decides who may see the answer stays in: claims (the citation carries the full
+ * claim, figures included), sources, fields, style, locale, role, tier, operation. Serving the remembered
+ * decision to a report with a different id is sound: the caller uses its text and checks its cited
+ * SOURCES; the report's own citations are built from its own fields, never from the narrative.
+ */
+function keyMaterial(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(keyMaterial);
+  if (value === null || typeof value !== 'object') return value;
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>)
+      .filter(([name]) => name !== 'sitrepId')
+      .map(([name, inner]) => [name, keyMaterial(inner)]),
+  );
+}
+
 function cacheKey(request: ComplianceRequest<unknown>): string {
-  const digest = createHash('sha256').update(stableStringify(request.payload)).digest('hex');
+  const digest = createHash('sha256')
+    .update(stableStringify(keyMaterial(request.payload)))
+    .digest('hex');
   return `${request.actorRole}|${request.modelTier}|${request.operation}|${digest}`;
 }
 

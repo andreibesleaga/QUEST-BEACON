@@ -6,6 +6,9 @@ import { ok, err, isErr } from '@/domain/shared/result.js';
 import { DomainError } from '@/domain/errors.js';
 import type { Result } from '@/domain/shared/result.js';
 import type { AICompliancePort, ComplianceDecision, ComplianceRequest } from '@/ports/intel.js';
+import { asId } from '@/domain/value-objects/ids.js';
+import type { CitationId, IncidentId, SitRepId, SourceId } from '@/domain/value-objects/ids.js';
+import { synthesizeSitRep } from '@/application/sitrep-synthesis/sitrep-synthesis.js';
 import { withNarrationMemo } from './narration-memo.js';
 
 /** A gateway stub that counts calls and returns whatever the test tells it to. */
@@ -217,5 +220,103 @@ describe('withNarrationMemo', () => {
     expect(calls()).toBe(1);
     await memo.mediate(REQ('text'));
     expect(calls()).toBe(2);
+  });
+});
+
+// The key must describe the QUESTION, not the read. Every SitRep read mints a new report id, and that id
+// sits inside each citation of the narration request — so a key built from the payload as sent never
+// matched twice on the HTTP read path (found on the live deployment, 2026-11-21).
+describe('withNarrationMemo — the per-read report id is not part of the question', () => {
+  /** The payload shape the SitRep synthesis really sends: figure-free claim + a citation naming the report. */
+  const narrationPayload = (
+    sitrepId: string,
+    claim = '2 hospitals are within the fire perimeter.',
+  ) => ({
+    style: 'sitrep',
+    facts: [
+      {
+        claim: 'Hospitals are within the fire perimeter.',
+        citation: { id: 'cit-exposure', sitrepId, sourceId: 'src-firms', field: 'exposure', claim },
+      },
+    ],
+  });
+
+  it('serves a second read of the SAME facts from the cache although its report id differs', async () => {
+    const { port, calls } = stub();
+    const memo = withNarrationMemo(port, { now: () => 1_000 });
+    await memo.mediate(REQ(narrationPayload('sitrep-1795261607699-1')));
+    await memo.mediate(REQ(narrationPayload('sitrep-1795261612672-2')));
+    expect(calls()).toBe(1);
+  });
+
+  it('joins the in-flight call of an earlier read with a different report id', async () => {
+    const { port, calls, release } = slowStub();
+    const memo = withNarrationMemo(port);
+    const first = memo.mediate(REQ(narrationPayload('sitrep-a')));
+    const second = memo.mediate(REQ(narrationPayload('sitrep-b')));
+    release();
+    await Promise.all([first, second]);
+    expect(calls()).toBe(1);
+  });
+
+  it('still narrates afresh when a FIGURE changes, even though the model-facing claim reads the same', async () => {
+    // The model sees the figure-free claim; the citation carries the full one. A changed figure must be
+    // a different question — the engine's record moved, whatever the prose would say.
+    const { port, calls } = stub();
+    const memo = withNarrationMemo(port, { now: () => 1_000 });
+    await memo.mediate(
+      REQ(narrationPayload('sitrep-1', '2 hospitals are within the fire perimeter.')),
+    );
+    await memo.mediate(
+      REQ(narrationPayload('sitrep-2', '3 hospitals are within the fire perimeter.')),
+    );
+    expect(calls()).toBe(2);
+  });
+
+  it('holds on the real path: two SitRep syntheses with different ids reach the model once', async () => {
+    let calls = 0;
+    const gateway: AICompliancePort = {
+      mediate: async <TReq, TRes>(
+        request: ComplianceRequest<TReq>,
+      ): Promise<Result<ComplianceDecision<TRes>, DomainError>> => {
+        calls += 1;
+        const payload = request.payload as { facts: { citation: unknown }[] };
+        const result = {
+          text: 'Hospitals lie inside the fire perimeter.',
+          citations: payload.facts.map((f) => f.citation),
+        };
+        return ok({ allowed: true, result: result as TRes });
+      },
+    };
+    const ai = withNarrationMemo(gateway);
+    const read = (id: string): ReturnType<typeof synthesizeSitRep> =>
+      synthesizeSitRep(
+        {
+          id: asId<SitRepId>(id),
+          generatedAt: '2026-07-07T00:00:00.000Z',
+          actorRole: 'EM',
+          facts: {
+            incidentId: asId<IncidentId>('inc-1'),
+            trend: 'STEADY',
+            facts: [
+              {
+                field: 'exposure',
+                claim: '2 hospitals are within the fire perimeter.',
+                sourceId: asId<SourceId>('src-firms'),
+                citationId: asId<CitationId>('cit-exposure'),
+              },
+            ],
+          },
+        },
+        { ai },
+      );
+    const first = await read('sitrep-read-1');
+    const second = await read('sitrep-read-2');
+    expect(calls).toBe(1);
+    for (const res of [first, second]) {
+      if (isErr(res)) throw new Error('expected ok');
+      expect(res.value.aiMode).toBe('cloud');
+      expect(res.value.summary).toBe('Hospitals lie inside the fire perimeter.');
+    }
   });
 });
