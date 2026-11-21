@@ -32,6 +32,7 @@ export const LAYER_IDS = [
   'outage',
   'cell',
   'weather',
+  'precipitation',
   'cameras',
   'exposure',
   'reports',

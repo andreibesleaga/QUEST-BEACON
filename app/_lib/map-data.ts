@@ -201,6 +201,8 @@ function presentLayers(md: MapData): LayerId[] {
     outage: md.outage !== undefined,
     cell: md.cell !== undefined,
     weather: md.weather !== undefined,
+    // A browser-fetched satellite overlay: it has no slice in the API response and so no freshness badge.
+    precipitation: false,
     cameras: md.cameras !== undefined,
     exposure: md.exposure !== undefined,
     reports: md.reports !== undefined,

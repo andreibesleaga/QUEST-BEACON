@@ -8,28 +8,43 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type * as StyleModule from './style.js';
 import type { Basemap } from './style.js';
+import type { LayerDescriptor } from './types.js';
 
-const { map, MapLibreMap, MapboxOverlay, pickBasemapStyle, setWorkerUrl } = vi.hoisted(() => {
-  const map = {
-    addControl: vi.fn(),
-    easeTo: vi.fn(),
-    getCenter: vi.fn(() => ({ lng: -120, lat: 38 })),
-    getZoom: vi.fn(() => 6),
-    on: vi.fn(),
-    remove: vi.fn(),
-    setStyle: vi.fn(),
-    zoomIn: vi.fn(),
-    zoomOut: vi.fn(),
-  };
-  const overlay = { setProps: vi.fn() };
-  return {
-    map,
-    MapLibreMap: vi.fn(() => map),
-    MapboxOverlay: vi.fn(() => overlay),
-    setWorkerUrl: vi.fn(),
-    pickBasemapStyle: vi.fn<() => Promise<{ basemap: Basemap; style: unknown } | null>>(),
-  };
-});
+const { map, overlay, MapLibreMap, MapboxOverlay, pickBasemapStyle, setWorkerUrl } = vi.hoisted(
+  () => {
+    const map = {
+      addControl: vi.fn(),
+      addLayer: vi.fn(),
+      addSource: vi.fn(),
+      getLayer: vi.fn<(id: string) => unknown>(() => undefined),
+      getSource: vi.fn<(id: string) => unknown>(() => undefined),
+      removeLayer: vi.fn(),
+      removeSource: vi.fn(),
+      easeTo: vi.fn(),
+      getCenter: vi.fn(() => ({ lng: -120, lat: 38 })),
+      getZoom: vi.fn(() => 6),
+      on: vi.fn(),
+      remove: vi.fn(),
+      setStyle: vi.fn(),
+      zoomIn: vi.fn(),
+      zoomOut: vi.fn(),
+    };
+    const overlay = { setProps: vi.fn() };
+    return {
+      map,
+      overlay,
+      // `function`, not an arrow: the engine calls these with `new`, and an arrow is not constructible.
+      MapLibreMap: vi.fn(function () {
+        return map;
+      }),
+      MapboxOverlay: vi.fn(function () {
+        return overlay;
+      }),
+      setWorkerUrl: vi.fn(),
+      pickBasemapStyle: vi.fn<() => Promise<{ basemap: Basemap; style: unknown } | null>>(),
+    };
+  },
+);
 
 vi.mock('maplibre-gl', () => ({ Map: MapLibreMap, setWorkerUrl }));
 vi.mock('@deck.gl/mapbox', () => ({ MapboxOverlay }));
@@ -135,5 +150,100 @@ describe('createMapEngine and the basemap ladder', () => {
     });
     await Promise.resolve();
     expect(pickBasemapStyle).not.toHaveBeenCalled();
+  });
+});
+
+describe('raster overlays (the precipitation field)', () => {
+  const RAIN: LayerDescriptor = {
+    id: 'precipitation-rate',
+    group: 'precipitation',
+    kind: 'raster',
+    data: [],
+    tiles: {
+      url: 'https://tiles.example.org/{z}/{y}/{x}.png',
+      maxZoom: 6,
+      attribution: 'Precipitation: example',
+      opacity: 0.6,
+    },
+  };
+  const POINT: LayerDescriptor = {
+    id: 'fire-hotspots',
+    group: 'fire',
+    kind: 'scatterplot',
+    data: [],
+  };
+
+  /** The `style.load` handler the engine registered — the hook a basemap swap re-applies through. */
+  const styleLoadHandler = (): (() => void) => {
+    const call = map.on.mock.calls.find(([event]) => event === 'style.load') as
+      [string, () => void] | undefined;
+    if (call === undefined) throw new Error('engine registered no style.load handler');
+    return call[1];
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    map.getLayer.mockReturnValue(undefined);
+    map.getSource.mockReturnValue(undefined);
+    pickBasemapStyle.mockResolvedValue(RASTER);
+  });
+
+  it('draws a raster descriptor in the MapLibre style, never in the deck overlay', () => {
+    const engine = createMapEngine({ container: document.createElement('div') });
+    engine.setLayers([POINT, RAIN]);
+    expect(map.addSource).toHaveBeenCalledWith('precipitation-rate', {
+      type: 'raster',
+      tiles: ['https://tiles.example.org/{z}/{y}/{x}.png'],
+      tileSize: 256,
+      maxzoom: 6,
+      attribution: 'Precipitation: example',
+    });
+    expect(map.addLayer).toHaveBeenCalledWith({
+      id: 'precipitation-rate',
+      type: 'raster',
+      source: 'precipitation-rate',
+      paint: { 'raster-opacity': 0.6 },
+    });
+    const deckLayers = (overlay.setProps.mock.calls.at(-1)?.[0] as { layers: unknown[] }).layers;
+    expect(deckLayers).toHaveLength(1); // the point layer only
+  });
+
+  it('removes the overlay when its toggle goes off', () => {
+    const engine = createMapEngine({ container: document.createElement('div') });
+    engine.setLayers([RAIN]);
+    map.getLayer.mockReturnValue({});
+    map.getSource.mockReturnValue({});
+    engine.setLayers([]);
+    expect(map.removeLayer).toHaveBeenCalledWith('precipitation-rate');
+    expect(map.removeSource).toHaveBeenCalledWith('precipitation-rate');
+  });
+
+  it('re-applies the overlay after a basemap swap, which discards every source of the old style', () => {
+    const engine = createMapEngine({ container: document.createElement('div') });
+    engine.setLayers([RAIN]);
+    expect(map.addSource).toHaveBeenCalledTimes(1);
+    styleLoadHandler()(); // the new style has loaded, empty
+    expect(map.addSource).toHaveBeenCalledTimes(2);
+    expect(map.addLayer).toHaveBeenCalledTimes(2);
+  });
+
+  it('survives a style that is not ready: nothing throws, and the next style.load draws it', () => {
+    map.addSource.mockImplementationOnce(() => {
+      throw new Error('Style is not done loading');
+    });
+    const engine = createMapEngine({ container: document.createElement('div') });
+    expect(() => engine.setLayers([RAIN])).not.toThrow();
+    expect(map.addLayer).not.toHaveBeenCalled();
+    styleLoadHandler()();
+    expect(map.addLayer).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not add a source twice when the style already holds it', () => {
+    const engine = createMapEngine({ container: document.createElement('div') });
+    map.getSource.mockReturnValue({});
+    map.getLayer.mockReturnValue({});
+    engine.setLayers([RAIN]);
+    expect(map.addSource).not.toHaveBeenCalled();
+    expect(map.addLayer).not.toHaveBeenCalled();
   });
 });

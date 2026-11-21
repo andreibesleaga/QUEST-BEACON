@@ -21,7 +21,7 @@ import type {
   Narrative,
   NewsItem,
 } from '@/ports/intel.js';
-import { synthesizeSitRep } from './sitrep-synthesis.js';
+import { qualitativeClaim, synthesizeSitRep } from './sitrep-synthesis.js';
 import type {
   GroundedFact,
   SynthesizeSitRepInput,
@@ -146,6 +146,26 @@ describe('synthesizeSitRep — degrade to deterministic-only (F4/F7)', () => {
     // Summary is the engine's own claims, joined — never the (unused) LLM text.
     expect(res.value.summary).toContain('2 hospitals are within the fire perimeter.');
     expect(res.value.summary).toContain('crest at 12.0 ft');
+  });
+
+  it('treats the ladder floor rung as NO prose: full figures, labelled deterministic-only (2026-11-21)', async () => {
+    // The live defect: every model rung failed, the ladder answered with its echo of the figure-free
+    // claims, and the report showed "winds /h" under a `cloud` label.
+    const res = await synthesizeSitRep(input(), {
+      ai: aiReturning({
+        allowed: true,
+        result: {
+          text: '[deterministic-only — AI narration unavailable] Cited facts: hospitals are within the fire perimeter.',
+          citations: NARRATIVE.citations,
+          degraded: true,
+        },
+      }),
+    });
+    if (!isOk(res)) throw new Error('expected ok');
+    expect(res.value.aiMode).toBe('deterministic-only');
+    expect(res.value.summary).toBe(
+      '2 hospitals are within the fire perimeter. River is forecast to crest at 12.0 ft by 03:00Z.',
+    );
   });
 
   it('falls back when the gateway blocks the call (allowed=false)', async () => {
@@ -542,5 +562,69 @@ describe('synthesizeSitRep — async narration (ADR-038)', () => {
     const res = await synthesizeSitRep(input(), { ai, narrationDeadlineMs: 5_000 });
     if (!isOk(res)) throw new Error('expected ok');
     expect(res.value.aiMode).toBe('deterministic-only');
+  });
+});
+
+// The model's INPUT (F-418). The guard on its output stays as strict as it was; these pin what the model
+// is shown, because a claim maimed on the way in comes back as maimed or reversed prose.
+describe('qualitativeClaim — what the narrator is allowed to see', () => {
+  it('turns a ZERO count into "no" instead of deleting it (deleting reverses the sentence)', () => {
+    expect(
+      qualitativeClaim(
+        '0 electrical substations intersect the current hazard footprint (of 2 assessed).',
+      ),
+    ).toBe('No electrical substations intersect the current hazard footprint (of those assessed).');
+  });
+
+  it('writes a zero RATIO as "none of those", so "0 of 5 shelters are open" keeps its meaning', () => {
+    expect(qualitativeClaim('0 of 5 shelters are open.')).toBe('None of those shelters are open.');
+    // A non-zero ratio loses its figures and keeps its shape.
+    expect(qualitativeClaim('3 of 5 shelters are open.')).toBe('Of those shelters are open.');
+  });
+
+  it('drops a non-zero count and keeps the words around it', () => {
+    expect(
+      qualitativeClaim('2 fire stations intersect the current hazard footprint (of 5 assessed).'),
+    ).toBe('Fire stations intersect the current hazard footprint (of those assessed).');
+  });
+
+  it('removes a figure together with its unit, compound units included', () => {
+    expect(qualitativeClaim('Surface winds 9 km/h from the N, favouring southward spread.')).toBe(
+      'Surface winds from the N, favouring southward spread.',
+    );
+    // A zero SPEED is a measurement, not a count: it is removed, never turned into "no km/h".
+    expect(qualitativeClaim('Surface winds 0 km/h from the N, favouring southward spread.')).toBe(
+      'Surface winds from the N, favouring southward spread.',
+    );
+  });
+
+  it('removes an ISO instant whole, with the word that introduced it', () => {
+    expect(
+      qualitativeClaim(
+        'Forecast crest 12.4 ft at 2026-11-21T06:00:00Z on the Sacramento River at I Street.',
+      ),
+    ).toBe('Forecast crest on the Sacramento River at I Street.');
+  });
+
+  it('names a pollutant instead of showing a code that carries a digit', () => {
+    expect(qualitativeClaim('PM2.5 AQI 153 (Unhealthy) at Sacramento T Street.')).toBe(
+      'Fine particulate matter AQI (Unhealthy) at Sacramento T Street.',
+    );
+  });
+
+  it('leaves no figure of any kind: digits in any script, number words, rankings, approximations', () => {
+    const out = [
+      'About 14,200 residents live inside the current hazard footprint.',
+      'Highest-priority asset: node-17 (blended risk score 0.82).',
+      'Deux postes ٤٧ électriques',
+      'Three shelters are open.',
+    ].map(qualitativeClaim);
+    expect(out).toEqual([
+      'Residents live inside the current hazard footprint.',
+      'Asset: node (blended risk).',
+      'Deux postes électriques',
+      'Shelters are open.',
+    ]);
+    for (const text of out) expect(text).not.toMatch(/\p{N}/u);
   });
 });

@@ -58,6 +58,13 @@ export interface NarrativeRequest {
 export interface Narrative {
   readonly text: string;
   readonly citations: readonly Citation[];
+  /**
+   * `true` when NO model rung produced a valid narration and `text` is the ladder's labelled echo of the
+   * facts it was handed. A caller that holds the full deterministic record (the SitRep synthesis) must
+   * treat this as "no prose" and render its own record instead: the ladder only ever sees the figure-free
+   * claims, so its echo carries no figures. Absent on every real narration.
+   */
+  readonly degraded?: true;
 }
 
 /**

@@ -268,11 +268,9 @@ The demo runs `FEATURE_STORE=memory`: everything is lost on restart. Production 
 ```bash
 FEATURE_STORE=postgres
 DATABASE_URL=postgres://beacon:CHANGE_ME@your-db-host:5432/beacon
-FEATURE_CACHE=redis                   # optional but recommended
-FEATURE_QUEUE=bullmq                  # durable ingest scheduling
-FEATURE_EVENTBUS=redis                # multi-instance fan-out
-REDIS_URL=redis://your-redis-host:6379
 FEATURE_REALTIME=sse
+# Leave FEATURE_CACHE, FEATURE_QUEUE and FEATURE_EVENTBUS at their defaults (memory / cron / memory).
+# The Redis and BullMQ rungs are NOT built in this release — see "Scale" in §10 and docs/DEPLOYMENT.md §4.
 ```
 
 Provision and migrate:
@@ -309,15 +307,21 @@ before enabling it. Turf is the tested default and is correct at region scale.
 
 ```bash
 AI_MODE=cloud                         # cloud | local | off
-LLM_TIER_DEFAULT_PROVIDER=groq
+# A rung is built from exactly three variables: MODEL, BASE and KEY. A tier with no MODEL or no BASE is
+# skipped; a tier with a wrong KEY is tried, refused by the provider and stepped over.
 LLM_TIER_DEFAULT_MODEL=openai/gpt-oss-120b
-LLM_TIER_FALLBACK_PROVIDER=openrouter
+LLM_TIER_DEFAULT_BASE=https://api.groq.com/openai/v1
+LLM_TIER_DEFAULT_KEY=...              # the Groq key
 LLM_TIER_FALLBACK_MODEL=anthropic/claude-haiku-4-5
-GROQ_API_KEY=...
-OPENROUTER_API_KEY=...
+LLM_TIER_FALLBACK_BASE=https://openrouter.ai/api/v1
+LLM_TIER_FALLBACK_KEY=...             # the OpenRouter key
 BUDGET_PER_INCIDENT_USD=5.00
 BUDGET_PER_REGION_USD=50.00
 ```
+
+`LLM_TIER_*_PROVIDER`, `GROQ_API_KEY` and `OPENROUTER_API_KEY` are labels for people (`.env.example`
+keeps them for readability); the narration ladder does not read them. Corrected 2026-11-21: this block
+used to list only those labels, and a deployment configured from it narrated nothing.
 
 For a fully self-hosted deployment with **no external AI dependency**, use `AI_MODE=local` with Ollama
 (`OLLAMA_BASE_URL`, `LLM_TIER_LOCAL_MODEL`). For an air-gapped deployment, `AI_MODE=off` — and the COP,
@@ -326,6 +330,11 @@ The LLM narrates; it never computes. Verify that claim yourself: flip `AI_MODE=o
 figures are unchanged.
 
 Check your AI path before you rely on it: `npx tsx scripts/ai-probe.ts`.
+
+**If reports show no prose, read the deploy log.** A model rung that steps aside writes one line saying
+which and why — `[beacon] narration degraded: <model> -> next rung — provider <model> returned 401` for a
+refused key, or `… narration rejected by the output validator` for text that carried a figure. The report
+itself is then the engine's own sentences with every figure, labelled `deterministic-only`.
 
 ## 6. Step 5 — real alert delivery
 
@@ -350,6 +359,12 @@ ORS_API_KEY=...
 This gives true road routing with **avoid-polygons built from the live hazard footprint**. Without it,
 the hazard-avoiding heuristic serves through the same port — and the UI names which engine produced the
 route, so an operator always knows what they are looking at.
+
+Two limits of the public openrouteservice API decide when the heuristic answers even with a valid key
+(measured 2026-11-21): with an area to avoid it refuses a route longer than about 150 km (its error
+code 2004), and it needs a road within 350 m of each end (code 2010) — the centre of a wildland fire
+often has none. Both are named in the deploy log (`[beacon] routing degraded: ors -> heuristic — … (ORS
+code 2004: …)`). A self-hosted openrouteservice has neither limit.
 
 ## 8. Step 7 — worldwide coverage
 
@@ -439,9 +454,12 @@ fetches and can take ~30 s. Every request after it is sub-second.
 - **Budgets.** `BUDGET_PER_INCIDENT_USD` / `BUDGET_PER_REGION_USD` are hard caps on AI spend, with a soft
   escalation threshold that triggers human review. An emergency system must not be able to surprise its
   agency with a bill.
-- **Scale.** With `FEATURE_QUEUE=bullmq` + `FEATURE_EVENTBUS=redis`, multiple app instances share one
-  ingest schedule and fan events out to all connected browsers. Region-partitioned workers keep latency
-  flat as coverage grows.
+- **Scale.** One instance today. The shared-state rungs are not built: `FEATURE_QUEUE=bullmq` and
+  `FEATURE_EVENTBUS=redis` have no adapter and `FEATURE_CACHE=redis` selects a stub, so each replica
+  runs its own ingest loop, keeps its own in-memory picture and pushes live updates only to its own
+  browsers. With `FEATURE_STORE=postgres` the durable records (reports, audit, logistics, panels) are
+  shared. `docs/DEPLOYMENT.md` §4 states the same and is the reference (corrected here 2026-11-21: this
+  guide used to describe the Redis rungs as if they existed).
 - **Attribution is not optional.** Sensor.Community (ODbL share-alike), OSM (ODbL), Windy, ALERTWildfire
   (CC BY-NC-ND), Open-Meteo (CC BY 4.0) and others require visible credit. It ships in `NOTICE` and in
   the in-app attribution badges — keep both.

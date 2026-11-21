@@ -3,6 +3,7 @@
 // walks and checks every host is allowed for tiles (connect-src) and decoded images (img-src).
 import { describe, expect, it } from 'vitest';
 import { BASEMAP_CANDIDATES } from '../_components/map/style.js';
+import { PRECIPITATION_TILES } from '../_components/map/build-layers.js';
 import { securityHeaders } from '../../next.config.mjs';
 
 const header = (
@@ -28,6 +29,13 @@ describe('securityHeaders (next.config.mjs)', () => {
       expect(directive(csp, 'connect-src')).toContain(origin);
       expect(directive(csp, 'img-src')).toContain(origin);
     }
+  });
+
+  it('names the overlay host the precipitation layer fetches its tiles from', () => {
+    const origin = new URL(PRECIPITATION_TILES.url.replace('{z}/{y}/{x}', '0/0/0')).origin;
+    expect(origin).toBe('https://gibs.earthdata.nasa.gov');
+    expect(directive(csp, 'connect-src')).toContain(origin);
+    expect(directive(csp, 'img-src')).toContain(origin);
   });
 
   it('lets MapLibre run its worker and decode tiles from blob: URLs, and frames nobody', () => {

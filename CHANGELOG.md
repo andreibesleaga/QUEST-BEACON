@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Precipitation map layer (ADR-048, 2026-11-21).** A fifteenth, default-off layer draws NASA GPM
+  IMERG's half-hourly precipitation rate from NASA GIBS as keyless raster tiles, for every region. The
+  operator's browser fetches the tiles (host named in the content-security policy); the layer carries a
+  fixed caveat in all 14 locales — satellite estimate, half-hour average, typically several hours
+  behind, not radar, not a forecast — and an offline build requests nothing. It has no server adapter,
+  enters no report and no rule, and is credited in `NOTICE`.
+- **CAP v1.2 as XML (2026-11-21).** `src/adapters/interop/cap-xml.ts` writes the already-validated CAP
+  document in the standard's own serialization (namespace, element order and date form per the OASIS
+  schema, pinned by unit tests; three documents validated by hand against `CAP-v1.2.xsd`, procedure in
+  `docs/SPEC.md` §7 — there is no XSD validator in the test suite). `POST /alerts/{id}/approve` returns
+  it as `data.capXml` beside the JSON `data.cap`, and now returns the emission of that approval by
+  alert id rather than the sink's last record. Nothing is sent to IPAWS or any outside system.
+- **A failed narration rung says why, in the deploy log (2026-11-21).** One line per rung that steps
+  aside — `[beacon] narration degraded: <model> -> next rung — provider <model> returned 401`, or
+  `… narration rejected by the output validator` — in the same form as the routing ladder's line.
 - **Docs: audit fixes (2026-10-29).** A root `AGENTS.md`; corrected in the guides: alert-drafting and approval roles, the SitRep narration deadline (ADR-038), what multiple replicas share, the Docker build arguments, the Railway service map with the always-on front, the release workflow's state, and two moved links.
 - **Always-on front for the public address (2026-10-12).** `homepage-offline/`: a zero-dependency Node service that owns https://quest-beacon.up.railway.app, passes traffic through to the deployment when it is up and serves a one-screen status page (project, contest status, how to request access) when it is off; its own tests (`node --test homepage-offline/server.test.mjs`), Dockerfile and `railway.json`. Documented in `homepage-offline/README.md` and `docs/LIVE_PRODUCTION_GUIDE.md`.
 - **Final audit of code and documentation (2026-09-16).** `docs/audit/FINAL-AUDIT-2026-09-16.md`: the
@@ -123,6 +138,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Dependencies (2026-11-21).** Minor and patch updates across the tree; `zod` 3 → 4 (clears the one
+  high advisory in a runtime dependency, GHSA-mrhx-c7xc-m3w5). Held, each with its measured reason in
+  `.github/dependabot.yml`: `@deck.gl/*` at 9.3 (9.4 takes the client bundle past its 950 KB ceiling),
+  `maplibre-gl` at 6.9 (6.10+ repackages its worker), `vitest` and `@vitest/coverage-v8` at 3 (the 4+/5
+  coverage remapping reads three enforced floors lower with no code change — floors are not lowered),
+  `happy-dom` at 20, and the `next`, `eslint` and `postgres` majors. `npm audit --omit=dev
+  --audit-level=high` exits 0; the remaining advisories are in test tools and are listed with reasons
+  and an expiry in `osv-scanner.toml`.
 - **Contest entry number removed from the public product (2026-10-15).** README, judge matrix, task ledger, changelog and the always-on front page no longer carry the portal entry number; the contest is still named.
 - **Public-release pass (2026-10-10).** Audit documents relocated (`docs/audit/v1/` for the Phase-2 carry-over, `docs/audit/DATA_SOURCE_VERIFICATION.md`, dated `FINAL_AUDIT-2026-06-29.md` / `FINAL_LIVE_AUDIT-2026-08.md`) with every reference rewritten; README gains three live screenshots; access wording says the repository is public and the deployment is brought online for the judging window and on request; local machine paths, a third-party address in a feed fixture and references to internal strategy documents removed. Recorded in `docs/audit/FINAL-AUDIT-2026-09-16.md` §8.
 - Visual baselines regenerated **once** for the tablet and phone viewports — the locale switcher wraps the
@@ -141,6 +164,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **A report whose narration failed showed a summary with its figures cut out, labelled `cloud`
+  (2026-11-21).** When no model rung answered, the ladder's last-resort text — built from the
+  figure-free claims the model is given — was accepted as narration: "winds /h from the N". The ladder
+  now flags that text (`Narrative.degraded`), and the synthesis treats it as no prose: the report shows
+  the engine's own sentences with every figure, labelled `deterministic-only`.
+- **Removing a zero count reversed a sentence for the narrator (2026-11-21).** "0 substations intersect
+  the footprint" reached the model as "substations intersect the footprint". A zero count is now written
+  "no"; figures are removed together with their units from a fixed list ("9 km/h" no longer leaves
+  "/h", "2 fire stations" no longer loses "fire"); ISO instants are removed whole; pollutant codes that
+  carry a digit are given by name.
+- **The routing fallback named no cause (2026-11-21).** `ORS routing HTTP 400` now carries
+  openrouteservice's own error code and a reason — code 2004, the route is too long for an avoid area —
+  without forwarding the coordinates its message quotes.
+- **The command-palette trigger's accessible name shared no word with its visible label (WCAG 2.5.3,
+  2026-11-21).** The name now starts with the visible word in all 14 locales.
+- **Guides corrected (2026-11-21).** `docs/LIVE_PRODUCTION_GUIDE.md` listed AI variables the narration
+  ladder does not read (a deployment configured from it narrated nothing) and described Redis/BullMQ
+  multi-instance rungs that are not built; `docs/OPERATOR_GUIDE.md` offered EDXL-RM as XML.
 - **An unconfigured region silently inherited California's bounding box (finding F-06).** The composition
   root held a hardcoded ISO map and a duplicated bbox fallback table, so a region without configured
   geography would have queried every source over California and rendered the result as if it were local.

@@ -51,10 +51,10 @@ and reproducible on any machine with one command.
 | | |
 |---|---|
 | **45 source adapters** registered, 41 consumed | fire, flood, weather, alerts, infrastructure, outages, cell, air quality, population, news, vetted social, cameras |
-| **14 COP map layers** | each with its own LIVE/CACHED/MOCK freshness badge |
+| **15 COP map layers** | 14 data layers, each with its own LIVE/CACHED/MOCK freshness badge, plus a satellite precipitation overlay labelled as an estimate (ADR-048) |
 | **5 regions · 14 locales** (RTL: ar, ur) | three continents, added by configuration — no code change |
-| **5,378 tests** passing, 0 boundary violations (911 modules) | plus Playwright across 5 zones × 4 devices, axe WCAG 2.2 AA, a real offline reload |
-| **36 API paths**, zero documented-but-unserved | CAP v1.2 + EDXL-RM + EDXL-SitRep round-trips |
+| **5,416 tests** passing, 0 boundary violations (913 modules) | plus Playwright across 5 zones × 4 devices, axe WCAG 2.2 AA, a real offline reload |
+| **36 API paths**, zero documented-but-unserved | CAP v1.2 (JSON and XML) + EDXL-RM + EDXL-SitRep round-trips |
 | **≈ $0 to run** | free/open data, open-source stack, one machine or free-tier cloud |
 
 **Working end-to-end today:** the cited SitRep with deterministic news fusion · fire and flood prediction
@@ -75,7 +75,8 @@ criteria-by-criteria evidence map in [`JUDGE_MATRIX.md`](JUDGE_MATRIX.md).
 
 ## Four flagship capabilities
 1. **Unified live geospatial COP** — timestamped layers: fire, flood gauges/forecasts, weather/alerts,
-   infrastructure, power outages, cell coverage; per-layer freshness badges.
+   precipitation (satellite estimate), infrastructure, power outages, cell coverage; per-layer
+   freshness badges.
 2. **AI situational-intelligence fusion** — news + vetted signals + geospatial risk → a ranked, **cited**
    SitRep with escalation trend and threshold-triggered DRAFT alerts; misinformation flagged, never trusted.
 3. **Responsible crowdsourced SOS + evacuation routing** — consent → AI triage/confidence → human
@@ -143,16 +144,16 @@ Backend Database is already populated with demo/mock/real data, and it can alway
 |---|---|---|
 | Lint | `./node_modules/.bin/eslint .` | **0** |
 | Types | `./node_modules/.bin/tsc --noEmit` | **0** |
-| Unit/integration | `./node_modules/.bin/vitest run` | **5378 passed / 6 skipped (5384), exit 0** (2026-09-16) |
+| Unit/integration | `./node_modules/.bin/vitest run` | **5416 passed / 6 skipped (5422), exit 0** (2026-11-21, in CI; one of them, `tests/architecture/dependency-tree.test.ts`, shells out to `npm ls --long --all` and fails on npm 11.16.0, whose long listing crashes on this tree — the tree itself is valid) |
 | Integration (real Postgres) | `npm run test:integration` | **18 passed** against PostgreSQL 16 (2026-09-11). Opt-in via `DATABASE_URL_TEST`; absent ⇒ skipped, so `npm test` and CI are unaffected. It applies the REAL migration files rather than pushing the schema, because the defect it was built for lived in a migration the schema definition knew nothing about |
-| …with coverage | `./node_modules/.bin/vitest run --coverage` | **green, every floor met (2026-09-15: 96.0 % statements / 90.9 % branches overall)** — and now enforced on every PR by CI. Its first CI run *failed* at 98.97% branch coverage against the 99% `src/application/**` floor: real drift accumulated since 2026-08-02, closed by covering `newsOutletProvenance`'s degrade branches. The floor was **not** lowered |
-| Architecture boundaries | `./node_modules/.bin/depcruise src app` | **0 violations across 911 modules** (2026-09-15) |
+| …with coverage | `./node_modules/.bin/vitest run --coverage` | **green, every floor met (2026-11-21: 95.88 % statements / 90.95 % branches overall; 2026-09-15: 96.0 % / 90.9 %)** — and now enforced on every PR by CI. Its first CI run *failed* at 98.97% branch coverage against the 99% `src/application/**` floor: real drift accumulated since 2026-08-02, closed by covering `newsOutletProvenance`'s degrade branches. The floor was **not** lowered |
+| Architecture boundaries | `./node_modules/.bin/depcruise src app` | **0 violations across 913 modules** (2026-11-21) |
 | API contract | `npm run docs` (`tests/api/openapi-contract.test.ts`) | **36 paths · 39 operations · 66 schemas**; every operation with an id, summary and responses; every operation but the unauthenticated `/health` liveness probe declares its minimum role; every `$ref` resolves (2026-09-15) |
-| Dependencies | `npm audit --audit-level=high` | **exit 0 — 0 high / 0 critical** (7 moderate, dev-only; re-measured **2026-09-11**). This gate was **RED** on 2026-09-11 before that measurement: 2 critical (unauthenticated RCE in Next.js ×2, and an XSS sanitizer bypass in the library that renders the map) and 3 high. Cleared by patching the non-breaking set and taking `maplibre-gl` 5→6 for the critical, which needed a source change for its v6 named export. Recorded here rather than quietly re-measured, because a gate that was red is a fact about the project |
-| Build | `./node_modules/.bin/next build` | ✅ (2026-09-15) |
-| Browser | `./node_modules/.bin/playwright test` | **214 passed / 26 skipped / 0 failed** (2026-09-15), run on every PR by CI on a clean runner across 4 device projects × 5 zones, including a real offline reload through the service worker (`e2e/pwa-offline.spec.ts`). The 2026-08-10 "mid-re-baseline" state (5 moved visual baselines + 2 flake classes) is fully resolved: baselines re-minted, and the flakes root-caused to a stale reused web server (`reuseExistingServer` now off by default). Read the WebGL caveat above before quoting this |
+| Dependencies | `npm audit --omit=dev --audit-level=high` (what CI runs) | **exit 0 — 0 high / 0 critical in runtime dependencies** (re-measured **2026-11-21**, after `zod` 3 → 4 cleared the one runtime advisory). The full tree, test tools included, reports 2 critical and 1 high — `tinypool` under Vitest 3 and `happy-dom`, neither of which is installed in the runtime image — each recorded with its reason and an expiry in `osv-scanner.toml`; OSV-Scanner over the lockfile reports no unrecorded issue. History kept, because a gate that was red is a fact about the project: the unfiltered gate was **RED** on 2026-09-11: 2 critical (unauthenticated RCE in Next.js ×2, and an XSS sanitizer bypass in the library that renders the map) and 3 high. Cleared by patching the non-breaking set and taking `maplibre-gl` 5→6 for the critical, which needed a source change for its v6 named export. Recorded here rather than quietly re-measured, because a gate that was red is a fact about the project |
+| Build | `./node_modules/.bin/next build` | ✅ (2026-11-21; client JavaScript 926.8 KB gzipped against the 950 KB ceiling in `e2e/perf.spec.ts`) |
+| Browser | `./node_modules/.bin/playwright test` | **214 passed / 26 skipped / 0 failed** (2026-09-15; the same count on 2026-11-21 after the dependency update), run on every PR by CI on a clean runner across 4 device projects × 5 zones, including a real offline reload through the service worker (`e2e/pwa-offline.spec.ts`). The 2026-08-10 "mid-re-baseline" state (5 moved visual baselines + 2 flake classes) is fully resolved: baselines re-minted, and the flakes root-caused to a stale reused web server (`reuseExistingServer` now off by default). Read the WebGL caveat above before quoting this |
 
-Every row was re-run on **2026-09-15** on the commit this README ships with; each carries its own
+Every row was re-run on **2026-09-15**, and the rows dated 2026-11-21 again on that day; each carries its own
 machine-produced date rather than being restated as fresh, because *"an unverified thing is
 'unverified', never 'fine'"* is the rule this project is graded against. **Every figure on this page must
 be re-produced on the tagged commit; a stale gate figure in a README is precisely the drift class this

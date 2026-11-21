@@ -954,6 +954,13 @@ paths:
         the Telegram channel is configured live (ADR-026) — broadcasts a PII-free digest to the
         subscriber registry strictly AFTER the emit succeeds. A broadcast failure is audited but
         never fails the approval (no 5xx). Role VERIFIER or EM. Writes AUDIT_EVENT.
+
+        The response `data` carries the approved `alert`, the emitted CAP document as validated JSON
+        (`cap`) and — since 2026-11-21 — the same document as OASIS CAP v1.2 **XML** (`capXml`, a
+        string; media type `application/cap+xml`, namespace `urn:oasis:names:tc:emergency:cap:1.2`,
+        element order and date form per the OASIS schema — see `docs/SPEC.md` §7 for what is tested and
+        how to validate a document against `CAP-v1.2.xsd`). The XML is for hand-off to a CAP consumer:
+        BEACON still sends nothing to IPAWS or any outside system (`provenance[0].mode` is `MOCK`).
       x-required-role: VERIFIER
       security:
         - sessionAuth: []
@@ -974,7 +981,21 @@ paths:
                   - $ref: '#/components/schemas/ResponseEnvelope'
                   - type: object
                     properties:
-                      data: { $ref: '#/components/schemas/Alert' }
+                      data:
+                        type: object
+                        required: [alert]
+                        properties:
+                          alert: { $ref: '#/components/schemas/Alert' }
+                          cap:
+                            type: object
+                            description: >-
+                              The emitted CAP v1.2 document as validated JSON
+                              (`schemas/cap-v1.2.schema.json`).
+                          capXml:
+                            type: string
+                            description: >-
+                              The same document as OASIS CAP v1.2 XML (media type
+                              `application/cap+xml`).
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
         '404': { $ref: '#/components/responses/NotFound' }

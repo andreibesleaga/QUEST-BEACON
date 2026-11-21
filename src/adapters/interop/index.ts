@@ -1,5 +1,5 @@
-// BEACON — interop anti-corruption layer barrel (E7; ADR-010). CAP v1.2 / EDXL-RM / EDXL-SitRep / GeoJSON
-// boundary serializations. Pure mappers: canonical model in, standard document out (and back), every
+// BEACON — interop anti-corruption layer barrel (E7; ADR-010). CAP v1.2 (JSON + XML) / EDXL-RM /
+// EDXL-SitRep / GeoJSON boundary serializations. Pure mappers: canonical model in, standard document out (and back), every
 // output schema-validated (Ajv draft 2020-12). No HTTP, no DB, no raw formats leak above this layer.
 export {
   alertToCap,
@@ -26,6 +26,9 @@ export type {
   CapMessageRef,
   CapNamedValue,
 } from './cap-mapper.js';
+
+// CAP v1.2 XML — the same validated document in the standard's own serialization (2026-11-21).
+export { CAP_XML_MEDIA_TYPE, CAP_XML_NAMESPACE, capAlertToXml, toCapDateTime } from './cap-xml.js';
 
 // Selectable CAP profile rule sets (D3.1; ADR-036 §1) — the blocking second validation pass.
 export {

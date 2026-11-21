@@ -119,6 +119,28 @@ function parseNarrative(json: unknown): {
   };
 }
 
+/**
+ * Why ORS refused, in words — keyed by ORS's own error code (`error.code` in its JSON error body).
+ *
+ * ORS's `message` is deliberately NOT forwarded: it quotes the request's coordinates, and a route origin
+ * can be a person's position — it does not belong in a deploy log. The code alone names the cause, which
+ * is what was missing on 2026-11-21: the log said `HTTP 400` for a key that was fine, because the public
+ * service refuses a route longer than its limit whenever an area must be avoided (code 2004).
+ */
+const ORS_REFUSAL: Readonly<Record<number, string>> = {
+  2004: 'request exceeds the service limits (with an avoid area the route may not be this long)',
+  2009: 'no route found between the two points',
+  2010: 'no routable road near the origin or the destination',
+};
+
+/** ` (ORS code N: reason)` for a refusal body, or '' when the body carries no numeric code. */
+function refusalDetail(json: unknown): string {
+  const code = (json as { readonly error?: { readonly code?: unknown } } | null)?.error?.code;
+  if (typeof code !== 'number') return '';
+  const reason = ORS_REFUSAL[code];
+  return reason === undefined ? ` (ORS code ${code})` : ` (ORS code ${code}: ${reason})`;
+}
+
 function buildBody(
   request: RouteRequest,
   avoidPolygon: Geometry | undefined,
@@ -152,7 +174,10 @@ export function makeOrsRoutingAdapter(deps: OrsRoutingAdapterDeps): RoutingPort 
       } catch (e) {
         return err(new DomainError('NOT_FOUND', `ORS routing unavailable: ${msg(e)}`));
       }
-      if (!httpOk) return err(new DomainError('NOT_FOUND', `ORS routing HTTP ${status}`));
+      if (!httpOk)
+        return err(
+          new DomainError('NOT_FOUND', `ORS routing HTTP ${status}${refusalDetail(json)}`),
+        );
 
       const geom = parseGeometry(json);
       if (geom === null)

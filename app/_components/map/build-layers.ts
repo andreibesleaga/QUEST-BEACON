@@ -6,6 +6,7 @@ import { isLinkOnlyUrl } from '@/domain/shared/link-policy.js';
 import { LAYER_IDS, type LayerId } from '../../_lib/types.js';
 import type { useT } from '../../_lib/i18n.js';
 import { visibleGeometry } from './geometry.js';
+import { basemapMode, type BasemapMode } from './style.js';
 import type {
   CameraPin,
   CellCoverage,
@@ -21,6 +22,7 @@ import type {
   OutageArea,
   PolygonRings,
   PredictionCone,
+  RasterTiles,
   ReportFeature,
   RouteFeature,
   ShelterFeature,
@@ -69,6 +71,29 @@ export const STORM_CAVEAT =
 const ROUTE_DIRECT_CAVEAT =
   'Direct path — this route was not verified to avoid the hazard. Confirm it before sending anyone.';
 
+/**
+ * The precipitation overlay is a satellite PRODUCT, and its three limits are the three things an operator
+ * would otherwise assume: that it is radar (it is a multi-satellite estimate), that it is now (the latest
+ * half-hour is typically several hours old), and that it looks ahead (it does not).
+ */
+const PRECIPITATION_CAVEAT =
+  'Satellite estimate (NASA GPM IMERG), half-hour average, typically several hours behind — not radar, not a forecast.';
+
+/**
+ * NASA GIBS serves IMERG's half-hourly precipitation rate as keyless Web-Mercator tiles; `default` in the
+ * time slot is GIBS's own "latest available" (verified 2026-11-21: identical bytes to the newest dated
+ * tile, `Access-Control-Allow-Origin: *`). Level 6 is the deepest the product is published at (~10 km
+ * cells) — MapLibre over-zooms it, which is honest for a field this coarse.
+ * Source: https://nasa-gibs.github.io/gibs-api-docs/access-basics/ (WMTS REST), layer
+ * `IMERG_Precipitation_Rate_30min` in the EPSG:3857 `best` capabilities document.
+ */
+export const PRECIPITATION_TILES: RasterTiles = {
+  url: 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/IMERG_Precipitation_Rate_30min/default/default/GoogleMapsCompatible_Level6/{z}/{y}/{x}.png',
+  maxZoom: 6,
+  attribution: 'Precipitation: NASA GPM IMERG via NASA EOSDIS GIBS',
+  opacity: 0.6,
+};
+
 /** Catalog keys for the FIXED caveats above (the dynamic prediction caveat has none — see caveatText). */
 export type CaveatKey =
   | 'caveat.outage'
@@ -76,6 +101,7 @@ export type CaveatKey =
   | 'caveat.fire'
   | 'caveat.floodzone'
   | 'caveat.weather'
+  | 'caveat.precipitation'
   | 'caveat.camera'
   | 'caveat.storm'
   | 'caveat.routeDirect';
@@ -88,6 +114,7 @@ const CAVEAT_KEY_BY_TEXT: ReadonlyMap<string, CaveatKey> = new Map<string, Cavea
   [FIRE_CAVEAT, 'caveat.fire'],
   [FLOODZONE_CAVEAT, 'caveat.floodzone'],
   [WEATHER_CAVEAT, 'caveat.weather'],
+  [PRECIPITATION_CAVEAT, 'caveat.precipitation'],
   [CAMERA_CAVEAT, 'caveat.camera'],
   [STORM_CAVEAT, 'caveat.storm'],
   [ROUTE_DIRECT_CAVEAT, 'caveat.routeDirect'],
@@ -144,6 +171,7 @@ export const LAYER_META: Record<LayerId, LayerMeta> = {
   floodzone: { label: 'Flood zones (NFHL)', caveat: FLOODZONE_CAVEAT },
   infra: { label: 'Infrastructure' },
   weather: { label: 'Weather (wind)', caveat: WEATHER_CAVEAT },
+  precipitation: { label: 'Precipitation (satellite estimate)', caveat: PRECIPITATION_CAVEAT },
   cameras: { label: 'Live cameras', caveat: CAMERA_CAVEAT },
   outage: { label: 'Power outages', caveat: OUTAGE_CAVEAT },
   cell: { label: 'Cell coverage', caveat: CELL_CAVEAT },
@@ -668,6 +696,27 @@ export function buildShelterLayers(
   ];
 }
 
+/**
+ * The precipitation overlay: one raster descriptor, or none.
+ *
+ * NONE on an air-gapped build. The tiles come from a public host, and a deployment declared offline must
+ * make no request at all — the same rule the basemap follows (style.ts). The layer stays in the toggle
+ * panel with its caveat; it simply draws nothing, as a layer with no data does.
+ */
+export function buildPrecipitationLayers(mode: BasemapMode = basemapMode()): LayerDescriptor[] {
+  if (mode === 'offline') return [];
+  return [
+    {
+      id: 'precipitation-rate',
+      group: 'precipitation',
+      kind: 'raster',
+      data: [],
+      caveat: PRECIPITATION_CAVEAT,
+      tiles: PRECIPITATION_TILES,
+    },
+  ];
+}
+
 // ── Registry + the pure aggregate mapping ──────────────────────────────────────
 
 type LayerBuilder = (data: MapData, role: ActorRole, t?: MapT) => LayerDescriptor[];
@@ -681,6 +730,7 @@ export const LAYER_BUILDERS: Record<LayerId, LayerBuilder> = {
   floodzone: (d, _role, t) => buildFloodZoneLayers(d.floodZones, t),
   infra: (d) => buildInfraLayers(d.infrastructure),
   weather: (d, _role, t) => buildWeatherLayers(d.weather, t),
+  precipitation: () => buildPrecipitationLayers(),
   cameras: (d) => buildCameraLayers(d.cameras),
   outage: (d, _role, t) => buildOutageLayers(d.outage, t),
   cell: (d) => buildCellLayers(d.cell),

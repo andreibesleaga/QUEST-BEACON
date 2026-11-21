@@ -145,8 +145,15 @@ const fullData: MapData = {
   },
 };
 
-/** layer id → the row-key prefix its rows carry (derived from the component's own `key` scheme). */
-const ROW_KEY_PREFIX: Record<LayerId, string> = {
+/**
+ * layer id → the row-key prefix its rows carry (derived from the component's own `key` scheme).
+ *
+ * `null` = a FIELD layer, not a feature layer. The precipitation overlay is a continuous satellite raster:
+ * it has no discrete features to list or select, so it contributes no row here by design — its text
+ * alternative is the layer's name and caveat in the toggle panel. Keeping the key in this record (rather
+ * than narrowing the type) means a NEW layer id still fails to compile until someone decides which it is.
+ */
+const ROW_KEY_PREFIX: Record<LayerId, string | null> = {
   fire: 'fire-',
   flood: 'gauge-',
   storm: 'storm-',
@@ -155,6 +162,7 @@ const ROW_KEY_PREFIX: Record<LayerId, string> = {
   outage: 'outage-',
   cell: 'cell-',
   weather: 'weather-',
+  precipitation: null,
   cameras: 'camera-',
   exposure: 'exp-',
   reports: 'report-',
@@ -163,11 +171,12 @@ const ROW_KEY_PREFIX: Record<LayerId, string> = {
   shelters: 'shelter-',
 };
 
-describe('MapFeatureList × 14 LAYER_IDS (S3·U3)', () => {
-  it('every one of the 14 layer ids contributes at least one row when populated', () => {
+describe('MapFeatureList × LAYER_IDS (S3·U3)', () => {
+  it('every feature layer id contributes at least one row when populated', () => {
     const keys = toFeatureRows(fullData, 'PUBLIC').map((r) => r.key);
     for (const id of LAYER_IDS) {
       const prefix = ROW_KEY_PREFIX[id];
+      if (prefix === null) continue; // a field layer — see ROW_KEY_PREFIX
       expect(
         keys.some((k) => k.startsWith(prefix)),
         `layer '${id}' must contribute a row`,
@@ -188,7 +197,7 @@ describe('MapFeatureList × 14 LAYER_IDS (S3·U3)', () => {
       'prediction',
       'route',
     ] as const) {
-      expect(baseKeys.some((k) => k.startsWith(ROW_KEY_PREFIX[id]))).toBe(false);
+      expect(baseKeys.some((k) => k.startsWith(ROW_KEY_PREFIX[id] ?? '\u0000'))).toBe(false);
     }
     // Empty (not just absent) slices degrade identically: no rows, never a fabricated one.
     const empties: MapData = {

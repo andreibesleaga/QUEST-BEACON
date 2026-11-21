@@ -130,19 +130,21 @@ plus an ACL test.
   consumed** by the five zones · 4 not: `itu`, `camara-gsma` (MOCK-only by design), `hifld` (held),
   `dot511` (covers Georgia only). **38 can serve live** (29 keyless, 9 with a free credential); the
   other seven are named with their evidence in `docs/LIVE_PRODUCTION_GUIDE.md` §1.
-- **14 map layers** (+ dark/light basemap themes), each with its own LIVE/CACHED/MOCK/DB badge;
-  the accessible fallback list covers all 14.
+- **15 map layers** (+ dark/light basemap themes): 14 data layers, each with its own
+  LIVE/CACHED/MOCK/DB badge and all covered by the accessible fallback list, plus `precipitation`, a
+  browser-fetched NASA GPM IMERG raster with a fixed "satellite estimate, hours behind" caveat (ADR-048).
 - **5 zones** (`us-ca`, `ro`, `es`, `gr`, `ph`) · **14 locales** (RTL: `ar`, `ur`); a zone or a locale
   is configuration, not code (`tests/zones/add-a-zone.test.ts`).
-- **vitest: 5,378 passed / 6 skipped, every floor met** · tsc 0 · eslint 0 · dependency-cruiser 0
-  violations / 911 modules (`depcruise src app`) · madge 0 cycles · Prettier clean.
+- **vitest: 5,416 passed / 6 skipped, every floor met** · tsc 0 · eslint 0 · dependency-cruiser 0
+  violations / 913 modules (`depcruise src app`) · madge 0 cycles · Prettier clean.
 - **OpenAPI: 36 paths / 39 operations / 66 schemas**, zero `x-status: planned`; every operation but the
   unauthenticated `/health` liveness probe declares its minimum role (`npm run docs`).
 - **Playwright: 214 passed / 26 skipped / 0 failed** across 4 device projects × 5 zones, including a real
   offline reload through the service worker.
-- **49 ADR files** (001–047 + 008a; two files share the 036 number — a recorded finding).
+- **50 ADR files** (001–048 + 008a; two files share the 036 number — a recorded finding).
 - **23 migrated Postgres tables** (`drizzle/`), asserted by the CI integration job.
-- **npm audit: 0 high / 0 critical** (dev-only moderates recorded in `osv-scanner.toml`).
+- **npm audit, runtime dependencies (`--omit=dev`): 0 high / 0 critical** (2026-11-21). Test-tool
+  advisories (Vitest 3's `tinypool`, `happy-dom`) are recorded with reasons in `osv-scanner.toml`.
 - CI (`.github/workflows/ci.yml`): static, unit + coverage floors, build, integration (real Postgres),
   browser (Playwright), security (npm audit, gitleaks, OSV — non-blocking lane). No SAST or DAST job is
   wired (planned; `SECURITY.md`).

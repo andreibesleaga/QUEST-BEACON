@@ -13,6 +13,35 @@ updates:
           - patch
     commit-message:
       prefix: deps
+    # Held versions — each with its measured reason (2026-11-21). Remove a rule when its reason is gone.
+    ignore:
+      # 9.4 adds about 58 KB gzipped to the client bundle; with it the total passes the 950 KB ceiling
+      # that e2e/perf.spec.ts enforces (measured: 984.7 KB with 9.4.1, 926.8 KB with 9.3.12).
+      - dependency-name: '@deck.gl/*'
+        update-types: ['version-update:semver-minor', 'version-update:semver-major']
+      # 6.10+ changes how the worker is packaged (the shared chunk the copy script and its guard test
+      # depend on is now empty); the map worker path needs re-verifying in a real build first.
+      - dependency-name: 'maplibre-gl'
+        update-types: ['version-update:semver-minor', 'version-update:semver-major']
+      # Vitest 4+/5 remaps V8 coverage and reads three enforced floors lower with no code change; floors
+      # are never lowered, so the upgrade waits for the tests that recover the points (osv-scanner.toml).
+      - dependency-name: 'vitest'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@vitest/coverage-v8'
+        update-types: ['version-update:semver-major']
+      # happy-dom 20.11+ implements Web Animations; the animation library then cancels real animations
+      # and 63 unhandled rejections fail the run (measured with 20.14.6 and 21.0.4). Needs a test-setup
+      # change, done with the Vitest upgrade.
+      - dependency-name: 'happy-dom'
+        update-types: ['version-update:semver-minor', 'version-update:semver-major']
+      # Framework, lint and database-driver majors are taken deliberately, one at a time, never from a
+      # weekly pull request (Next 16 and ESLint 10 fail this repository's build and lint gates as is).
+      - dependency-name: 'next'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'eslint'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'postgres'
+        update-types: ['version-update:semver-major']
 
   - package-ecosystem: github-actions
     directory: '/'

@@ -70,11 +70,11 @@ Full detail: **§7 What is genuinely new** · evidence per criterion: **§2**.
 | Dimension | Figure |
 |---|---|
 | Data-source adapters | **45 registered** (id↔factory match test-asserted) · 41 consumed · 4 deliberately not (2 MOCK-only by design, 1 held, 1 covers another state — §7) |
-| Map layers | **14**, each with its own LIVE/CACHED/MOCK freshness badge and a tooltip on every point; accessible list fallback covers all 14 |
+| Map layers | **15**: 14 data layers, each with its own LIVE/CACHED/MOCK freshness badge and a tooltip on every point (the accessible list fallback covers all 14), plus a satellite precipitation overlay (NASA GPM IMERG via NASA GIBS) labelled as an estimate several hours behind (ADR-048) |
 | Regions / locales | **5 zones** (US-CA, RO, ES, GR, PH) · **14 locales** incl. RTL (ar, ur) — region/locale are config, not code |
-| Tests | **5,378 unit/integration tests passed / 6 skipped** (exit 0, 2026-09-16) · Playwright e2e across **5 zones × 4 device projects** incl. axe WCAG 2.2 AA, visual baselines and a real offline reload |
+| Tests | **5,416 unit/integration tests passed / 6 skipped** (exit 0, 2026-11-21) · Playwright e2e across **5 zones × 4 device projects** incl. axe WCAG 2.2 AA, visual baselines and a real offline reload |
 | Coverage floors (CI-enforced) | domain + application **99/99/99/99** · main 97/79/96/97 · adapters 90/83/93/90 · app 89/86/89/89 — floors are never lowered (measured 96.0 % / 90.9 % overall, 2026-09-15) |
-| Architecture | Hexagonal ports & adapters, **0 boundary violations** (dependency-cruiser gate, 911 modules) · **49 ADR files** (001–047 + 008a; two files share the 036 number — a recorded finding) |
+| Architecture | Hexagonal ports & adapters, **0 boundary violations** (dependency-cruiser gate, 913 modules) · **50 ADR files** (001–048 + 008a; two files share the 036 number — a recorded finding) |
 | API | OpenAPI: **36 paths / 39 operations / 66 schemas**, zero `x-status: planned` — everything documented is served; the document is contract-tested (`npm run docs`) |
 | Time-to-Trustworthy-Picture | **< 10 s budget, measured ~1 s** per zone, phone included (`e2e/perf.spec.ts`) |
 | Real-time push | SSE delta in **~1.7 s** browser-proven (`e2e/sse-push.spec.ts`); 15 s polling is the labelled fallback |
@@ -129,7 +129,7 @@ Reproduce the gates yourself: `npm install && npx tsc --noEmit && npx eslint . &
 | Crisis-first UX: low cognitive load, one meaning per colour, trust cues everywhere | Layer toggles default to the hazard's needs; severity vocabulary tested; freshness + "Unverified" badges pervasive | UI test suites · `docs/UI_UX_DESIGN.md` |
 | monitor → assess → decide → act, "act" one click from the map | Act menu on the COP: route, alert, task — one click; command palette for keyboard operators | `app/_components/act-menu.tsx` |
 | Responsive (EOC → tablet → field phone), dark ops mode, WCAG 2.1 AA, throttled networks, run locally | **WCAG 2.2 AA** (exceeds the promised 2.1) with an **axe CI gate**; dark/light × desktop/tablet/phone Playwright matrix; keyboard-only operation incl. map zoom/re-center controls; fully offline-capable | axe gate in e2e · visual baselines (8 files) |
-| **Beyond the promise** | **14 locales incl. RTL**; accessible map fallback lists all 14 layers when WebGL is absent (never a dead-end); session survives reload mid-incident; `docs/OPERATOR_GUIDE.md` is a judge-readable workflow guide | i18n suite · `e2e/i18n-rtl.spec.ts` |
+| **Beyond the promise** | **14 locales incl. RTL**; accessible map fallback lists all 14 data layers when WebGL is absent (never a dead-end); session survives reload mid-incident; `docs/OPERATOR_GUIDE.md` is a judge-readable workflow guide | i18n suite · `e2e/i18n-rtl.spec.ts` |
 
 ### 2.5 Scenario Fit, Insightfulness, Innovation & Technical/Data Creativity — Phase-2: 4.7
 
@@ -177,7 +177,7 @@ still produces usable, ranked decisions.* This is the shipped architecture, mach
 The product was built under **GABBE**, the author's agentic-SDLC governance framework — the same
 *deterministic → AI → human* principle the product itself enforces, applied to its own construction:
 
-- **Structured SDLC**: S00 discovery → requirements (EARS) → architecture (C4 + 49 ADR files) → spec →
+- **Structured SDLC**: S00 discovery → requirements (EARS) → architecture (C4 + 50 ADR files) → spec →
   task decomposition (~500 atomic tasks, `project/TASKS*.md`) → test-first build waves → audits →
   go-live — the full golden thread *requirement → ADR → spec → test → code* is preserved in this repo.
 - **AI-assisted, never AI-trusted**: agents wrote code under frozen operational law, with quality gates

@@ -201,7 +201,8 @@ no outbound anything (Art. XIII/XIV on camera).
 ### H. Alerts end-to-end + Telegram broadcast (HITL)
 1. As EM/VERIFIER (dev-login), threshold engine has DRAFT alerts in the queue (`GET /api/v1/alerts`).
 2. Approve one: `POST /api/v1/alerts/{id}/approve`.
-**VERIFY:** 201, alert becomes ACTUAL with `approvedBy`=your JWT sub; CAP v1.2 XML exports valid;
+**VERIFY:** 201, alert becomes ACTUAL with `approvedBy`=your JWT sub; the response carries the emitted CAP
+v1.2 document twice — validated JSON in `data.cap` and OASIS CAP v1.2 XML in `data.capXml` (since 2026-11-21);
 **your Telegram receives the PII-free digest within seconds** (with 1d configured); kill the bot token →
 approval still 201 (broadcast failure audited-not-fatal). Inbound: reply to the bot (poller running) →
 message lands via the trust pipeline as an InboundMessage.
@@ -369,7 +370,7 @@ New scenarios to run (extend the A–T matrix; all work offline on the seed):
   the API (or a malformed envelope) lands each panel on a **labelled error state with Retry**, never a
   crashed page.
 - **V. Accessible map fallback ×14.** With WebGL unavailable (or via the e2e path), the map's fallback
-  lists **all 14 layers** as feature rows — including outages ("ASSUMED offline" + customer count), cell
+  lists **all 14 data layers** as feature rows — including outages ("ASSUMED offline" + customer count), cell
   LTE/5G statuses, the wind observation, cameras, the prediction cone **with its uncertainty caveat**,
   route and shelter rows.
 - **W. Session persistence.** Sign in (or pick a dev role), reload the same tab → the role survives

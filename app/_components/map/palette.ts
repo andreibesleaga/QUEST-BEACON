@@ -18,6 +18,8 @@ export const COLOR_BY_GROUP: Record<LayerId, RGBA> = {
   floodzone: [45, 120, 214, 90], // regulatory zone (translucent water)
   infra: [120, 130, 150, 210], // slate
   weather: [160, 200, 235, 210], // wind (sky)
+  // precipitation is a raster overlay that carries its own colour scale; this hue is its legend swatch.
+  precipitation: [70, 110, 220, 150],
   cameras: [168, 85, 247, 220], // live cameras (violet — distinct from outage's magenta-violet)
   outage: [180, 90, 200, 190], // outage violet
   cell: [70, 170, 160, 190], // teal

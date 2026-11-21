@@ -33,14 +33,14 @@ export function LayerTogglePanel({ data, now, className }: LayerTogglePanelProps
     >
       <legend className="mb-2 text-sm font-semibold text-fg">{t('layersLegend')}</legend>
       {/*
-        F-413: the list MUST be its own scroll region. There are 14 layers, each row at least 44 px tall
+        F-413: the list MUST be its own scroll region. There are 15 layers, each row at least 44 px tall
         (`min-h-11`, the WCAG 2.2 target-size floor) plus optional caveat lines — comfortably over 800 px —
         and this panel renders inside a Popover anchored to the toolbar at the TOP of the page. Unbounded,
         it simply ran off the bottom of the viewport: every layer from "Exposure" (the 10th) downward was
         UNREACHABLE by mouse or keyboard, on a 1440×900 desktop as well as on phones. That is five shipped
         map layers a user could never turn on, on the flagship COP surface.
 
-        Caught by the browser gate, which is the only place it COULD be caught: the panel renders all 14
+        Caught by the browser gate, which is the only place it COULD be caught: the panel renders all 15
         rows in jsdom, so every component test passed and every row was "present" — presence is not reach.
       */}
       <ul className="flex max-h-[60vh] flex-col gap-2 overflow-y-auto pe-1">

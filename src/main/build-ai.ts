@@ -21,7 +21,7 @@ import {
   type Upstream,
 } from '@/adapters/compliance/index.js';
 import { makeObservability, type Observability } from '@/adapters/ai/observability.js';
-import { makeLlmLadder } from '@/adapters/ai/llm/llm-ladder.js';
+import { makeLlmLadder, type OnRungFailure } from '@/adapters/ai/llm/llm-ladder.js';
 import { makeMockProvider, type LlmProvider } from '@/adapters/ai/llm/mock-provider.js';
 import { makeHttpClient } from '@/adapters/ai/http-client.js';
 import { resolveLadder, type AiEnv } from '@/adapters/ai/llm/ladder-config.js';
@@ -43,7 +43,19 @@ export interface BuildComplianceAiOptions {
   readonly env?: AiEnv;
   /** Observability sink (defaults to pino at LOG_LEVEL). Tests inject a silent one. */
   readonly observability?: Observability;
+  /** Where a failed narration rung is reported (defaults to one stderr line, like the routing ladder). */
+  readonly onRungFailure?: OnRungFailure;
 }
+
+/**
+ * One deploy-log line per failed rung, in the same form as `routing degraded` (feature-seed.ts): the
+ * operator reading the log learns WHICH provider stepped aside and WHY (e.g. `returned 401` for a revoked
+ * key) instead of inferring it from reports that silently lost their prose.
+ */
+const logRungFailure: OnRungFailure = (provider, failure, detail) => {
+  const why = failure === 'provider-error' ? detail : 'narration rejected by the output validator';
+  process.stderr.write(`[beacon] narration degraded: ${provider} -> next rung — ${why}\n`);
+};
 
 /**
  * Build the compliance-gated AICompliancePort the SitRep path narrates through. The LLM ladder is reachable
@@ -73,7 +85,7 @@ export function buildComplianceAi(
   const resolved =
     options.providers ?? (options.env ? resolveLadder(options.env, makeHttpClient()) : []);
   const providers = resolved.length > 0 ? resolved : [makeMockProvider()];
-  const ladder = makeLlmLadder(providers, seal);
+  const ladder = makeLlmLadder(providers, seal, options.onRungFailure ?? logRungFailure);
   // The upstream reaches the ladder ONLY with the gateway's minted seal (un-stamped calls are refused, F16).
   const upstream: Upstream = async ({ token, payload }) => {
     const narrated = await ladder.sealed(token).narrate(payload as NarrativeRequest);

@@ -48,9 +48,9 @@
     "test:pg": "BEACON_PG_INTEGRATION=1 vitest run src/adapters/persistence/seed.legacy-upgrade.pg.test.ts"
   },
   "dependencies": {
-    "@deck.gl/core": "^9.3.6",
-    "@deck.gl/layers": "^9.3.6",
-    "@deck.gl/mapbox": "^9.3.6",
+    "@deck.gl/core": "~9.3.6",
+    "@deck.gl/layers": "~9.3.6",
+    "@deck.gl/mapbox": "~9.3.6",
     "@fontsource-variable/inter": "^5.2.8",
     "@fontsource/noto-sans-arabic": "^5.3.0",
     "@fontsource/noto-sans-bengali": "^5.3.0",
@@ -74,7 +74,7 @@
     "jose": "^6.2.12",
     "js-yaml": "^4.3.0",
     "lucide-react": "^1.23.0",
-    "maplibre-gl": "^6.9.0",
+    "maplibre-gl": "~6.9.0",
     "motion": "^12.42.2",
     "next": "^15.1.0",
     "next-intl": "^4.13.4",
@@ -84,7 +84,7 @@
     "react-dom": "^19.0.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
-    "zod": "^3.24.1",
+    "zod": "^4.6.7",
     "zustand": "^5.0.14"
   },
   "devDependencies": {
@@ -105,7 +105,7 @@
     "drizzle-kit": "^0.31.10",
     "eslint": "^9.17.0",
     "eslint-config-next": "^16.4.2",
-    "happy-dom": "^20.10.6",
+    "happy-dom": "~20.10.6",
     "madge": "^8.0.0",
     "postcss": "^8.5.23",
     "prettier": "^3.4.2",
