@@ -12,6 +12,7 @@ import {
   buildRegionRegistries,
   liveOverlay,
   resetLiveRuleState,
+  placeIn,
 } from './live-composition.js';
 import { DEFAULT_MAP_SEED } from './map-seed.js';
 import { makeInfrastructureNode } from '@/domain/infrastructure-node.js';
@@ -552,6 +553,14 @@ describe('liveOverlay — live threshold specs, footprints and regions for the d
     expect(overlay.thresholdRules.length).toBeGreaterThanOrEqual(3);
     expect(overlay.hazards.get(String(discovered.id))?.type).toBe('Polygon');
     expect(overlay.incidentRegions.get(String(discovered.id))).toBe('us-ca');
+    // Where it is, for an alert about it: the coordinates its own headline states — never looked up.
+    expect(overlay.incidentLocator?.get(String(discovered.id))).toBe('39.70°N 121.60°W');
+  });
+
+  it('placeIn reads the coordinates off a discovered headline, and nothing off a headline without them', () => {
+    expect(placeIn('Wildfire perimeter near 36.25°N 121.71°W')).toBe('36.25°N 121.71°W');
+    expect(placeIn('Flood — 2 reported reaches near 45.40°N 28.00°E')).toBe('45.40°N 28.00°E');
+    expect(placeIn('Bear Ridge Fire — active wildfire, Butte County')).toBeUndefined();
   });
 
   it('carries the evaluator’s state across cycles — the same episode does not draft twice', () => {

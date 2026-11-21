@@ -37,7 +37,7 @@ import { isAllClear } from '@/domain/alert.js';
 import type { CapLocalizedText, CapOptions } from '@/adapters/interop/cap-mapper.js';
 import { capTranslationsFor } from '@/adapters/interop/cap-mapper.js';
 import type { RegionRegistry } from '@/adapters/persistence/region-registry.js';
-import { regionAlertLocales } from '@/adapters/persistence/region-registry.js';
+import { regionAlertLocales, regionPlaceName } from '@/adapters/persistence/region-registry.js';
 import { buildWarningText } from '@/application/warning-text/index.js';
 import type { WarningTextInput } from '@/application/warning-text/index.js';
 import { definedOnly } from '@/domain/shared/guard.js';
@@ -59,10 +59,44 @@ export interface CapTextDeps {
    * default.
    */
   readonly areaDescFor?: (alert: Alert) => string | undefined;
+  /**
+   * Where an alert's incident is when nobody has described its area — coordinates, as a discovered
+   * incident's headline states them ("36.25°N 121.71°W"). Added in brackets to the region's place name.
+   */
+  readonly locatorFor?: (alert: Alert) => string | undefined;
   /** Pre-formatted time phrase for the WHEN section, per alert. This module formats no dates (Art. XII). */
   readonly whenFor?: (alert: Alert) => string | undefined;
   /** Pre-computed impact sentence for the IMPACTS section, per alert. Never computed here (Art. XII). */
   readonly impactsFor?: (alert: Alert) => string | undefined;
+}
+
+/**
+ * The words for WHERE — always a noun phrase, because every action sentence builds on it ("Leave {area}
+ * now", "Watch for updates about {area}").
+ *
+ *  1. The composition's own description of the area, when it has one ("Butte County, California").
+ *  2. Otherwise the place the alert's region is named for, with the incident's coordinates in brackets
+ *     when they are known: "California (36.25°N 121.71°W)".
+ *
+ * Never empty when the region is known. An alert for a discovered incident had no description, and its
+ * text read "WHERE: ." and "Watch for updates about ." (2026-11-21). A region is coarse, and true.
+ */
+/** A trimmed, non-empty string — or nothing. */
+const words = (value: string | undefined): string | undefined => {
+  const trimmed = value?.trim();
+  return trimmed === undefined || trimmed === '' ? undefined : trimmed;
+};
+
+/** The region's place name, with the incident's coordinates in brackets when they are known. */
+function regionPlaceOf(alert: Alert, deps: CapTextDeps): string | undefined {
+  const regionId = deps.regionIdFor(alert);
+  const region = regionId === undefined ? undefined : regionPlaceName(deps.regions, regionId);
+  const locator = words(deps.locatorFor?.(alert));
+  return region !== undefined && locator !== undefined ? `${region} (${locator})` : region;
+}
+
+function areaDescOf(alert: Alert, deps: CapTextDeps): string | undefined {
+  return words(deps.areaDescFor?.(alert)) ?? regionPlaceOf(alert, deps);
 }
 
 /** The deterministic inputs the warning templates interpolate, assembled from the alert + the composition. */
@@ -73,7 +107,7 @@ function warningInputFor(alert: Alert, event: string, deps: CapTextDeps): Warnin
   return {
     event,
     severity: alert.severity,
-    areaDesc: deps.areaDescFor?.(alert) ?? '',
+    areaDesc: areaDescOf(alert, deps) ?? '',
     ...(responseType !== undefined ? { responseType } : {}),
     ...(when !== undefined ? { when } : {}),
     ...(impacts !== undefined ? { impacts } : {}),
@@ -88,7 +122,7 @@ function textFor(
 ): Omit<CapLocalizedText, 'language'> {
   const t = warningTranslator(locale);
   const event = t(`warning.event.${alert.category}`);
-  const areaDesc = deps.areaDescFor?.(alert);
+  const areaDesc = areaDescOf(alert, deps);
   const warning = buildWarningText(warningInputFor(alert, event, deps), t);
   // An all-clear leads with ALL CLEAR, not with the hazard and its severity: the first line of a cancel must
   // not read like a fresh warning for the same hazard. The instruction still comes from the AllClear action
@@ -118,7 +152,7 @@ export function makeCapTextProvider(deps: CapTextDeps): (alert: Alert) => CapOpt
     const locales = regionAlertLocales(deps.regions, deps.regionIdFor(alert) ?? '');
     const texts: Record<string, Omit<CapLocalizedText, 'language'>> = {};
     for (const locale of locales) texts[locale] = textFor(alert, locale, deps);
-    const areaDesc = deps.areaDescFor?.(alert);
+    const areaDesc = areaDescOf(alert, deps);
     // The ENGLISH block's fields are ALSO set at the base-option level, so the single-language case and the
     // multilingual case are produced by one code path rather than two that can drift apart — and so the
     // authoritative English wording is the document's base text even for a non-English region (ADR-030 §7).

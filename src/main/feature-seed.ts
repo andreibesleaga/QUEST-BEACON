@@ -149,6 +149,8 @@ export interface FeatureSeed {
   readonly ruleCatalogue?: readonly ThresholdRule[];
   /** incidentId → the human `<areaDesc>` for CAP. Geometry cannot supply the words CAP requires. */
   readonly incidentAreaDesc?: ReadonlyMap<string, string>;
+  /** Incident id → coordinates, for incidents with no described area (the discovered ones). */
+  readonly incidentLocator?: ReadonlyMap<string, string>;
 }
 
 const CA_CENTER: readonly [number, number] = [-121.6, 39.7]; // Butte County, CA (wildfire demo)
@@ -368,7 +370,22 @@ function makeCapOptionsFor(seed: FeatureSeed): ((alert: Alert) => CapOptions) | 
     regions: loaded.value,
     regionIdFor: (alert) => seed.incidentRegions?.get(String(alert.incidentId)),
     areaDescFor: (alert) => seed.incidentAreaDesc?.get(String(alert.incidentId)),
+    locatorFor: (alert) => seed.incidentLocator?.get(String(alert.incidentId)),
   });
+}
+
+/**
+ * `CAP_SENDER` — the identity an emitted CAP document carries in `<sender>`. Documented from the start
+ * (CONFIGURATION.md, SPEC §7) and read by nothing until 2026-11-21: every document went out as the
+ * built-in `beacon@beacon.local`, whatever the deployment had set. CAP forbids spaces, commas and the
+ * characters `<`, `&`, `'` in a sender; a value that breaks that rule would block every emission at the
+ * schema gate, so it is ignored here and the built-in sender is used instead.
+ */
+export function capSenderFrom(
+  rawEnv: Readonly<Record<string, string | undefined>>,
+): string | undefined {
+  const sender = rawEnv.CAP_SENDER?.trim();
+  return sender !== undefined && /^[^\s,<&']+$/.test(sender) ? sender : undefined;
 }
 
 /**
@@ -385,8 +402,10 @@ function makeCapSink(
   rawEnv: Readonly<Record<string, string | undefined>>,
 ): ReturnType<typeof makeAlertSink> {
   const capOptionsFor = makeCapOptionsFor(seed);
+  const sender = capSenderFrom(rawEnv);
   return makeAlertSink({
     clock,
+    ...(sender !== undefined ? { capOptions: { sender } } : {}),
     ...(capOptionsFor !== undefined ? { capOptionsFor } : {}),
     capProfile: toCapProfileId(rawEnv.CAP_PROFILE),
   });

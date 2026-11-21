@@ -179,6 +179,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   "no"; figures are removed together with their units from a fixed list ("9 km/h" no longer leaves
   "/h", "2 fire stations" no longer loses "fire"); ISO instants are removed whole; pollutant codes that
   carry a digit are given by name.
+- **An alert approved on a deployment was emitted with message keys instead of text (2026-11-21).** The
+  server read the warning catalogs from `messages/` on disk; the runtime image does not carry that
+  directory, so the English base came back empty and the document read
+  `<headline>warning.headline</headline>`. The fourteen catalogs are now compiled into the server code.
+  Every test had passed, because the test runner works in the repository, where the directory exists.
+- **An alert about a discovered incident said "WHERE: ." (2026-11-21).** Only the seeded incidents had a
+  described area. An alert now names the place its region is named for, with the incident's coordinates
+  in brackets when they are known ("California (36.25°N 121.71°W)"); a described area still wins.
+- **`CAP_SENDER` was documented and read by nothing (2026-11-21).** Every CAP document carried the
+  built-in sender. A valid configured sender is now used; a CAP-illegal value is ignored, not fatal.
 - **The AI summary of a report could stay unseen for minutes (2026-11-21).** A report read does not wait
   for the model (ADR-038): a slow narration leaves the first answer engine-only and is kept for the next
   read — but nothing made that next read happen until the data changed. The report panel now re-reads an

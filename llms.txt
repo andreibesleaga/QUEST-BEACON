@@ -135,7 +135,7 @@ plus an ACL test.
   browser-fetched NASA GPM IMERG raster with a fixed "satellite estimate, hours behind" caveat (ADR-048).
 - **5 zones** (`us-ca`, `ro`, `es`, `gr`, `ph`) · **14 locales** (RTL: `ar`, `ur`); a zone or a locale
   is configuration, not code (`tests/zones/add-a-zone.test.ts`).
-- **vitest: 5,453 passed / 6 skipped, every floor met** · tsc 0 · eslint 0 · dependency-cruiser 0
+- **vitest: 5,462 passed / 6 skipped, every floor met** · tsc 0 · eslint 0 · dependency-cruiser 0
   violations / 913 modules (`depcruise src app`) · madge 0 cycles · Prettier clean.
 - **OpenAPI: 36 paths / 39 operations / 66 schemas**, zero `x-status: planned`; every operation but the
   unauthenticated `/health` liveness probe declares its minimum role (`npm run docs`).
