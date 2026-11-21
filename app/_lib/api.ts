@@ -244,7 +244,10 @@ export function getReports(fetchImpl?: FetchImpl): Promise<Envelope<ReportsData>
   return fetchEnvelope<ReportsData>('/reports?status=pending', undefined, fetchImpl);
 }
 
-/** GET /alerts — the computed DRAFT alert queue (VERIFIER+; DRAFT-only, never emitted — Art. XIII). */
+/**
+ * GET /alerts — the computed alert review queue (VERIFIER+). Every alert is created DRAFT and the read never
+ * emits (Art. XIII); an approved alert stays listed with state ACTUAL.
+ */
 export function getAlerts(fetchImpl?: FetchImpl): Promise<Envelope<AlertsData>> {
   return fetchEnvelope<AlertsData>('/alerts', undefined, fetchImpl);
 }

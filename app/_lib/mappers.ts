@@ -72,7 +72,7 @@ export function confidenceComponentsOf(report: ReportSummary): readonly Confiden
   return rows;
 }
 
-/** GET /alerts — the DRAFT alert array lives under `data.alerts`. */
+/** GET /alerts — the review-queue array (DRAFT rows, and approved ones as ACTUAL) lives under `data.alerts`. */
 export function alertsOf(env: Envelope<AlertsData>): readonly AlertSummary[] {
   return env.data.alerts;
 }

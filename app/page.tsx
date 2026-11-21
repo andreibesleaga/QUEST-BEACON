@@ -121,7 +121,8 @@ const VISION_LIVE_ENABLED = process.env.NEXT_PUBLIC_FEATURE_VISION_LIVE === 'on'
  * - `approveError`: a FAILED approval must be labelled, never silent — before this, a rejected approve
  *   (e.g. the one seeded DRAFT already promoted in an earlier session) left the button looking dead.
  * - `approvedSticky`: "Approved" sticks only while it is true of what the tab shows — after the queue
- *   refetch removes the approved DRAFT, an EMPTY queue keeps the badge (the decision visibly stuck);
+ *   refetch shows the approved alert as ACTUAL, NO outstanding DRAFT keeps the badge (the decision
+ *   visibly stuck; `draftAlerts` here is the outstanding DRAFTs only);
  *   a DIFFERENT draft arriving first re-enables the button so the next decision can be made
  *   (`approve.variables` is the id of the last approval). Previously `approve.isSuccess` alone badged
  *   "Approved" forever, hiding any newly arrived DRAFT behind a stale success.
@@ -346,14 +347,20 @@ export default function CopPage(): ReactNode {
       provenance: prov,
     }));
   }, [alertsQuery.data]);
+  // The list keeps an approved alert (badge ACTUAL) as the record of the decision; only the ones still
+  // DRAFT are outstanding, and only those may be offered for approval (2026-11-21).
+  const outstandingDrafts = useMemo(
+    () => draftAlerts.filter((a) => a.state === 'DRAFT'),
+    [draftAlerts],
+  );
   const approve = useApproveAlert(activeRegionId);
   const decisionApproval = decisionApprovalProps(
     actorRole,
-    draftAlerts[0],
+    outstandingDrafts[0],
     (id) => approve.mutate(id),
     tDecision,
   );
-  const { approveError, approvedSticky } = approvalDisplayState(approve, draftAlerts);
+  const { approveError, approvedSticky } = approvalDisplayState(approve, outstandingDrafts);
 
   // Decision support figures + narration are DERIVED from the selected incident's SitRep (engine numbers only).
   const decisionSitRep = useSitRep(selectedIncidentId);

@@ -177,6 +177,8 @@ test('DRAFT→ACTUAL alert promotion via the VERIFIER UI (HITL, one-shot)', asyn
   // The HITL approve promotes the alert: its state badge flips DRAFT → ACTUAL (GET /alerts refetch).
   await expect(alertRow).toContainText('ACTUAL', { timeout: 10_000 });
   await expect(alertRow).not.toContainText('DRAFT');
+  // The approved alert stays listed as the record of the decision, and offers no second approval.
+  await expect(alertRow.getByRole('button', { name: /review.*approve/i })).toHaveCount(0);
 });
 
 // The DRAFT→ACTUAL promotion gate is enforced server-side and requires an authenticated VERIFIER/EM.

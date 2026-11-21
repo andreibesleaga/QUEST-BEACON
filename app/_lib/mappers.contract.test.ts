@@ -152,13 +152,13 @@ describe('seam: GET /reports ↔ ReportsData (VERIFIER+, geomPrecise gated)', ()
   });
 });
 
-describe('seam: GET /alerts ↔ AlertsData (VERIFIER+, DRAFT-only)', () => {
+describe('seam: GET /alerts ↔ AlertsData (VERIFIER+; every alert starts DRAFT)', () => {
   it('PUBLIC is refused (403)', async () => {
     const { status } = await realGet<AlertsData>('/api/v1/alerts', 'PUBLIC');
     expect(status).toBe(403);
   });
 
-  it('VERIFIER sees an object with an alerts[] array, every one DRAFT (Art. XIII)', async () => {
+  it('VERIFIER sees an object with an alerts[] array, every one DRAFT before any approval (Art. XIII)', async () => {
     const { status, env } = await realGet<AlertsData>('/api/v1/alerts', 'VERIFIER');
     expect(status).toBe(200);
     expect(Array.isArray(env.data)).toBe(false);

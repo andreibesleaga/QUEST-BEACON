@@ -51,7 +51,7 @@ on the live deployment right now.
 | CAP / EDXL interoperability | **CAP v1.2 + EDXL-RM + EDXL-SitRep round-trips**, schema-validated |
 | Push, don't poll | Real **SSE push ~1.7 s**; time-to-trustworthy-picture **~1 s** against a < 10 s budget |
 | Runs locally at near-zero cost | Runs **fully air-gapped** on one machine — the *same artifact* runs in the cloud |
-| Modular adapter core | Hexagonal boundaries **machine-enforced**, 0 violations across 911 modules |
+| Modular adapter core | Hexagonal boundaries **machine-enforced**, 0 violations across 926 modules |
 
 **And several things the brief never asked for**, each working in the live demo: early-warning,
 COP, cited synthesis and responder logistics on **one canonical model** (normally three or four separate
@@ -72,9 +72,9 @@ Full detail: **§7 What is genuinely new** · evidence per criterion: **§2**.
 | Data-source adapters | **45 registered** (id↔factory match test-asserted) · 41 consumed · 4 deliberately not (2 MOCK-only by design, 1 held, 1 covers another state — §7) |
 | Map layers | **15**: 14 data layers, each with its own LIVE/CACHED/MOCK freshness badge and a tooltip on every point (the accessible list fallback covers all 14), plus a satellite precipitation overlay (NASA GPM IMERG via NASA GIBS) labelled as an estimate several hours behind (ADR-048) |
 | Regions / locales | **5 zones** (US-CA, RO, ES, GR, PH) · **14 locales** incl. RTL (ar, ur) — region/locale are config, not code |
-| Tests | **5,463 unit/integration tests passed / 6 skipped** (exit 0, 2026-11-21) · Playwright e2e across **5 zones × 4 device projects** incl. axe WCAG 2.2 AA, visual baselines and a real offline reload |
+| Tests | **5,471 unit/integration tests passed / 6 skipped** (exit 0, 2026-11-21) · Playwright e2e across **5 zones × 4 device projects** incl. axe WCAG 2.2 AA, visual baselines and a real offline reload |
 | Coverage floors (CI-enforced) | domain + application **99/99/99/99** · main 97/79/96/97 · adapters 90/83/93/90 · app 89/86/89/89 — floors are never lowered (measured 96.0 % / 90.9 % overall, 2026-09-15) |
-| Architecture | Hexagonal ports & adapters, **0 boundary violations** (dependency-cruiser gate, 913 modules) · **50 ADR files** (001–048 + 008a; two files share the 036 number — a recorded finding) |
+| Architecture | Hexagonal ports & adapters, **0 boundary violations** (dependency-cruiser gate, 926 modules) · **50 ADR files** (001–048 + 008a; two files share the 036 number — a recorded finding) |
 | API | OpenAPI: **36 paths / 39 operations / 66 schemas**, zero `x-status: planned` — everything documented is served; the document is contract-tested (`npm run docs`) |
 | Time-to-Trustworthy-Picture | **< 10 s budget, measured ~1 s** per zone, phone included (`e2e/perf.spec.ts`) |
 | Real-time push | SSE delta in **~1.7 s** browser-proven (`e2e/sse-push.spec.ts`); 15 s polling is the labelled fallback |
@@ -377,7 +377,7 @@ a failing test if it stops being true.
 
 The rarest thing in this repository may be that **it is hard to lie in it**:
 
-- **Hexagonal boundaries** are machine-enforced (dependency-cruiser, 0 violations across 911 modules).
+- **Hexagonal boundaries** are machine-enforced (dependency-cruiser, 0 violations across 926 modules).
 - **Drill mode structurally cannot reach a live channel** — a dependency-cruiser rule fails the build if
   exercise/anticipatory code so much as imports a messaging transport. Practice without risk, by
   construction rather than by discipline.

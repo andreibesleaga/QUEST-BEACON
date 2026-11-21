@@ -189,6 +189,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   in brackets when they are known ("California (36.25°N 121.71°W)"); a described area still wins.
 - **`CAP_SENDER` was documented and read by nothing (2026-11-21).** Every CAP document carried the
   built-in sender. A valid configured sender is now used; a CAP-illegal value is ignored, not fatal.
+- **After signing in, the report shown was still the signed-out one (2026-11-21).** The SitRep is
+  role-scoped on the server (the narration is for signed-in readers) and its cache key held no role, so
+  an operator who opened the COP signed out and then signed in kept the `deterministic-only` copy until
+  an unrelated delta arrived. The key now carries the role; a delta still invalidates every role's copy.
+- **An approved alert still offered "Review & approve" (2026-11-21).** `GET /alerts` keeps an approved
+  alert in the list with state ACTUAL, as the record of the decision, but the Draft alerts tab showed
+  its approve control again and the Decision tab took the first listed alert whatever its state — both
+  could only earn the server's 409. The control is now offered for DRAFT rows only, and the Decision tab
+  targets the first outstanding DRAFT. The API description said every row is DRAFT; it now states what
+  the handler does (`AlertQueueItem.state`: `DRAFT` or `ACTUAL`).
 - **The AI summary of a report could stay unseen for minutes (2026-11-21).** A report read does not wait
   for the model (ADR-038): a slow narration leaves the first answer engine-only and is kept for the next
   read — but nothing made that next read happen until the data changed. The report panel now re-reads an
