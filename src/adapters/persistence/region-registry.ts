@@ -190,6 +190,18 @@ export function regionAlertLocales(
   return alertLocalesFor(findRegion(registry, regionId)?.region.languages ?? []);
 }
 
+/**
+ * The place a region's configured name stands for, without its bracketed note: "California (Flagship)"
+ * is "California", "Spain (EU Wildfire, demo-grade)" is "Spain". The note is for the region selector; an
+ * alert must name the place and nothing else. Nothing for an unknown id or an empty name.
+ */
+export function regionPlaceName(registry: RegionRegistry, regionId: string): string | undefined {
+  const place = findRegion(registry, regionId)
+    ?.region.name.replace(/\s*\([^)]*\)\s*$/, '')
+    .trim();
+  return place === undefined || place === '' ? undefined : place;
+}
+
 /** Load + parse config/regions.json (default path). Returns a typed Result — never throws upstream. */
 export function loadRegionRegistry(path?: string): Result<RegionRegistry, DomainError> {
   try {

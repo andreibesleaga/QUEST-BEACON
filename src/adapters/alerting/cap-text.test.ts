@@ -11,6 +11,7 @@ import type { PolygonGeometry } from '@/domain/value-objects/geo.js';
 import { parseRegionRegistry } from '@/adapters/persistence/region-registry.js';
 import { alertToCap, capMachineValuesAgree } from '@/adapters/interop/cap-mapper.js';
 import { makeCapTextProvider } from './cap-text.js';
+import { LOCALE_IDS } from '@/config/locales.js';
 import { warningTranslator } from './warning-catalog.js';
 
 const SENT = '2026-07-05T22:00:00Z';
@@ -147,11 +148,47 @@ describe('makeCapTextProvider', () => {
     );
   });
 
-  it('composes without an areaDesc, when the composition has none to give', () => {
+  it('names the region when the composition has no description of the area (2026-11-21)', () => {
+    // The live defect: an alert for a discovered incident read "WHERE: ." and "Watch for updates about .".
     const bare = makeCapTextProvider({ regions: REGIONS, regionIdFor: () => 'ro' });
     const opts = bare(alert('inc-ro'));
-    expect(opts.areaDesc).toBeUndefined();
+    expect(opts.areaDesc).toBe('Romania');
     expect(opts.translations).toHaveLength(2);
+    for (const text of opts.translations ?? []) {
+      expect(text.description).toContain('Romania');
+      expect(text.instruction).toContain('Romania');
+      expect(text.description).not.toMatch(/:\s*\.$/);
+    }
+  });
+
+  it('a blank description counts as none; an unknown region still has no words to give', () => {
+    const blank = makeCapTextProvider({
+      regions: REGIONS,
+      regionIdFor: () => 'us-ca',
+      areaDescFor: () => '   ',
+    });
+    expect(blank(alert('inc-ca')).areaDesc).toBe('California');
+    const unknown = makeCapTextProvider({ regions: REGIONS, regionIdFor: () => undefined });
+    expect(unknown(alert('inc-x')).areaDesc).toBeUndefined();
+  });
+
+  it("adds a discovered incident's coordinates to the region, as a noun phrase the action can use", () => {
+    const live = makeCapTextProvider({
+      regions: REGIONS,
+      regionIdFor: () => 'us-ca',
+      locatorFor: () => '36.25°N 121.71°W',
+    });
+    const opts = live(alert('discovered:us-ca:WILDFIRE:-487:145'));
+    expect(opts.areaDesc).toBe('California (36.25°N 121.71°W)');
+    expect(opts.instruction).toContain('Leave California (36.25°N 121.71°W) now.');
+    // A described area always wins over the fallback.
+    const seeded = makeCapTextProvider({
+      regions: REGIONS,
+      regionIdFor: () => 'us-ca',
+      areaDescFor: () => 'Butte County, California',
+      locatorFor: () => '39.70°N 121.60°W',
+    });
+    expect(seeded(alert('us-ca-wildfire-demo')).areaDesc).toBe('Butte County, California');
   });
 });
 
@@ -168,5 +205,26 @@ describe('warningTranslator (server-side catalog, ADR-030 fallback ladder)', () 
     const rendered = t('warning.label.action');
     expect(rendered.trim()).not.toBe('');
     expect(rendered).not.toContain('warning.label');
+  });
+
+  it('carries its catalogs in the code: no file read can leave an alert with raw keys (2026-11-21)', async () => {
+    // The live defect: the runtime image has no `messages/` directory, the disk read failed, the English
+    // base came back empty and an approved alert was emitted as "<headline>warning.headline</headline>".
+    // The module must therefore not touch the file system at all.
+    const source = await import('node:fs').then((fs) =>
+      fs.readFileSync(new URL('./warning-catalog.ts', import.meta.url), 'utf8'),
+    );
+    expect(source).not.toMatch(/from 'node:fs'|readFileSync|import\.meta\.url/);
+  });
+
+  it('renders real text for every shipped locale — never a key, never a blank', () => {
+    for (const locale of LOCALE_IDS) {
+      const t = warningTranslator(locale);
+      for (const key of ['warning.label.what', 'warning.label.where', 'warning.label.action']) {
+        const text = t(key);
+        expect(text.trim(), `${locale} ${key}`).not.toBe('');
+        expect(text, `${locale} ${key}`).not.toContain('warning.');
+      }
+    }
   });
 });

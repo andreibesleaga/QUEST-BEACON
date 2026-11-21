@@ -1,6 +1,6 @@
 // BEACON — server-side warning-copy catalog (D3.4/D3.5; ADR-030 + ADR-036 §4/§5). Turns a locale id into a
-// `WarningTranslate` over `messages/<locale>.json`, for text composed on the SERVER (the emitted CAP
-// document, the Telegram digest) rather than in the browser.
+// `WarningTranslate` over the `messages/<locale>.json` catalogs, for text composed on the SERVER (the
+// emitted CAP document) rather than in the browser.
 //
 // WHY NOT REUSE app/_lib/messages.server.ts: that loader is a Next.js server module — it reads `cookies()`
 // and uses `await import()` so the bundler can code-split catalogs out of the client payload. Neither
@@ -12,44 +12,71 @@
 // The fallback ladder is the part that matters: the locale catalog is deep-merged OVER English, so a key the
 // translators have not delivered resolves to the English source text. A raw key never renders, and a blank
 // never renders — a blank protective-action line is worse than an English one.
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { createTranslator } from 'next-intl';
 import { DEFAULT_LOCALE } from '@/config/locales.js';
 import type { LocaleId } from '@/config/locales.js';
 import type { WarningTranslate } from '@/application/warning-text/index.js';
+import ar from '../../../messages/ar.json';
+import bn from '../../../messages/bn.json';
+import el from '../../../messages/el.json';
+import en from '../../../messages/en.json';
+import es from '../../../messages/es.json';
+import fil from '../../../messages/fil.json';
+import fr from '../../../messages/fr.json';
+import hi from '../../../messages/hi.json';
+import id from '../../../messages/id.json';
+import ptBR from '../../../messages/pt-BR.json';
+import ro from '../../../messages/ro.json';
+import ru from '../../../messages/ru.json';
+import ur from '../../../messages/ur.json';
+import zhHans from '../../../messages/zh-Hans.json';
 
-type MessageTree = { readonly [key: string]: string | MessageTree };
+/** A catalog node: text, a nested group, or a non-text value (each catalog carries a `_meta` block). */
+type MessageTree = { readonly [key: string]: unknown };
 
 /**
- * Catalog path for a locale. `LocaleId` is a closed literal union, so no caller string reaches a path.
- * Resolved lazily at call time (never at module evaluation) so that merely importing this file is safe in
- * any environment, including a browser-shaped test runner where `import.meta.url` is not a `file:` URL.
+ * The catalogs, COMPILED IN — one entry per shipped locale, and the type makes that exhaustive: a new
+ * `LocaleId` does not compile until its catalog is imported here.
+ *
+ * They used to be read from `messages/<locale>.json` on disk at first use. The runtime image does not
+ * carry that directory (infra/Dockerfile copies `.next`, `config`, `schemas`, `fixtures` … and not
+ * `messages`), so in every container the read failed, the English base came back EMPTY, and the
+ * "resolves to English, never to a raw key" ladder below had nothing to resolve to. Found on the live
+ * deployment on 2026-11-21: an approved alert was emitted as
+ * `<event>warning.event.Fire</event><headline>warning.headline</headline>`. Every test passed, because
+ * the test runner works in the repository, where the directory exists.
+ *
+ * Importing the JSON puts the text in the server bundle, where no deployment layout can lose it — the
+ * same way `channels/messaging/digest-i18n.ts` has always carried its English catalog.
  */
-function catalogPath(locale: LocaleId): string {
-  return fileURLToPath(new URL(`../../../messages/${locale}.json`, import.meta.url));
-}
+const CATALOGS: Readonly<Record<LocaleId, MessageTree>> = {
+  en,
+  'zh-Hans': zhHans,
+  hi,
+  es,
+  ar,
+  fr,
+  bn,
+  'pt-BR': ptBR,
+  id,
+  ur,
+  ru,
+  ro,
+  fil,
+  el,
+};
 
-/**
- * Read a catalog, or `undefined` when it is missing/unparseable. A missing catalog is a DEGRADATION, not a
- * crash (Art. XVI): the emission continues in English rather than failing the alert.
- */
-function readCatalog(locale: LocaleId): MessageTree | undefined {
-  try {
-    return JSON.parse(readFileSync(catalogPath(locale), 'utf8')) as MessageTree;
-  } catch {
-    return undefined;
-  }
-}
+const isTree = (value: unknown): value is MessageTree =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
 
 /** Deep-merge `override` onto `base`, ignoring blank overrides (an empty string is "not translated"). */
 function mergeMessages(base: MessageTree, override: MessageTree): MessageTree {
-  const out: Record<string, string | MessageTree> = { ...base };
+  const out: Record<string, unknown> = { ...base };
   for (const [key, value] of Object.entries(override)) {
     const current = out[key];
     if (typeof value === 'string') {
       if (value !== '') out[key] = value;
-    } else if (typeof current === 'object' && current !== null) {
+    } else if (isTree(value) && isTree(current)) {
       out[key] = mergeMessages(current, value);
     } else if (current === undefined) {
       out[key] = value;
@@ -58,14 +85,7 @@ function mergeMessages(base: MessageTree, override: MessageTree): MessageTree {
   return out;
 }
 
-let englishCache: MessageTree | undefined;
 const translators = new Map<string, WarningTranslate>();
-
-/** The English source catalog, read once on FIRST USE (never at import time — see `catalogPath`). */
-function english(): MessageTree {
-  englishCache ??= readCatalog(DEFAULT_LOCALE) ?? {};
-  return englishCache;
-}
 
 /**
  * A `WarningTranslate` for one locale, memoized. `onError` is swallowed on purpose: an ICU defect in one
@@ -75,8 +95,8 @@ function english(): MessageTree {
 export function warningTranslator(locale: LocaleId): WarningTranslate {
   const cached = translators.get(locale);
   if (cached) return cached;
-  const messages =
-    locale === DEFAULT_LOCALE ? english() : mergeMessages(english(), readCatalog(locale) ?? {});
+  const english = CATALOGS[DEFAULT_LOCALE];
+  const messages = locale === DEFAULT_LOCALE ? english : mergeMessages(english, CATALOGS[locale]);
   const t = createTranslator({ locale, messages: messages as never, onError: () => undefined });
   const translate: WarningTranslate = (key, args) =>
     (t as unknown as (k: string, v?: Readonly<Record<string, string | number>>) => string)(

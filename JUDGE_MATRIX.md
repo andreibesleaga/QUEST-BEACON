@@ -72,7 +72,7 @@ Full detail: **§7 What is genuinely new** · evidence per criterion: **§2**.
 | Data-source adapters | **45 registered** (id↔factory match test-asserted) · 41 consumed · 4 deliberately not (2 MOCK-only by design, 1 held, 1 covers another state — §7) |
 | Map layers | **15**: 14 data layers, each with its own LIVE/CACHED/MOCK freshness badge and a tooltip on every point (the accessible list fallback covers all 14), plus a satellite precipitation overlay (NASA GPM IMERG via NASA GIBS) labelled as an estimate several hours behind (ADR-048) |
 | Regions / locales | **5 zones** (US-CA, RO, ES, GR, PH) · **14 locales** incl. RTL (ar, ur) — region/locale are config, not code |
-| Tests | **5,450 unit/integration tests passed / 6 skipped** (exit 0, 2026-11-21) · Playwright e2e across **5 zones × 4 device projects** incl. axe WCAG 2.2 AA, visual baselines and a real offline reload |
+| Tests | **5,463 unit/integration tests passed / 6 skipped** (exit 0, 2026-11-21) · Playwright e2e across **5 zones × 4 device projects** incl. axe WCAG 2.2 AA, visual baselines and a real offline reload |
 | Coverage floors (CI-enforced) | domain + application **99/99/99/99** · main 97/79/96/97 · adapters 90/83/93/90 · app 89/86/89/89 — floors are never lowered (measured 96.0 % / 90.9 % overall, 2026-09-15) |
 | Architecture | Hexagonal ports & adapters, **0 boundary violations** (dependency-cruiser gate, 913 modules) · **50 ADR files** (001–048 + 008a; two files share the 036 number — a recorded finding) |
 | API | OpenAPI: **36 paths / 39 operations / 66 schemas**, zero `x-status: planned` — everything documented is served; the document is contract-tested (`npm run docs`) |

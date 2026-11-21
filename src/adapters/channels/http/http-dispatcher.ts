@@ -569,6 +569,9 @@ export function withLiveOverlay(base: FeatureSeed, overlay: LiveFeatureOverlay):
       ? new Map([...overlay.hazards, ...base.hazards])
       : new Map([...base.hazards, ...overlay.hazards]),
     incidentRegions: new Map([...(base.incidentRegions ?? []), ...overlay.incidentRegions]),
+    // WHERE, in an alert's words: a seeded incident has a description (`incidentAreaDesc`, untouched); a
+    // discovered one brings the coordinates its headline states, which the alert adds to the region.
+    incidentLocator: new Map([...(base.incidentLocator ?? []), ...(overlay.incidentLocator ?? [])]),
     // What GET /threshold-rules lists = what runs: under hybrid the seeded specs' rules still run, so the
     // catalogue carries them ahead of the live rules (each id once; forecast triggers are appended where
     // the catalogue is read, since they are a function of the clock).

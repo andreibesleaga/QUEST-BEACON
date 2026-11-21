@@ -145,6 +145,42 @@ export function useIncidents(
   });
 }
 
+/** How long after an engine-only report the panel reads it once more, and how many times at most. */
+export const SITREP_FOLLOW_UP_MS = 3_000;
+export const SITREP_FOLLOW_UP_READS = 2;
+
+/**
+ * Should the report be read again by itself, and after how long?
+ *
+ * A report read is not held up by the model (ADR-038): when the prose is not ready within the server's
+ * deadline, the answer is the engine's own sentences, marked `deterministic-only`, and the model's answer
+ * is remembered for the NEXT read. Nothing made that next read happen — it waited for a data change or
+ * for the operator to reload — so on a quiet picture the AI summary an operator was entitled to stayed
+ * unseen for minutes (seen on the live deployment, 2026-11-21).
+ *
+ * So an engine-only answer is followed by at most two quiet re-reads, a few seconds apart. Bounded on
+ * purpose: with AI switched off, or blocked, `deterministic-only` is the permanent and correct answer,
+ * and the panel must not poll for prose that will never come.
+ *
+ * `attempts` is every read of this report that has finished — answered OR failed. Counting answers alone
+ * would leave the bound open exactly when it matters: a follow-up that fails changes no data, so the last
+ * engine-only answer stays in place and an answers-only count never moves — the panel would re-read every
+ * three seconds for as long as the outage lasts.
+ */
+export function sitRepFollowUpMs(aiMode: string | undefined, attempts: number): number | false {
+  return aiMode === 'deterministic-only' && attempts <= SITREP_FOLLOW_UP_READS
+    ? SITREP_FOLLOW_UP_MS
+    : false;
+}
+
+/** Finished reads of one query: TanStack counts answers and failures separately. */
+export function finishedReads(state: {
+  readonly dataUpdateCount: number;
+  readonly errorUpdateCount: number;
+}): number {
+  return state.dataUpdateCount + state.errorUpdateCount;
+}
+
 export function useSitRep(
   incidentId: string | undefined,
 ): UseQueryResult<Envelope<SitRepData>, ApiError> {
@@ -152,6 +188,8 @@ export function useSitRep(
     queryKey: queryKeys.sitrep(incidentId ?? ''),
     queryFn: () => api.getSitRep(incidentId as string),
     enabled: incidentId !== undefined && incidentId !== '',
+    refetchInterval: (query) =>
+      sitRepFollowUpMs(query.state.data?.data?.aiMode, finishedReads(query.state)),
   });
 }
 

@@ -9,7 +9,7 @@ import { isOk } from '@/domain/shared/result.js';
 import { asId } from '@/domain/value-objects/ids.js';
 import type { IncidentId } from '@/domain/value-objects/ids.js';
 import type { HttpClient, HttpResponse } from '@/adapters/ai/http-client.js';
-import { buildFeatureDeps, DEFAULT_FEATURE_SEED } from './feature-seed.js';
+import { buildFeatureDeps, capSenderFrom, DEFAULT_FEATURE_SEED } from './feature-seed.js';
 
 const CLOCK = () => '2026-07-05T22:00:00Z';
 const CA_INCIDENT = asId<IncidentId>('us-ca-wildfire-demo');
@@ -139,5 +139,24 @@ describe('EnvSchema fail-fast (config/index.ts refine, exercised via loadConfig)
 
   it('FEATURE_ROUTING defaults to heuristic when unset', () => {
     expect(loadConfig({}).FEATURE_ROUTING).toBe('heuristic');
+  });
+});
+
+describe('capSenderFrom — the CAP <sender> identity from CAP_SENDER', () => {
+  it('uses a valid configured sender', () => {
+    expect(capSenderFrom({ CAP_SENDER: 'cap@county-eoc.example.org' })).toBe(
+      'cap@county-eoc.example.org',
+    );
+    expect(capSenderFrom({ CAP_SENDER: '  cap@county-eoc.example.org  ' })).toBe(
+      'cap@county-eoc.example.org',
+    );
+  });
+
+  it('ignores an unset, blank or CAP-illegal value, so a typo cannot block every alert', () => {
+    expect(capSenderFrom({})).toBeUndefined();
+    expect(capSenderFrom({ CAP_SENDER: '' })).toBeUndefined();
+    for (const illegal of ['County EOC', 'a,b', 'eoc<x>', 'r&d', "o'brien"]) {
+      expect(capSenderFrom({ CAP_SENDER: illegal })).toBeUndefined();
+    }
   });
 });

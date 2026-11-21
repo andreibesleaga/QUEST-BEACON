@@ -5,7 +5,12 @@ import { describe, expect, it } from 'vitest';
 import { isOk } from '@/domain/shared/result.js';
 import { loadManifest } from '@/main/adapter-registry.js';
 import type { RegionRegistry } from './region-registry';
-import { loadRegionRegistry, parseRegionRegistry, regionAlertLocales } from './region-registry';
+import {
+  loadRegionRegistry,
+  parseRegionRegistry,
+  regionAlertLocales,
+  regionPlaceName,
+} from './region-registry';
 
 describe('loadRegionRegistry (real config/regions.json)', () => {
   it('loads CA (default) + Romania with the RO CACHED overrides', () => {
@@ -268,5 +273,20 @@ describe('regionAlertLocales (region languages → alert locales)', () => {
       ],
     });
     expect(regionAlertLocales(reg, 'x')).toEqual(['ro', 'en']);
+  });
+});
+
+describe('regionPlaceName — the place a region is named for, as an alert may say it', () => {
+  it('drops the bracketed note of every shipped region and keeps the place', () => {
+    const result = loadRegionRegistry();
+    if (!isOk(result)) throw new Error('expected the shipped registry to load');
+    const places = ['us-ca', 'ro', 'es', 'gr', 'ph'].map((id) => regionPlaceName(result.value, id));
+    expect(places).toEqual(['California', 'Romania', 'Spain', 'Greece', 'Philippines']);
+  });
+
+  it('answers nothing for a region that is not configured', () => {
+    const result = loadRegionRegistry();
+    if (!isOk(result)) throw new Error('expected the shipped registry to load');
+    expect(regionPlaceName(result.value, 'atlantis')).toBeUndefined();
   });
 });

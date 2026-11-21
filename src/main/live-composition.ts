@@ -62,6 +62,12 @@ export interface LiveFeatureOverlay {
   /** Discovered incident id → region id (what an approved alert is published under). */
   readonly incidentRegions: ReadonlyMap<string, string>;
   /**
+   * Discovered incident id → where it is, as its own headline states it: the cluster centre in degrees
+   * ("36.25°N 121.71°W"). An alert about it names the region and adds this in brackets. Derived, like
+   * the headline — no place name is looked up or invented.
+   */
+  readonly incidentLocator?: ReadonlyMap<string, string>;
+  /**
    * Hybrid picture: the seeded demo incident is still served, so its seeded specs keep running BESIDE the
    * live ones. Live-only: the live specs REPLACE them (the demo's specs would draft for incidents the COP
    * no longer serves). Decided by the picture, not by the caller (2026-09-14).
@@ -118,6 +124,14 @@ function ruleOf(r: {
   });
 }
 
+/** The coordinates a discovered incident's headline ends with ("… near 36.25°N 121.71°W"), or nothing. */
+export function placeIn(headline: string): string | undefined {
+  const marker = ' near ';
+  const at = headline.lastIndexOf(marker);
+  const place = at < 0 ? '' : headline.slice(at + marker.length).trim();
+  return place === '' ? undefined : place;
+}
+
 /** Build the overlay for the live-only picture from the seeds just assembled. */
 export function liveOverlay(
   coreSeed: CoreSeed,
@@ -132,17 +146,21 @@ export function liveOverlay(
   const thresholds: ThresholdAlertSpec[] = [];
   const hazards = new Map<string, Geometry>();
   const incidentRegions = new Map<string, string>();
+  const incidentLocator = new Map<string, string>();
   for (const [regionId, map] of Object.entries(mapSeed)) {
     const incidents = coreSeed.incidents
       .filter((i) => String(i.regionId) === regionId)
       .map((i) => ({
         id: i.id,
         type: i.type,
+        headline: i.headline,
         hazards: i.derivation.hazards,
         sourceId: asId<SourceId>(String(i.provenance[0]?.sourceId ?? 'unknown')),
       }));
     for (const i of incidents) {
       incidentRegions.set(String(i.id), regionId);
+      const place = placeIn(i.headline);
+      if (place !== undefined) incidentLocator.set(String(i.id), place);
       const footprint = clusterFootprint(i.hazards);
       if (footprint !== undefined) hazards.set(String(i.id), footprint);
     }
@@ -164,6 +182,7 @@ export function liveOverlay(
     thresholdRules: rules,
     hazards,
     incidentRegions,
+    incidentLocator,
     keepSeeded: options.keepSeeded ?? false,
   };
 }

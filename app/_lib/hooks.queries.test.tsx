@@ -23,7 +23,10 @@ import type { ReactNode } from 'react';
 import { makeQueryClient } from './query-client.js';
 import { useUiStore } from './store.js';
 import {
+  finishedReads,
   queryKeys,
+  sitRepFollowUpMs,
+  SITREP_FOLLOW_UP_MS,
   useAlerts,
   useIncidents,
   useMapData,
@@ -327,5 +330,37 @@ describe('useMapData', () => {
     await waitFor(() => expect(h.countOf('/map')).toBeGreaterThan(0));
     // Whatever the server said, the hook's contract is total: a MapData, always.
     await waitFor(() => expect(view.result.current).toEqual({}));
+  });
+});
+
+// ADR-038: a report read is not held up by the model, and the model's answer is kept for the NEXT read.
+// These pin when the panel makes that next read happen by itself — and when it must not.
+describe('sitRepFollowUpMs — a quiet re-read after an engine-only report', () => {
+  it('asks again a few seconds after an engine-only answer', () => {
+    expect(sitRepFollowUpMs('deterministic-only', 1)).toBe(SITREP_FOLLOW_UP_MS);
+    expect(sitRepFollowUpMs('deterministic-only', 2)).toBe(SITREP_FOLLOW_UP_MS);
+  });
+
+  it('stops after two follow-ups: with AI off, engine-only is the permanent answer, not a wait', () => {
+    expect(sitRepFollowUpMs('deterministic-only', 3)).toBe(false);
+    expect(sitRepFollowUpMs('deterministic-only', 50)).toBe(false);
+  });
+
+  it('counts a FAILED follow-up too: an outage must not turn two re-reads into a poll without end', () => {
+    // One answer (engine-only), then the follow-ups fail: the data — and an answers-only count — would
+    // never change, and the interval would stay on for as long as the outage lasts.
+    const afterOneAnswer = { dataUpdateCount: 1, errorUpdateCount: 0 };
+    const afterTwoFailures = { dataUpdateCount: 1, errorUpdateCount: 2 };
+    expect(sitRepFollowUpMs('deterministic-only', finishedReads(afterOneAnswer))).toBe(
+      SITREP_FOLLOW_UP_MS,
+    );
+    expect(sitRepFollowUpMs('deterministic-only', finishedReads(afterTwoFailures))).toBe(false);
+    expect(finishedReads({ dataUpdateCount: 2, errorUpdateCount: 3 })).toBe(5);
+  });
+
+  it('never re-reads a report that already carries prose, or one not yet received', () => {
+    expect(sitRepFollowUpMs('cloud', 1)).toBe(false);
+    expect(sitRepFollowUpMs('local', 1)).toBe(false);
+    expect(sitRepFollowUpMs(undefined, 0)).toBe(false);
   });
 });
