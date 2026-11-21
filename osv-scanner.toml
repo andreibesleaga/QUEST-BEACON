@@ -8,20 +8,45 @@ reason = "esbuild <=0.25.0 dev-server CORS advisory (CVSS 5.3, Medium). Dev-only
 
 [[IgnoredVulns]]
 id = "GHSA-82fw-gwwq-j7x9"
-ignoreUntil = 2026-12-01
-reason = "Vitest / @vitest/mocker 3.2.7 (CVSS 5.9, Medium), fixed in 4.1.11. DEV-ONLY: vitest is a devDependency, is never installed in the runtime image (infra/Dockerfile runs `npm ci --omit=dev`) and ships in no production artifact. The Vitest 3 → 4 major upgrade changes V8 coverage results and requires a deliberate test/coverage migration; keep this expiring exception until that dedicated dependency window."
+ignoreUntil = 2027-02-01
+reason = "Vitest / @vitest/mocker 3.2.7 (CVSS 5.9, Medium), fixed in 4.1.11. DEV-ONLY: vitest is a devDependency, is never installed in the runtime image (infra/Dockerfile runs `npm ci --omit=dev`) and ships in no production artifact. The Vitest 3 → 4 major upgrade changes V8 coverage results and requires a deliberate test/coverage migration; keep this expiring exception until that dedicated dependency window. Re-measured 2026-11-21 with Vitest 5.1.1: all 5,414 tests pass, but its V8 coverage remapping reads src/application branches 98.61 %, src/main lines 95.58 % and app branches 83.08 % - under three enforced floors with no code change. Floors are never lowered, so the exception is extended, not the floors."
 
 [[IgnoredVulns]]
 id = "GHSA-5gmw-xhrv-c9v3"
-ignoreUntil = 2026-12-01
-reason = "Tinypool prototype-pollution/RCE advisory (Critical) in Vitest 3's worker pool. DEV-ONLY test tooling; not installed in the runtime image (`npm ci --omit=dev`). Vitest 4 fixes it but changes the coverage results enough to fail enforced coverage floors, so track this temporary exception for the dedicated test-toolchain upgrade."
+ignoreUntil = 2027-02-01
+reason = "Tinypool prototype-pollution/RCE advisory (Critical) in Vitest 3's worker pool. DEV-ONLY test tooling; not installed in the runtime image (`npm ci --omit=dev`). Vitest 4 fixes it but changes the coverage results enough to fail enforced coverage floors, so track this temporary exception for the dedicated test-toolchain upgrade. Re-measured 2026-11-21 with Vitest 5.1.1: all 5,414 tests pass, but its V8 coverage remapping reads src/application branches 98.61 %, src/main lines 95.58 % and app branches 83.08 % - under three enforced floors with no code change. Floors are never lowered, so the exception is extended, not the floors."
 
 [[IgnoredVulns]]
 id = "GHSA-85c8-ppgw-ccpr"
-ignoreUntil = 2026-12-01
-reason = "Tinypool prototype-pollution/RCE advisory (Critical) in Vitest 3's worker pool. DEV-ONLY test tooling; not installed in the runtime image (`npm ci --omit=dev`). Vitest 4 fixes it but changes the coverage results enough to fail enforced coverage floors, so track this temporary exception for the dedicated test-toolchain upgrade."
+ignoreUntil = 2027-02-01
+reason = "Tinypool prototype-pollution/RCE advisory (Critical) in Vitest 3's worker pool. DEV-ONLY test tooling; not installed in the runtime image (`npm ci --omit=dev`). Vitest 4 fixes it but changes the coverage results enough to fail enforced coverage floors, so track this temporary exception for the dedicated test-toolchain upgrade. Re-measured 2026-11-21 with Vitest 5.1.1: all 5,414 tests pass, but its V8 coverage remapping reads src/application branches 98.61 %, src/main lines 95.58 % and app branches 83.08 % - under three enforced floors with no code change. Floors are never lowered, so the exception is extended, not the floors."
 
 [[IgnoredVulns]]
 id = "GHSA-vfj7-8cjw-p6xm"
 ignoreUntil = 2026-12-01
 reason = "braces <=3.0.3 (CVSS 7.5, High) has no fixed npm release as of 2026-10-15. DEV-ONLY transitive dependency of eslint-config-next's fast-glob/micromatch; production installs omit dev dependencies. Reassess before expiry and remove this exception as soon as upstream publishes a fix."
+
+[[IgnoredVulns]]
+id = "GHSA-qxg6-89mg-rqv8"
+ignoreUntil = 2027-02-01
+reason = "@vitest/mocker 3.2.7 code injection via manual mock registration (CVSS 4.7, Medium), fixed in 4.1.12. DEV-ONLY, same toolchain and same blocker as the Vitest entries above (the 4+/5 coverage remapping fails enforced floors, measured 2026-11-21)."
+
+[[IgnoredVulns]]
+id = "GHSA-834v-8h66-3h79"
+ignoreUntil = 2027-02-01
+reason = "happy-dom <=21.0.3 unsanitized import alias (CVSS 8.8, High), fixed in 21.0.4. DEV-ONLY test DOM: never in the runtime image (`npm ci --omit=dev`), and the tests render this project's own components, not untrusted markup. happy-dom 20.14.6 and 21.0.4 were tried on 2026-11-21: from 20.11 it implements Web Animations, and the animation library's cancelled animations then surface as 63 unhandled rejections that fail the run. Needs a test-setup change, tracked with the Vitest upgrade."
+
+[[IgnoredVulns]]
+id = "GHSA-c8p4-j97h-3vg8"
+ignoreUntil = 2027-02-01
+reason = "happy-dom <21.0.0 SSRF via iframe/link stylesheet when parsing untrusted HTML (CVSS 8.6, High). DEV-ONLY test DOM that parses only this project's own components; same upgrade blocker as GHSA-834v-8h66-3h79."
+
+[[IgnoredVulns]]
+id = "GHSA-3g3m-2fjr-6pw4"
+ignoreUntil = 2027-02-01
+reason = "glob 10.x (CVSS 6.3, Medium), fixed in 14.0.2. DEV-ONLY transitive dependency of the coverage toolchain (@vitest/coverage-v8 3.x); below the documented high+ gate and removed by the Vitest upgrade."
+
+[[IgnoredVulns]]
+id = "GHSA-g3hv-75wg-m249"
+ignoreUntil = 2027-02-01
+reason = "minimatch 10.x (CVSS 6.9, Medium), fixed in 11.0.1. DEV-ONLY transitive dependency of the coverage toolchain (@vitest/coverage-v8 3.x); below the documented high+ gate and removed by the Vitest upgrade."

@@ -2,6 +2,13 @@
 // domain+application (F-core). Backend tests run in the 'node' env; React component tests declare
 // `// @vitest-environment happy-dom` at the top of the file (per-file, version-safe). JSX is compiled
 // via esbuild's automatic runtime so no extra plugin is needed.
+//
+// Vitest stays on 3.x (measured 2026-11-21 with 5.1.1: all tests pass, but its V8 coverage remapping
+// reads src/application branches 98.61 %, src/main lines 95.58 % and app branches 83.08 % — under three
+// enforced floors with no code change). Floors are never lowered, so the upgrade waits for the tests
+// that recover those points; the dev-only advisories it would clear are recorded in osv-scanner.toml.
+// A Vitest 4+/Vite 8 config needs `oxc: { jsx: { runtime: 'automatic' } }` in place of `esbuild.jsx`
+// and `clearMocks: false` (its default flipped to true).
 import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 import { fileURLToPath } from 'node:url';
 
