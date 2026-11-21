@@ -144,7 +144,7 @@ Backend Database is already populated with demo/mock/real data, and it can alway
 |---|---|---|
 | Lint | `./node_modules/.bin/eslint .` | **0** |
 | Types | `./node_modules/.bin/tsc --noEmit` | **0** |
-| Unit/integration | `./node_modules/.bin/vitest run` | **5463 passed / 6 skipped (5469), exit 0** (2026-11-21, in CI; one of them, `tests/architecture/dependency-tree.test.ts`, shells out to `npm ls --long --all` and fails on npm 11.16.0, whose long listing crashes on this tree — the tree itself is valid) |
+| Unit/integration | `./node_modules/.bin/vitest run` | **5471 passed / 6 skipped (5477), exit 0** (2026-11-21, in CI; one of them, `tests/architecture/dependency-tree.test.ts`, shells out to `npm ls --long --all` and fails on npm 11.16.0, whose long listing crashes on this tree — the tree itself is valid) |
 | Integration (real Postgres) | `npm run test:integration` | **18 passed** against PostgreSQL 16 (2026-09-11). Opt-in via `DATABASE_URL_TEST`; absent ⇒ skipped, so `npm test` and CI are unaffected. It applies the REAL migration files rather than pushing the schema, because the defect it was built for lived in a migration the schema definition knew nothing about |
 | …with coverage | `./node_modules/.bin/vitest run --coverage` | **green, every floor met (2026-11-21: 95.92 % statements / 91.03 % branches overall; 2026-09-15: 96.0 % / 90.9 %)** — and now enforced on every PR by CI. Its first CI run *failed* at 98.97% branch coverage against the 99% `src/application/**` floor: real drift accumulated since 2026-08-02, closed by covering `newsOutletProvenance`'s degrade branches. The floor was **not** lowered |
 | Architecture boundaries | `./node_modules/.bin/depcruise src app` | **0 violations across 926 modules** (2026-11-21) |
@@ -160,7 +160,7 @@ be re-produced on the tagged commit; a stale gate figure in a README is precisel
 project has been fighting, and it has bitten here before** (`depcruise 0/723`, `301 files / 3615 tests`,
 `Playwright 86 passed` were all wrong at the time they were displayed).
 **Hexagonal boundaries are machine-enforced, not merely described** — the rules live in
-[`.dependency-cruiser.cjs`](.dependency-cruiser.cjs) and "0 violations across 911 modules" is the claim.
+[`.dependency-cruiser.cjs`](.dependency-cruiser.cjs) and "0 violations across 926 modules" is the claim.
 
 ## Repo layout note
 `docs/audit/` holds the audits of record: the **Phase-2 carry-over** (Phase-2 review and clarified

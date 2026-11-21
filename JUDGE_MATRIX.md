@@ -51,7 +51,7 @@ on the live deployment right now.
 | CAP / EDXL interoperability | **CAP v1.2 + EDXL-RM + EDXL-SitRep round-trips**, schema-validated |
 | Push, don't poll | Real **SSE push ~1.7 s**; time-to-trustworthy-picture **~1 s** against a < 10 s budget |
 | Runs locally at near-zero cost | Runs **fully air-gapped** on one machine — the *same artifact* runs in the cloud |
-| Modular adapter core | Hexagonal boundaries **machine-enforced**, 0 violations across 911 modules |
+| Modular adapter core | Hexagonal boundaries **machine-enforced**, 0 violations across 926 modules |
 
 **And several things the brief never asked for**, each working in the live demo: early-warning,
 COP, cited synthesis and responder logistics on **one canonical model** (normally three or four separate
@@ -377,7 +377,7 @@ a failing test if it stops being true.
 
 The rarest thing in this repository may be that **it is hard to lie in it**:
 
-- **Hexagonal boundaries** are machine-enforced (dependency-cruiser, 0 violations across 911 modules).
+- **Hexagonal boundaries** are machine-enforced (dependency-cruiser, 0 violations across 926 modules).
 - **Drill mode structurally cannot reach a live channel** — a dependency-cruiser rule fails the build if
   exercise/anticipatory code so much as imports a messaging transport. Practice without risk, by
   construction rather than by discipline.

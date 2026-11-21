@@ -1,7 +1,8 @@
 // BEACON — read-queue HTTP handlers (E7·T-378/T-387; SPEC §2.2, Art. XIII/XIV, F1). Framework-agnostic PURE
 // handlers for the two decide/act READ surfaces the COP needs to drive monitor→assess→decide→act:
 //   • GET /reports — the verifier triage queue (VERIFIER+; precise SOS geometry RESPONDER+ only, Art. XIV).
-//   • GET /alerts  — the DRAFT alerts computed by the threshold engine (VERIFIER+; DRAFT-only, never emitted).
+//   • GET /alerts  — the alert review queue computed by the threshold engine (VERIFIER+; created DRAFT, never
+//                    emitted by the read; an approved alert stays listed as ACTUAL).
 // Each takes an ALREADY-authenticated request (resolved role) + a read seam and returns an Envelope-shaped
 // { status, body } — no server, deterministic, offline. RBAC is enforced here by role rank (identical policy
 // to the command-router MIN_ROLE, Art. XIII); provenance is NON-EMPTY on every success (F1). Mirrors map.ts.
@@ -171,7 +172,7 @@ function toAlertItem(alert: Alert, forecast: ForecastEvidence | undefined): Aler
 }
 
 /**
- * GET /alerts — the DRAFT alerts the threshold engine COMPUTED (FR-11). VERIFIER+ only (SPEC §2.2 line 121:
+ * GET /alerts — the alert review queue the threshold engine COMPUTED (FR-11). VERIFIER+ only (SPEC §2.2 line 121:
  * the alert/CAP family is VERIFIER+). Every alert is created cap_status=DRAFT; promotion to ACTUAL is the
  * separate, authenticated HITL approve gate (POST /alerts/:id/approve, Art. XIII) — listing never emits.
  * An approved alert stays in the list with state ACTUAL (the reviewer sees the outcome of the decision);

@@ -289,7 +289,10 @@ export function useReports(regionId?: string): UseQueryResult<Envelope<ReportsDa
   return useQuery({ queryKey: queryKeys.reports(regionId, role), queryFn: () => api.getReports() });
 }
 
-/** GET /alerts — the computed DRAFT alert queue (VERIFIER+; DRAFT-only, Art. XIII). Role-keyed: see useReports. */
+/**
+ * GET /alerts — the computed alert review queue (VERIFIER+; rows are DRAFT until approved, then ACTUAL —
+ * Art. XIII). Role-keyed: see useReports.
+ */
 export function useAlerts(regionId?: string): UseQueryResult<Envelope<AlertsData>, ApiError> {
   const role = useActorRole();
   return useQuery({ queryKey: queryKeys.alerts(regionId, role), queryFn: () => api.getAlerts() });

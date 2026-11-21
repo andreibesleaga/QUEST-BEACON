@@ -74,7 +74,7 @@ memory ledgers) outside the repository; their durable output is committed under 
   script stays in the private monorepo, so it fails in this repository) ·
   `npm run docs:redocly` (optional Redocly lint, not a dependency).
 
-## Architecture (hexagonal; boundaries enforced by dependency-cruiser, 0 violations across 911 modules)
+## Architecture (hexagonal; boundaries enforced by dependency-cruiser, 0 violations across 926 modules)
 
 - [src/domain/](src/domain/): pure entities/value-objects (Incident, HazardGeometry, Gauge, CameraFeed,
   PublicReport, SitRep, Alert, SourceRecord, Shelter, Resource, …). No framework imports. Factories

@@ -465,7 +465,7 @@ describe('feature-router — GET /api/v1/alerts (DRAFT queue, VERIFIER+)', () =>
     expect(res.status).toBe(403);
   });
 
-  it('VERIFIER → 200 with the computed DRAFT alerts (DRAFT-only, Art. XIII) + non-empty provenance', async () => {
+  it('VERIFIER → 200 with the computed alerts, all DRAFT before any approval (Art. XIII) + non-empty provenance', async () => {
     const res = await handleHttp(
       req({ method: 'GET', path: '/api/v1/alerts', headers: roleHeaders('VERIFIER') }),
       deps(),
