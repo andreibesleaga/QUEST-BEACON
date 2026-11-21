@@ -169,11 +169,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   figure-free claims the model is given — was accepted as narration: "winds /h from the N". The ladder
   now flags that text (`Narrative.degraded`), and the synthesis treats it as no prose: the report shows
   the engine's own sentences with every figure, labelled `deterministic-only`.
+- **The narration memo never matched on the HTTP read path (2026-11-21).** Every SitRep read mints a new
+  report id, and that id is inside each citation of the narration request, so the memo's key differed on
+  every read: identical facts reached the model again a few seconds apart, and a report whose narration
+  takes longer than the read deadline (ADR-038) never showed its prose. The report id is now left out of
+  the key; claims, figures, sources, role, tier and operation remain in it.
 - **Removing a zero count reversed a sentence for the narrator (2026-11-21).** "0 substations intersect
   the footprint" reached the model as "substations intersect the footprint". A zero count is now written
   "no"; figures are removed together with their units from a fixed list ("9 km/h" no longer leaves
   "/h", "2 fire stations" no longer loses "fire"); ISO instants are removed whole; pollutant codes that
   carry a digit are given by name.
+- **Road routing never answered around a real fire (2026-11-21).** The public openrouteservice API
+  refuses an avoid polygon wider than 20 km or larger than 200 km², per polygon, and a real fire's
+  bounding rectangle was 15 km × 13 km — 20 km corner to corner. A footprint over the limit is now sent
+  as a grid of rectangles (at most 10 km a side) covering its bounding rectangle, which the service
+  accepts; one too large even for that (over about 100 km × 100 km) is not sent at all, so a road route
+  through the hazard is never returned as a real one.
+- **Under the hybrid picture the demo incident's footprint spanned the region (2026-11-21).** The live
+  overlay computed it as the rectangle around every hazard of the region and replaced the seeded box;
+  with a real fire 390 km away no routing engine could avoid it. A seeded incident now keeps its seeded
+  footprint under `LIVE_PICTURE=hybrid`; discovered incidents keep the live one.
 - **The routing fallback named no cause (2026-11-21).** `ORS routing HTTP 400` now carries
   openrouteservice's own error code and a reason — code 2004, the route is too long for an avoid area —
   without forwarding the coordinates its message quotes.

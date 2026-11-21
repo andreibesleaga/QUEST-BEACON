@@ -2,6 +2,7 @@
 // counter newId, DEFAULT_SEED (US + RO), no network, no Next.js. Covers every implemented route, the
 // envelope contract (data + non-empty provenance + freshness; citations on sitrep), the DomainError→status
 // mapping (400/403/404/409/422), RBAC, and the per-actor rate-limit 429.
+import type { Geometry } from '@/domain/value-objects/geo.js';
 import { describe, it, expect } from 'vitest';
 import type { Envelope } from '@/ports/interaction.js';
 import { statusForError } from './error-mapping.js';
@@ -1315,6 +1316,41 @@ describe('withLiveOverlay — live-only replaces the seeded specs, hybrid keeps 
     expect(seed.forecastThresholds).toBe(DEFAULT_FEATURE_SEED.forecastThresholds);
     // The catalogue lists what runs: the seeded specs' rules ahead of the live ones (here: none).
     expect(seed.ruleCatalogue).toEqual(DEFAULT_FEATURE_SEED.thresholds.map((spec) => spec.rule));
+  });
+
+  it('hybrid: a seeded incident keeps its OWN hazard footprint; a discovered one gets the live footprint', () => {
+    // The 2026-11-21 live case: under hybrid the overlay computed the demo incident's footprint as the
+    // rectangle around every hazard of the region — reaching a real fire 390 km away — and it replaced
+    // the seeded box, so no routing engine could avoid it.
+    const demoId = [...DEFAULT_FEATURE_SEED.hazards.keys()][0]!;
+    const regionWide: Geometry = {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [-121.79, 36.19],
+          [-121.59, 36.19],
+          [-121.59, 39.71],
+          [-121.79, 39.71],
+          [-121.79, 36.19],
+        ],
+      ],
+    };
+    const liveFootprints = new Map<string, Geometry>([
+      [demoId, regionWide],
+      ['discovered:us-ca:WILDFIRE:1:1', regionWide],
+    ]);
+    const hybrid = withLiveOverlay(DEFAULT_FEATURE_SEED, {
+      ...overlay(true),
+      hazards: liveFootprints,
+    });
+    expect(hybrid.hazards.get(demoId)).toBe(DEFAULT_FEATURE_SEED.hazards.get(demoId));
+    expect(hybrid.hazards.get('discovered:us-ca:WILDFIRE:1:1')).toBe(regionWide);
+    // Live-only is unchanged: what the overlay computed is the footprint.
+    const liveOnly = withLiveOverlay(DEFAULT_FEATURE_SEED, {
+      ...overlay(false),
+      hazards: liveFootprints,
+    });
+    expect(liveOnly.hazards.get(demoId)).toBe(regionWide);
   });
 
   it('hybrid: a live rule with the same id as a seeded one is listed once', () => {

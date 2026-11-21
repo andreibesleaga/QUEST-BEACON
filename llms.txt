@@ -124,7 +124,7 @@ redundancy-acceptance `ALL_IDS`, and a `SOURCE_<PREFIX>_MODE` line in `.env.exam
 Tests: clone the `firms` pattern (mode switch, live-down-degrades, envelope, health, factory fail-fast)
 plus an ACL test.
 
-## Verified facts (machine-produced 2026-09-16 on the final commit)
+## Verified facts (machine-produced 2026-09-16; layer, test, module, ADR and audit lines re-measured 2026-11-21)
 
 - **45 adapters registered** (`config/adapters.json` ↔ `ADAPTER_FACTORIES`, test-asserted) · **41
   consumed** by the five zones · 4 not: `itu`, `camara-gsma` (MOCK-only by design), `hifld` (held),
@@ -135,7 +135,7 @@ plus an ACL test.
   browser-fetched NASA GPM IMERG raster with a fixed "satellite estimate, hours behind" caveat (ADR-048).
 - **5 zones** (`us-ca`, `ro`, `es`, `gr`, `ph`) · **14 locales** (RTL: `ar`, `ur`); a zone or a locale
   is configuration, not code (`tests/zones/add-a-zone.test.ts`).
-- **vitest: 5,416 passed / 6 skipped, every floor met** · tsc 0 · eslint 0 · dependency-cruiser 0
+- **vitest: 5,428 passed / 6 skipped, every floor met** · tsc 0 · eslint 0 · dependency-cruiser 0
   violations / 913 modules (`depcruise src app`) · madge 0 cycles · Prettier clean.
 - **OpenAPI: 36 paths / 39 operations / 66 schemas**, zero `x-status: planned`; every operation but the
   unauthenticated `/health` liveness probe declares its minimum role (`npm run docs`).

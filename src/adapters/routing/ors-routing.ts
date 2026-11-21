@@ -51,6 +51,101 @@ export interface OrsRoutingAdapterDeps {
 const isAvoidable = (geom: Geometry): geom is PolygonGeometry | MultiPolygonGeometry =>
   geom.type === 'Polygon' || geom.type === 'MultiPolygon';
 
+// ── Avoid areas the service will accept ───────────────────────────────────────────────────────────────
+//
+// The public openrouteservice API refuses an avoid polygon wider than 20 km or larger than 200 km²
+// (HTTP 400, error code 2003: "The extent of a polygon to avoid must not exceed 20000.0 meters" / "The
+// area … must not exceed 2.0E8 square meters"). The limit is PER POLYGON: the same area sent as several
+// smaller polygons is accepted, and avoiding a set of adjacent rectangles is avoiding their union. Both
+// facts were measured against the live service on 2026-11-21, when every route around a real fire fell
+// back to the straight-line heuristic because the fire's bounding rectangle was 15 km × 13 km — 20.0 km
+// corner to corner.
+//
+// So a footprint over the limit is sent as a GRID OF RECTANGLES covering its bounding rectangle. That
+// over-avoids (the rectangle contains the footprint), which is the safe direction for an evacuation
+// route. A footprint within the limits is sent exactly as it is, as before.
+const KM_PER_DEGREE_LAT = 110.57;
+const KM_PER_DEGREE_LON_AT_EQUATOR = 111.32;
+/** Kept under the service's 20 km / 200 km² so rounding and its own geodesy cannot tip a polygon over. */
+const SAFE_EXTENT_KM = 18;
+const SAFE_AREA_KM2 = 180;
+/** One tile: 10 km × 10 km at most — 14.1 km corner to corner, 100 km². */
+const TILE_SIDE_KM = 10;
+/** About 100 km × 100 km. Beyond this the request is not sent: the heuristic answers, and the log says why. */
+const MAX_TILES = 100;
+
+type Bounds = readonly [west: number, south: number, east: number, north: number];
+
+function boundsOf(rings: readonly (readonly Position[])[]): Bounds {
+  let [w, s, e, n] = [Infinity, Infinity, -Infinity, -Infinity];
+  for (const ring of rings) {
+    for (const [lon, lat] of ring) {
+      w = Math.min(w, lon);
+      e = Math.max(e, lon);
+      s = Math.min(s, lat);
+      n = Math.max(n, lat);
+    }
+  }
+  return [w, s, e, n];
+}
+
+function sizeKm([w, s, e, n]: Bounds): { readonly width: number; readonly height: number } {
+  const midLat = ((s + n) / 2) * (Math.PI / 180);
+  return {
+    width: (e - w) * KM_PER_DEGREE_LON_AT_EQUATOR * Math.cos(midLat),
+    height: (n - s) * KM_PER_DEGREE_LAT,
+  };
+}
+
+function withinLimits(bounds: Bounds): boolean {
+  const { width, height } = sizeKm(bounds);
+  return Math.hypot(width, height) <= SAFE_EXTENT_KM && width * height <= SAFE_AREA_KM2;
+}
+
+const polygonsOf = (
+  geom: PolygonGeometry | MultiPolygonGeometry,
+): readonly (readonly (readonly Position[])[])[] =>
+  geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
+
+function rectangle(w: number, s: number, e: number, n: number): Position[][] {
+  return [
+    [
+      [w, s],
+      [e, s],
+      [e, n],
+      [w, n],
+      [w, s],
+    ],
+  ];
+}
+
+/**
+ * The avoid area to send for a hazard footprint: the footprint itself when every polygon of it is within
+ * the service's limits, a grid of rectangles over its bounding rectangle when it is not, or `null` when
+ * even the grid would be unreasonably large (the caller then does not ask ORS at all).
+ */
+export function avoidAreaFor(
+  hazard: PolygonGeometry | MultiPolygonGeometry,
+): PolygonGeometry | MultiPolygonGeometry | null {
+  const polygons = polygonsOf(hazard);
+  if (polygons.every((rings) => withinLimits(boundsOf(rings)))) return hazard;
+  const bounds = boundsOf(polygons.flat());
+  const [w, s, e, n] = bounds;
+  const { width, height } = sizeKm(bounds);
+  const columns = Math.max(1, Math.ceil(width / TILE_SIDE_KM));
+  const rows = Math.max(1, Math.ceil(height / TILE_SIDE_KM));
+  if (columns * rows > MAX_TILES) return null;
+  const dx = (e - w) / columns;
+  const dy = (n - s) / rows;
+  const tiles: Position[][][] = [];
+  for (let i = 0; i < columns; i += 1) {
+    for (let j = 0; j < rows; j += 1) {
+      tiles.push(rectangle(w + i * dx, s + j * dy, w + (i + 1) * dx, s + (j + 1) * dy));
+    }
+  }
+  return { type: 'MultiPolygon', coordinates: tiles };
+}
+
 const msg = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 interface OrsFeature {
@@ -159,7 +254,18 @@ export function makeOrsRoutingAdapter(deps: OrsRoutingAdapterDeps): RoutingPort 
   return {
     async route(request: RouteRequest): Promise<Result<EvacRoute, DomainError>> {
       const hazard = request.avoidHazard !== false ? deps.hazardFor(request.incidentId) : undefined;
-      const avoidPolygon = hazard !== undefined && isAvoidable(hazard) ? hazard : undefined;
+      const avoidArea =
+        hazard !== undefined && isAvoidable(hazard) ? avoidAreaFor(hazard) : undefined;
+      // A footprint too large even for the tile grid: asking ORS for a route that ignores it would return
+      // a road route through the hazard labelled as a real one. Step aside instead (Art. XVI).
+      if (avoidArea === null)
+        return err(
+          new DomainError(
+            'NOT_FOUND',
+            'ORS routing not asked: the hazard footprint is too large for the service to avoid',
+          ),
+        );
+      const avoidPolygon = avoidArea;
 
       let status: number;
       let httpOk: boolean;

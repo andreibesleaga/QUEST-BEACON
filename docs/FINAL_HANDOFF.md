@@ -13,12 +13,12 @@ through the redundancy ladder, Postgres, named-account sign-in, self-seeding, th
 table, CSP/HSTS, an installable offline-capable browser app behind a default-off flag). The contest entry
 is frozen at the `v1.0.0-submission` tag; the repository continues as the project's open-source home.
 
-## 2. Verification snapshot — machine-produced 2026-09-15/16 (final commit)
+## 2. Verification snapshot — machine-produced 2026-09-15/16; test, module, ADR, layer and audit rows re-measured 2026-11-21
 
 | Gate | Result |
 |---|---|
 | `tsc --noEmit` · `eslint .` · `depcruise src app` · `madge --circular src` | **0 · 0 · 0 violations (913 modules) · 0 cycles** |
-| `vitest run --coverage` | **5,416 passed / 6 skipped (409 files), exit 0** (2026-11-21); every floor met (domain + application 99/99/99/99 · main 97/79/96/97 · adapters 90/83/93/90 · app 89/86/89/89); measured 95.88 % statements / 90.95 % branches overall |
+| `vitest run --coverage` | **5,428 passed / 6 skipped (409 files), exit 0** (2026-11-21); every floor met (domain + application 99/99/99/99 · main 97/79/96/97 · adapters 90/83/93/90 · app 89/86/89/89); measured 95.88 % statements / 90.95 % branches overall |
 | `npm run docs` (OpenAPI contract test) | **36 paths / 39 operations / 66 schemas**, every operation with an id, summary and responses; every operation but the unauthenticated `/health` liveness probe declares its minimum role; every `$ref` resolves; nothing marked planned |
 | `next build` | ✅ |
 | Playwright (5 zones × 4 device projects; axe; TTTP; visual; SSE; session; i18n/RTL; WebGL; PWA offline) | see `README.md` § Gates for the run on this commit |
