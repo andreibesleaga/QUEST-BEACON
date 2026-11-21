@@ -23,6 +23,7 @@ import type { ReactNode } from 'react';
 import { makeQueryClient } from './query-client.js';
 import { useUiStore } from './store.js';
 import {
+  finishedReads,
   queryKeys,
   sitRepFollowUpMs,
   SITREP_FOLLOW_UP_MS,
@@ -343,6 +344,18 @@ describe('sitRepFollowUpMs — a quiet re-read after an engine-only report', () 
   it('stops after two follow-ups: with AI off, engine-only is the permanent answer, not a wait', () => {
     expect(sitRepFollowUpMs('deterministic-only', 3)).toBe(false);
     expect(sitRepFollowUpMs('deterministic-only', 50)).toBe(false);
+  });
+
+  it('counts a FAILED follow-up too: an outage must not turn two re-reads into a poll without end', () => {
+    // One answer (engine-only), then the follow-ups fail: the data — and an answers-only count — would
+    // never change, and the interval would stay on for as long as the outage lasts.
+    const afterOneAnswer = { dataUpdateCount: 1, errorUpdateCount: 0 };
+    const afterTwoFailures = { dataUpdateCount: 1, errorUpdateCount: 2 };
+    expect(sitRepFollowUpMs('deterministic-only', finishedReads(afterOneAnswer))).toBe(
+      SITREP_FOLLOW_UP_MS,
+    );
+    expect(sitRepFollowUpMs('deterministic-only', finishedReads(afterTwoFailures))).toBe(false);
+    expect(finishedReads({ dataUpdateCount: 2, errorUpdateCount: 3 })).toBe(5);
   });
 
   it('never re-reads a report that already carries prose, or one not yet received', () => {

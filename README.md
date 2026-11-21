@@ -53,7 +53,7 @@ and reproducible on any machine with one command.
 | **45 source adapters** registered, 41 consumed | fire, flood, weather, alerts, infrastructure, outages, cell, air quality, population, news, vetted social, cameras |
 | **15 COP map layers** | 14 data layers, each with its own LIVE/CACHED/MOCK freshness badge, plus a satellite precipitation overlay labelled as an estimate (ADR-048) |
 | **5 regions · 14 locales** (RTL: ar, ur) | three continents, added by configuration — no code change |
-| **5,462 tests** passing, 0 boundary violations (913 modules) | plus Playwright across 5 zones × 4 devices, axe WCAG 2.2 AA, a real offline reload |
+| **5,463 tests** passing, 0 boundary violations (913 modules) | plus Playwright across 5 zones × 4 devices, axe WCAG 2.2 AA, a real offline reload |
 | **36 API paths**, zero documented-but-unserved | CAP v1.2 (JSON and XML) + EDXL-RM + EDXL-SitRep round-trips |
 | **≈ $0 to run** | free/open data, open-source stack, one machine or free-tier cloud |
 
@@ -144,7 +144,7 @@ Backend Database is already populated with demo/mock/real data, and it can alway
 |---|---|---|
 | Lint | `./node_modules/.bin/eslint .` | **0** |
 | Types | `./node_modules/.bin/tsc --noEmit` | **0** |
-| Unit/integration | `./node_modules/.bin/vitest run` | **5462 passed / 6 skipped (5468), exit 0** (2026-11-21, in CI; one of them, `tests/architecture/dependency-tree.test.ts`, shells out to `npm ls --long --all` and fails on npm 11.16.0, whose long listing crashes on this tree — the tree itself is valid) |
+| Unit/integration | `./node_modules/.bin/vitest run` | **5463 passed / 6 skipped (5469), exit 0** (2026-11-21, in CI; one of them, `tests/architecture/dependency-tree.test.ts`, shells out to `npm ls --long --all` and fails on npm 11.16.0, whose long listing crashes on this tree — the tree itself is valid) |
 | Integration (real Postgres) | `npm run test:integration` | **18 passed** against PostgreSQL 16 (2026-09-11). Opt-in via `DATABASE_URL_TEST`; absent ⇒ skipped, so `npm test` and CI are unaffected. It applies the REAL migration files rather than pushing the schema, because the defect it was built for lived in a migration the schema definition knew nothing about |
 | …with coverage | `./node_modules/.bin/vitest run --coverage` | **green, every floor met (2026-11-21: 95.92 % statements / 91.03 % branches overall; 2026-09-15: 96.0 % / 90.9 %)** — and now enforced on every PR by CI. Its first CI run *failed* at 98.97% branch coverage against the 99% `src/application/**` floor: real drift accumulated since 2026-08-02, closed by covering `newsOutletProvenance`'s degrade branches. The floor was **not** lowered |
 | Architecture boundaries | `./node_modules/.bin/depcruise src app` | **0 violations across 913 modules** (2026-11-21) |
