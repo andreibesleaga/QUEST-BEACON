@@ -13,7 +13,7 @@ through the redundancy ladder, Postgres, named-account sign-in, self-seeding, th
 table, CSP/HSTS, an installable offline-capable browser app behind a default-off flag). The contest entry
 is frozen at the `v1.0.0-submission` tag; the repository continues as the project's open-source home.
 
-## 2. Verification snapshot — machine-produced 2026-09-15/16 (final commit)
+## 2. Verification snapshot — machine-produced 2026-09-15/16; test, module, ADR, layer and audit rows re-measured 2026-11-21
 
 | Gate | Result |
 |---|---|

@@ -124,7 +124,7 @@ redundancy-acceptance `ALL_IDS`, and a `SOURCE_<PREFIX>_MODE` line in `.env.exam
 Tests: clone the `firms` pattern (mode switch, live-down-degrades, envelope, health, factory fail-fast)
 plus an ACL test.
 
-## Verified facts (machine-produced 2026-09-16 on the final commit)
+## Verified facts (machine-produced 2026-09-16; layer, test, module, ADR and audit lines re-measured 2026-11-21)
 
 - **45 adapters registered** (`config/adapters.json` ↔ `ADAPTER_FACTORIES`, test-asserted) · **41
   consumed** by the five zones · 4 not: `itu`, `camara-gsma` (MOCK-only by design), `hifld` (held),
