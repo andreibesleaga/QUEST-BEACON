@@ -7,6 +7,12 @@ export const BASEMAP_HOSTS = [
   'https://tiles.versatiles.org',
 ];
 
+/**
+ * Hosts the operator's browser reaches for optional raster overlays (app/_components/map/build-layers.ts).
+ * NASA GIBS serves the precipitation layer's tiles; an air-gapped build never requests them.
+ */
+export const OVERLAY_HOSTS = ['https://gibs.earthdata.nasa.gov'];
+
 /** The origin of an operator-pinned tile URL, or nothing when unset/unparsable (a template is a URL too). */
 function pinnedBasemapOrigin(env) {
   const url = env.NEXT_PUBLIC_BASEMAP_TILE_URL;
@@ -21,7 +27,7 @@ function pinnedBasemapOrigin(env) {
 /** The response headers every route carries. `env` is injectable so the policy is testable. */
 export function securityHeaders(env = process.env) {
   const pinned = pinnedBasemapOrigin(env);
-  const tileHosts = [...BASEMAP_HOSTS, ...(pinned ? [pinned] : [])].join(' ');
+  const tileHosts = [...BASEMAP_HOSTS, ...OVERLAY_HOSTS, ...(pinned ? [pinned] : [])].join(' ');
   const csp = [
     "default-src 'self'",
     "script-src 'self' 'unsafe-inline'",

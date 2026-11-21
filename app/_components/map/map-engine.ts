@@ -122,7 +122,10 @@ function textLayer(d: LayerDescriptor): Layer {
   });
 }
 
-const KIND_BUILDERS: Record<LayerDescriptor['kind'], (d: LayerDescriptor) => Layer> = {
+/** Every kind deck.gl draws. `raster` is not one of them — MapLibre draws it, under the deck overlay. */
+type DeckKind = Exclude<LayerDescriptor['kind'], 'raster'>;
+
+const KIND_BUILDERS: Record<DeckKind, (d: LayerDescriptor) => Layer> = {
   scatterplot: scatterLayer,
   polygon: polygonLayer,
   path: pathLayer,
@@ -130,7 +133,73 @@ const KIND_BUILDERS: Record<LayerDescriptor['kind'], (d: LayerDescriptor) => Lay
 };
 
 function toDeckLayer(d: LayerDescriptor): Layer {
-  return KIND_BUILDERS[d.kind](d);
+  return KIND_BUILDERS[d.kind as DeckKind](d);
+}
+
+const isRaster = (d: LayerDescriptor): boolean => d.kind === 'raster' && d.tiles !== undefined;
+
+/**
+ * Raster overlays (the precipitation field) live in the MapLibre STYLE, not in the deck overlay, so they
+ * sit above the basemap and below every operational layer. That has one consequence worth a comment: the
+ * basemap ladder replaces the style (`setStyle`), and a style swap discards every source and layer added
+ * to the old one. The wanted set is therefore kept here and re-applied on every `style.load`, or the
+ * overlay would vanish the moment a browser was moved down to a fallback basemap.
+ *
+ * Every MapLibre call is guarded: a style that is still loading throws on `addSource`, and an overlay
+ * must never be able to take the map down (Art. XVI) — the next `style.load` applies it.
+ */
+function makeRasterOverlays(map: MapLibreMap): (wanted: readonly LayerDescriptor[]) => void {
+  let wanted: readonly LayerDescriptor[] = [];
+  const drawn = new Set<string>();
+
+  const remove = (id: string): void => {
+    try {
+      if (map.getLayer(id) !== undefined) map.removeLayer(id);
+      if (map.getSource(id) !== undefined) map.removeSource(id);
+    } catch {
+      /* style swapped underneath us — the source is already gone */
+    }
+    drawn.delete(id);
+  };
+
+  const add = (d: LayerDescriptor): void => {
+    const tiles = d.tiles;
+    if (tiles === undefined) return;
+    try {
+      if (map.getSource(d.id) === undefined) {
+        map.addSource(d.id, {
+          type: 'raster',
+          tiles: [tiles.url],
+          tileSize: 256,
+          maxzoom: tiles.maxZoom,
+          attribution: tiles.attribution,
+        });
+      }
+      if (map.getLayer(d.id) === undefined) {
+        map.addLayer({
+          id: d.id,
+          type: 'raster',
+          source: d.id,
+          paint: { 'raster-opacity': tiles.opacity },
+        });
+      }
+      drawn.add(d.id);
+    } catch {
+      /* style not ready yet — `style.load` calls apply() again */
+    }
+  };
+
+  const apply = (): void => {
+    const ids = new Set(wanted.map((d) => d.id));
+    for (const id of [...drawn]) if (!ids.has(id)) remove(id);
+    for (const d of wanted) add(d);
+  };
+
+  map.on('style.load', apply);
+  return (next) => {
+    wanted = next;
+    apply();
+  };
 }
 
 /** The operator's language, as the document declares it — Next stamps the active locale onto <html lang>.
@@ -184,6 +253,7 @@ export const createMapEngine: MapEngineFactory = (opts) => {
 
   const overlay = new MapboxOverlay({ interleaved: false, layers: [] });
   map.addControl(overlay);
+  const setRasterOverlays = makeRasterOverlays(map);
 
   // Basemap click → ground coordinate. MapLibre reports lngLat, which is already the [lon, lat] order the
   // domain uses, so it is passed straight through with no axis flip to get wrong. deck.gl's own feature
@@ -216,7 +286,8 @@ export const createMapEngine: MapEngineFactory = (opts) => {
 
   return {
     setLayers(descriptors: readonly LayerDescriptor[]): void {
-      overlay.setProps({ layers: descriptors.map(toDeckLayer) });
+      overlay.setProps({ layers: descriptors.filter((d) => !isRaster(d)).map(toDeckLayer) });
+      setRasterOverlays(descriptors.filter(isRaster));
     },
     zoomIn(): void {
       map.zoomIn();

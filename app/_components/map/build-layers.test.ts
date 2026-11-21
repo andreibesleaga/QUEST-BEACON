@@ -12,6 +12,8 @@ import {
   buildCellLayers,
   buildFloodZoneLayers,
   buildWeatherLayers,
+  buildPrecipitationLayers,
+  PRECIPITATION_TILES,
   buildPredictionLayers,
   buildRouteLayers,
   caveatText,
@@ -449,5 +451,44 @@ describe('point labels', () => {
       'inside HOTSPOT buffer',
       'Oroville Hospital · HOSPITAL',
     ]);
+  });
+});
+
+describe('precipitation — a satellite raster overlay, honest about what it is', () => {
+  it('emits ONE raster descriptor with its tiles and caveat when ON, none when OFF', () => {
+    const on = buildLayers({ layers: { ...allOff(), precipitation: true }, role: 'PUBLIC' }, {});
+    expect(on).toEqual([
+      {
+        id: 'precipitation-rate',
+        group: 'precipitation',
+        kind: 'raster',
+        data: [],
+        caveat: LAYER_META.precipitation.caveat,
+        tiles: PRECIPITATION_TILES,
+      },
+    ]);
+    expect(buildLayers({ layers: allOff(), role: 'PUBLIC' }, {})).toEqual([]);
+  });
+
+  it('needs no API data: it is drawn from the tile host, not from a region slice', () => {
+    expect(buildPrecipitationLayers('online')).toHaveLength(1);
+  });
+
+  it('emits NOTHING on an air-gapped build — a deployment declared offline makes no request', () => {
+    expect(buildPrecipitationLayers('offline')).toEqual([]);
+  });
+
+  it('points at the keyless NASA GIBS IMERG half-hourly product, latest available time', () => {
+    expect(PRECIPITATION_TILES.url).toBe(
+      'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/IMERG_Precipitation_Rate_30min/default/default/GoogleMapsCompatible_Level6/{z}/{y}/{x}.png',
+    );
+    expect(PRECIPITATION_TILES.maxZoom).toBe(6);
+    expect(PRECIPITATION_TILES.attribution).toContain('NASA');
+  });
+
+  it('says it is an estimate, late, and not a forecast — in the caveat every surface shows', () => {
+    expect(LAYER_META.precipitation.caveat).toMatch(/estimate/i);
+    expect(LAYER_META.precipitation.caveat).toMatch(/hours behind/i);
+    expect(LAYER_META.precipitation.caveat).toMatch(/not a forecast/i);
   });
 });

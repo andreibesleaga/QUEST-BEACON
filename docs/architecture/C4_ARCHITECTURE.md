@@ -582,6 +582,7 @@ the build-time flag differs.
 
 | ADR-037 … ADR-046 | Live-demo delivery increment (037), async SitRep narration (038), live provenance persistence (039), role-gated operator links (040), DB-backed operator panels (041), records clipped to the region (042), the live-only picture (043), live threshold alerting from the rules table (044), focus areas (045), self-seeding (046) — each file in `decisions/` carries its full context |
 | ADR-047 installable-offline-cop | An installable, offline-capable COP behind the default-off `NEXT_PUBLIC_PWA` flag: hand-written module service worker (zero deps), PUBLIC-only data cache contract-tested against the OpenAPI, saved-time banner, complete fallback when off |
+| ADR-048 precipitation-raster-overlay | Precipitation as a fifteenth, default-off map layer: NASA GPM IMERG half-hourly rate from NASA GIBS as keyless raster tiles fetched by the browser (host named in the CSP), fixed caveat in 14 locales (satellite estimate, hours behind, not radar, not a forecast), no descriptor on an offline build, no server adapter |
 
 **Constitutional decisions (law, not a separate ADR — see `agents/CONSTITUTION.md`):** deterministic
 source of truth (Art. XII), provenance/citation envelope `{data, provenance[], freshness}` + SitRep

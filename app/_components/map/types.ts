@@ -175,7 +175,23 @@ export interface MapData {
 
 // ── deck.gl layer descriptors (serializable — the engine translates these to real deck layers) ──
 
-export type LayerKind = 'scatterplot' | 'polygon' | 'path' | 'text';
+export type LayerKind = 'scatterplot' | 'polygon' | 'path' | 'text' | 'raster';
+
+/**
+ * A raster tile overlay drawn UNDER the operational layers (kind `raster`). The tiles are fetched by the
+ * operator's browser straight from the named host, exactly like the basemap — so the host must be in the
+ * content-security policy (`next.config.mjs`), and an air-gapped build must emit no such descriptor.
+ */
+export interface RasterTiles {
+  /** XYZ template in Web Mercator: `{z}`, `{x}`, `{y}`. */
+  readonly url: string;
+  /** Deepest zoom the host serves; MapLibre over-zooms beyond it. */
+  readonly maxZoom: number;
+  /** Credit the data licence requires — shown in the map's attribution control. */
+  readonly attribution: string;
+  /** 0..1 — an overlay must leave the basemap and its labels readable. */
+  readonly opacity: number;
+}
 
 /** One plottable datum. Fields are populated per-kind; the engine reads only what its layer kind needs. */
 export interface LayerDatum {
@@ -205,6 +221,8 @@ export interface LayerDescriptor {
   readonly data: readonly LayerDatum[];
   readonly pickable?: boolean;
   readonly caveat?: string;
+  /** Present on a `raster` descriptor, and only there: where its tiles come from. */
+  readonly tiles?: RasterTiles;
   /** Optional per-layer click handler (E11 cameras): the engine wires it to the deck.gl layer's onClick,
    *  passing the picked datum. Additive + optional — a descriptor without it behaves exactly as before. */
   readonly onClick?: (datum: LayerDatum) => void;

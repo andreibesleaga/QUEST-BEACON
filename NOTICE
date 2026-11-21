@@ -101,6 +101,11 @@ Live-demo increment S2 (2026-08-08) — 11 further wired adapters:
 - NASA GIBS / Worldview imagery (vision `burn-area` rung) .......... U.S. Government, public domain;
   keyless WMTS snapshots (MODIS/VIIRS — Sentinel-2 is NOT served keyless by GIBS). Imagery is analyzed
   advisory-only and never rehosted.
+- NASA GPM IMERG precipitation rate via NASA GIBS (map layer `precipitation`) ... U.S. Government,
+  public domain; credit "NASA GPM IMERG via NASA EOSDIS GIBS" shown in the map's attribution control.
+  Keyless WMTS raster tiles (`IMERG_Precipitation_Rate_30min`) fetched by the operator's browser, never
+  by the server and never rehosted; a satellite estimate, typically several hours behind (ADR-048).
+  Not one of the 45 adapters: it has no server-side source record.
 - OpenAQ v3 (global air quality aggregate) ......... per-location open licences (typically CC BY 4.0),
   attribution required — "OpenAQ and the contributing networks". Wired 2026-08-08 (S3) with the SitRep
   air-quality threshold fact; LIVE requires a free API key.
