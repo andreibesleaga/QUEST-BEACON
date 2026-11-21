@@ -576,6 +576,12 @@ describe('qualitativeClaim — what the narrator is allowed to see', () => {
     ).toBe('No electrical substations intersect the current hazard footprint (of those assessed).');
   });
 
+  it('writes a zero RATIO as "none of those", so "0 of 5 shelters are open" keeps its meaning', () => {
+    expect(qualitativeClaim('0 of 5 shelters are open.')).toBe('None of those shelters are open.');
+    // A non-zero ratio loses its figures and keeps its shape.
+    expect(qualitativeClaim('3 of 5 shelters are open.')).toBe('Of those shelters are open.');
+  });
+
   it('drops a non-zero count and keeps the words around it', () => {
     expect(
       qualitativeClaim('2 fire stations intersect the current hazard footprint (of 5 assessed).'),

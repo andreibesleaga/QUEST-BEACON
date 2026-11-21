@@ -87,6 +87,31 @@ describe('handleAlertApprove (HITL emit gate, Art. XIII)', () => {
     expect(res.body.provenance[0]?.mode).toBe('MOCK'); // no real external send
   });
 
+  it("returns THIS approval's document when two approvals interleave (never the sink's last record)", async () => {
+    // Both handlers share one sink, and each yields several times between its emit and its response.
+    // Reading the tail of the emission list would hand one caller the other alert's CAP document.
+    const d = deps([draftAlert('alert-a'), draftAlert('alert-b')]);
+    const approve = (id: string): ReturnType<typeof handleAlertApprove> =>
+      handleAlertApprove({ alertId: asId<AlertId>(id), actorRole: 'EM', approvedBy: APPROVER }, d);
+    const [a, b] = await Promise.all([approve('alert-a'), approve('alert-b')]);
+
+    expect(d.sink.emissions).toHaveLength(2);
+    for (const [res, id] of [
+      [a, 'alert-a'],
+      [b, 'alert-b'],
+    ] as const) {
+      const data = res.body.data as { alert: Alert; cap: { identifier: string }; capXml: string };
+      const own = d.sink.emissions.find((e) => e.alertId === id);
+      expect(res.status).toBe(201);
+      expect(data.alert.id).toBe(id);
+      expect(data.cap.identifier).toBe(own?.cap.identifier);
+      expect(data.capXml).toContain(`<identifier>${own?.cap.identifier}</identifier>`);
+      expect(res.body.meta?.auditHash).toBe(own?.auditHash);
+    }
+    // The two documents are different documents — otherwise the assertions above prove nothing.
+    expect(d.sink.emissions[0]?.cap.identifier).not.toBe(d.sink.emissions[1]?.cap.identifier);
+  });
+
   it('returns the SAME emitted document as CAP v1.2 XML beside the JSON (2026-11-21)', async () => {
     const res = await handleAlertApprove(
       { alertId: asId<AlertId>('alert-1'), actorRole: 'EM', approvedBy: APPROVER },

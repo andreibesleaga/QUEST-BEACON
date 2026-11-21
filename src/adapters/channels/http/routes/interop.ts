@@ -299,7 +299,10 @@ export async function handleAlertApprove(
     req.lang,
   );
 
-  const record = deps.sink.emissions.at(-1);
+  // THIS approval's emission, found by alert id — never "the last one": the sink is shared, and between
+  // the emit above and this line another approval may have appended its own record (the awaits in
+  // between yield). Reading the tail would then return that other alert's document under this alert.
+  const record = deps.sink.emissions.findLast((e) => e.alertId === approved.id);
   return {
     status: 201, // SPEC §2.2/§2.3 — POST /alerts created an emission
     body: envelope({ alert: approved, ...emittedDocument(record?.cap) }, provenance, {

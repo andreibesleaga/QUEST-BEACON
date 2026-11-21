@@ -1,7 +1,9 @@
-// BEACON — CAP v1.2 XML serialization tests (2026-11-21). The conformance facts pinned here were checked
-// against the OASIS schema itself (CAP-v1.2.xsd): root namespace, element SEQUENCE, and the CAP dateTime
-// form. The XML is read back with the same parser the inbound CAP adapters use, so "what we write" is
-// compared with "what a consumer parses", not with a string we also wrote.
+// BEACON — CAP v1.2 XML serialization tests (2026-11-21). These pin three rules read off the OASIS schema
+// (CAP-v1.2.xsd): root namespace, element SEQUENCE, and the CAP dateTime form — plus value fidelity and
+// escaping. They are NOT an XSD validation: no validator is a dependency, so a cardinality or enumeration
+// error the types do not already prevent would pass here (docs/SPEC.md §7 has the manual check). The XML
+// is read back with the same parser the inbound CAP adapters use, so "what we write" is compared with
+// "what a consumer parses", not with a string we also wrote.
 import { describe, expect, it } from 'vitest';
 import { XMLParser } from 'fast-xml-parser';
 import { makeAlert } from '@/domain/alert.js';

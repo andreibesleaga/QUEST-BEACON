@@ -284,8 +284,13 @@ export function qualitativeClaim(claim: string): string {
       )
       // A ZERO count is the one figure whose removal reverses the sentence: "0 substations intersect the
       // footprint" became "substations intersect the footprint", and the model duly narrated substations
-      // inside the hazard (2026-11-21). "No" says the same thing and is not a figure.
-      .replace(new RegExp(String.raw`(^|[\s(])0(?=\s+\p{L})(?!\s*${UNIT})`, 'gu'), '$1no')
+      // inside the hazard (2026-11-21). "No" says the same thing and is not a figure. A zero RATIO
+      // ("0 of 5 shelters") is handled first, as "none of those".
+      .replace(/(^|[\s(])0\s+of\s+[-+]?\p{N}[\p{N},.]*(?=\s+\p{L})/gu, '$1none of those')
+      .replace(
+        new RegExp(String.raw`(^|[\s(])0(?=\s+\p{L})(?!\s+of\b)(?!\s*${UNIT})`, 'gu'),
+        '$1no',
+      )
       // "(of 2 assessed)" keeps its meaning without its number.
       .replace(/\bof\s+[-+]?\p{N}[\p{N},.]*(?=\s+\p{L})/gu, 'of those')
       // Numerals in ANY script (\p{N} covers Arabic-Indic etc. — `\d` is ASCII-only), with a unit from

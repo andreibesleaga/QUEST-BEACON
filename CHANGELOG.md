@@ -17,8 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   enters no report and no rule, and is credited in `NOTICE`.
 - **CAP v1.2 as XML (2026-11-21).** `src/adapters/interop/cap-xml.ts` writes the already-validated CAP
   document in the standard's own serialization (namespace, element order and date form per the OASIS
-  schema; output validated against `CAP-v1.2.xsd`). `POST /alerts/{id}/approve` returns it as
-  `data.capXml` beside the JSON `data.cap`. Nothing is sent to IPAWS or any outside system.
+  schema, pinned by unit tests; three documents validated by hand against `CAP-v1.2.xsd`, procedure in
+  `docs/SPEC.md` §7 — there is no XSD validator in the test suite). `POST /alerts/{id}/approve` returns
+  it as `data.capXml` beside the JSON `data.cap`, and now returns the emission of that approval by
+  alert id rather than the sink's last record. Nothing is sent to IPAWS or any outside system.
 - **A failed narration rung says why, in the deploy log (2026-11-21).** One line per rung that steps
   aside — `[beacon] narration degraded: <model> -> next rung — provider <model> returned 401`, or
   `… narration rejected by the output validator` — in the same form as the routing ladder's line.

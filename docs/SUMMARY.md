@@ -71,7 +71,7 @@ EFFIS CACHED-only, EAGLE-I "assumed-offline", ORS route not yet UI-distinguished
 > **Machine-verified, final commit (2026-09-16):** **45 registered adapters / 41 consumed / 4 not** (`itu` +
 > `camara-gsma` MOCK-only by design; `hifld` held pending a merge-not-replace slot design; `dot511`
 > covers Georgia only) · OpenAPI **36 paths / 39 operations / 66 schemas**, zero `x-status: planned` ·
-> **50 ADR files** · vitest **5,414 passed / 6 skipped** · dependency-cruiser **0 violations / 913 modules**
+> **50 ADR files** · vitest **5,416 passed / 6 skipped** · dependency-cruiser **0 violations / 913 modules**
 > · **5 zones · 14 locales** · Playwright **214 / 26 skipped / 0 failed**.
 > *Re-produce every figure at tag time rather than quoting these (`docs/RELEASE_GUIDE.md` §2).*
 >

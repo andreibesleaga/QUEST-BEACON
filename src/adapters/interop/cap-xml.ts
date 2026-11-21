@@ -7,8 +7,11 @@
 // What this does NOT do: it sends nothing. There is still no IPAWS origination and no outbound CAP feed
 // (IPAWS_ENABLED=off; SPEC §13) — the XML is returned to the approver with the JSON, for hand-off.
 //
-// Conformance, checked against the OASIS schema itself (CAP-v1.2.xsd, docs.oasis-open.org/emergency/cap/
-// v1.2/) and pinned by cap-xml.test.ts:
+// What is guaranteed, and by what. The three rules below are read off the OASIS schema (CAP-v1.2.xsd,
+// docs.oasis-open.org/emergency/cap/v1.2/) and are PINNED by cap-xml.test.ts. Full XSD validation is NOT
+// part of the test suite: the schema is not vendored and no XSD validator is a dependency. It was run by
+// hand on 2026-11-21 (libxml2 2.14) on three documents — a draft, an approved alert and a fully populated
+// update — and all three validated; docs/SPEC.md §7 gives the two commands to repeat it.
 //   * namespace `urn:oasis:names:tc:emergency:cap:1.2` on the root;
 //   * child elements in the SEQUENCE the schema declares (an XSD sequence is ordered — a valid set of
 //     elements in the wrong order is an invalid document);

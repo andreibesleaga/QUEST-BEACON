@@ -799,10 +799,19 @@ origination — C6).
 OASIS CAP v1.2 **XML** by `src/adapters/interop/cap-xml.ts`: root namespace
 `urn:oasis:names:tc:emergency:cap:1.2`, child elements in the sequence the OASIS schema declares, and
 every instant in the CAP form (`-00:00` for UTC, no fractional seconds). `POST /alerts/{id}/approve`
-returns both (`data.cap`, `data.capXml`). Output written this way was validated against the OASIS
-`CAP-v1.2.xsd` on 2026-11-21 (the schema file is not vendored; the unit tests pin namespace, order and
-date form). EDXL-RM and EDXL-SitRep remain JSON data models with no XML output, and nothing is sent to
-IPAWS or any outside system.
+returns both (`data.cap`, `data.capXml`). EDXL-RM and EDXL-SitRep remain JSON data models with no XML
+output, and nothing is sent to IPAWS or any outside system.
+
+What is tested, and what is not: the unit tests (`cap-xml.test.ts`) pin the namespace, the element
+order, the date form, value fidelity and escaping. They do **not** run an XSD validator — the OASIS
+schema is not vendored and no validator is a dependency. Validation against the schema was done by hand
+on 2026-11-21 (libxml2 2.14) for three documents — a draft, an approved alert and a fully populated
+update — and all three were valid. To repeat it on any emitted document saved as `alert.xml`:
+
+```bash
+curl -sO https://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1.2.xsd
+xmllint --noout --schema CAP-v1.2.xsd alert.xml      # prints "alert.xml validates"
+```
 
 ### 7.1 CAP v1.2 (events → alerts; FR-9, EV5/EV10)
 
