@@ -245,68 +245,175 @@ function buildBody(
   return body;
 }
 
+/** ORS's error code from a refusal body, when it carries one. */
+function refusalCode(json: unknown): number | undefined {
+  const code = (json as { readonly error?: { readonly code?: unknown } } | null)?.error?.code;
+  return typeof code === 'number' ? code : undefined;
+}
+
+/** "The request exceeds the service limits" — with an avoid area, the route is longer than ORS allows. */
+const ORS_EXCEEDS_LIMITS = 2004;
+
+// ── A route checked against the footprint, for when avoidance cannot be requested ────────────────────
+//
+// Two cases leave no avoid area to send: a footprint too large even for the tile grid, and a route the
+// service will not compute with ANY avoid area because it is longer than about 150 km (code 2004 — the
+// 2026-11-21 live case: the nearest open shelter was 181 km from a real fire). In both, ORS can still
+// offer the plain road route, and whether THAT route keeps clear of the hazard is a question geometry
+// answers: it is accepted only if no segment of it touches the bounding rectangle of any polygon of the
+// footprint. The rectangle contains the polygon, so "clear of the rectangle" is a stronger statement
+// than "clear of the hazard" — the safe direction. A route that touches it is refused, and the labelled
+// heuristic answers: a road route through the hazard is never returned as a real one (Art. XVI).
+
+/** Does the segment a→b touch the axis-aligned rectangle? (Liang–Barsky clipping, closed rectangle.) */
+function segmentTouches(a: Position, b: Position, [w, s, e, n]: Bounds): boolean {
+  const dx = b[0] - a[0];
+  const dy = b[1] - a[1];
+  let enter = 0;
+  let leave = 1;
+  for (const [p, q] of [
+    [-dx, a[0] - w],
+    [dx, e - a[0]],
+    [-dy, a[1] - s],
+    [dy, n - a[1]],
+  ] as const) {
+    if (p === 0) {
+      if (q < 0) return false; // parallel to this edge and outside it
+      continue;
+    }
+    const t = q / p;
+    if (p < 0) enter = Math.max(enter, t);
+    else leave = Math.min(leave, t);
+    if (enter > leave) return false;
+  }
+  return true;
+}
+
+/** True when no segment of the path touches the bounding rectangle of any polygon of the hazard. */
+export function routeClearOf(
+  path: readonly Position[],
+  hazard: PolygonGeometry | MultiPolygonGeometry,
+): boolean {
+  const boxes = polygonsOf(hazard).map(boundsOf);
+  for (let i = 1; i < path.length; i += 1) {
+    const from = path[i - 1] as Position;
+    const to = path[i] as Position;
+    if (boxes.some((box) => segmentTouches(from, to, box))) return false;
+  }
+  return true;
+}
+
 /** Build the ORS RoutingPort rung. Never throws — every failure mode returns a typed err (Art. XVI). */
 export function makeOrsRoutingAdapter(deps: OrsRoutingAdapterDeps): RoutingPort {
   const baseUrl = deps.baseUrl ?? DEFAULT_BASE_URL;
   const profile = deps.profile ?? DEFAULT_PROFILE;
   const url = `${baseUrl}/v2/directions/${profile}/geojson`;
 
-  return {
-    async route(request: RouteRequest): Promise<Result<EvacRoute, DomainError>> {
-      const hazard = request.avoidHazard !== false ? deps.hazardFor(request.incidentId) : undefined;
-      const avoidArea =
-        hazard !== undefined && isAvoidable(hazard) ? avoidAreaFor(hazard) : undefined;
-      // A footprint too large even for the tile grid: asking ORS for a route that ignores it would return
-      // a road route through the hazard labelled as a real one. Step aside instead (Art. XVI).
-      if (avoidArea === null)
-        return err(
-          new DomainError(
-            'NOT_FOUND',
-            'ORS routing not asked: the hazard footprint is too large for the service to avoid',
-          ),
-        );
-      const avoidPolygon = avoidArea;
+  /** One request to ORS. `refused` carries ORS's own error code so the caller can act on it. */
+  async function ask(
+    request: RouteRequest,
+    avoid: Geometry | undefined,
+  ): Promise<
+    | { readonly ok: true; readonly json: unknown }
+    | { readonly ok: false; readonly error: DomainError; readonly code?: number }
+  > {
+    try {
+      const res = await deps.http.postJson(url, buildBody(request, avoid), {
+        Authorization: deps.apiKey,
+      });
+      if (res.ok) return { ok: true, json: res.json };
+      const code = refusalCode(res.json);
+      return {
+        ok: false,
+        error: new DomainError(
+          'NOT_FOUND',
+          `ORS routing HTTP ${res.status}${refusalDetail(res.json)}`,
+        ),
+        ...(code !== undefined ? { code } : {}),
+      };
+    } catch (e) {
+      return {
+        ok: false,
+        error: new DomainError('NOT_FOUND', `ORS routing unavailable: ${msg(e)}`),
+      };
+    }
+  }
 
-      let status: number;
-      let httpOk: boolean;
-      let json: unknown;
-      try {
-        const res = await deps.http.postJson(url, buildBody(request, avoidPolygon), {
-          Authorization: deps.apiKey,
-        });
-        status = res.status;
-        httpOk = res.ok;
-        json = res.json;
-      } catch (e) {
-        return err(new DomainError('NOT_FOUND', `ORS routing unavailable: ${msg(e)}`));
-      }
-      if (!httpOk)
-        return err(
-          new DomainError('NOT_FOUND', `ORS routing HTTP ${status}${refusalDetail(json)}`),
-        );
-
-      const geom = parseGeometry(json);
-      if (geom === null)
-        return err(
-          new DomainError('PARSE_ERROR', 'ORS routing: malformed/empty directions response'),
-        );
-
-      try {
-        const id = asId<EvacRouteId>(deps.newId('route'));
-        const route = makeEvacRoute({
-          id,
+  /** ORS's answer as a route, or a typed error for a body that is not one. */
+  function toRoute(
+    json: unknown,
+    request: RouteRequest,
+    geom: LineStringGeometry,
+    avoidsHazard: boolean,
+  ): Result<EvacRoute, DomainError> {
+    try {
+      return ok(
+        makeEvacRoute({
+          id: asId<EvacRouteId>(deps.newId('route')),
           incidentId: request.incidentId,
           geom,
-          avoidsHazard: avoidPolygon !== undefined,
+          avoidsHazard,
           engine: 'ors',
           ...parseNarrative(json),
-        });
-        return ok(route);
-      } catch (e) {
-        return err(
-          new DomainError('PARSE_ERROR', `ORS routing: invalid route geometry (${msg(e)})`),
-        );
-      }
+        }),
+      );
+    } catch (e) {
+      return err(new DomainError('PARSE_ERROR', `ORS routing: invalid route geometry (${msg(e)})`));
+    }
+  }
+
+  const malformed = (): Result<EvacRoute, DomainError> =>
+    err(new DomainError('PARSE_ERROR', 'ORS routing: malformed/empty directions response'));
+
+  /** The plain road route, accepted only when it is clear of the footprint (see `routeClearOf`). */
+  async function verifiedPlainRoute(
+    request: RouteRequest,
+    hazard: PolygonGeometry | MultiPolygonGeometry,
+  ): Promise<Result<EvacRoute, DomainError>> {
+    const plain = await ask(request, undefined);
+    if (!plain.ok) return err(plain.error);
+    const geom = parseGeometry(plain.json);
+    if (geom === null) return malformed();
+    if (!routeClearOf(geom.coordinates, hazard))
+      return err(
+        new DomainError(
+          'NOT_FOUND',
+          'ORS routing: the road route offered passes through the hazard footprint',
+        ),
+      );
+    return toRoute(plain.json, request, geom, true);
+  }
+
+  /** The polygon footprint to keep clear of, or nothing: avoidance declined, no footprint, or not an area. */
+  function hazardOf(request: RouteRequest): PolygonGeometry | MultiPolygonGeometry | undefined {
+    if (request.avoidHazard === false) return undefined;
+    const found = deps.hazardFor(request.incidentId);
+    return found !== undefined && isAvoidable(found) ? found : undefined;
+  }
+
+  /** No footprint in play: the plain road route, reported as not avoiding anything. */
+  async function plainRoute(request: RouteRequest): Promise<Result<EvacRoute, DomainError>> {
+    const answer = await ask(request, undefined);
+    if (!answer.ok) return err(answer.error);
+    const geom = parseGeometry(answer.json);
+    return geom === null ? malformed() : toRoute(answer.json, request, geom, false);
+  }
+
+  return {
+    async route(request: RouteRequest): Promise<Result<EvacRoute, DomainError>> {
+      const hazard = hazardOf(request);
+      if (hazard === undefined) return plainRoute(request);
+      const avoidArea = avoidAreaFor(hazard);
+      // A footprint too large even for the tile grid: avoidance cannot be requested, only checked.
+      if (avoidArea === null) return verifiedPlainRoute(request, hazard);
+
+      const first = await ask(request, avoidArea);
+      // Too long for ANY avoid area: ask for the plain route and check it against the footprint.
+      if (!first.ok && first.code === ORS_EXCEEDS_LIMITS)
+        return verifiedPlainRoute(request, hazard);
+      if (!first.ok) return err(first.error);
+      const geom = parseGeometry(first.json);
+      return geom === null ? malformed() : toRoute(first.json, request, geom, true);
     },
   };
 }

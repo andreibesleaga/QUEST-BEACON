@@ -179,6 +179,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   "no"; figures are removed together with their units from a fixed list ("9 km/h" no longer leaves
   "/h", "2 fire stations" no longer loses "fire"); ISO instants are removed whole; pollutant codes that
   carry a digit are given by name.
+- **A draft alert from a verified report could not be approved (2026-11-21).** Verifying a public report
+  with `emitCap`, or composing a draft with `POST /alerts`, returned a DRAFT alert that was never placed
+  in the alert store, so the review queue stayed empty and `POST /alerts/{id}/approve` answered 404. Only
+  drafts proposed by threshold rules could be approved. The HTTP layer now puts every freshly drafted
+  alert in the review queue; an existing alert is never overwritten.
+- **Model prose with markdown was shown as its characters (2026-11-21).** A long report came back opening
+  with "# Situational Report" and the panel, which shows the summary as one paragraph, printed the
+  heading. The provider now returns plain prose: heading lines dropped, bullet and emphasis marks
+  removed, lines joined; the prompt asks for one plain paragraph.
+- **A route longer than the routing service allows with an avoid area fell back to a straight line
+  (2026-11-21).** openrouteservice refuses any avoid area on a route over about 150 km (code 2004). The
+  adapter now asks for the plain road route and accepts it only when no segment touches the bounding
+  rectangle of the hazard footprint; a route that does is refused and the labelled heuristic answers.
+  The same check serves a footprint too large for the tile grid.
+- **The four `SUSTAINABILITY_*` settings were documented and read by nothing (2026-11-21).**
+  `GET /.well-known/sustainability` published constants: a deployment that set its own provider and
+  methodology link still served `sustain@beacon.local` and a relative link that is a 404 on its origin.
+  The endpoint now reads `SUSTAINABILITY_ENABLED`, `_PROVIDER`, `_MEASUREMENT_METHOD` and
+  `_METHODOLOGY_URI`; unset, each keeps the value served before.
+- **`npm run demo:on` could not switch the deployment on again (2026-11-21).** After `demo:off` there is
+  no deployment to redeploy and the Railway CLI answers "No deployment found"; the switch now starts a
+  fresh deployment of the service's source in that case.
 - **Road routing never answered around a real fire (2026-11-21).** The public openrouteservice API
   refuses an avoid polygon wider than 20 km or larger than 200 km², per polygon, and a real fire's
   bounding rectangle was 15 km × 13 km — 20 km corner to corner. A footprint over the limit is now sent

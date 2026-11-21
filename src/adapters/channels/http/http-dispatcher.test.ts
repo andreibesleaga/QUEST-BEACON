@@ -366,6 +366,84 @@ describe('handleHttp — intake + HITL', () => {
     expect(store.auditTrail()).toHaveLength(0); // spoof rejected BEFORE the core — nothing recorded
   });
 
+  it('a DRAFT alert from a verified report enters the review queue and can be approved (2026-11-21)', async () => {
+    // The live defect: the answer carried the DRAFT, the queue stayed empty, approval answered 404.
+    const d = deps();
+    const verified = await handleHttp(
+      req({
+        method: 'PATCH',
+        path: '/api/v1/reports/rep-demo-1', // seeded TRIAGED, linked to the demo incident
+        headers: { 'x-beacon-role': 'VERIFIER' },
+        body: JSON.stringify({ decision: 'VERIFIED', emitCap: true }),
+      }),
+      d,
+    );
+    expect(verified.status).toBe(202);
+    const drafted = asEnvelope(verified.body).meta?.['emittedAlert'] as {
+      id: string;
+      capStatus: string;
+    };
+    expect(drafted.capStatus).toBe('DRAFT');
+
+    const queue = await handleHttp(
+      req({ method: 'GET', path: '/api/v1/alerts', headers: { 'x-beacon-role': 'VERIFIER' } }),
+      d,
+    );
+    const listed = (asEnvelope(queue.body).data as { alerts: { id: string }[] }).alerts;
+    expect(listed.map((a) => a.id)).toContain(drafted.id);
+
+    const approved = await handleHttp(
+      req({
+        method: 'POST',
+        path: `/api/v1/alerts/${drafted.id}/approve`,
+        headers: { 'x-beacon-role': 'EM' },
+        body: '{}',
+      }),
+      d,
+    );
+    expect(approved.status).toBe(201);
+    const data = asEnvelope(approved.body).data as {
+      alert: { id: string; capStatus: string };
+      cap: { status: string };
+      capXml: string;
+    };
+    expect(data.alert.id).toBe(drafted.id);
+    expect(data.alert.capStatus).toBe('ACTUAL');
+    expect(data.cap.status).toBe('Actual');
+    expect(data.capXml).toContain('<status>Actual</status>');
+  });
+
+  it('a hand-composed DRAFT (POST /alerts) enters the review queue too', async () => {
+    const d = deps();
+    const composed = await handleHttp(
+      req({
+        method: 'POST',
+        path: '/api/v1/alerts',
+        headers: { 'x-beacon-role': 'EM' },
+        body: JSON.stringify({ incidentId: 'us-ca-wildfire-demo', headline: 'Evacuate zone A' }),
+      }),
+      d,
+    );
+    expect(composed.status).toBe(201);
+    const id = (asEnvelope(composed.body).data as { alert: { id: string } }).alert.id;
+    expect(await d.features.interop.alerts.get(id as never)).not.toBeNull();
+  });
+
+  it('verifying WITHOUT emitCap puts nothing in the queue', async () => {
+    const d = deps();
+    const before = (await d.features.interop.alerts.list()).length;
+    await handleHttp(
+      req({
+        method: 'PATCH',
+        path: '/api/v1/reports/rep-demo-1',
+        headers: { 'x-beacon-role': 'VERIFIER' },
+        body: JSON.stringify({ decision: 'VERIFIED' }),
+      }),
+      d,
+    );
+    expect((await d.features.interop.alerts.list()).length).toBe(before);
+  });
+
   it('report → verify round-trip persists across requests (single wired core)', async () => {
     const d = deps();
     const created = await handleHttp(

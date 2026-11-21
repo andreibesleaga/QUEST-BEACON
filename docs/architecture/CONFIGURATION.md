@@ -368,7 +368,7 @@ live-production posture — those live in the database and are untouched.
 |---|---|---|
 | `SUSTAINABILITY_ENABLED` | `on` \| `off` | Serve `GET /.well-known/sustainability` (ADR-020). On by default; the document is heavily cached |
 | `SUSTAINABILITY_MEASUREMENT_METHOD` | `third-party-modeled` \| `hardware-metered` \| `hardware-estimated` \| `cloud-billing` | Reported `measurement-method`. The demo publishes `third-party-modeled` (no real metering); flip to `hardware-metered` only where a deployment has authoritative datacenter metering |
-| `SUSTAINABILITY_METHODOLOGY_URI` | `https://beacon.local/docs/SUSTAINABILITY.md` | Reported `methodology-uri` — the transparent methodology + SFC C1–C4 checklist (anti-greenwashing) |
+| `SUSTAINABILITY_METHODOLOGY_URI` | `docs/SUSTAINABILITY.md` (set an absolute address on a deployment, e.g. the file's URL in your repository — the relative default does not resolve on the origin) | Reported `methodology-uri` — the transparent methodology + SFC C1–C4 checklist (anti-greenwashing) |
 | `SUSTAINABILITY_PROVIDER` | `BEACON (sustain@beacon.local)` | Reported `provider` (entity operating the origin) |
 
 ## 6. Data sources (per-adapter: mode + key + interval)

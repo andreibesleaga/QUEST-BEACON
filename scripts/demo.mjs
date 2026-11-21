@@ -65,8 +65,48 @@ function banner(lines) {
   console.log(`└${'─'.repeat(width)}┘\n`);
 }
 
+/**
+ * Start the service when there is NO deployment to redeploy.
+ *
+ * `demo:off` removes the deployment, and from then on `railway redeploy` has nothing to act on: the CLI
+ * answers "No deployment found for service" (seen with CLI 5.75 on 2026-11-21 — the switch could be
+ * turned off and not on again). A fresh deployment of the service's configured source is the same
+ * outcome, and the public API offers it as one mutation. The ids come from `railway status --json`, so
+ * nothing about the project is written into this file.
+ */
+function deployFresh() {
+  const status = spawnSync('railway', ['status', '--json'], { encoding: 'utf8' });
+  let ids;
+  try {
+    for (const environment of JSON.parse(status.stdout).environments.edges) {
+      for (const instance of environment.node.serviceInstances.edges) {
+        if (instance.node.serviceName === SERVICE)
+          ids = { s: instance.node.serviceId, e: environment.node.id };
+      }
+    }
+  } catch {
+    ids = undefined;
+  }
+  if (ids === undefined) {
+    console.error(`could not find the service "${SERVICE}" in \`railway status --json\`.`);
+    return 1;
+  }
+  return railway([
+    'api',
+    'mutation start($s: String!, $e: String!) { serviceInstanceDeployV2(serviceId: $s, environmentId: $e) }',
+    '--variables',
+    JSON.stringify(ids),
+  ]);
+}
+
 async function on() {
-  const code = railway(['redeploy', '--service', SERVICE, '--yes']);
+  let code = railway(['redeploy', '--service', SERVICE, '--yes']);
+  if (code !== 0) {
+    console.error(
+      '\nNothing to redeploy (the deployment was removed). Starting a fresh deployment instead.',
+    );
+    code = deployFresh();
+  }
   if (code !== 0) return code;
   banner([
     'THE DEMO IS NOW PUBLIC.',
@@ -75,7 +115,8 @@ async function on() {
     'Anyone with the link can reach it. Switch it off when you are done:',
     '  npm run demo:off',
     '',
-    'A deployment takes a minute or two to start serving. Check it with:',
+    'A deployment takes about five minutes to build and start, and a few more until every answer',
+    'is fast (the first data cycle). Until then the public address shows the offline page. Check with:',
     '  npm run demo:status     (or: node scripts/check-live.mjs)',
   ]);
   return 0;

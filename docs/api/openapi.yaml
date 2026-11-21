@@ -620,7 +620,8 @@ paths:
         '202':
           description: |
             Transition accepted. On VERIFIED an Alert (DRAFT) is emitted and referenced in
-            `meta.emittedAlert`. The response returns the responder view of the report
+            `meta.emittedAlert`; the same DRAFT enters the review queue (`GET /alerts`) and is
+            approved through `POST /alerts/{id}/approve`. The response returns the responder view of the report
             (may include precise PII location).
           content:
             application/json:

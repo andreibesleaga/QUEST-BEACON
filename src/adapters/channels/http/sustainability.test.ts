@@ -31,4 +31,34 @@ describe('handleSustainability', () => {
     expect(res.headers['cache-control']).toContain('max-age');
     expect(res.headers.etag).toContain('W/');
   });
+
+  it('reads provider, method and methodology link from the SUSTAINABILITY_* settings (2026-11-21)', () => {
+    // Documented since the endpoint shipped, and read by nothing until now.
+    const res = handleSustainability(() => FIXED, {
+      SUSTAINABILITY_PROVIDER: 'County EOC (ops@example.org)',
+      SUSTAINABILITY_MEASUREMENT_METHOD: 'cloud-billing',
+      SUSTAINABILITY_METHODOLOGY_URI: 'https://example.org/methodology',
+    });
+    const body = res.body as Record<string, unknown>;
+    expect(res.status).toBe(200);
+    expect(body.provider).toBe('County EOC (ops@example.org)');
+    expect(body['measurement-method']).toBe('cloud-billing');
+    expect(body['methodology-uri']).toBe('https://example.org/methodology');
+    expect(validate(body)).toBe(true);
+  });
+
+  it('an unset or blank setting keeps the value the endpoint always served', () => {
+    const plain = handleSustainability(() => FIXED).body;
+    const blank = handleSustainability(() => FIXED, {
+      SUSTAINABILITY_PROVIDER: '  ',
+      SUSTAINABILITY_METHODOLOGY_URI: '',
+    }).body;
+    expect(blank).toEqual(plain);
+  });
+
+  it('SUSTAINABILITY_ENABLED=off switches the endpoint off (404); anything else leaves it on', () => {
+    expect(handleSustainability(() => FIXED, { SUSTAINABILITY_ENABLED: 'off' }).status).toBe(404);
+    expect(handleSustainability(() => FIXED, { SUSTAINABILITY_ENABLED: 'on' }).status).toBe(200);
+    expect(handleSustainability(() => FIXED, {}).status).toBe(200);
+  });
 });
