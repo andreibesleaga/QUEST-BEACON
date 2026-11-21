@@ -78,6 +78,48 @@ describe('LlmLadder — descent + AI-off degradation (Art. XVI)', () => {
     }
   });
 
+  it('flags the floor rung as degraded, and never flags a real narration (2026-11-21)', async () => {
+    const floor = await (await sealed([])).narrate(request);
+    const real = await (await sealed([makeMockProvider('haiku', false)])).narrate(request);
+    if (!isOk(floor) || !isOk(real)) throw new Error('expected ok');
+    expect(floor.value.degraded).toBe(true);
+    expect(real.value.degraded).toBeUndefined();
+  });
+
+  it('reports WHY each rung stepped aside: a provider error with its text, a rejection without the prose', async () => {
+    const seal = makeGateSeal();
+    const token = await seal.mint({ operation: 'llm.narrate', modelTier: 'CLOUD', maxTokens: 800 });
+    const seen: string[] = [];
+    const refused = {
+      name: 'revoked-key',
+      narrate: () => Promise.reject(new Error('provider revoked-key returned 401')),
+    };
+    const liar = {
+      name: 'liar',
+      narrate: () =>
+        Promise.resolve({ text: 'Estimated 999 casualties.', inputTokens: 5, outputTokens: 5 }),
+    };
+    const ladder = makeLlmLadder([refused, liar], seal, (provider, failure, detail) =>
+      seen.push(`${provider}|${failure}|${detail}`),
+    );
+    const r = await ladder.sealed(token).narrate(request);
+    expect(isOk(r) && r.value.degraded).toBe(true);
+    expect(seen).toEqual([
+      'revoked-key|provider-error|provider revoked-key returned 401',
+      'liar|rejected-by-validator|',
+    ]);
+  });
+
+  it('a reporter that throws cannot break the ladder (Art. XVI)', async () => {
+    const seal = makeGateSeal();
+    const token = await seal.mint({ operation: 'llm.narrate', modelTier: 'CLOUD', maxTokens: 800 });
+    const ladder = makeLlmLadder([makeMockProvider('groq', true)], seal, () => {
+      throw new Error('log sink down');
+    });
+    const r = await ladder.sealed(token).narrate(request);
+    expect(isOk(r) && r.value.degraded).toBe(true);
+  });
+
   it('AI_MODE=off yields an empty env-resolved ladder', () => {
     const providers = resolveLadder({ AI_MODE: 'off' }, makeHttpClient());
     expect(providers).toHaveLength(0);

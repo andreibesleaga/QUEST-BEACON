@@ -217,6 +217,10 @@ async function narrate(
   if (isErr(res)) return null; // gateway/upstream failure ⇒ degrade
   const decision = res.value;
   if (!decision.allowed || decision.result === undefined) return null; // blocked by policy/firewall/breaker
+  // No model rung answered: the ladder's echo is built from the figure-free claims the model was given, so
+  // showing it would print a summary with its numbers cut out ("winds /h") under a `cloud` label. Treat it
+  // as no prose — the caller then renders the full deterministic claims, labelled deterministic-only.
+  if (decision.result.degraded === true) return null;
   const allowed = new Set(facts.flatMap((f) => sourcesOf(f).map((s) => String(s))));
   return isGrounded(decision.result, allowed) ? decision.result.text : null; // T-245 enforcement
 }
@@ -249,12 +253,50 @@ function isGrounded(narrative: Narrative, allowedSources: ReadonlySet<string>): 
  * NOTHING the operator sees changes. `buildFields` still carries the FULL deterministic claim, and the UI
  * renders every figure from that record with its citation. This trims only the model's input.
  */
+/**
+ * Units the engine's claims attach to a figure, longest first. A LIST on purpose: the first version took
+ * any word of up to four letters after a number as its unit, so "2 fire stations" lost "fire" and
+ * "9 km/h" left "/h" behind (seen on the live deployment, 2026-11-21).
+ */
+const UNIT = String.raw`(?:µg\/m³|μg\/m³|m³\/s|km\/h|m\/s|km²|mph|cfs|km|mm|cm|ft|mi|kt|ha|min|%|°[CF]?|m|h|s)(?![\p{L}\p{N}])`;
+
+/** Pollutant codes carry a digit ("PM2.5"), so the model is given the plain name instead. */
+const POLLUTANT_NAMES: readonly (readonly [RegExp, string])[] = [
+  [/\bPM2\.5\b/g, 'fine particulate matter'],
+  [/\bPM10\b/g, 'coarse particulate matter'],
+  [/\bNO2\b/g, 'nitrogen dioxide'],
+  [/\bSO2\b/g, 'sulphur dioxide'],
+  [/\bO3\b/g, 'ozone'],
+];
+
+const upperFirst = (text: string): string =>
+  text === '' ? text : text.charAt(0).toUpperCase() + text.slice(1);
+
 export function qualitativeClaim(claim: string): string {
-  return (
-    claim
-      // Numerals in ANY script (\p{N} covers Arabic-Indic etc. — `\d` is ASCII-only), with any attached
-      // unit/symbol, plus a leading article that would be left dangling ("of 2 assessed" → "assessed").
-      .replace(/\b(?:of|at|by|to)?\s*[-+]?\p{N}[\p{N},.:]*\s*(?:%|°[CF]?|[a-zA-Z]{1,4}\b)?/gu, ' ')
+  let text = claim;
+  for (const [code, name] of POLLUTANT_NAMES) text = text.replace(code, name);
+  return upperFirst(
+    text
+      // ISO instants first, whole — stripped digit by digit they leave "TZ" behind.
+      .replace(
+        /(?:\b(?:at|by|to|on|until|from)\s+)?\p{N}{4}-\p{N}{2}-\p{N}{2}(?:T[\p{N}:.]+Z?)?/gu,
+        ' ',
+      )
+      // A ZERO count is the one figure whose removal reverses the sentence: "0 substations intersect the
+      // footprint" became "substations intersect the footprint", and the model duly narrated substations
+      // inside the hazard (2026-11-21). "No" says the same thing and is not a figure.
+      .replace(new RegExp(String.raw`(^|[\s(])0(?=\s+\p{L})(?!\s*${UNIT})`, 'gu'), '$1no')
+      // "(of 2 assessed)" keeps its meaning without its number.
+      .replace(/\bof\s+[-+]?\p{N}[\p{N},.]*(?=\s+\p{L})/gu, 'of those')
+      // Numerals in ANY script (\p{N} covers Arabic-Indic etc. — `\d` is ASCII-only), with a unit from
+      // the list above, plus a leading word that would be left dangling ("at 12 ft", "about 14,200").
+      .replace(
+        new RegExp(
+          String.raw`(?:\b(?:of|at|by|to|about|around|roughly|nearly|approximately)\s+)?[-+]?\p{N}[\p{N},.:]*(?:\s*${UNIT})?`,
+          'giu',
+        ),
+        ' ',
+      )
       // Spelled-out numbers — the bypass class F-340 was opened for.
       .replace(
         /\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|dozen|score|hundreds?|thousands?|millions?|billions?)\b/gi,
@@ -267,8 +309,10 @@ export function qualitativeClaim(claim: string): string {
       )
       .replace(/\(\s*[),]?\s*\)/g, '') // empty parens left behind by the strips
       .replace(/\s{2,}/g, ' ')
+      .replace(/\(\s+/g, '(')
+      .replace(/\s+\)/g, ')')
       .replace(/\s+([.,;:])/g, '$1')
-      .trim()
+      .trim(),
   );
 }
 

@@ -25,22 +25,41 @@ function buildNarrative(text: string, request: NarrativeRequest): Narrative {
   return { text, citations: request.facts.map((f) => f.citation) };
 }
 
-// The deterministic-only rung: no model, numbers retained, degradation clearly labeled (F3/Art. XVI).
+// The deterministic-only rung: no model, degradation clearly labelled (F3/Art. XVI) AND flagged
+// (`degraded`). The echo is built from the claims this ladder was handed — figure-free by design since
+// F-418 — so it is a last resort for a caller with nothing better, never a summary to show beside the
+// record: the SitRep synthesis reads the flag and renders its own full claims instead (2026-11-21).
 function deterministicOnly(request: NarrativeRequest): Narrative {
   const claims = request.facts.map((f) => f.claim).join('; ');
-  return buildNarrative(
-    `[deterministic-only — AI narration unavailable] Cited facts: ${claims}`,
-    request,
-  );
+  return {
+    ...buildNarrative(
+      `[deterministic-only — AI narration unavailable] Cited facts: ${claims}`,
+      request,
+    ),
+    degraded: true,
+  };
 }
+
+/** Why a rung stepped aside: the provider failed (outage, refused key, rate limit) or its text was rejected. */
+export type RungFailure = 'provider-error' | 'rejected-by-validator';
+
+/**
+ * Told once per failed rung, so the reason reaches the deploy log. Without it a refused API key looked
+ * exactly like a model outage: every report quietly fell to the deterministic rung and nothing said why
+ * (found on the live deployment, 2026-11-21). `detail` is the provider's own error text (a status code,
+ * never a credential) or empty for a validator rejection — the rejected prose itself is never logged.
+ */
+export type OnRungFailure = (provider: string, failure: RungFailure, detail: string) => void;
 
 export class LlmLadder implements SealableLLM {
   readonly #providers: readonly LlmProvider[];
   readonly #seal: GateSeal;
+  readonly #onRungFailure: OnRungFailure | undefined;
 
-  constructor(providers: readonly LlmProvider[], seal: GateSeal) {
+  constructor(providers: readonly LlmProvider[], seal: GateSeal, onRungFailure?: OnRungFailure) {
     this.#providers = providers;
     this.#seal = seal;
+    this.#onRungFailure = onRungFailure;
   }
 
   /** Public port method — always refuses without a gateway stamp (adapters cannot be reached directly). */
@@ -72,13 +91,30 @@ export class LlmLadder implements SealableLLM {
     try {
       const out = await provider.narrate(request);
       const narrative = buildNarrative(out.text, request);
-      return isValidNarration(narrative, request.facts) ? narrative : null;
+      if (isValidNarration(narrative, request.facts)) return narrative;
+      this.#report(provider.name, 'rejected-by-validator', '');
+      return null;
+    } catch (e) {
+      // provider outage / refused key / rate-limit → descend one rung (availability degrade)
+      this.#report(provider.name, 'provider-error', e instanceof Error ? e.message : String(e));
+      return null;
+    }
+  }
+
+  // A reporter must never be able to break the ladder it reports on (Art. XVI).
+  #report(provider: string, failure: RungFailure, detail: string): void {
+    try {
+      this.#onRungFailure?.(provider, failure, detail);
     } catch {
-      return null; // provider outage / rate-limit → descend one rung (availability degrade)
+      /* reporting is best-effort */
     }
   }
 }
 
-export function makeLlmLadder(providers: readonly LlmProvider[], seal: GateSeal): LlmLadder {
-  return new LlmLadder(providers, seal);
+export function makeLlmLadder(
+  providers: readonly LlmProvider[],
+  seal: GateSeal,
+  onRungFailure?: OnRungFailure,
+): LlmLadder {
+  return new LlmLadder(providers, seal, onRungFailure);
 }
