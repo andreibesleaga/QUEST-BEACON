@@ -954,6 +954,12 @@ paths:
         the Telegram channel is configured live (ADR-026) — broadcasts a PII-free digest to the
         subscriber registry strictly AFTER the emit succeeds. A broadcast failure is audited but
         never fails the approval (no 5xx). Role VERIFIER or EM. Writes AUDIT_EVENT.
+
+        The response `data` carries the approved `alert`, the emitted CAP document as validated JSON
+        (`cap`) and — since 2026-11-21 — the same document as OASIS CAP v1.2 **XML** (`capXml`, a
+        string; media type `application/cap+xml`, namespace `urn:oasis:names:tc:emergency:cap:1.2`,
+        checked against the OASIS `CAP-v1.2.xsd`). The XML is for hand-off to a CAP consumer: BEACON
+        still sends nothing to IPAWS or any outside system (`provenance[0].mode` is `MOCK`).
       x-required-role: VERIFIER
       security:
         - sessionAuth: []

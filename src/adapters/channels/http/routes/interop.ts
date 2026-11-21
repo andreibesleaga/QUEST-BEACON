@@ -22,6 +22,8 @@ import { errorEnvelope } from '@/application/interaction/command-router.js';
 import { edxlRmToResourceTask, resourceTaskToEdxlRm } from '@/adapters/interop/edxl-rm-mapper.js';
 import type { EdxlRmMessage } from '@/adapters/interop/edxl-rm-mapper.js';
 import { sitRepToEdxlSitRep } from '@/adapters/interop/edxl-sitrep-mapper.js';
+import { capAlertToXml } from '@/adapters/interop/cap-xml.js';
+import type { CapAlert } from '@/adapters/interop/cap-mapper.js';
 import type { SitRepOptions } from '@/adapters/interop/edxl-sitrep-mapper.js';
 import { asEmittable } from '@/adapters/alerting/alert-sink.js';
 import type { AlertSink } from '@/adapters/alerting/alert-sink.js';
@@ -245,6 +247,18 @@ async function broadcastApproval(
 }
 
 /**
+ * The emitted document, twice: `cap` is BEACON's validated JSON form, `capXml` is the same document as
+ * OASIS CAP v1.2 XML — the form a CAP consumer reads — for hand-off. Nothing is sent anywhere by this.
+ * Both keys are present even when nothing was recorded, so the response shape does not vary.
+ */
+function emittedDocument(cap: CapAlert | undefined): {
+  readonly cap: CapAlert | undefined;
+  readonly capXml: string | undefined;
+} {
+  return { cap, capXml: cap === undefined ? undefined : capAlertToXml(cap) };
+}
+
+/**
  * POST /alerts/:id/approve — the HITL emit gate (Art. XIII). Loads a DRAFT alert, requires VERIFIER+,
  * promotes DRAFT → ACTUAL with approvedBy = the actor, emits the approved alert via the AlertSink (CAP
  * serialized + schema-validated + audited), and returns the CAP. REJECTS a non-DRAFT (409), an
@@ -288,7 +302,7 @@ export async function handleAlertApprove(
   const record = deps.sink.emissions.at(-1);
   return {
     status: 201, // SPEC §2.2/§2.3 — POST /alerts created an emission
-    body: envelope({ alert: approved, cap: record?.cap }, provenance, {
+    body: envelope({ alert: approved, ...emittedDocument(record?.cap) }, provenance, {
       meta: approvalMeta(record?.auditHash, delivery),
     }),
   };

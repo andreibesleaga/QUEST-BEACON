@@ -87,6 +87,19 @@ describe('handleAlertApprove (HITL emit gate, Art. XIII)', () => {
     expect(res.body.provenance[0]?.mode).toBe('MOCK'); // no real external send
   });
 
+  it('returns the SAME emitted document as CAP v1.2 XML beside the JSON (2026-11-21)', async () => {
+    const res = await handleAlertApprove(
+      { alertId: asId<AlertId>('alert-1'), actorRole: 'EM', approvedBy: APPROVER },
+      deps(),
+    );
+    const data = res.body.data as { cap: { identifier: string }; capXml: string };
+    expect(data.capXml.startsWith('<?xml version="1.0" encoding="UTF-8"?>')).toBe(true);
+    expect(data.capXml).toContain('<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">');
+    expect(data.capXml).toContain(`<identifier>${data.cap.identifier}</identifier>`);
+    expect(data.capXml).toContain('<status>Actual</status>');
+    expect(res.body.provenance[0]?.mode).toBe('MOCK'); // still no external send — the XML is handed back
+  });
+
   it('an EM (higher rank) may also approve + emit', async () => {
     const d = deps();
     const res = await handleAlertApprove(
