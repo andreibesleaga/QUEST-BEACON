@@ -33,6 +33,18 @@ describe('CommandPalette', () => {
     expect(screen.getByText(/Toggle fire layer/)).toBeInTheDocument();
   });
 
+  it('names its trigger with the visible word first (WCAG 2.5.3 Label in Name)', () => {
+    render(<CommandPalette />);
+    const trigger = screen.getByTestId('command-palette-trigger');
+    const visible = trigger.querySelector('span')?.textContent ?? '';
+    expect(visible.length).toBeGreaterThan(0);
+    const shortcut = trigger.querySelector('kbd')?.textContent ?? '';
+    // What a voice-control user reads on the button — the word, then the shortcut — must be how the
+    // accessible name begins, word for word and in that order.
+    expect(trigger.getAttribute('aria-label')?.startsWith(`${visible} ${shortcut} — `)).toBe(true);
+    expect(trigger.getAttribute('aria-keyshortcuts')).toBe('Meta+K Control+K');
+  });
+
   it('opens the keyboard-shortcuts overlay on "?"', async () => {
     render(<CommandPalette />);
     fireEvent.keyDown(document, { key: '?' });

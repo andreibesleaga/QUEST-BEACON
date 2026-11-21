@@ -63,6 +63,9 @@ function useGlobalHotkeys(togglePalette: () => void, openShortcuts: () => void):
   }, [togglePalette, openShortcuts]);
 }
 
+/** The shortcut as the trigger shows it. One constant, because the button's accessible name repeats it. */
+const SHORTCUT_GLYPH = '⌘K';
+
 export function CommandPalette({
   regions,
   incidents,
@@ -107,14 +110,19 @@ export function CommandPalette({
       <button
         type="button"
         data-testid="command-palette-trigger"
-        aria-label={t('openLabel')}
+        // WCAG 2.5.3 (Label in Name): the accessible name STARTS WITH everything the button shows — the
+        // word and the shortcut, in that order — so someone using voice control can say what they see
+        // ("Search") and reach it; the fuller description follows. Before 2026-11-21 the name was the
+        // description alone, which shared no word with the visible label in any of the 14 languages
+        // (axe: label-content-name-mismatch, which compares the visible words with the name's words).
+        aria-label={`${t('triggerText')} ${SHORTCUT_GLYPH} — ${t('openLabel')}`}
         aria-keyshortcuts="Meta+K Control+K"
         onClick={togglePalette}
         className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-line bg-surface px-3 text-sm text-fg-muted transition-colors duration-150 ease-out hover:text-fg"
       >
         <span>{t('triggerText')}</span>
         <kbd className="rounded border border-line bg-surface-2 px-1.5 py-0.5 font-mono text-xs">
-          ⌘K
+          {SHORTCUT_GLYPH}
         </kbd>
       </button>
       <Command.Dialog
