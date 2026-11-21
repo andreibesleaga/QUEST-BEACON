@@ -179,6 +179,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   "no"; figures are removed together with their units from a fixed list ("9 km/h" no longer leaves
   "/h", "2 fire stations" no longer loses "fire"); ISO instants are removed whole; pollutant codes that
   carry a digit are given by name.
+- **The AI summary of a report could stay unseen for minutes (2026-11-21).** A report read does not wait
+  for the model (ADR-038): a slow narration leaves the first answer engine-only and is kept for the next
+  read — but nothing made that next read happen until the data changed. The report panel now re-reads an
+  engine-only report by itself, at most twice, three seconds apart; with AI off it stops there.
 - **A draft alert from a verified report could not be approved (2026-11-21).** Verifying a public report
   with `emitCap`, or composing a draft with `POST /alerts`, returned a DRAFT alert that was never placed
   in the alert store, so the review queue stayed empty and `POST /alerts/{id}/approve` answered 404. Only
