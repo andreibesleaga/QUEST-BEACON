@@ -22,11 +22,6 @@ ignoreUntil = 2027-02-01
 reason = "Tinypool prototype-pollution/RCE advisory (Critical) in Vitest 3's worker pool. DEV-ONLY test tooling; not installed in the runtime image (`npm ci --omit=dev`). Vitest 4 fixes it but changes the coverage results enough to fail enforced coverage floors, so track this temporary exception for the dedicated test-toolchain upgrade. Re-measured 2026-11-21 with Vitest 5.1.1: all 5,463 tests pass, but its V8 coverage remapping reads src/application branches 98.61 %, src/main lines 95.58 % and app branches 83.08 % - under three enforced floors with no code change. Floors are never lowered, so the exception is extended, not the floors."
 
 [[IgnoredVulns]]
-id = "GHSA-vfj7-8cjw-p6xm"
-ignoreUntil = 2026-12-01
-reason = "braces <=3.0.3 (CVSS 7.5, High) has no fixed npm release as of 2026-10-15. DEV-ONLY transitive dependency of eslint-config-next's fast-glob/micromatch; production installs omit dev dependencies. Reassess before expiry and remove this exception as soon as upstream publishes a fix."
-
-[[IgnoredVulns]]
 id = "GHSA-qxg6-89mg-rqv8"
 ignoreUntil = 2027-02-01
 reason = "@vitest/mocker 3.2.7 code injection via manual mock registration (CVSS 4.7, Medium), fixed in 4.1.12. DEV-ONLY, same toolchain and same blocker as the Vitest entries above (the 4+/5 coverage remapping fails enforced floors, measured 2026-11-21)."
